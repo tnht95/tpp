@@ -1,0 +1,28 @@
+{
+  "name": "tpp-web",
+  "private": true,
+  "version": "0.0.0",
+  "packageManager": "yarn@4.0.2",
+  "type": "module",
+  "engines": {
+    "npm": "please use yarn"
+  },
+  "scripts": {
+    "format:check": "prettier --check .",
+    "format": "prettier --write .",
+    "lint:check": "eslint .",
+    "lint": "eslint . --fix",
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "prettier": "^3.1.1",
+    "solid-js": "^1.8.7"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2",
+    "vite": "^5.0.8",
+    "vite-plugin-solid": "^2.8.0"
+  }
+}
