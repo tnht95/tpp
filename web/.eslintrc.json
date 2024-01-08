@@ -1,0 +1,91 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "tsconfig.json",
+    "sourceType": "module",
+    "tsconfigRootDir": "./"
+  },
+  "plugins": [
+    "@typescript-eslint",
+    "import",
+    "promise",
+    "unicorn",
+    "sonarjs",
+    "solid"
+  ],
+  "extends": [
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "plugin:@typescript-eslint/strict",
+    "plugin:import/recommended",
+    "plugin:import/typescript",
+    "plugin:promise/recommended",
+    "prettier",
+    "plugin:unicorn/recommended",
+    "plugin:sonarjs/recommended",
+    "plugin:solid/typescript"
+  ],
+  "rules": {
+    // turn off rules that are covered already by others
+    "unicorn/prefer-top-level-await": "off",
+    "unicorn/prevent-abbreviations": "off",
+
+    // comment
+    "spaced-comment": [
+      "error",
+      "always",
+      { "exceptions": ["-"], "markers": ["/"] }
+    ],
+
+    // arrow style functions
+    "arrow-parens": ["error", "as-needed"],
+    "arrow-body-style": ["error", "as-needed"],
+    "no-restricted-syntax": [
+      "error",
+      "FunctionExpression",
+      "FunctionDeclaration"
+    ],
+
+    // line
+    "no-multiple-empty-lines": [
+      "error",
+      { "max": 1, "maxEOF": 0, "maxBOF": 0 }
+    ],
+    "linebreak-style": ["error", "unix"],
+    "eol-last": ["error", "always"],
+
+    // general
+    "prefer-destructuring": ["error"],
+    "quotes": [
+      "error",
+      "single",
+      { "avoidEscape": true, "allowTemplateLiterals": true }
+    ],
+    "comma-dangle": ["error", "never"],
+    "@typescript-eslint/no-unused-vars": ["error"],
+    "@typescript-eslint/no-explicit-any": ["error"],
+    "@typescript-eslint/no-unnecessary-condition": ["error"],
+    "@typescript-eslint/no-useless-constructor": ["error"],
+    "no-console": ["error"],
+
+    // import
+    "import/newline-after-import": ["error", { "count": 1 }],
+    "sort-imports": [
+      "error",
+      { "ignoreCase": true, "ignoreDeclarationSort": true }
+    ],
+    "import/order": [
+      "error",
+      {
+        "groups": ["builtin", "external", "internal", ["parent", "sibling"]],
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": false
+        }
+      }
+    ],
+    "import/no-relative-parent-imports": ["error", { "ignore": ["src"] }]
+  },
+  "overrides": []
+}
