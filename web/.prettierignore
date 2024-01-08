@@ -1,5 +1,4 @@
 .yarn
 dist
 coverage
-tsconfig*
-.pnp.*
+tsconfig.json
