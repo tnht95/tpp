@@ -85,7 +85,18 @@
         }
       }
     ],
-    "import/no-relative-parent-imports": ["error", { "ignore": ["src"] }]
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": ["src*", "..*", "./*/", "@/*/"]
+      }
+    ]
   },
-  "overrides": []
+  "overrides": [],
+  "settings": {
+    "import/resolver": {
+      "node": { "extensions": [".ts", ".tsx"] },
+      "typescript": {}
+    }
+  }
 }
