@@ -1,0 +1,8 @@
+[workspace]
+members = [
+    "chip8_core",
+    "wasm"
+]
+resolver = "2"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
