@@ -1,5 +1,5 @@
 import { alienLogo } from '@/assets';
-import { Searchbar } from '@/components/searchbar';
+import { Searchbar } from '@/components';
 
 export const Header = () => (
   <header class=" bg-indigo-900 text-white shadow-lg flex flex-row items-center justify-between">
@@ -20,7 +20,7 @@ export const Header = () => (
             </a>
           </li>
           <li class="px-5 h-full flex items-center hover:bg-indigo-300 hover:text-indigo-900 cursor-pointer">
-            <a href="" >
+            <a href="">
               <span>Games</span>
             </a>
           </li>
@@ -30,12 +30,12 @@ export const Header = () => (
             </a>
           </li>
         </ul>
-        <Searchbar/>
+        <Searchbar />
       </nav>
     </div>
 
     <button class="border border-white rounded-full font-bold px-8 py-2  hover:bg-white hover:text-indigo-900 mr-12">
-        Sign In
-      </button>
+      Sign In
+    </button>
   </header>
 );

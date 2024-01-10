@@ -30,7 +30,7 @@ export const Games = () => (
         <div class="flex-3">
           <div class="flex flex-row items-center">
             <p class="text-2xl font-bold text-indigo-900 m-5 ml-0">All Games</p>
-            <Selects/>
+            <Selects />
           </div>
           <div class="flex flex-row flex-wrap gap-7">
             <Gamecard />
