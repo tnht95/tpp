@@ -26,8 +26,12 @@ impl Database {
         let opts = PgConnectOptions::from_url(&config.server.pg_url.parse()?)?
             .log_statements(LevelFilter::Info)
             .log_slow_statements(LevelFilter::Warn, Duration::from_millis(200));
+
         let pool = PgPoolOptions::new()
             .max_connections(config.server.pg_max_pool)
+            .acquire_timeout(Duration::from_millis(300))
+            .idle_timeout(Duration::from_millis(400))
+            .max_lifetime(Duration::from_millis(500))
             .connect_with(opts)
             .await?;
 
