@@ -1,0 +1,48 @@
+# integration test with production mode
+version: "3.5"
+
+services:
+  db:
+    container_name: db
+    image: postgres:14-alpine
+    environment:
+      POSTGRES_DB: book
+      POSTGRES_USER: service
+      POSTGRES_PASSWORD: password
+      PGDATA: /data/postgres
+    healthcheck:
+      test: pg_isready -U service -d book
+      interval: 1s
+      timeout: 5s
+      retries: 20
+    volumes:
+      - ./data/db:/data/postgres
+    ports:
+      - 5432:5432
+
+  cache:
+    container_name: cache
+    image: redis/redis-stack-server:latest
+    environment:
+      REDIS_ARGS: "--requirepass redis"
+    healthcheck:
+      test: ["CMD", "redis-cli","ping"]
+      interval: 1s
+      timeout: 5s
+      retries: 10
+    ports:
+      - 6379:6379
+
+  pgadmin:
+    depends_on:
+      db:
+        condition: service_healthy
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin@example.com
+    volumes:
+      - ./data/pgadmin:/var/lib/pgadmin
+    ports:
+      - 5050:80
