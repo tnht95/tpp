@@ -3,6 +3,7 @@ pub mod entities;
 use std::time::Duration;
 
 use anyhow::Result;
+use async_trait::async_trait;
 use log::LevelFilter;
 use sqlx::{
     postgres::{PgConnectOptions, PgPoolOptions},
@@ -13,8 +14,10 @@ use sqlx::{
 
 use crate::config::Config;
 
+#[async_trait]
 pub trait IDatabase {
     fn get_pool(&self) -> &Pool<Postgres>;
+    async fn is_healthy(&self) -> bool;
 }
 
 pub struct Database {
@@ -47,8 +50,13 @@ impl Database {
     }
 }
 
+#[async_trait]
 impl IDatabase for Database {
     fn get_pool(&self) -> &Pool<Postgres> {
         &self.pool
+    }
+
+    async fn is_healthy(&self) -> bool {
+        sqlx::query("SELECT 1").fetch_one(&self.pool).await.is_ok()
     }
 }

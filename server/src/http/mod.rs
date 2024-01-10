@@ -11,6 +11,7 @@ use axum::{
     ServiceExt,
 };
 use controllers::book::get_books;
+use tokio::sync::RwLock;
 use tower::ServiceBuilder;
 use tower_http::{
     catch_panic::CatchPanicLayer,
@@ -25,28 +26,33 @@ use tracing::{error, info, Level};
 
 use crate::{
     config::Config,
-    http::controllers::book::add_books,
+    http::controllers::{book::add_books, health::is_healthy},
     model::responses::INTERNAL_SERVER_ERR,
-    services::book::IBookService,
+    services::{book::IBookService, health::IHealthService},
 };
 
-pub struct Server<T: IBookService> {
+pub struct Server<THealthService: IHealthService, TBookService: IBookService> {
     config: Config,
-    services: Services<T>,
+    services: Services<THealthService, TBookService>,
 }
 
-struct Services<T: IBookService> {
-    book: T,
+struct Services<THealthService: IHealthService, TBookService: IBookService> {
+    health: THealthService,
+    book: TBookService,
 }
 
-impl<T> Server<T>
+impl<THealthService, TBookService> Server<THealthService, TBookService>
 where
-    T: IBookService + Sync + Send + 'static,
+    THealthService: IHealthService + Sync + Send + 'static,
+    TBookService: IBookService + Sync + Send + 'static,
 {
-    pub fn new(config: Config, book_service: T) -> Self {
+    pub fn new(config: Config, health_service: THealthService, book_service: TBookService) -> Self {
         Self {
             config,
-            services: Services { book: book_service },
+            services: Services {
+                health: health_service,
+                book: book_service,
+            },
         }
     }
 
@@ -74,20 +80,24 @@ where
             .layer(RequestBodyTimeoutLayer::new(Duration::from_secs(4)))
             .layer(TimeoutLayer::new(Duration::from_secs(5)));
 
-        let app = NormalizePath::trim_trailing_slash(
+        let state = Arc::new(RwLock::new(self));
+        let app = NormalizePath::trim_trailing_slash(Router::merge(
             Router::new()
-                .route("/books", get(get_books::<T>))
-                .route("/books", post(add_books::<T>))
-                .route("/ping", get(|| async { "pong" }))
+                .route("/books", get(get_books::<THealthService, TBookService>))
+                .route("/books", post(add_books::<THealthService, TBookService>))
                 .layer(middleware)
-                .with_state(Arc::new(self)),
-        );
+                .with_state(Arc::clone(&state)),
+            Router::new().route(
+                "/health",
+                get(is_healthy::<THealthService, TBookService>).with_state(Arc::clone(&state)),
+            ),
+        ));
 
         info!("listening on {}", http_address);
 
         axum::Server::bind(&http_address)
             .serve(app.into_make_service())
-            .with_graceful_shutdown(shutdown_signal())
+            .with_graceful_shutdown(shutdown_signal(state))
             .await?;
 
         info!("Server shutdown successfully");
@@ -108,7 +118,12 @@ fn panic_recover(e: Box<dyn std::any::Any + Send + 'static>) -> Response {
     (StatusCode::INTERNAL_SERVER_ERROR, Json(INTERNAL_SERVER_ERR)).into_response()
 }
 
-async fn shutdown_signal() {
+async fn shutdown_signal<THealthService, TBookService>(
+    state: Arc<RwLock<Server<THealthService, TBookService>>>,
+) where
+    THealthService: IHealthService,
+    TBookService: IBookService,
+{
     let ctrl_c = async {
         tokio::signal::ctrl_c()
             .await
@@ -129,9 +144,11 @@ async fn shutdown_signal() {
     tokio::select! {
         _ = ctrl_c => {
             info!("Receiving SIGINT signal");
+            state.write().await.services.health.app_close();
         },
         _ = terminate => {
             info!("Receiving SIGKILL signal");
+            state.write().await.services.health.app_close();
         },
     }
 }

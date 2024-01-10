@@ -6,7 +6,7 @@ use cli::{Cli, Cmd};
 use config::{Config, LogFmt};
 use database::Database;
 use http::Server;
-use services::book::BookService;
+use services::{book::BookService, health::HealthService};
 use tracing::trace;
 use tracing_subscriber::{prelude::*, EnvFilter};
 
@@ -23,9 +23,7 @@ mod services;
 // swagger
 // redis
 // test
-// Gracefully shutdown
 // CI/CD
-// K8s prevent request loss
 #[tokio::main]
 async fn main() -> Result<()> {
     let cli = Cli::parse();
@@ -57,12 +55,18 @@ async fn main() -> Result<()> {
                 .await
                 .context("Failed to migrate database")?;
 
-            let database = Database::new(&config)
+            // FIXME: database
+            let database1 = Database::new(&config)
                 .await
                 .context("Failed to initialize database")?;
 
-            let book_service = BookService::new(database);
-            let server = Server::new(config, book_service);
+            let database2 = Database::new(&config)
+                .await
+                .context("Failed to initialize database")?;
+
+            let health_service = HealthService::new(database1);
+            let book_service = BookService::new(database2);
+            let server = Server::new(config, health_service, book_service);
             server.start().await.context("Failed to start server {}")?;
         }
     }
