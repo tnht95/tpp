@@ -18,3 +18,5 @@ tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
 sqlx = { version = "0.7", features = ["runtime-tokio", "postgres", "chrono"] }
 futures = "0.3.28"
+thiserror = "1.0.56"
+log = "0.4.20"

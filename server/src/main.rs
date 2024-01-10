@@ -1,12 +1,13 @@
 use std::path::PathBuf;
 
+use anyhow::{Context, Result};
 use clap::Parser;
 use cli::{Cli, Cmd};
 use config::{Config, LogFmt};
 use database::Database;
 use http::Server;
 use services::book::BookService;
-use tracing::{error, trace};
+use tracing::trace;
 use tracing_subscriber::{prelude::*, EnvFilter};
 
 mod cli;
@@ -17,7 +18,6 @@ mod model;
 mod services;
 
 // TODO
-// pg, migrate, log
 // middleware
 // docker
 // swagger
@@ -28,15 +28,12 @@ mod services;
 // request-id tracking
 // CI/CD
 // K8s prevent request loss
-// error handling
 #[tokio::main]
-async fn main() {
+async fn main() -> Result<()> {
     let cli = Cli::parse();
 
-    let config = match Config::from_file(PathBuf::from(&cli.config)) {
-        Ok(config) => config,
-        Err(e) => panic!("couldn't read config file: {}\n{}", cli.config, e),
-    };
+    let config =
+        Config::from_file(PathBuf::from(&cli.config)).context("Could not read config file")?;
 
     // init logger
     match config.log_format {
@@ -58,12 +55,19 @@ async fn main() {
 
     match cli.command {
         Cmd::Start => {
-            let database = Database::new(&config).await.unwrap();
+            Database::migrate(&config)
+                .await
+                .context("Failed to migrate database")?;
+
+            let database = Database::new(&config)
+                .await
+                .context("Failed to initialize database")?;
+
             let book_service = BookService::new(database);
             let server = Server::new(config, book_service);
-            if let Err(e) = server.start().await {
-                error!("fail to start server {}", e);
-            }
+            server.start().await.context("Failed to start server {}")?;
         }
     }
+
+    Ok(())
 }
