@@ -87,7 +87,10 @@ where
 
         axum::Server::bind(&http_address)
             .serve(app.into_make_service())
+            .with_graceful_shutdown(shutdown_signal())
             .await?;
+
+        info!("Server shutdown successfully");
 
         Ok(())
     }
@@ -103,4 +106,32 @@ fn panic_recover(e: Box<dyn std::any::Any + Send + 'static>) -> Response {
     };
     error!("Unhandled error: {e:?}");
     (StatusCode::INTERNAL_SERVER_ERROR, Json(INTERNAL_SERVER_ERR)).into_response()
+}
+
+async fn shutdown_signal() {
+    let ctrl_c = async {
+        tokio::signal::ctrl_c()
+            .await
+            .expect("Failed to install Ctrl+C handler");
+    };
+
+    #[cfg(unix)]
+    let terminate = async {
+        tokio::signal::unix::signal(tokio::signal::unix::SignalKind::terminate())
+            .expect("Failed to install signal handler")
+            .recv()
+            .await;
+    };
+
+    #[cfg(not(unix))]
+    let terminate = std::future::pending::<()>();
+
+    tokio::select! {
+        _ = ctrl_c => {
+            info!("Receiving SIGINT signal");
+        },
+        _ = terminate => {
+            info!("Receiving SIGKILL signal");
+        },
+    }
 }
