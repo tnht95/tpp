@@ -39,5 +39,11 @@
     "typescript": "^5.3.3",
     "vite": "^5.0.11",
     "vite-plugin-solid": "^2.8.0"
+  },
+  "dependencies": {
+    "@solidjs/router": "^0.10.7",
+    "@suid/icons-material": "^0.6.11",
+    "@suid/material": "^0.15.1",
+    "@suid/vite-plugin": "^0.1.5"
   }
 }

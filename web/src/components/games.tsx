@@ -1,4 +1,4 @@
-import { Gamecard, Tag } from '@/components';
+import { Gamecard, ScaledSelect, Tag } from '@/components';
 
 export const Games = () => (
   <>
@@ -27,28 +27,29 @@ export const Games = () => (
     </div>
     <div>
       <div class="ml-10 mt-10 flex">
-      <div class="flex-3">
-        <div>
-        <p class="text-2xl font-bold text-indigo-900 m-5 ml-0">All Games</p>
+        <div class="flex-3">
+          <div class="flex flex-row items-center">
+            <p class="text-2xl font-bold text-indigo-900 m-5 ml-0">All Games</p>
+            <ScaledSelect />
+          </div>
+          <div class="flex flex-row flex-wrap gap-7">
+            <Gamecard />
+            <Gamecard />
+            <Gamecard />
+            <Gamecard />
+            <Gamecard />
+            <Gamecard />
+            <Gamecard />
+            <Gamecard />
+            <Gamecard />
+            <Gamecard />
+            <Gamecard />
+            <Gamecard />
+            <Gamecard />
+            <Gamecard />
+            <Gamecard />
+          </div>
         </div>
-        <div class="flex flex-row flex-wrap gap-7">
-          <Gamecard />
-          <Gamecard />
-          <Gamecard />
-          <Gamecard />
-          <Gamecard />
-          <Gamecard />
-          <Gamecard />
-          <Gamecard />
-          <Gamecard />
-          <Gamecard />
-          <Gamecard />
-          <Gamecard />
-          <Gamecard />
-          <Gamecard />
-          <Gamecard />
-        </div>
-      </div>
         <div class="flex-1" />
       </div>
     </div>

@@ -69,7 +69,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/generator@npm:^7.21.1, @babel/generator@npm:^7.23.6":
+"@babel/generator@npm:^7.21.1, @babel/generator@npm:^7.22.15, @babel/generator@npm:^7.23.6":
   version: 7.23.6
   resolution: "@babel/generator@npm:7.23.6"
   dependencies:
@@ -289,7 +289,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/parser@npm:^7.1.0, @babel/parser@npm:^7.20.7, @babel/parser@npm:^7.22.15, @babel/parser@npm:^7.23.6":
+"@babel/parser@npm:^7.1.0, @babel/parser@npm:^7.20.7, @babel/parser@npm:^7.22.15, @babel/parser@npm:^7.22.16, @babel/parser@npm:^7.23.6":
   version: 7.23.6
   resolution: "@babel/parser@npm:7.23.6"
   bin:
@@ -373,7 +373,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/traverse@npm:^7.23.7":
+"@babel/traverse@npm:^7.22.20, @babel/traverse@npm:^7.23.7":
   version: 7.23.7
   resolution: "@babel/traverse@npm:7.23.7"
   dependencies:
@@ -391,7 +391,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/types@npm:^7.0.0, @babel/types@npm:^7.18.6, @babel/types@npm:^7.20.7, @babel/types@npm:^7.21.2, @babel/types@npm:^7.22.15, @babel/types@npm:^7.22.5, @babel/types@npm:^7.23.0, @babel/types@npm:^7.23.6, @babel/types@npm:^7.8.3":
+"@babel/types@npm:^7.0.0, @babel/types@npm:^7.18.6, @babel/types@npm:^7.20.7, @babel/types@npm:^7.21.2, @babel/types@npm:^7.22.15, @babel/types@npm:^7.22.19, @babel/types@npm:^7.22.5, @babel/types@npm:^7.23.0, @babel/types@npm:^7.23.6, @babel/types@npm:^7.8.3":
   version: 7.23.6
   resolution: "@babel/types@npm:7.23.6"
   dependencies:
@@ -742,6 +742,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@popperjs/core@npm:^2.11.8":
+  version: 2.11.8
+  resolution: "@popperjs/core@npm:2.11.8"
+  checksum: 4681e682abc006d25eb380d0cf3efc7557043f53b6aea7a5057d0d1e7df849a00e281cd8ea79c902a35a414d7919621fc2ba293ecec05f413598e0b23d5a1e63
+  languageName: node
+  linkType: hard
+
 "@rollup/rollup-android-arm-eabi@npm:4.9.4":
   version: 4.9.4
   resolution: "@rollup/rollup-android-arm-eabi@npm:4.9.4"
@@ -833,6 +840,129 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@solidjs/router@npm:^0.10.7":
+  version: 0.10.7
+  resolution: "@solidjs/router@npm:0.10.7"
+  peerDependencies:
+    solid-js: ^1.8.6
+  checksum: ec830a961630656feeaaab5cb4698f26cbfaa619f75f76b53a3b2608e3987e5d17c1d0b5f1d22a23661f0caee3e078be803ef4155125d02b58253c9241440361
+  languageName: node
+  linkType: hard
+
+"@suid/base@npm:0.8.5":
+  version: 0.8.5
+  resolution: "@suid/base@npm:0.8.5"
+  dependencies:
+    "@popperjs/core": "npm:^2.11.8"
+    "@suid/css": "npm:0.4.0"
+    "@suid/system": "npm:0.10.5"
+    "@suid/types": "npm:0.5.3"
+    "@suid/utils": "npm:0.8.0"
+    clsx: "npm:^2.0.0"
+  peerDependencies:
+    solid-js: ^1.7.12
+  checksum: e6a2e38f344dddb1a7bc6e141ad77307f709619e6b7eecebee2f439ea1418263625d152ecd0509fb28fcfda3033a6dc68d2b1a3680513bffb2d543c3cec2a7c8
+  languageName: node
+  linkType: hard
+
+"@suid/css@npm:0.4.0":
+  version: 0.4.0
+  resolution: "@suid/css@npm:0.4.0"
+  checksum: d3def5b8de729ab483b3f20beac478681aaa1b2e36c979b421961d997589c5311e31ebafdabbd45e7e4b38460df5ce5471d3217b84664e69b9a8162ccdf59006
+  languageName: node
+  linkType: hard
+
+"@suid/icons-material@npm:^0.6.11":
+  version: 0.6.11
+  resolution: "@suid/icons-material@npm:0.6.11"
+  dependencies:
+    "@suid/material": "npm:0.15.1"
+  peerDependencies:
+    solid-js: ^1.7.12
+  checksum: 3a688d3161b72ac401328a80c589073d91fb1f7ec6d6d4754836589169d9b6a304917d088dff500e5cdfb1d6e0187cc71c7b13cad1e92491a55c52fb056858e3
+  languageName: node
+  linkType: hard
+
+"@suid/material@npm:0.15.1, @suid/material@npm:^0.15.1":
+  version: 0.15.1
+  resolution: "@suid/material@npm:0.15.1"
+  dependencies:
+    "@suid/base": "npm:0.8.5"
+    "@suid/css": "npm:0.4.0"
+    "@suid/system": "npm:0.10.5"
+    "@suid/types": "npm:0.5.3"
+    "@suid/utils": "npm:0.8.0"
+    clsx: "npm:^2.0.0"
+  peerDependencies:
+    solid-js: ^1.7.12
+  checksum: 5988bc2aaf1f4a582fe30d97eafd54b5b27fde18118ae3d51b757f3f2e6b98a9c20382914e659c0a00bd55ec9783ab96efcc0539af6f314405e51f9da0e3e6b7
+  languageName: node
+  linkType: hard
+
+"@suid/styled-engine@npm:0.6.1":
+  version: 0.6.1
+  resolution: "@suid/styled-engine@npm:0.6.1"
+  dependencies:
+    "@suid/css": "npm:0.4.0"
+    "@suid/utils": "npm:0.8.0"
+  peerDependencies:
+    solid-js: ^1.7.12
+  checksum: 16035dc647dffae289c74882f626fc4d8a30335c82e409f679101ec611edb626f22688c6cb3c21c406d6191c590c437f3e661f46c051068f4f00165fa5617f37
+  languageName: node
+  linkType: hard
+
+"@suid/system@npm:0.10.5":
+  version: 0.10.5
+  resolution: "@suid/system@npm:0.10.5"
+  dependencies:
+    "@suid/css": "npm:0.4.0"
+    "@suid/styled-engine": "npm:0.6.1"
+    "@suid/types": "npm:0.5.3"
+    "@suid/utils": "npm:0.8.0"
+    clsx: "npm:^2.0.0"
+    csstype: "npm:^3.1.2"
+  peerDependencies:
+    solid-js: ^1.7.12
+  checksum: 50c4a5ab23d5f02a03578e663932ecb3ba4cd6baab3e5bffeadbda7e1de8c11a2de812997f23759ab69f76a68abbd804ac357ae30ee3b94f75a9247699a7da8e
+  languageName: node
+  linkType: hard
+
+"@suid/types@npm:0.5.3":
+  version: 0.5.3
+  resolution: "@suid/types@npm:0.5.3"
+  peerDependencies:
+    solid-js: ^1.7.12
+  checksum: 167b2bb4cd9c30464cf077aa28c000ab8cab8219a6a018975bfce9108a1f14085e2c17da423e765d13d410f5926aec7ad1c661a75cc24bd36788aed7eb69ed23
+  languageName: node
+  linkType: hard
+
+"@suid/utils@npm:0.8.0":
+  version: 0.8.0
+  resolution: "@suid/utils@npm:0.8.0"
+  dependencies:
+    "@suid/types": "npm:0.5.3"
+  peerDependencies:
+    solid-js: ^1.7.12
+  checksum: e0fb71088c09118eacb972f51ee0e3421e0218fb4e95d388b4aad0110494c248005a9e6dcd0453f2c55ede077456b0bebec28754649f31cc8162468c89981abf
+  languageName: node
+  linkType: hard
+
+"@suid/vite-plugin@npm:^0.1.5":
+  version: 0.1.5
+  resolution: "@suid/vite-plugin@npm:0.1.5"
+  dependencies:
+    "@babel/generator": "npm:^7.22.15"
+    "@babel/parser": "npm:^7.22.16"
+    "@babel/traverse": "npm:^7.22.20"
+    "@babel/types": "npm:^7.22.19"
+    "@types/babel__generator": "npm:^7.6.5"
+    "@types/babel__traverse": "npm:^7.20.2"
+  peerDependencies:
+    vite: ^4.0.0
+  checksum: 9befbc46f63c9ab65eed6fc814a1e063f362f2a5c7b51706998e02e71e08c683567c841f1d85765dc03ed3f911be278606861bb733815fbd380b685ef1757db0
+  languageName: node
+  linkType: hard
+
 "@types/babel__core@npm:^7.20.4":
   version: 7.20.5
   resolution: "@types/babel__core@npm:7.20.5"
@@ -846,7 +976,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/babel__generator@npm:*":
+"@types/babel__generator@npm:*, @types/babel__generator@npm:^7.6.5":
   version: 7.6.8
   resolution: "@types/babel__generator@npm:7.6.8"
   dependencies:
@@ -865,7 +995,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/babel__traverse@npm:*":
+"@types/babel__traverse@npm:*, @types/babel__traverse@npm:^7.20.2":
   version: 7.20.5
   resolution: "@types/babel__traverse@npm:7.20.5"
   dependencies:
@@ -1555,6 +1685,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"clsx@npm:^2.0.0":
+  version: 2.1.0
+  resolution: "clsx@npm:2.1.0"
+  checksum: c09c00ad14f638366ca814097e6cab533dfa1972a358da5b557be487168acbb25b4c1395e89ffa842a8a61ba87a462d2b4885bc9d4f8410b598f3cb339599cdb
+  languageName: node
+  linkType: hard
+
 "color-convert@npm:^1.9.0":
   version: 1.9.3
   resolution: "color-convert@npm:1.9.3"
@@ -1637,7 +1774,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"csstype@npm:^3.1.0":
+"csstype@npm:^3.1.0, csstype@npm:^3.1.2":
   version: 3.1.3
   resolution: "csstype@npm:3.1.3"
   checksum: 80c089d6f7e0c5b2bd83cf0539ab41474198579584fa10d86d0cafe0642202343cbc119e076a0b1aece191989477081415d66c9fefbf3c957fc2fc4b7009f248
@@ -4605,6 +4742,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "tpp-web@workspace:."
   dependencies:
+    "@solidjs/router": "npm:^0.10.7"
+    "@suid/icons-material": "npm:^0.6.11"
+    "@suid/material": "npm:^0.15.1"
+    "@suid/vite-plugin": "npm:^0.1.5"
     "@types/node": "npm:^20.10.8"
     "@typescript-eslint/eslint-plugin": "npm:^6.18.1"
     "@typescript-eslint/parser": "npm:^6.18.1"
