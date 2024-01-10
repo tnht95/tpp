@@ -18,14 +18,12 @@ mod model;
 mod services;
 
 // TODO
-// middleware
+// auth
 // docker
 // swagger
 // redis
 // test
-// doc
 // Gracefully shutdown
-// request-id tracking
 // CI/CD
 // K8s prevent request loss
 #[tokio::main]
