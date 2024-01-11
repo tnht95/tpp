@@ -1,3 +1,3 @@
-cargo clippy --all-targets --all-features -- -D warnings
+cargo clippy --all-targets --all-features -- -D warnings -D clippy::all
 
-rustup default nightly && cargo fmt --all && rustup default stable
+cargo +nightly fmt
