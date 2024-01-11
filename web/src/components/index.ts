@@ -5,3 +5,4 @@ export * from './select';
 export * from './searchbar';
 export * from './button';
 export * from './table-row';
+export * from './activity';
