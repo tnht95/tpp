@@ -1,9 +1,9 @@
 import { Tag } from '@/components';
 
 export const GameInfo = () => (
-  <div class="container pb-10  mt-8">
+  <div class="container pb-10  mt-8 ml-10">
     <div class="md:flex">
-      <div class="w-full mr-4 md:w-3/4">
+      <div class=" mr-4 w-3/4">
         <div class="py-6 border-b md:border md:rounded-lg md:px-8">
           <div class="font-semibold text-black">README.md</div>
           <div class="my-6">
@@ -146,11 +146,9 @@ export const GameInfo = () => (
               <div class="flex flex-wrap gap-2 my-4">
                 <p class="text-base font-semibold text-black">Tag</p>
                 <div class="flex flex-wrap gap-2">
-                  <Tag />
-                  <Tag />
-                  <Tag />
-                  <Tag />
-                  <Tag />
+                  <Tag name="Name" />
+                  <Tag name="Name" />
+                  <Tag name="Name" />
                 </div>
               </div>
             </div>

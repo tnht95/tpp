@@ -1,8 +1,9 @@
-import { GameDetailsHeader, GameInfo } from '@/components';
+import { GameDetailsHeader, GameDiscussion } from '@/components';
 
 export const GameDetails = () => (
   <div class="bg-white">
     <GameDetailsHeader />
-    <GameInfo />
+
+    <GameDiscussion />
   </div>
 );

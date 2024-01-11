@@ -1,4 +1,7 @@
-export const Tag = () => (
+type TagProps = {
+  name: string;
+};
+export const Tag = (props: TagProps) => (
   <div class="inline-block relative py-1 text-sm group">
     <div class="absolute inset-0 text-indigo-200 flex group-hover:text-indigo-300 ">
       <svg height="100%" viewBox="0 0 50 100">
@@ -13,7 +16,7 @@ export const Tag = () => (
     <span class="relative text-indigo-500 group-hover:text-white uppercase font-semibold pr-px cursor-pointer">
       <a>
         {' '}
-        <span class="ml-2 px-2">tag name</span>{' '}
+        <span class="ml-2 px-2">{props.name}</span>{' '}
       </a>
     </span>
   </div>

@@ -7,3 +7,5 @@ export * from './searchbar';
 export * from './game-details';
 export * from './game-info';
 export * from './game-details-header';
+export * from './game-discussion';
+export * from './button';
