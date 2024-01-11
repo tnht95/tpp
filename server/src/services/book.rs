@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use async_trait::async_trait;
 use thiserror::Error;
 
@@ -19,14 +21,14 @@ pub trait IBookService {
 }
 
 pub struct BookService<T: IDatabase> {
-    db: T,
+    db: Arc<T>,
 }
 
 impl<T> BookService<T>
 where
     T: IDatabase,
 {
-    pub fn new(db: T) -> Self {
+    pub fn new(db: Arc<T>) -> Self {
         Self { db }
     }
 }

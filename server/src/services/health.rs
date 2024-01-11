@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use async_trait::async_trait;
 
 use crate::database::IDatabase;
@@ -9,7 +11,7 @@ pub trait IHealthService {
 }
 
 pub struct HealthService<T: IDatabase> {
-    db: T,
+    db: Arc<T>,
     is_app_closed: bool,
 }
 
@@ -17,7 +19,7 @@ impl<T> HealthService<T>
 where
     T: IDatabase,
 {
-    pub fn new(db: T) -> Self {
+    pub fn new(db: Arc<T>) -> Self {
         Self {
             db,
             is_app_closed: false,

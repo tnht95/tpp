@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::{path::PathBuf, sync::Arc};
 
 use anyhow::{Context, Result};
 use clap::Parser;
@@ -55,17 +55,14 @@ async fn main() -> Result<()> {
                 .await
                 .context("Failed to migrate database")?;
 
-            // FIXME: database
-            let database1 = Database::new(&config)
-                .await
-                .context("Failed to initialize database")?;
+            let db = Arc::new(
+                Database::new(&config)
+                    .await
+                    .context("Failed to initialize database")?,
+            );
 
-            let database2 = Database::new(&config)
-                .await
-                .context("Failed to initialize database")?;
-
-            let health_service = HealthService::new(database1);
-            let book_service = BookService::new(database2);
+            let health_service = HealthService::new(Arc::clone(&db));
+            let book_service = BookService::new(db);
             let server = Server::new(config, health_service, book_service);
             server.start().await.context("Failed to start server {}")?;
         }
