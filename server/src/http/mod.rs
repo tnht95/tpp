@@ -20,7 +20,7 @@ use tower_http::{
     request_id::{MakeRequestUuid, PropagateRequestIdLayer, SetRequestIdLayer},
     sensitive_headers::SetSensitiveRequestHeadersLayer,
     timeout::{RequestBodyTimeoutLayer, TimeoutLayer},
-    trace::{DefaultMakeSpan, DefaultOnFailure, DefaultOnRequest, DefaultOnResponse, TraceLayer},
+    trace::{DefaultMakeSpan, DefaultOnFailure, DefaultOnResponse, TraceLayer},
 };
 use tracing::{info, Level};
 
@@ -66,7 +66,6 @@ where
                 TraceLayer::new_for_http()
                     .make_span_with(DefaultMakeSpan::new().include_headers(true))
                     .on_failure(DefaultOnFailure::new().level(Level::ERROR))
-                    .on_request(DefaultOnRequest::new().level(Level::INFO))
                     .on_response(
                         DefaultOnResponse::new()
                             .level(Level::INFO)

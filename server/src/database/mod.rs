@@ -41,6 +41,18 @@ impl Database {
         Ok(Database { pool })
     }
 
+    pub async fn new_with_no_log(config: &Config) -> Result<Self> {
+        let pool = PgPoolOptions::new()
+            .max_connections(config.server.pg_max_pool)
+            .acquire_timeout(Duration::from_secs(1))
+            .idle_timeout(Duration::from_secs(2))
+            .max_lifetime(Duration::from_secs(3))
+            .connect(&config.server.pg_url)
+            .await?;
+
+        Ok(Database { pool })
+    }
+
     pub async fn migrate(config: &Config) -> Result<()> {
         let pool = PgPoolOptions::new()
             .max_connections(1)
