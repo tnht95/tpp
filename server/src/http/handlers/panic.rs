@@ -1,3 +1,5 @@
+use std::any::Any;
+
 use axum::{
     http::StatusCode,
     response::{IntoResponse, Response},
@@ -7,7 +9,7 @@ use tracing::error;
 
 use crate::model::responses::INTERNAL_SERVER_ERR;
 
-pub fn recover(e: Box<dyn std::any::Any + Send + 'static>) -> Response {
+pub fn recover(e: Box<dyn Any + Send + 'static>) -> Response {
     let e = if let Some(e) = e.downcast_ref::<String>() {
         e.to_string()
     } else if let Some(e) = e.downcast_ref::<&str>() {
