@@ -1,6 +1,7 @@
 import { Route, Router } from '@solidjs/router';
 
-import { GameDetails, Games, Header } from './components';
+import { Header } from './components';
+import { GameDetails, Games } from './pages';
 
 export const App = () => (
   <>
