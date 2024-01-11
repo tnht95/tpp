@@ -1,18 +1,12 @@
-use std::sync::Arc;
-
 use axum::{
     extract::State,
-    http::StatusCode,
     response::{IntoResponse, Json, Response},
 };
-use tokio::sync::RwLock;
 
+use super::InternalState;
 use crate::{
-    http::Server,
-    model::{
-        requests::book::AddBookRequest,
-        responses::{HttpResponse, INTERNAL_SERVER_ERR},
-    },
+    http::utils::response_unhandled_err,
+    model::{requests::book::AddBookRequest, responses::HttpResponse},
     services::{
         book::{BookServiceErr, IBookService},
         health::IHealthService,
@@ -20,7 +14,7 @@ use crate::{
 };
 
 pub async fn get_books<THealthService, TBookService>(
-    State(state): State<Arc<RwLock<Server<THealthService, TBookService>>>>,
+    State(state): InternalState<THealthService, TBookService>,
 ) -> Response
 where
     THealthService: IHealthService,
@@ -28,13 +22,12 @@ where
 {
     match state.read().await.services.book.get_books().await {
         Ok(books) => Json(HttpResponse { data: books }).into_response(),
-        Err(BookServiceErr::Other(_)) =>
-            (StatusCode::INTERNAL_SERVER_ERROR, Json(INTERNAL_SERVER_ERR)).into_response(),
+        Err(BookServiceErr::Other(e)) => response_unhandled_err(e),
     }
 }
 
 pub async fn add_books<THealthService, TBookService>(
-    State(state): State<Arc<RwLock<Server<THealthService, TBookService>>>>,
+    State(state): InternalState<THealthService, TBookService>,
     Json(book): Json<AddBookRequest>,
 ) -> Response
 where
@@ -43,7 +36,6 @@ where
 {
     match state.read().await.services.book.add_books(book).await {
         Ok(book) => Json(HttpResponse { data: book }).into_response(),
-        Err(BookServiceErr::Other(_)) =>
-            (StatusCode::INTERNAL_SERVER_ERROR, Json(INTERNAL_SERVER_ERR)).into_response(),
+        Err(BookServiceErr::Other(e)) => response_unhandled_err(e),
     }
 }

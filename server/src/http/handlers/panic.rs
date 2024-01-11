@@ -1,13 +1,8 @@
 use std::any::Any;
 
-use axum::{
-    http::StatusCode,
-    response::{IntoResponse, Response},
-    Json,
-};
-use tracing::error;
+use axum::response::Response;
 
-use crate::model::responses::INTERNAL_SERVER_ERR;
+use crate::http::utils::response_unhandled_str;
 
 pub fn recover(e: Box<dyn Any + Send + 'static>) -> Response {
     let e = if let Some(e) = e.downcast_ref::<String>() {
@@ -17,6 +12,5 @@ pub fn recover(e: Box<dyn Any + Send + 'static>) -> Response {
     } else {
         "Unknown panic message".to_string()
     };
-    error!("Unhandled error: {e:?}");
-    (StatusCode::INTERNAL_SERVER_ERROR, Json(INTERNAL_SERVER_ERR)).into_response()
+    response_unhandled_str(&e)
 }

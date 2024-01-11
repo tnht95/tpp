@@ -1,5 +1,6 @@
 mod controllers;
 mod handlers;
+mod utils;
 
 use std::{iter::once, net::SocketAddr, sync::Arc, time::Duration};
 
