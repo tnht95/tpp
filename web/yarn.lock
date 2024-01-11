@@ -605,81 +605,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@floating-ui/core@npm:^1.5.3":
-  version: 1.5.3
-  resolution: "@floating-ui/core@npm:1.5.3"
-  dependencies:
-    "@floating-ui/utils": "npm:^0.2.0"
-  checksum: 5fc8fa0d6f99ac91ae42bdfc06c4dea60ae0a979d8f7c74ebc8e9e9770d3c88a0afa6efce459fcdc0c3922176763477d13bc27b93d3838c8b81851e753193976
-  languageName: node
-  linkType: hard
-
-"@floating-ui/dom@npm:^1.5.1":
-  version: 1.5.4
-  resolution: "@floating-ui/dom@npm:1.5.4"
-  dependencies:
-    "@floating-ui/core": "npm:^1.5.3"
-    "@floating-ui/utils": "npm:^0.2.0"
-  checksum: 8a47ac5b8cf90214d73011d436d66821ccb7f4b9a29170e23117df2cc6008845834db7f59e73d998add19807f62f09e5e6a84516eed81cebbf25770dea595a84
-  languageName: node
-  linkType: hard
-
-"@floating-ui/utils@npm:^0.2.0":
-  version: 0.2.1
-  resolution: "@floating-ui/utils@npm:0.2.1"
-  checksum: ee77756712cf5b000c6bacf11992ffb364f3ea2d0d51cc45197a7e646a17aeb86ea4b192c0b42f3fbb29487aee918a565e84f710b8c3645827767f406a6b4cc9
-  languageName: node
-  linkType: hard
-
-"@formatjs/ecma402-abstract@npm:1.18.0":
-  version: 1.18.0
-  resolution: "@formatjs/ecma402-abstract@npm:1.18.0"
-  dependencies:
-    "@formatjs/intl-localematcher": "npm:0.5.2"
-    tslib: "npm:^2.4.0"
-  checksum: bbdad0aee8e48baad6bfe6b2c27caf3befe35e658b922ee2f84417a819f0bdc7e849a8c0c782db8b53f5666bf19669d2b10a1104257c08796d198c87766bfc92
-  languageName: node
-  linkType: hard
-
-"@formatjs/fast-memoize@npm:2.2.0":
-  version: 2.2.0
-  resolution: "@formatjs/fast-memoize@npm:2.2.0"
-  dependencies:
-    tslib: "npm:^2.4.0"
-  checksum: ae88c5a93b96235aba4bd9b947d0310d2ec013687a99133413361b24122b5cdea8c9bf2e04a4a2a8b61f1f4ee5419ef6416ca4796554226b5050e05a9ce6ef49
-  languageName: node
-  linkType: hard
-
-"@formatjs/icu-messageformat-parser@npm:2.7.3":
-  version: 2.7.3
-  resolution: "@formatjs/icu-messageformat-parser@npm:2.7.3"
-  dependencies:
-    "@formatjs/ecma402-abstract": "npm:1.18.0"
-    "@formatjs/icu-skeleton-parser": "npm:1.7.0"
-    tslib: "npm:^2.4.0"
-  checksum: 2a51038813e5cff7e2df767e1227373d228e907adb7268fc3744b3d82c4fa69d4aa9f6020a62de2c468cf724600e9372ac07ae43a4480ed066fe34e224e80e4a
-  languageName: node
-  linkType: hard
-
-"@formatjs/icu-skeleton-parser@npm:1.7.0":
-  version: 1.7.0
-  resolution: "@formatjs/icu-skeleton-parser@npm:1.7.0"
-  dependencies:
-    "@formatjs/ecma402-abstract": "npm:1.18.0"
-    tslib: "npm:^2.4.0"
-  checksum: 2e4db815247ddb10f7990bbb501c85b854ee951ee45143673eb91b4392b11d0a8312327adb8b624c6a2fdafab12083904630d6d22475503d025f1612da4dcaee
-  languageName: node
-  linkType: hard
-
-"@formatjs/intl-localematcher@npm:0.5.2":
-  version: 0.5.2
-  resolution: "@formatjs/intl-localematcher@npm:0.5.2"
-  dependencies:
-    tslib: "npm:^2.4.0"
-  checksum: 4b3ae75470e3e53ffa39b2d46e65a2a4c9c4becbc0aac989b0694370e10c6687643660a045512d676509bc29b257fe5726fbb028de12f889be02c2d20b6527e6
-  languageName: node
-  linkType: hard
-
 "@humanwhocodes/config-array@npm:^0.11.13":
   version: 0.11.13
   resolution: "@humanwhocodes/config-array@npm:0.11.13"
@@ -702,34 +627,6 @@ __metadata:
   version: 2.0.1
   resolution: "@humanwhocodes/object-schema@npm:2.0.1"
   checksum: 9dba24e59fdb4041829d92b693aacb778add3b6f612aaa9c0774f3b650c11a378cc64f042a59da85c11dae33df456580a3c36837b953541aed6ff94294f97fac
-  languageName: node
-  linkType: hard
-
-"@internationalized/date@npm:^3.4.0":
-  version: 3.5.1
-  resolution: "@internationalized/date@npm:3.5.1"
-  dependencies:
-    "@swc/helpers": "npm:^0.5.0"
-  checksum: 9d40fd8b7700d9080be4de2d488d511c492803667251389518cf6fdebfd5f511ca4cc81b4e456f7d3149e6b7458398b1f5cb2fbd382e6d462a8d1af9a52da06f
-  languageName: node
-  linkType: hard
-
-"@internationalized/message@npm:^3.1.1":
-  version: 3.1.1
-  resolution: "@internationalized/message@npm:3.1.1"
-  dependencies:
-    "@swc/helpers": "npm:^0.5.0"
-    intl-messageformat: "npm:^10.1.0"
-  checksum: e778de8567e424e00c52f9b69eb65cea817664803add4bc4f76eb0248d12a4a7eaedbc15a290cabe90a070826d25a93438dea99a1bee796deb024b78cd694a92
-  languageName: node
-  linkType: hard
-
-"@internationalized/number@npm:^3.2.1":
-  version: 3.5.0
-  resolution: "@internationalized/number@npm:3.5.0"
-  dependencies:
-    "@swc/helpers": "npm:^0.5.0"
-  checksum: 04d3dc7bcf8e797fb7dafa56c2bf4eb384e0814024d486dfc766b2e7fbed5b87340e1e87fcb7e0c4ea221408a5befbe274856abad97379c059d167d5fe9dfc69
   languageName: node
   linkType: hard
 
@@ -786,38 +683,6 @@ __metadata:
     "@jridgewell/resolve-uri": "npm:^3.1.0"
     "@jridgewell/sourcemap-codec": "npm:^1.4.14"
   checksum: 0ea0b2675cf513ec44dc25605616a3c9b808b9832e74b5b63c44260d66b58558bba65764f81928fc1033ead911f8718dca1134049c3e7a93937faf436671df31
-  languageName: node
-  linkType: hard
-
-"@kobalte/core@npm:^0.11.2":
-  version: 0.11.2
-  resolution: "@kobalte/core@npm:0.11.2"
-  dependencies:
-    "@floating-ui/dom": "npm:^1.5.1"
-    "@internationalized/date": "npm:^3.4.0"
-    "@internationalized/message": "npm:^3.1.1"
-    "@internationalized/number": "npm:^3.2.1"
-    "@kobalte/utils": "npm:^0.9.0"
-  peerDependencies:
-    solid-js: ^1.7.11
-  checksum: 177ae3f7fc47dc1cacab97f3641d3eb208f281a0f21cff37159e55d91643910af45852fe918e30625f75449ad3170d543e7180f8d7529594affdf6efea5ca4e3
-  languageName: node
-  linkType: hard
-
-"@kobalte/utils@npm:^0.9.0":
-  version: 0.9.0
-  resolution: "@kobalte/utils@npm:0.9.0"
-  dependencies:
-    "@solid-primitives/event-listener": "npm:^2.2.14"
-    "@solid-primitives/keyed": "npm:^1.2.0"
-    "@solid-primitives/map": "npm:^0.4.7"
-    "@solid-primitives/media": "npm:^2.2.4"
-    "@solid-primitives/props": "npm:^3.1.8"
-    "@solid-primitives/refs": "npm:^1.0.5"
-    "@solid-primitives/utils": "npm:^6.2.1"
-  peerDependencies:
-    solid-js: ^1.7.11
-  checksum: c7af67db175190a3bdc030b0b3287022958498d84c7101cf3d7d9bec704a2413e2de1dd8cd34a45a09bd7e942908b2c4ee0e8b63b45dcedff3984b7a4997fe84
   languageName: node
   linkType: hard
 
@@ -968,130 +833,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@solid-primitives/event-listener@npm:^2.2.14, @solid-primitives/event-listener@npm:^2.3.0":
-  version: 2.3.0
-  resolution: "@solid-primitives/event-listener@npm:2.3.0"
-  dependencies:
-    "@solid-primitives/utils": "npm:^6.2.1"
-  peerDependencies:
-    solid-js: ^1.6.12
-  checksum: d6f67f1a302ab23800f0e10f37f85a3f7c4376c3b6b4ceba290ad5b7566247bc6c0b6de48944ab4e5c4c882647bd67e1e18d3aed93ebcd523f5a55e5a0c744ec
-  languageName: node
-  linkType: hard
-
-"@solid-primitives/keyed@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "@solid-primitives/keyed@npm:1.2.0"
-  peerDependencies:
-    solid-js: ^1.6.12
-  checksum: da2d8a6e53d33b36bef55c9e816ab8e03bf81b9051d5b9100c4ab17e71cdf34f5da0dca83398086056f8c20d16e90d8d6c248438b2a60db109ca10ade5337dc0
-  languageName: node
-  linkType: hard
-
-"@solid-primitives/map@npm:^0.4.7":
-  version: 0.4.8
-  resolution: "@solid-primitives/map@npm:0.4.8"
-  dependencies:
-    "@solid-primitives/trigger": "npm:^1.0.8"
-  peerDependencies:
-    solid-js: ^1.6.12
-  checksum: 0b75cde1d30450fce949d9ba9aaf97de30f865f2e0e45a1bf3cfbc9ad745fdb39066278b29939498ad7d2dfb82a32a23a21d4520bd6bab18b3e5d3e459720a9d
-  languageName: node
-  linkType: hard
-
-"@solid-primitives/media@npm:^2.2.4":
-  version: 2.2.5
-  resolution: "@solid-primitives/media@npm:2.2.5"
-  dependencies:
-    "@solid-primitives/event-listener": "npm:^2.3.0"
-    "@solid-primitives/rootless": "npm:^1.4.2"
-    "@solid-primitives/static-store": "npm:^0.0.5"
-    "@solid-primitives/utils": "npm:^6.2.1"
-  peerDependencies:
-    solid-js: ^1.6.12
-  checksum: c0baabda3dee6864d56be36c8d28016c4f905a686e06160b7bfa39fb367dc8c77884ed902231811c171d2390b0be1dd9a14c017467602be525fe10b752481b77
-  languageName: node
-  linkType: hard
-
-"@solid-primitives/props@npm:^3.1.8":
-  version: 3.1.8
-  resolution: "@solid-primitives/props@npm:3.1.8"
-  dependencies:
-    "@solid-primitives/utils": "npm:^6.2.1"
-  peerDependencies:
-    solid-js: ^1.6.12
-  checksum: 966cd5f34c48bf140339256e0352d8cfd36c7d2f5e7fd26c0b459b1b160dcdee3c62a6bf668543a0e54de70a285cd5e2908b5d0134ab7a6cc9ac1086ad9f74ff
-  languageName: node
-  linkType: hard
-
-"@solid-primitives/refs@npm:^1.0.5":
-  version: 1.0.5
-  resolution: "@solid-primitives/refs@npm:1.0.5"
-  dependencies:
-    "@solid-primitives/utils": "npm:^6.2.1"
-  peerDependencies:
-    solid-js: ^1.6.12
-  checksum: 528f02f07116dd02639c9448d577157de6ff532b62203a5df2e2ede5607bd941ae13975e8dab9bd8cd15dd42410c56c1e3656b3ab227deb34395801645f6e403
-  languageName: node
-  linkType: hard
-
-"@solid-primitives/rootless@npm:^1.4.2":
-  version: 1.4.2
-  resolution: "@solid-primitives/rootless@npm:1.4.2"
-  dependencies:
-    "@solid-primitives/utils": "npm:^6.2.1"
-  peerDependencies:
-    solid-js: ^1.6.12
-  checksum: e68937ae74df02458a16bd47c9d903cc642b48e243dd865ef5042ecbf8602bdbd31affe4d30c1832a92c7bb09b492b660b080f90d47d57afdb541de9fe825538
-  languageName: node
-  linkType: hard
-
-"@solid-primitives/static-store@npm:^0.0.5":
-  version: 0.0.5
-  resolution: "@solid-primitives/static-store@npm:0.0.5"
-  dependencies:
-    "@solid-primitives/utils": "npm:^6.2.1"
-  peerDependencies:
-    solid-js: ^1.6.12
-  checksum: e3803368146d47d8e981a628bd5c020ff3d0a7c7a27c7416c9d29e11b1213d58ba9ee6c235442823f2b14f901850ad9feaa19076a02df34519389bcb366d1bb4
-  languageName: node
-  linkType: hard
-
-"@solid-primitives/trigger@npm:^1.0.8":
-  version: 1.0.8
-  resolution: "@solid-primitives/trigger@npm:1.0.8"
-  dependencies:
-    "@solid-primitives/utils": "npm:^6.2.1"
-  peerDependencies:
-    solid-js: ^1.6.12
-  checksum: f5605c0dd66925ddb339627f41927113acd9604a8c6366b56538c0d4859505b5050d23bc3a9fd153b5f3404611bcee7da9a13dd8eae4729357e246a79a5e50c0
-  languageName: node
-  linkType: hard
-
-"@solid-primitives/utils@npm:^6.2.1":
-  version: 6.2.1
-  resolution: "@solid-primitives/utils@npm:6.2.1"
-  peerDependencies:
-    solid-js: ^1.6.12
-  checksum: 402116f9daaf020b6299d6e7b2c41bfda67c069a323d4fba76ea76b31ed1c3500769ae39430bb0e5732d3747e5e7f5c194718acf6f0c3e9bf237a4d6188b56e6
-  languageName: node
-  linkType: hard
-
 "@solidjs/router@npm:^0.10.7":
   version: 0.10.7
   resolution: "@solidjs/router@npm:0.10.7"
   peerDependencies:
     solid-js: ^1.8.6
   checksum: ec830a961630656feeaaab5cb4698f26cbfaa619f75f76b53a3b2608e3987e5d17c1d0b5f1d22a23661f0caee3e078be803ef4155125d02b58253c9241440361
-  languageName: node
-  linkType: hard
-
-"@swc/helpers@npm:^0.5.0":
-  version: 0.5.3
-  resolution: "@swc/helpers@npm:0.5.3"
-  dependencies:
-    tslib: "npm:^2.4.0"
-  checksum: 7003b9dafad38e27a4474a3dcf78d2aee85ce4bb7ee171ecc2d5b533768fb4f8fc9dbd6a1c3a9df5f8001e61ff416b93681e0a7dcbdc0df109b3e09c50cd4615
   languageName: node
   linkType: hard
 
@@ -3061,18 +2808,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"intl-messageformat@npm:^10.1.0":
-  version: 10.5.8
-  resolution: "intl-messageformat@npm:10.5.8"
-  dependencies:
-    "@formatjs/ecma402-abstract": "npm:1.18.0"
-    "@formatjs/fast-memoize": "npm:2.2.0"
-    "@formatjs/icu-messageformat-parser": "npm:2.7.3"
-    tslib: "npm:^2.4.0"
-  checksum: 1d2854aae8471ec48165ca265760d6c5b1814eca831c88db698eb29b5ed20bee21ca8533090c9d28d9c6f1d844dda210b0bc58a2e036446158fae0845e5eed4f
-  languageName: node
-  linkType: hard
-
 "ip@npm:^2.0.0":
   version: 2.0.0
   resolution: "ip@npm:2.0.0"
@@ -4879,7 +4614,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "tpp-web@workspace:."
   dependencies:
-    "@kobalte/core": "npm:^0.11.2"
     "@solidjs/router": "npm:^0.10.7"
     "@types/node": "npm:^20.10.8"
     "@typescript-eslint/eslint-plugin": "npm:^6.18.1"
@@ -4936,13 +4670,6 @@ __metadata:
   version: 1.14.1
   resolution: "tslib@npm:1.14.1"
   checksum: 69ae09c49eea644bc5ebe1bca4fa4cc2c82b7b3e02f43b84bd891504edf66dbc6b2ec0eef31a957042de2269139e4acff911e6d186a258fb14069cd7f6febce2
-  languageName: node
-  linkType: hard
-
-"tslib@npm:^2.4.0":
-  version: 2.6.2
-  resolution: "tslib@npm:2.6.2"
-  checksum: e03a8a4271152c8b26604ed45535954c0a45296e32445b4b87f8a5abdb2421f40b59b4ca437c4346af0f28179780d604094eb64546bee2019d903d01c6c19bdb
   languageName: node
   linkType: hard
 

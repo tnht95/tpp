@@ -1,4 +1,4 @@
-import { Button } from '@/components';
+import { Button, TableRow } from '@/components';
 
 export const GameDiscussion = () => (
   <section class="flex flex-col items-center mt-10">
@@ -28,43 +28,11 @@ export const GameDiscussion = () => (
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
-                <tr class="hover:bg-gray-100 ">
-                  <td class="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap ">
-                    <div class="inline-flex items-center gap-x-3">
-                      <span>#3066</span>
-                    </div>
-                  </td>
-
-                  <td class="px-4 py-4 text-sm text-gray-500 whitespace-nowrap">
-                    <div>
-                      <a href="" class="text-base font-bold text-gray-800  ">
-                        Arthur Melo
-                      </a>
-                      <p class="text-xs font-normal text-gray-600 ">
-                        Feb 24 2022 by authurmelo@example.com
-                      </p>
-                    </div>
-                  </td>
-                </tr>
-
-                <tr class="hover:bg-gray-100 ">
-                  <td class="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
-                    <div class="inline-flex items-center gap-x-3">
-                      <span>#3065</span>
-                    </div>
-                  </td>
-
-                  <td class="px-4 py-4 text-sm text-gray-500  whitespace-nowrap">
-                    <div>
-                      <a href="" class="text-base font-bold text-gray-800  ">
-                        Andi Lane
-                      </a>
-                      <p class="text-xs font-normal text-gray-600 ">
-                        Jan 15 2022 by andi@example.com
-                      </p>
-                    </div>
-                  </td>
-                </tr>
+                <TableRow
+                  title="Found Bug"
+                  user="johnny@gmail.com"
+                  date="26 Jan 2022"
+                />
               </tbody>
             </table>
           </div>

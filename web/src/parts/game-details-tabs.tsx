@@ -1,4 +1,4 @@
-export const GameDetailsHeader = () => (
+export const GameDetailsTabs = () => (
   <div class="px-6 mt-4 overflow-x-hidden lg:px-10">
     <div class="flex flex-row ">
       <div class="flex items-center flex-5">
@@ -8,7 +8,7 @@ export const GameDetailsHeader = () => (
         </div>
       </div>
       <div class="flex flex-2 ">
-        <div class="hidden md:block md:flex md:justify-between">
+        <div class="hidden  md:flex md:justify-between">
           <div class="flex text-center border rounded-lg md:border-none">
             <div class="flex items-center px-2 py-1 bg-gray-200 border-gray-400 cursor-pointer md:rounded-l-lg md:border-t md:border-l md:border-b hover:bg-gray-400">
               <i class="fa-solid fa-plus mr-1 text-sm" />
