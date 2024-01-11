@@ -1,5 +1,5 @@
 mod controllers;
-mod panic_handler;
+mod handlers;
 
 use std::{iter::once, net::SocketAddr, sync::Arc, time::Duration};
 
@@ -26,7 +26,10 @@ use tracing::{info, Level};
 
 use crate::{
     config::Config,
-    http::controllers::{book::add_books, health::is_healthy},
+    http::{
+        controllers::{book::add_books, health::is_healthy},
+        handlers::{panic, shutdown},
+    },
     services::{book::IBookService, health::IHealthService},
 };
 
@@ -58,7 +61,7 @@ where
         let middleware = ServiceBuilder::new()
             .layer(SetSensitiveRequestHeadersLayer::new(once(AUTHORIZATION)))
             .layer(CompressionLayer::new().quality(CompressionLevel::Fastest))
-            .layer(CatchPanicLayer::custom(panic_handler::recover))
+            .layer(CatchPanicLayer::custom(panic::recover))
             .layer(
                 TraceLayer::new_for_http()
                     .make_span_with(DefaultMakeSpan::new().include_headers(true))
@@ -67,8 +70,7 @@ where
                     .on_response(
                         DefaultOnResponse::new()
                             .level(Level::INFO)
-                            .include_headers(true)
-                            .latency_unit(tower_http::LatencyUnit::Micros),
+                            .include_headers(true),
                     ),
             )
             .layer(SetRequestIdLayer::x_request_id(MakeRequestUuid))
@@ -93,46 +95,11 @@ where
 
         axum::Server::bind(&http_address)
             .serve(app.into_make_service())
-            .with_graceful_shutdown(shutdown_signal(state))
+            .with_graceful_shutdown(shutdown::handle(state))
             .await?;
 
         info!("Server shutdown successfully");
 
         Ok(())
-    }
-}
-
-async fn shutdown_signal<THealthService, TBookService>(
-    state: Arc<RwLock<Server<THealthService, TBookService>>>,
-) where
-    THealthService: IHealthService,
-    TBookService: IBookService,
-{
-    let ctrl_c = async {
-        tokio::signal::ctrl_c()
-            .await
-            .expect("Failed to install Ctrl+C handler");
-    };
-
-    #[cfg(unix)]
-    let terminate = async {
-        tokio::signal::unix::signal(tokio::signal::unix::SignalKind::terminate())
-            .expect("Failed to install signal handler")
-            .recv()
-            .await;
-    };
-
-    #[cfg(not(unix))]
-    let terminate = std::future::pending::<()>();
-
-    tokio::select! {
-        _ = ctrl_c => {
-            info!("Receiving SIGINT signal");
-            state.write().await.services.health.app_close();
-        },
-        _ = terminate => {
-            info!("Receiving SIGKILL signal");
-            state.write().await.services.health.app_close();
-        },
     }
 }
