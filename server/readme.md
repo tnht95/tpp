@@ -10,7 +10,8 @@ $ tree -d -L 4 --gitignore
     ├── database
     │   └── entities
     ├── http
-    │   └── controllers
+    │   ├── controllers
+    │   └── handlers
     ├── model
     │   ├── requests
     │   └── responses
