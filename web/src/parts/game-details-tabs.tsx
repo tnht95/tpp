@@ -21,7 +21,7 @@ export const GameDetailsTabs = () => (
       <div class="flex">
         <GameTab
           title="Info"
-          url="/games/:id"
+          url="/games/:id/info"
           icon="fa-solid fa-wand-sparkles"
         />
         <GameTab

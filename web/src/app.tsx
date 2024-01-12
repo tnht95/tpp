@@ -11,7 +11,7 @@ export const App = () => (
     <Router>
       <Route path="/games" component={Games} />
       <Route path="/games/:id" component={GameDetails}>
-        <Route path="/" component={GameInfo} />
+        <Route path="/info" component={GameInfo} />
         <Route path="/discussion" component={GameDiscussion} />
         <Route path="/activities" component={GameActivities} />
       </Route>

@@ -2,6 +2,8 @@
 import { MountableElement, render } from 'solid-js/web';
 
 import './index.css';
+import 'flowbite';
+
 import { App } from './app';
 
 const root = document.querySelector('#root');
