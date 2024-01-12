@@ -2,11 +2,6 @@ export const GameInfo = () => (
   <div class="py-6 border-b md:border md:rounded-lg md:px-8">
     <div class="font-semibold text-black">README.md</div>
     <div class="my-6">
-      <img
-        class="w-64"
-        src="https://camo.githubusercontent.com/87d7034892fd41dc88f3606bb44b853f87cd2c51/68747470733a2f2f7265666163746f72696e6775692e6e7963332e63646e2e6469676974616c6f6365616e7370616365732e636f6d2f7461696c77696e642d6c6f676f2e737667"
-        alt=""
-      />
       <p>
         A utility-first CSS framework for rapidly building custom user
         interfaces.{' '}

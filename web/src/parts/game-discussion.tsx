@@ -6,15 +6,13 @@ export const GameDiscussion = () => (
       <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8 ">
         <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
           <div class="overflow-hidden border border-gray-200 md:rounded-lg">
-            <div class="min-w-full divide-y divide-gray-200 ">
-              <div class="flex justify-between items-center py-3.5 px-4 text-base font-bold text-left rtl:text-right text-black">
+            <div class="min-w-full divide-y divide-gray-200">
+              <div class="flex justify-between items-center py-3.5 px-8 text-base font-bold text-left rtl:text-right text-black">
                 <p>Total 2 discussions</p>
                 <Button
                   withIcon="fa-solid fa-plus"
                   title="New"
-                  textColor="text-green-500"
-                  bgColor="bg-white"
-                  customStyle="hover:text-white hover:bg-green-500 float-right"
+                  customStyle="hover:text-white hover:bg-green-500 float-right text-green-500 font-bold"
                 />
               </div>
 

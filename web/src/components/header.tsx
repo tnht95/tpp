@@ -14,17 +14,17 @@ export const Header = () => (
       </a>
       <nav class="contents font-semibold text-base ">
         <ul class="flex-1 flex items-center h-full">
-          <li class="px-5 h-full flex items-center hover:bg-indigo-300 hover:text-indigo-900 cursor-pointer">
-            <a href="">
+          <li class="px-5 h-full flex items-center hover:bg-indigo-300 hover:text-indigo-900">
+            <a href="/">
               <span>Home</span>
             </a>
           </li>
-          <li class="px-5 h-full flex items-center hover:bg-indigo-300 hover:text-indigo-900 cursor-pointer">
-            <a href="">
+          <li class="px-5 h-full flex items-center hover:bg-indigo-300 hover:text-indigo-900 ">
+            <a href="/games">
               <span>Games</span>
             </a>
           </li>
-          <li class="p-5 xl:p-8 h-full flex items-center hover:bg-indigo-300 hover:text-indigo-900 cursor-pointer">
+          <li class="p-5 xl:p-8 h-full flex items-center hover:bg-indigo-300 hover:text-indigo-900 ">
             <a href="">
               <span>Blog</span>
             </a>

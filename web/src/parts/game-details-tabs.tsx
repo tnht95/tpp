@@ -1,3 +1,5 @@
+import { GameTab } from '@/components';
+
 export const GameDetailsTabs = () => (
   <div class="px-6 mt-4 overflow-x-hidden lg:px-10">
     <div class="flex flex-row ">
@@ -36,26 +38,9 @@ export const GameDetailsTabs = () => (
 
     <div class="flex items-center justify-between px-10 mt-6 -mx-10 border-b select-none">
       <div class="flex">
-        <div class="flex items-center px-4 pb-2 text-sm border-b-2 border-indigo-900 cursor-pointer">
-          <i class="fa-solid fa-wand-sparkles mr-1" />
-          Info
-        </div>
-        <div class="flex items-center hidden px-4 pb-2 text-sm border-b-2 border-transparent cursor-pointer hover:border-gray-300 md:flex md:block">
-          <i class=" fa-regular fa-comment-dots mr-2" /> Discussions
-        </div>
-        <div class="flex items-center hidden px-4 pb-2 text-sm border-b-2 border-transparent cursor-pointer hover:border-gray-300 md:block md:flex">
-          <i class="fa-regular fa-newspaper mr-2" />
-          Activities
-        </div>
-      </div>
-      <div class="flex items-start pb-2 cursor-pointer md:hidden">
-        <svg
-          class="w-5 h-5 text-gray-700 fill-current"
-          fill="currentColor"
-          viewBox="0 0 20 20"
-        >
-          <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-        </svg>
+        <GameTab title="Info" url="/games/:id" />
+        <GameTab title="Discussion" url="/games/:id/discussion" />
+        <GameTab title="Activities" url="/games/:id/activities" />
       </div>
     </div>
   </div>

@@ -6,3 +6,7 @@ export * from './searchbar';
 export * from './button';
 export * from './table-row';
 export * from './activity';
+export * from './game-tab';
+export * from './avatar';
+export * from './comment';
+export * from './comment-form';
