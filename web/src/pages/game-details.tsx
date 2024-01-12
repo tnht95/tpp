@@ -7,7 +7,7 @@ export const GameDetails = (props: ParentProps) => (
     <GameDetailsTabs />
     <div class="container pb-10 mt-8 ml-10">
       <div class="md:flex">
-        <div class=" mr-4 w-3/4">{props.children}</div>
+        <div class=" mr-4 w-9/12">{props.children}</div>
         <GameDetailsSidebar />
       </div>
     </div>

@@ -10,3 +10,4 @@ export * from './game-tab';
 export * from './avatar';
 export * from './comment';
 export * from './comment-form';
+export * from './pill-button';

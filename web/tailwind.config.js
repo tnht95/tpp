@@ -8,7 +8,11 @@ export default {
       3: '3',
       5: '5'
     },
-    extend: {}
+    extend: {
+      width: {
+        '7/10': '70%'
+      }
+    }
   },
   plugins: []
 };

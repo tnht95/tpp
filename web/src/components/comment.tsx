@@ -28,10 +28,17 @@ export const Comment = (props: CommentProp) => (
           has returned a 403 (Forbidden) error. However, I can offer general
           guidance and potential troubleshooting steps:
           <div class="mt-2">
-            <Show when={props.liked} fallback={<i class="fa-regular fa-heart text-xl hover:text-gray-400  cursor-pointer" />}>
+            <Show
+              when={props.liked}
+              fallback={
+                <i class="fa-regular fa-heart text-xl hover:text-gray-400  cursor-pointer" />
+              }
+            >
               <i class="fa-solid fa-heart text-xl text-red-500 hover:text-gray-400  cursor-pointer" />
             </Show>
-            {props.likeNumber > 0 && <span class="ml-1.5">{props.likeNumber}</span>}
+            {props.likeNumber > 0 && (
+              <span class="ml-1.5">{props.likeNumber}</span>
+            )}
           </div>
         </div>
       </div>
