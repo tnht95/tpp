@@ -6,16 +6,12 @@ use axum::{
     response::{IntoResponse, Response},
     Json,
 };
-use tracing::debug;
 
 use super::InternalState;
 use crate::{
-    model::responses::auth::{
-        BAD_FORMAT_INSTALLATION_ID,
-        INVALID_INSTALLATION_ID,
-        MISSING_INSTALLATION_ID,
-    },
+    model::responses::auth::{INVALID_OATH_CODE, MISSING_OATH_CODE},
     services::{book::IBookService, health::IHealthService},
+    utils::github::exchange_user_token,
 };
 
 pub async fn exchange_token<THealthService, TBookService>(
@@ -26,26 +22,24 @@ where
     THealthService: IHealthService,
     TBookService: IBookService,
 {
-    let installation_id = match params.get("installation_id") {
-        Some(id) => match id.parse::<u64>() {
-            Ok(id) => id,
-            Err(_) =>
-                return (StatusCode::BAD_REQUEST, Json(BAD_FORMAT_INSTALLATION_ID)).into_response(),
-        },
-        None => return (StatusCode::BAD_REQUEST, Json(MISSING_INSTALLATION_ID)).into_response(),
+    let code = match params.get("code") {
+        Some(id) => id,
+        None => return (StatusCode::BAD_REQUEST, Json(MISSING_OATH_CODE)).into_response(),
     };
 
-    let installation = match state
-        .gh_client
-        .apps()
-        .installation(installation_id.into())
-        .await
+    let response = match exchange_user_token(
+        &state.gh_client,
+        &state.config.github_app.client_id,
+        &state.config.github_app.client_secret,
+        code,
+    )
+    .await
     {
-        Ok(installation) => installation,
-        Err(e) => {
-            debug!("Invalid installation id: {e}");
-            return (StatusCode::BAD_REQUEST, Json(INVALID_INSTALLATION_ID)).into_response();
+        Ok(response) => response,
+        Err(_) => {
+            return (StatusCode::BAD_REQUEST, Json(INVALID_OATH_CODE)).into_response();
         }
     };
-    (StatusCode::OK, Json(installation)).into_response()
+
+    (StatusCode::OK, Json(response)).into_response()
 }

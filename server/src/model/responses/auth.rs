@@ -1,16 +1,11 @@
 use super::ConstantErr;
 
-pub const MISSING_INSTALLATION_ID: ConstantErr = ConstantErr {
+pub const MISSING_OATH_CODE: ConstantErr = ConstantErr {
     code: "AUTH_001",
-    msg: "Missing installation id",
+    msg: "Missing oauth code",
 };
 
-pub const BAD_FORMAT_INSTALLATION_ID: ConstantErr = ConstantErr {
+pub const INVALID_OATH_CODE: ConstantErr = ConstantErr {
     code: "AUTH_002",
-    msg: "Bad format installation id",
-};
-
-pub const INVALID_INSTALLATION_ID: ConstantErr = ConstantErr {
-    code: "AUTH_003",
-    msg: "Invalid installation id",
+    msg: "Invalid oauth code",
 };

@@ -39,6 +39,8 @@ pub enum Mode {
 #[derive(Serialize, Deserialize, Debug, Default)]
 pub struct GithubApp {
     pub app_id: u64,
+    pub client_id: String,
+    pub client_secret: String,
     pub secret: String,
 }
 
