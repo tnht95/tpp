@@ -1,6 +1,5 @@
 use std::sync::Arc;
 
-use tokio::sync::RwLock;
 use tracing::info;
 
 use crate::{
@@ -8,9 +7,8 @@ use crate::{
     services::{book::IBookService, health::IHealthService},
 };
 
-pub async fn handle<THealthService, TBookService>(
-    state: Arc<RwLock<Server<THealthService, TBookService>>>,
-) where
+pub async fn handle<THealthService, TBookService>(state: Arc<Server<THealthService, TBookService>>)
+where
     THealthService: IHealthService,
     TBookService: IBookService,
 {
@@ -34,11 +32,11 @@ pub async fn handle<THealthService, TBookService>(
     tokio::select! {
         _ = ctrl_c => {
             info!("Receiving SIGINT signal");
-            state.write().await.services.health.app_close();
+            state.services.health.write().await.app_close();
         },
         _ = terminate => {
             info!("Receiving SIGKILL signal");
-            state.write().await.services.health.app_close();
+            state.services.health.write().await.app_close();
         },
     }
 }

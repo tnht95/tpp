@@ -36,8 +36,6 @@ where
     };
 
     let installation = match state
-        .read()
-        .await
         .gh_client
         .apps()
         .installation(installation_id.into())

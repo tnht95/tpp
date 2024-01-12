@@ -42,7 +42,7 @@ pub struct Server<THealthService: IHealthService, TBookService: IBookService> {
 }
 
 struct Services<THealthService: IHealthService, TBookService: IBookService> {
-    health: THealthService,
+    health: RwLock<THealthService>,
     book: TBookService,
 }
 
@@ -60,7 +60,10 @@ where
         Self {
             config,
             gh_client,
-            services: Services { health, book },
+            services: Services {
+                health: RwLock::new(health),
+                book,
+            },
         }
     }
 
@@ -86,18 +89,15 @@ where
             .layer(RequestBodyTimeoutLayer::new(Duration::from_secs(4)))
             .layer(TimeoutLayer::new(Duration::from_secs(5)));
 
-        let state = Arc::new(RwLock::new(self));
+        let state = Arc::new(self);
         let app = NormalizePath::trim_trailing_slash(Router::merge(
             Router::new()
                 .route("/authentication", get(auth::exchange_token))
-                .route("/books", get(get_books::<THealthService, TBookService>))
-                .route("/books", post(add_books::<THealthService, TBookService>))
+                .route("/books", get(get_books))
+                .route("/books", post(add_books))
                 .layer(middleware)
                 .with_state(Arc::clone(&state)),
-            Router::new().route(
-                "/health",
-                get(is_healthy::<THealthService, TBookService>).with_state(Arc::clone(&state)),
-            ),
+            Router::new().route("/health", get(is_healthy).with_state(Arc::clone(&state))),
         ));
 
         info!("listening on {}", http_address);

@@ -10,7 +10,7 @@ where
     THealthService: IHealthService,
     TBookService: IBookService,
 {
-    match state.read().await.services.health.is_healthy().await {
+    match state.services.health.read().await.is_healthy().await {
         true => StatusCode::OK,
         false => StatusCode::BAD_GATEWAY,
     }

@@ -20,7 +20,7 @@ where
     THealthService: IHealthService,
     TBookService: IBookService,
 {
-    match state.read().await.services.book.get_books().await {
+    match state.services.book.get_books().await {
         Ok(books) => Json(HttpResponse { data: books }).into_response(),
         Err(BookServiceErr::Other(e)) => response_unhandled_err(e),
     }
@@ -34,7 +34,7 @@ where
     THealthService: IHealthService,
     TBookService: IBookService,
 {
-    match state.read().await.services.book.add_books(book).await {
+    match state.services.book.add_books(book).await {
         Ok(book) => Json(HttpResponse { data: book }).into_response(),
         Err(BookServiceErr::Other(e)) => response_unhandled_err(e),
     }
