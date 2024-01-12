@@ -37,7 +37,7 @@ use crate::{
 
 pub struct Server<THealthService: IHealthService, TBookService: IBookService> {
     config: Config,
-    gh_client: Octocrab,
+    _gh_client: Octocrab,
     services: Services<THealthService, TBookService>,
 }
 
@@ -59,7 +59,7 @@ where
     ) -> Self {
         Self {
             config,
-            gh_client,
+            _gh_client: gh_client,
             services: Services {
                 health: RwLock::new(health),
                 book,

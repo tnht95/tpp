@@ -12,6 +12,7 @@ pub struct Config {
     pub log_format: LogFmt,
     pub server: Server,
     pub github_app: GithubApp,
+    pub jwt_secret: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -55,6 +56,7 @@ impl Default for Config {
                 pg_max_pool: 50,
             },
             github_app: GithubApp::default(),
+            jwt_secret: "".into(),
         }
     }
 }

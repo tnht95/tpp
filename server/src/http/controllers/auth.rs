@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 
+use anyhow::anyhow;
 use axum::{
     extract::{Query, State},
     http::StatusCode,
@@ -9,9 +10,13 @@ use axum::{
 
 use super::InternalState;
 use crate::{
-    model::responses::auth::{INVALID_OATH_CODE, MISSING_OATH_CODE},
+    http::utils::err_handler::response_unhandled_err,
+    model::responses::auth::{Auth, INVALID_OATH_CODE, MISSING_OATH_CODE},
     services::{book::IBookService, health::IHealthService},
-    utils::github::exchange_user_token,
+    utils::{
+        github::{exchange_user_token, get_user_email_from_token},
+        jwt::encode_jwt,
+    },
 };
 
 pub async fn exchange_token<THealthService, TBookService>(
@@ -27,8 +32,7 @@ where
         None => return (StatusCode::BAD_REQUEST, Json(MISSING_OATH_CODE)).into_response(),
     };
 
-    let response = match exchange_user_token(
-        &state.gh_client,
+    let gh_oauth = match exchange_user_token(
         &state.config.github_app.client_id,
         &state.config.github_app.client_secret,
         code,
@@ -41,5 +45,15 @@ where
         }
     };
 
-    (StatusCode::OK, Json(response)).into_response()
+    let user_email = match get_user_email_from_token(&gh_oauth.access_token).await {
+        Ok(user_email) => user_email,
+        Err(e) => return response_unhandled_err(e),
+    };
+
+    let jwt = match encode_jwt(user_email, &state.config.jwt_secret) {
+        Ok(jwt) => jwt,
+        Err(e) => return response_unhandled_err(anyhow!(e)),
+    };
+
+    (StatusCode::OK, Json(Auth { access_token: jwt })).into_response()
 }
