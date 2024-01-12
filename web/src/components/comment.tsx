@@ -1,3 +1,5 @@
+import { Show } from 'solid-js';
+
 import { Avatar } from '@/components';
 
 type CommentProp = {
@@ -26,14 +28,10 @@ export const Comment = (props: CommentProp) => (
           has returned a 403 (Forbidden) error. However, I can offer general
           guidance and potential troubleshooting steps:
           <div class="mt-2">
-            <i
-              class="fa-solid fa-heart text-xl hover:text-gray-400  cursor-pointer"
-              classList={{
-                'text-red-500': props.liked,
-                'text-black': !props.liked
-              }}
-            />
-            <span class="ml-1.5">{props.likeNumber}</span>
+            <Show when={props.liked} fallback={<i class="fa-regular fa-heart text-xl hover:text-gray-400  cursor-pointer" />}>
+              <i class="fa-solid fa-heart text-xl text-red-500 hover:text-gray-400  cursor-pointer" />
+            </Show>
+            {props.likeNumber > 0 && <span class="ml-1.5">{props.likeNumber}</span>}
           </div>
         </div>
       </div>
