@@ -9,7 +9,7 @@ export const PillButton = (props: PillButtonProp) => (
       <i class={`${props.icon} mr-1 text-sm`} />
       <span class="self-center text-sm font-medium">{props.title}</span>
     </div>
-    <div class="px-2 py-1 text-sm font-semibold border border-t border-gray-400 rounded-r-lg cursor-pointer hover:text-blue-600">
+    <div class="px-2 py-1 text-sm font-semibold border border-t border-gray-400 rounded-r-lg">
       {props.number}
     </div>
   </div>
