@@ -5,7 +5,7 @@ use axum::{
 
 use super::InternalState;
 use crate::{
-    http::utils::response_unhandled_err,
+    http::utils::err_handler::response_unhandled_err,
     model::{requests::book::AddBookRequest, responses::HttpResponse},
     services::{
         book::{BookServiceErr, IBookService},

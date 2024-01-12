@@ -2,7 +2,7 @@ use std::any::Any;
 
 use axum::response::Response;
 
-use crate::http::utils::response_unhandled_str;
+use crate::http::utils::err_handler::response_unhandled_str;
 
 pub fn recover(e: Box<dyn Any + Send + 'static>) -> Response {
     let e = if let Some(e) = e.downcast_ref::<String>() {

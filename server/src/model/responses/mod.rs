@@ -1,3 +1,4 @@
+pub mod auth;
 pub mod book;
 
 use serde::Serialize;
@@ -14,12 +15,12 @@ pub struct HttpResponseErr {
 }
 
 #[derive(Serialize)]
-pub struct InternalServerErr {
+pub struct ConstantErr {
     pub code: &'static str,
     pub msg: &'static str,
 }
 
-pub const INTERNAL_SERVER_ERR: InternalServerErr = InternalServerErr {
+pub const INTERNAL_SERVER_ERR: ConstantErr = ConstantErr {
     code: "ERR_000",
     msg: "Internal Server Error",
 };

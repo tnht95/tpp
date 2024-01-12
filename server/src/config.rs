@@ -11,6 +11,7 @@ use serde::{Deserialize, Serialize};
 pub struct Config {
     pub log_format: LogFmt,
     pub server: Server,
+    pub github_app: GithubApp,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -35,6 +36,12 @@ pub enum Mode {
     Prod,
 }
 
+#[derive(Serialize, Deserialize, Debug, Default)]
+pub struct GithubApp {
+    pub app_id: u64,
+    pub secret: String,
+}
+
 impl Default for Config {
     fn default() -> Self {
         Self {
@@ -45,6 +52,7 @@ impl Default for Config {
                 pg_url: "postgres://service:password@localhost:5432/book?sslmode=disable".into(),
                 pg_max_pool: 50,
             },
+            github_app: GithubApp::default(),
         }
     }
 }

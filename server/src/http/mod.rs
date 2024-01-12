@@ -12,6 +12,7 @@ use axum::{
     ServiceExt,
 };
 use controllers::book::get_books;
+use octocrab::Octocrab;
 use tokio::sync::RwLock;
 use tower::ServiceBuilder;
 use tower_http::{
@@ -28,7 +29,7 @@ use tracing::{info, Level};
 use crate::{
     config::Config,
     http::{
-        controllers::{book::add_books, health::is_healthy},
+        controllers::{auth, book::add_books, health::is_healthy},
         handlers::{panic, shutdown},
     },
     services::{book::IBookService, health::IHealthService},
@@ -36,6 +37,7 @@ use crate::{
 
 pub struct Server<THealthService: IHealthService, TBookService: IBookService> {
     config: Config,
+    gh_client: Octocrab,
     services: Services<THealthService, TBookService>,
 }
 
@@ -49,9 +51,15 @@ where
     THealthService: IHealthService + Sync + Send + 'static,
     TBookService: IBookService + Sync + Send + 'static,
 {
-    pub fn new(config: Config, health: THealthService, book: TBookService) -> Self {
+    pub fn new(
+        config: Config,
+        gh_client: Octocrab,
+        health: THealthService,
+        book: TBookService,
+    ) -> Self {
         Self {
             config,
+            gh_client,
             services: Services { health, book },
         }
     }
@@ -81,6 +89,7 @@ where
         let state = Arc::new(RwLock::new(self));
         let app = NormalizePath::trim_trailing_slash(Router::merge(
             Router::new()
+                .route("/authentication", get(auth::exchange_token))
                 .route("/books", get(get_books::<THealthService, TBookService>))
                 .route("/books", post(add_books::<THealthService, TBookService>))
                 .layer(middleware)
