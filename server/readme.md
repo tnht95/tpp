@@ -11,11 +11,13 @@ $ tree -d -L 4 --gitignore
     │   └── entities
     ├── http
     │   ├── controllers
-    │   └── handlers
+    │   ├── handlers
+    │   └── utils
     ├── model
     │   ├── requests
     │   └── responses
-    └── services
+    ├── services
+    └── utils
 ```
 
 ### How to develop

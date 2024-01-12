@@ -11,7 +11,9 @@ use tracing::debug;
 use super::InternalState;
 use crate::{
     model::responses::auth::{
-        BAD_FORMAT_INSTALLATION_ID, INVALID_INSTALLATION_ID, MISSING_INSTALLATION_ID,
+        BAD_FORMAT_INSTALLATION_ID,
+        INVALID_INSTALLATION_ID,
+        MISSING_INSTALLATION_ID,
     },
     services::{book::IBookService, health::IHealthService},
 };
@@ -27,9 +29,8 @@ where
     let installation_id = match params.get("installation_id") {
         Some(id) => match id.parse::<u64>() {
             Ok(id) => id,
-            Err(_) => {
-                return (StatusCode::BAD_REQUEST, Json(BAD_FORMAT_INSTALLATION_ID)).into_response()
-            }
+            Err(_) =>
+                return (StatusCode::BAD_REQUEST, Json(BAD_FORMAT_INSTALLATION_ID)).into_response(),
         },
         None => return (StatusCode::BAD_REQUEST, Json(MISSING_INSTALLATION_ID)).into_response(),
     };
