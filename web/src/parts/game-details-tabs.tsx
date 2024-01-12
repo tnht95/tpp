@@ -19,9 +19,21 @@ export const GameDetailsTabs = () => (
 
     <div class="flex items-center justify-between px-10 mt-6 -mx-10 border-b select-none">
       <div class="flex">
-        <GameTab title="Info" url="/games/:id" />
-        <GameTab title="Discussion" url="/games/:id/discussion" />
-        <GameTab title="Activities" url="/games/:id/activities" />
+        <GameTab
+          title="Info"
+          url="/games/:id"
+          icon="fa-solid fa-wand-sparkles"
+        />
+        <GameTab
+          title="Discussion"
+          url="/games/:id/discussion"
+          icon="fa-regular fa-comment-dots"
+        />
+        <GameTab
+          title="Activities"
+          url="/games/:id/activities"
+          icon="fa-regular fa-rectangle-list"
+        />
       </div>
     </div>
   </div>
