@@ -9,15 +9,17 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize)]
 pub struct JwtClaim {
-    user_email: String,
+    id: u64,
+    email: String,
     exp_at: u128,
 }
 
-pub fn encode_jwt(user_email: String, secret: &str, expire_in: u64) -> Result<String> {
+pub fn encode_jwt(id: u64, email: String, secret: &str, expire_in: u64) -> Result<String> {
     Ok(encode(
         &Header::new(Algorithm::HS256),
         &JwtClaim {
-            user_email,
+            id,
+            email,
             exp_at: SystemTime::now()
                 .add(Duration::from_secs(expire_in))
                 .duration_since(UNIX_EPOCH)?

@@ -4,7 +4,7 @@ use axum::http::{
     HeaderMap,
     HeaderValue,
 };
-use octocrab::Octocrab;
+use octocrab::{models::Author, Octocrab};
 use serde::Deserialize;
 
 #[derive(Deserialize)]
@@ -61,8 +61,8 @@ pub async fn exchange_user_token(
         .await.map_err(|e| anyhow!(e))
 }
 
-pub async fn get_user_email_from_token(token: &str) -> Result<String> {
-    let user_emails = octocrab::instance()
+pub async fn _get_email_from_token(token: &str) -> Result<String> {
+    let emails = octocrab::instance()
         .get_with_headers::<Vec<GhEmail>, _, _>(
             "https://api.github.com/user/emails",
             None::<&()>,
@@ -71,9 +71,20 @@ pub async fn get_user_email_from_token(token: &str) -> Result<String> {
         .await
         .map_err(|e| anyhow!(e))?;
 
-    user_emails
+    emails
         .into_iter()
         .find(|e| e.primary)
         .map(|e| e.email)
         .ok_or(anyhow!("Could not find any primary email"))
+}
+
+pub async fn get_user_from_token(token: &str) -> Result<Author> {
+    octocrab::instance()
+        .get_with_headers::<Author, _, _>(
+            "https://api.github.com/user",
+            None::<&()>,
+            Some(build_headers(Some(token))?),
+        )
+        .await
+        .map_err(|e| anyhow!(e))
 }

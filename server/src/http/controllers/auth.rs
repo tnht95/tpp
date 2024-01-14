@@ -17,7 +17,7 @@ use crate::{
     model::responses::auth::{INVALID_OATH_CODE, MISSING_OATH_CODE},
     services::{book::IBookService, health::IHealthService},
     utils::{
-        github::{exchange_user_token, get_user_email_from_token},
+        github::{exchange_user_token, get_user_from_token},
         jwt::encode_jwt,
     },
 };
@@ -48,13 +48,14 @@ where
         }
     };
 
-    let user_email = match get_user_email_from_token(&gh_oauth.access_token).await {
-        Ok(user_email) => user_email,
+    let user = match get_user_from_token(&gh_oauth.access_token).await {
+        Ok(user) => user,
         Err(e) => return response_unhandled_err(e),
     };
 
     let jwt = match encode_jwt(
-        user_email,
+        *user.id,
+        user.email.unwrap_or("".into()),
         &state.config.auth.jwt.secret,
         state.config.auth.jwt.expire_in,
     ) {
