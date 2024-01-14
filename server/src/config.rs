@@ -12,7 +12,7 @@ pub struct Config {
     pub log_format: LogFmt,
     pub server: Server,
     pub github_app: GithubApp,
-    pub jwt_secret: String,
+    pub auth: Auth,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -45,6 +45,18 @@ pub struct GithubApp {
     pub secret: String,
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+pub struct Auth {
+    pub jwt: Jwt,
+    pub redirect_url: String,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct Jwt {
+    pub secret: String,
+    pub expire_in: u64, // seconds
+}
+
 impl Default for Config {
     fn default() -> Self {
         Self {
@@ -56,7 +68,13 @@ impl Default for Config {
                 pg_max_pool: 50,
             },
             github_app: GithubApp::default(),
-            jwt_secret: "".into(),
+            auth: Auth {
+                jwt: Jwt {
+                    secret: "".into(),
+                    expire_in: 3600,
+                },
+                redirect_url: "".into(),
+            },
         }
     }
 }

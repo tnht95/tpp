@@ -92,12 +92,17 @@ where
         let state = Arc::new(self);
         let app = NormalizePath::trim_trailing_slash(Router::merge(
             Router::new()
-                .route("/authentication", get(auth::exchange_token))
-                .route("/books", get(get_books))
-                .route("/books", post(add_books))
-                .layer(middleware)
+                .route("/health", get(is_healthy))
                 .with_state(Arc::clone(&state)),
-            Router::new().route("/health", get(is_healthy).with_state(Arc::clone(&state))),
+            Router::new().nest(
+                "/api/v1",
+                Router::new()
+                    .route("/authentication", get(auth::exchange_token))
+                    .route("/books", get(get_books))
+                    .route("/books", post(add_books))
+                    .layer(middleware)
+                    .with_state(Arc::clone(&state)),
+            ),
         ));
 
         info!("listening on {}", http_address);

@@ -3,7 +3,10 @@ use std::collections::HashMap;
 use anyhow::anyhow;
 use axum::{
     extract::{Query, State},
-    http::StatusCode,
+    http::{
+        header::{LOCATION, SET_COOKIE},
+        StatusCode,
+    },
     response::{IntoResponse, Response},
     Json,
 };
@@ -11,7 +14,7 @@ use axum::{
 use super::InternalState;
 use crate::{
     http::utils::err_handler::response_unhandled_err,
-    model::responses::auth::{Auth, INVALID_OATH_CODE, MISSING_OATH_CODE},
+    model::responses::auth::{INVALID_OATH_CODE, MISSING_OATH_CODE},
     services::{book::IBookService, health::IHealthService},
     utils::{
         github::{exchange_user_token, get_user_email_from_token},
@@ -50,10 +53,29 @@ where
         Err(e) => return response_unhandled_err(e),
     };
 
-    let jwt = match encode_jwt(user_email, &state.config.jwt_secret) {
+    let jwt = match encode_jwt(
+        user_email,
+        &state.config.auth.jwt.secret,
+        state.config.auth.jwt.expire_in,
+    ) {
         Ok(jwt) => jwt,
         Err(e) => return response_unhandled_err(anyhow!(e)),
     };
 
-    (StatusCode::OK, Json(Auth { access_token: jwt })).into_response()
+    // TODO: update database
+
+    (
+        StatusCode::FOUND,
+        [
+            (
+                SET_COOKIE,
+                format!(
+                    "access_token={jwt};SameSite=None;Secure;HttpOnly;Max-Age={}",
+                    state.config.auth.jwt.expire_in
+                ),
+            ),
+            (LOCATION, String::from(&state.config.auth.redirect_url)),
+        ],
+    )
+        .into_response()
 }
