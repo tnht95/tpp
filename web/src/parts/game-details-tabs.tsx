@@ -22,7 +22,7 @@ export const GameDetailsTabs = () => (
         <GameTab
           title="Info"
           url="/games/:id/info"
-          icon="fa-solid fa-wand-sparkles"
+          icon="fa-regular fa-lightbulb"
         />
         <GameTab
           title="Discussion"
@@ -30,8 +30,8 @@ export const GameDetailsTabs = () => (
           icon="fa-regular fa-comment-dots"
         />
         <GameTab
-          title="Activities"
-          url="/games/:id/activities"
+          title="Activity"
+          url="/games/:id/activity"
           icon="fa-regular fa-rectangle-list"
         />
       </div>

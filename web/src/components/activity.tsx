@@ -7,7 +7,7 @@ export const Activity = (props: ActivityProp) => (
     <i class="fa-solid fa-wave-square text-lg text-green-500" />
     <div class="ml-3">
       <p class="text-base font-semibold">{props.title}</p>
-      <p class="text-sm">{props.date}</p>
+      <p class="text-sm text-gray-400">{props.date}</p>
     </div>
   </div>
 );

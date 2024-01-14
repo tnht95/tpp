@@ -10,7 +10,7 @@ export const TableRow = (props: TableRowProps) => (
         <a href="" class="text-base font-bold text-gray-800  ">
           {props.title}
         </a>
-        <p class="text-xs font-normal text-gray-600 ">
+        <p class="text-xs font-normal text-gray-400 ">
           {props.date} by {props.user}
         </p>
       </div>
