@@ -1,4 +1,4 @@
-import { Tag } from '@/components';
+import { Avatar, Tag } from '@/components';
 
 export const GameDetailsSidebar = () => (
   <div class="ml-4 md:w-1/4">
@@ -30,14 +30,8 @@ export const GameDetailsSidebar = () => (
       </div>
     </div>
     <div class="px-6 py-6 -mx-10 border-b md:mx-0 md:px-0">
-      <p class="text-base font-semibold text-black">Upload By</p>
-      <div class="flex flex-wrap items-center mt-4 -mx-2 overflow-hidden">
-        <img
-          class="object-cover w-10 h-10 mx-2 mt-2 text-white border-2 border-gray-400 rounded-full shadow-sm cursor-pointer md:mt-0"
-          src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-          alt=""
-        />
-      </div>
+      <p class="text-base font-semibold text-black mb-5">Upload By</p>
+      <Avatar />
     </div>
     <div class="flex flex-col  flex-wrap gap-2 my-4">
       <p class="text-base font-semibold text-black mb-3">Tag</p>
