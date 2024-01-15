@@ -5,6 +5,7 @@ use axum::{
     extract::{Query, State},
     http::{
         header::{LOCATION, SET_COOKIE},
+        HeaderMap,
         StatusCode,
     },
     response::{IntoResponse, Response},
@@ -18,7 +19,7 @@ use crate::{
     services::{book::IBookService, health::IHealthService},
     utils::{
         github::{exchange_user_token, get_user_from_token},
-        jwt::encode_jwt,
+        jwt,
     },
 };
 
@@ -53,7 +54,7 @@ where
         Err(e) => return response_unhandled_err(e),
     };
 
-    let jwt = match encode_jwt(
+    let jwt = match jwt::encode(
         *user.id,
         user.email.unwrap_or("".into()),
         &state.config.auth.jwt.secret,
@@ -79,4 +80,26 @@ where
         ],
     )
         .into_response()
+}
+
+pub async fn verify<THealthService, TBookService>(
+    headers: HeaderMap,
+    State(state): InternalState<THealthService, TBookService>,
+) -> StatusCode
+where
+    THealthService: IHealthService,
+    TBookService: IBookService,
+{
+    let cookie = match headers.get("cookie") {
+        Some(cookie) => match cookie.to_str() {
+            Ok(cookie) => cookie,
+            Err(_) => return StatusCode::UNAUTHORIZED,
+        },
+        None => return StatusCode::UNAUTHORIZED,
+    };
+
+    match jwt::decode(&cookie[13..], &state.config.auth.jwt.secret) {
+        Ok(_) => StatusCode::OK,
+        Err(_) => StatusCode::UNAUTHORIZED,
+    }
 }

@@ -97,6 +97,7 @@ where
             Router::new().nest(
                 "/api/v1",
                 Router::new()
+                    .route("/me", get(auth::verify))
                     .route("/authentication", get(auth::exchange_token))
                     .route("/books", get(get_books))
                     .route("/books", post(add_books))
