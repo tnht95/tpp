@@ -13,6 +13,7 @@ pub struct Config {
     pub server: Server,
     pub github_app: GithubApp,
     pub auth: Auth,
+    pub site_url: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -75,6 +76,7 @@ impl Default for Config {
                 },
                 redirect_url: "".into(),
             },
+            site_url: "".into(),
         }
     }
 }

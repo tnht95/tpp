@@ -28,6 +28,7 @@ tower-http = { version = "0.4.4", features = [
   "trace",
   "normalize-path",
   "sensitive-headers",
+  "cors"
 ] }
 octocrab = "0.32.0"
 jsonwebtoken = "9.2.0"

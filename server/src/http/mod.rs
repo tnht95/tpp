@@ -6,7 +6,7 @@ use std::{iter::once, net::SocketAddr, sync::Arc, time::Duration};
 
 use anyhow::Result;
 use axum::{
-    http::header::AUTHORIZATION,
+    http::{header::AUTHORIZATION, Method},
     routing::{get, post},
     Router,
     ServiceExt,
@@ -18,6 +18,7 @@ use tower::ServiceBuilder;
 use tower_http::{
     catch_panic::CatchPanicLayer,
     compression::{CompressionLayer, CompressionLevel},
+    cors::CorsLayer,
     normalize_path::NormalizePath,
     request_id::{MakeRequestUuid, PropagateRequestIdLayer, SetRequestIdLayer},
     sensitive_headers::SetSensitiveRequestHeadersLayer,
@@ -71,6 +72,17 @@ where
         let http_address = SocketAddr::from(([0, 0, 0, 0], self.config.server.http_port));
 
         let middleware = ServiceBuilder::new()
+            .layer(
+                CorsLayer::new()
+                    .allow_credentials(true)
+                    .allow_methods([Method::GET, Method::POST, Method::PUT, Method::DELETE])
+                    .allow_origin([self.config.site_url.parse().expect("invalid site url")])
+                    .allow_headers([
+                        "x-request-id".parse().expect("invalid header"),
+                        "content-type".parse().expect("invalid header"),
+                    ])
+                    .max_age(Duration::from_secs(3600)),
+            )
             .layer(SetSensitiveRequestHeadersLayer::new(once(AUTHORIZATION)))
             .layer(CompressionLayer::new().quality(CompressionLevel::Fastest))
             .layer(CatchPanicLayer::custom(panic::recover))
