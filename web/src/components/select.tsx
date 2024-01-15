@@ -1,16 +1,15 @@
 export const Selects = () => (
-  <form>
+  <div class="flex items-center">
     <select
-      name="sort"
-      id="sort"
-      class="border-black border-2 ml-2 p-1 rounded"
+      id="countries"
+      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 "
     >
-      <option disabled selected value="">
+      <option disabled selected>
         Sort by
       </option>
-      <option value="date">Date</option>
       <option value="name">Name</option>
-      <option value="rating">Rating</option>
+      <option value="star">Star</option>
+      <option value="date">Date</option>
     </select>
-  </form>
+  </div>
 );
