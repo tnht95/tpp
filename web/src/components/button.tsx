@@ -7,7 +7,7 @@ type ButtonProps = {
   modalTargetId?: string;
 };
 export const Button = (props: ButtonProps) => {
-  const [dataAttributes, setDataAttributes] = createSignal({}); // Signal for data attributes
+  const [dataAttributes, setDataAttributes] = createSignal({});
 
   onMount(() => {
     if (props.modalTargetId) {

@@ -3,7 +3,7 @@ import { Searchbar } from '@/components';
 
 export const Header = () => (
   <header class=" bg-indigo-900 text-white shadow-lg flex flex-row items-center justify-between">
-    <div class=" ml-12 flex items-center h-16">
+    <div class=" ml-12 flex items-center h-16 w-3/5">
       <a href="" class="mr-5 flex items-center justify-center">
         <img class="h-12" src={alienLogo} alt="logo" />
         <span class="ml-4 uppercase font-black text-sm">
@@ -13,7 +13,7 @@ export const Header = () => (
         </span>
       </a>
       <nav class="contents font-semibold text-base ">
-        <ul class="flex-1 flex items-center h-full">
+        <ul class="flex-1 flex items-center h-full mr-3">
           <li class="px-5 h-full flex items-center hover:bg-indigo-300 hover:text-indigo-900">
             <a href="/">
               <span>Home</span>
