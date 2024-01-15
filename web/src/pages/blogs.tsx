@@ -1,4 +1,4 @@
-import { BlogPost, Button } from '@/components';
+import { BlogForm, BlogPost, Button } from '@/components';
 
 export const Blogs = () => (
   <div class="w-4/6 ml-10 mt-10">
@@ -8,7 +8,9 @@ export const Blogs = () => (
         title="Add New Blog"
         withIcon="fa-solid fa-plus"
         customStyle="bg-green-400 text-white font-bold hover:text-indigo-900 hover:bg-white"
+        modalTargetId="blog-modal"
       />
+      <BlogForm />
     </div>
     <div class=" flex flex-col gap-5 mt-5">
       <BlogPost />

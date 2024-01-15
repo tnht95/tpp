@@ -1,4 +1,4 @@
-import { Button, TableRow } from '@/components';
+import { Button, DiscussionForm, TableRow } from '@/components';
 
 export const GameDiscussion = () => (
   <>
@@ -13,9 +13,10 @@ export const GameDiscussion = () => (
                   withIcon="fa-solid fa-plus"
                   title="New"
                   customStyle="hover:text-white hover:bg-green-500 float-right text-green-500 font-bold"
+                  modalTargetId="discussion-modal"
                 />
               </div>
-
+              <DiscussionForm />
               <TableRow
                 title="Found Bug"
                 user="johnny@gmail.com"

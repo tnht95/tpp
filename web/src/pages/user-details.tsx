@@ -1,4 +1,4 @@
-import { Activity, GameCard, PillButton } from '@/components';
+import { Activity, Button, GameCard, GameForm, PillButton } from '@/components';
 
 export const UserDetails = () => (
   <div class=" ml-10  my-5 p-5">
@@ -42,72 +42,83 @@ export const UserDetails = () => (
         <div />
       </div>
       <div class="w-4/6 ml-10 mt-6 ">
-        <div class="bg-white pl-8 pt-3 pb-7 border rounded-xl">
-          <div class="flex items-center space-x-2 font-semibold text-gray-900 leading-8 mb-5">
-            <i class="fa-regular fa-paper-plane text-lg text-green-400" />
-            <span class="tracking-wide">Games</span>
+        <div class="bg-white px-8 pt-3 pb-7 border rounded-xl">
+          <div class="mb-5 flex justify-between">
+            <div class="flex items-center space-x-2 font-semibold text-gray-900 leading-8 ">
+              <i class="fa-regular fa-paper-plane text-lg text-green-400" />
+              <span class="tracking-wide">Games</span>
+            </div>
+            <Button
+              title="Add new game"
+              withIcon="fa-solid fa-plus"
+              customStyle="border-green-400 text-green-400 font-bold hover:bg-green-400 hover:text-white"
+              modalTargetId="game-modal"
+            />
+            <GameForm />
           </div>
-
           <div class="flex gap-7 flex-wrap">
             <GameCard
               gameTitle="Bob"
               byUser="Harry"
               stars={35}
-              img={'https://i.ytimg.com/vi/73lnG3ArcDg/hqdefault.jpg'}
+              img="https://i.ytimg.com/vi/73lnG3ArcDg/hqdefault.jpg"
             />
 
             <GameCard
               gameTitle="Bob"
               byUser="Harry"
               stars={35}
-              img={'https://i.ytimg.com/vi/73lnG3ArcDg/hqdefault.jpg'}
+              img="https://i.ytimg.com/vi/73lnG3ArcDg/hqdefault.jpg"
             />
 
             <GameCard
               gameTitle="Bob"
               byUser="Harry"
               stars={35}
-              img={'https://i.ytimg.com/vi/73lnG3ArcDg/hqdefault.jpg'}
-            />
-            <GameCard
-              gameTitle="Bob"
-              byUser="Harry"
-              stars={35}
-              img={'https://i.ytimg.com/vi/73lnG3ArcDg/hqdefault.jpg'}
-            />
-            <GameCard
-              gameTitle="Bob"
-              byUser="Harry"
-              stars={35}
-              img={'https://i.ytimg.com/vi/73lnG3ArcDg/hqdefault.jpg'}
+              img="https://i.ytimg.com/vi/73lnG3ArcDg/hqdefault.jpg"
             />
 
             <GameCard
               gameTitle="Bob"
               byUser="Harry"
               stars={35}
-              img={'https://i.ytimg.com/vi/73lnG3ArcDg/hqdefault.jpg'}
+              img="https://i.ytimg.com/vi/73lnG3ArcDg/hqdefault.jpg"
             />
-
             <GameCard
               gameTitle="Bob"
               byUser="Harry"
               stars={35}
-              img={'https://i.ytimg.com/vi/73lnG3ArcDg/hqdefault.jpg'}
+              img="https://i.ytimg.com/vi/73lnG3ArcDg/hqdefault.jpg"
             />
-
             <GameCard
               gameTitle="Bob"
               byUser="Harry"
               stars={35}
-              img={'https://i.ytimg.com/vi/73lnG3ArcDg/hqdefault.jpg'}
+              img="https://i.ytimg.com/vi/73lnG3ArcDg/hqdefault.jpg"
             />
-
             <GameCard
               gameTitle="Bob"
               byUser="Harry"
               stars={35}
-              img={'https://i.ytimg.com/vi/73lnG3ArcDg/hqdefault.jpg'}
+              img="https://i.ytimg.com/vi/73lnG3ArcDg/hqdefault.jpg"
+            />
+            <GameCard
+              gameTitle="Bob"
+              byUser="Harry"
+              stars={35}
+              img="https://i.ytimg.com/vi/73lnG3ArcDg/hqdefault.jpg"
+            />
+            <GameCard
+              gameTitle="Bob"
+              byUser="Harry"
+              stars={35}
+              img="https://i.ytimg.com/vi/73lnG3ArcDg/hqdefault.jpg"
+            />
+            <GameCard
+              gameTitle="Bob"
+              byUser="Harry"
+              stars={35}
+              img="https://i.ytimg.com/vi/73lnG3ArcDg/hqdefault.jpg"
             />
           </div>
         </div>
