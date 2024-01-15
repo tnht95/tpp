@@ -4,6 +4,7 @@ import { GameActivity, GameDiscussion, GameInfo } from '@/parts';
 
 import { Header } from './components';
 import {
+  BlogDetails,
   Blogs,
   DiscussionDetails,
   GameDetails,
@@ -24,6 +25,7 @@ export const App = () => (
       <Route path="games/:id/discussion/:id" component={DiscussionDetails} />
       <Route path={'users/:id'} component={UserDetails} />
       <Route path={'blogs'} component={Blogs} />
+      <Route path={'blogs/:id'} component={BlogDetails} />
     </Router>
   </>
 );

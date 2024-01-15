@@ -15,11 +15,12 @@ export const Comment = (props: CommentProp) => (
         <Avatar />
       </div>
       <div class="ml-2">
-        <div class="border  border-gray-200 rounded-t p-2 bg-gray-200 flex items-center">
-          <div class="ml-2">
+        <div class="px-5 border border-gray-200 rounded-t p-2 bg-gray-200 flex items-center justify-between">
+          <div>
             <span class="font-semibold">{props.user}</span> commented on{' '}
             {props.date}
           </div>
+          <i class="fa-solid fa-ellipsis cursor-pointer text-lg text-gray-500" />
         </div>
 
         <div class="border border-gray-200 border-t-0 rounded-b px-5 py-3">

@@ -1,14 +1,11 @@
 import { Button } from '@/components';
 
-type CommentFormProp = {
-  title: string;
-};
-export const CommentForm = (props: CommentFormProp) => (
+export const CommentForm = () => (
   <form class=" border bg-white rounded-lg px-4 pt-2">
     <div class="flex flex-wrap -mx-3 mb-6">
       <div>
         <h2 class="px-4 pt-3 pb-2 font-semibold text-gray-800 text-lg">
-          {props.title}
+          Add a comment
         </h2>
       </div>
       <div class="w-full md:w-full px-3 mb-2 mt-2">
