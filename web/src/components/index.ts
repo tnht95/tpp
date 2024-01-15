@@ -11,3 +11,4 @@ export * from './avatar';
 export * from './comment';
 export * from './comment-form';
 export * from './pill-button';
+export * from './blog-post';

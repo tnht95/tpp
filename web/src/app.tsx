@@ -3,7 +3,13 @@ import { Route, Router } from '@solidjs/router';
 import { GameActivity, GameDiscussion, GameInfo } from '@/parts';
 
 import { Header } from './components';
-import { DiscussionDetails, GameDetails, Games, UserDetails } from './pages';
+import {
+  Blogs,
+  DiscussionDetails,
+  GameDetails,
+  Games,
+  UserDetails
+} from './pages';
 
 export const App = () => (
   <>
@@ -17,6 +23,7 @@ export const App = () => (
       </Route>
       <Route path="games/:id/discussion/:id" component={DiscussionDetails} />
       <Route path={'users/:id'} component={UserDetails} />
+      <Route path={'blogs'} component={Blogs} />
     </Router>
   </>
 );

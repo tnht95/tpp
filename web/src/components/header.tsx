@@ -25,7 +25,7 @@ export const Header = () => (
             </a>
           </li>
           <li class="p-5 xl:p-8 h-full flex items-center hover:bg-indigo-300 hover:text-indigo-900 ">
-            <a href="">
+            <a href="/blogs">
               <span>Blog</span>
             </a>
           </li>
