@@ -36,7 +36,9 @@ export const UserMenuGroup = () => (
       class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-52 "
     >
       <div class="px-4 py-5 text-sm text-gray-900">
-        <EllipsisText maxWidth="max-w-40" customStyle="font-bold">name@flowbite.comfsdfdsfsfs</EllipsisText>
+        <EllipsisText maxWidth="max-w-40" customStyle="font-bold">
+          name@flowbite.comfsdfdsfsfs
+        </EllipsisText>
       </div>
       <div
         class=" text-sm text-gray-700 "

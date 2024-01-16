@@ -1,15 +1,16 @@
 import { Route, Router } from '@solidjs/router';
 
+import { Header } from '@/components';
 import { GameActivity, GameDiscussion, GameInfo } from '@/parts';
 
-import { Header } from './components';
 import {
   BlogDetails,
   Blogs,
   Dashboard,
   DiscussionDetails,
   GameDetails,
-  Games, Search,
+  Games,
+  Search,
   UserDetails
 } from './pages';
 

@@ -1,4 +1,4 @@
-import { EllipsisText } from '@/components/ellipsis-text';
+import { EllipsisText } from '@/components';
 
 type GameCardProps = {
   gameTitle: string;
@@ -15,8 +15,15 @@ export const GameCard = (props: GameCardProps) => (
         alt="product image"
       />
       <div class="pl-5 pb-2">
-        <EllipsisText maxWidth="max-w-28" customStyle="text-indigo-900 font-bold text-xs ">{props.gameTitle}</EllipsisText>
-        <EllipsisText maxWidth="max-w-28" customStyle="text-xs text-indigo-700">{props.byUser}</EllipsisText>
+        <EllipsisText
+          maxWidth="max-w-28"
+          customStyle="text-indigo-900 font-bold text-xs "
+        >
+          {props.gameTitle}
+        </EllipsisText>
+        <EllipsisText maxWidth="max-w-28" customStyle="text-xs text-indigo-700">
+          {props.byUser}
+        </EllipsisText>
         <div class="flex items-center mt-2.5 mb-5">
           <div class="bg-indigo-500 items-center rounded px-2.5 py-1 flex ">
             <span class=" text-white text-xs font-semibold">

@@ -1,4 +1,4 @@
-import { EllipsisText } from '@/components/ellipsis-text';
+import { EllipsisText } from '@/components';
 
 type TagProps = {
   name: string;
@@ -16,7 +16,9 @@ export const Tag = (props: TagProps) => (
       <div class="flex-grow h-full -ml-px bg-indigo-200 group-hover:bg-indigo-900 rounded-md rounded-l-none " />
     </div>
     <span class="relative text-indigo-500 group-hover:text-white uppercase font-semibold pr-px cursor-pointer flex items-center p-2">
-        <EllipsisText maxWidth="max-w-80" customStyle="ml-2 px-2">{props.name}</EllipsisText>
+      <EllipsisText maxWidth="max-w-80" customStyle="ml-2 px-2">
+        {props.name}
+      </EllipsisText>
     </span>
   </div>
 );
