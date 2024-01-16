@@ -6,6 +6,7 @@ import { Header } from './components';
 import {
   BlogDetails,
   Blogs,
+  Dashboard,
   DiscussionDetails,
   GameDetails,
   Games,
@@ -16,6 +17,7 @@ export const App = () => (
   <>
     <Header isAuthenticated={true} />
     <Router>
+      <Route path="/" component={Dashboard} />
       <Route path="/games" component={Games} />
       <Route path="/games/:id" component={GameDetails}>
         <Route path="/info" component={GameInfo} />

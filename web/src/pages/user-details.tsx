@@ -126,19 +126,23 @@ export const UserDetails = () => (
         <div class="my-4" />
 
         <div class="bg-white p-3 border rounded-xl">
-          <div class="px-8 pt-3 pb-7">
+          <div class="px-8 pt-3">
             <div class=" items-center space-x-2 font-semibold text-gray-900 leading-8 mb-5">
               <i class="fa-regular fa-newspaper text-lg text-green-400" />
               <span class="tracking-wide">Activity</span>
             </div>
-            <div class="">
-              <Activity title="Bob upload this game" date="09 Jun 2023" />
+            <ol class="relative border-s border-gray-200 dark:border-gray-700">
+              <Activity
+                title="Bob upload this game"
+                date="09 Jun 2023"
+                latest
+              />
               <Activity title="Bob upload this game" date="09 Jun 2023" />
 
               <Activity title="Bob upload this game" date="09 Jun 2023" />
 
               <Activity title="Bob upload this game" date="09 Jun 2023" />
-            </div>
+            </ol>
           </div>
         </div>
       </div>

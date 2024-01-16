@@ -1,7 +1,7 @@
 import { Button } from '@/components';
 
 export const CommentForm = () => (
-  <form class=" border bg-white rounded-lg px-4 pt-2">
+  <form class="w-full border bg-white rounded-lg px-4 pt-2">
     <div class="flex flex-wrap -mx-3 mb-6">
       <div>
         <h2 class="px-4 pt-3 pb-2 font-semibold text-gray-800 text-lg">

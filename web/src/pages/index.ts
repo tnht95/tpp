@@ -4,3 +4,4 @@ export * from './discussion-details';
 export * from './user-details';
 export * from './blogs';
 export * from './blog-details';
+export * from './dashboard';
