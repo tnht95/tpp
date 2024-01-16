@@ -1,20 +1,15 @@
-import { Show } from 'solid-js';
+import { Show, Suspense } from 'solid-js';
 
 import { Searchbar } from '@/components';
+import { useAuth } from '@/context';
 import { UserMenuGroup } from '@/parts';
 
 import { HeaderLogo } from './header-logo';
 import { HeaderMenu } from './header-menu';
+import { SignInBtn, SignInBtnSkeleton } from './sign-in';
 
-type HeaderProps = {
-  isAuthenticated: boolean;
-};
-export const Header = (props: HeaderProps) => {
-  const signInButton = (
-    <button class="border border-white rounded-full font-bold px-8 py-2  hover:bg-white hover:text-indigo-900 mr-12">
-      Sign In
-    </button>
-  );
+export const Header = () => {
+  const { user } = useAuth();
 
   return (
     <header class="top-0 bg-indigo-900 text-white flex flex-row items-center justify-between sticky z-50">
@@ -23,10 +18,11 @@ export const Header = (props: HeaderProps) => {
         <HeaderMenu />
         <Searchbar />
       </div>
-
-      <Show when={props.isAuthenticated} fallback={signInButton}>
-        <UserMenuGroup />
-      </Show>
+      <Suspense fallback={<SignInBtnSkeleton />}>
+        <Show when={user()} fallback={<SignInBtn />}>
+          <UserMenuGroup />
+        </Show>
+      </Suspense>
     </header>
   );
 };
