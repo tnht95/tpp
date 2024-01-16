@@ -6,3 +6,4 @@ export * from './blogs';
 export * from './blog-details';
 export * from './dashboard';
 export * from './search';
+export * from './not-found';
