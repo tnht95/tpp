@@ -16,3 +16,5 @@ export * from './blog-form';
 export * from './discussion-form';
 export * from './game-form';
 export * from './notification';
+export * from './post';
+export * from './vertical-game-card';

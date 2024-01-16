@@ -10,7 +10,7 @@ export const UserMenuGroup = () => (
     >
       <i class="fa-solid fa-earth-americas text-2xl" />
 
-      <div class="absolute block w-3 h-3 bg-red-500 border-2 border-white rounded-full left-4 top-1.5 start-2.5" />
+      <div class="absolute block w-3 h-3 bg-red-500 border-2 border-white rounded-full left-4 top-1.5 start-4" />
     </button>
 
     <div

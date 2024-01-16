@@ -14,7 +14,8 @@ export default {
     },
     extend: {
       width: {
-        '7/10': '70%'
+        '7/10': '70%',
+        '90px': '90px'
       }
     }
   },
