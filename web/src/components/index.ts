@@ -15,3 +15,4 @@ export * from './blog-post';
 export * from './blog-form';
 export * from './discussion-form';
 export * from './game-form';
+export * from './notification';

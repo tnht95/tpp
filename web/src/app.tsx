@@ -14,7 +14,7 @@ import {
 
 export const App = () => (
   <>
-    <Header />
+    <Header isAuthenticated={true}/>
     <Router>
       <Route path="/games" component={Games} />
       <Route path="/games/:id" component={GameDetails}>
