@@ -8,7 +8,7 @@ export const GameDiscussion = () => (
           <div class="overflow-hidden border border-gray-200 md:rounded-lg">
             <div class="min-w-full divide-y divide-gray-200">
               <div class="flex justify-between items-center py-3.5 px-8 text-base font-bold text-left rtl:text-right text-black">
-                <p>Total 2 discussions</p>
+                <p class="text-lg">Total 2 discussions</p>
                 <Button
                   withIcon="fa-solid fa-plus"
                   title="New"
