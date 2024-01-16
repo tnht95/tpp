@@ -11,14 +11,14 @@ export const UserDetails = () => (
                 <div class="relative">
                   <img
                     src="https://source.unsplash.com/jmURdhtm7Ng/120x120"
-                    class="dark:shadow-xl border-white dark:border-gray-800 rounded-full align-middle border-8 absolute -m-16 -ml-18 lg:-ml-16 max-w-[150px]"
+                    class="border-white  rounded-full align-middle border-8 absolute -m-16 -ml-18 lg:-ml-16 max-w-[150px]"
                     alt="d"
                   />
                 </div>
               </div>
             </div>
             <div class="mt-20 text-center flex justify-center  ">
-              <h3 class="text-2xl font-bold leading-normal text-gray-700 dark:text-gray-300">
+              <h3 class="text-2xl font-bold leading-normal text-gray-700">
                 Ariel Cerda
               </h3>
             </div>
