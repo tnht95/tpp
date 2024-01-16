@@ -5,3 +5,4 @@ export * from './user-details';
 export * from './blogs';
 export * from './blog-details';
 export * from './dashboard';
+export * from './search';

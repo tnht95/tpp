@@ -15,7 +15,7 @@ export const Header = (props: HeaderProps) => {
   );
 
   return (
-    <header class="top-0 bg-indigo-900 text-white flex flex-row items-center justify-between sticky ">
+    <header class="top-0 bg-indigo-900 text-white flex flex-row items-center justify-between sticky z-50">
       <div class=" ml-12 flex items-center h-16 w-3/5">
         <a href="/" class="mr-5 flex items-center justify-center">
           <img class="h-12" src={alienLogo} alt="logo" />

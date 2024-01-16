@@ -23,8 +23,8 @@ export const Dashboard = () => (
             </p>
             <div class="flex flex-col gap-5">
               <VerticalGameCard
-                user="Jen@gmai.com"
-                title="Space Invader"
+                user="Jen@gmai.comjhvhjv hvhmvh mvhvhmv"
+                title="Space Invaderhnvhmvhvhgcvhngcgbcgc"
                 img="https://ajor.co.uk/images/chip8/super-spacefig.png"
               />
               <VerticalGameCard

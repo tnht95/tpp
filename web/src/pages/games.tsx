@@ -38,10 +38,10 @@ export const Games = () => (
           />
         </div>
       </div>
-      <div class="flex-1">
-        <p class="text-2xl font-bold text-indigo-900 m-5 ml-0">Tags</p>
+      <div class="flex-1 mr-10">
+        <p class="text-2xl font-bold text-indigo-900 m-5 ml-0 ">Tags</p>
         <div class="flex flex-row flex-wrap gap-3">
-          <Tag name="Name" />
+          <Tag name="Name dgndjgbdjgbdjghbdgkjhdgdgdsgsdgsgsgdggsgsgsdgs" />
           <Tag name="Name" />
           <Tag name="Name" />
           <Tag name="Name" />

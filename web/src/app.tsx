@@ -9,7 +9,7 @@ import {
   Dashboard,
   DiscussionDetails,
   GameDetails,
-  Games,
+  Games, Search,
   UserDetails
 } from './pages';
 
@@ -28,6 +28,7 @@ export const App = () => (
       <Route path={'users/:id'} component={UserDetails} />
       <Route path={'blogs'} component={Blogs} />
       <Route path={'blogs/:id'} component={BlogDetails} />
+      <Route path={'search'} component={Search} />
     </Router>
   </>
 );

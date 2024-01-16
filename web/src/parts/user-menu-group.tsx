@@ -1,4 +1,4 @@
-import { Avatar, Notification } from '@/components';
+import { Avatar, EllipsisText, Notification } from '@/components';
 
 export const UserMenuGroup = () => (
   <div class="flex gap-7 items-center">
@@ -36,7 +36,7 @@ export const UserMenuGroup = () => (
       class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-52 "
     >
       <div class="px-4 py-5 text-sm text-gray-900">
-        <div class="truncate font-bold  ">name@flowbite.com</div>
+        <EllipsisText maxWidth="max-w-40" customStyle="font-bold">name@flowbite.comfsdfdsfsfs</EllipsisText>
       </div>
       <div
         class=" text-sm text-gray-700 "
