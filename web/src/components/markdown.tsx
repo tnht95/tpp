@@ -6,5 +6,5 @@ type MarkdownProps = {
 };
 
 export const Markdown = (props: MarkdownProps) => (
-  <SolidMarkdown remarkPlugins={[remarkGfm]} children={props.content} />
+  <SolidMarkdown class="markdown" remarkPlugins={[remarkGfm]} children={props.content} />
 );
