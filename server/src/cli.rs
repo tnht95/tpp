@@ -5,7 +5,7 @@ use clap::{Parser, Subcommand};
 #[command(propagate_version = true)]
 pub struct Cli {
     /// config path location
-    #[arg(short = 'c', long, default_value_t = format!("{}/.{}/config.toml", env!("HOME"), env!("CARGO_PKG_NAME")))]
+    #[arg(short = 'c', long, default_value_t = format!("{}/config.toml", env!("PWD")))]
     pub config: String,
 
     #[command(subcommand)]

@@ -24,14 +24,14 @@ use crate::{
 };
 
 pub async fn exchange_token<THealthService, TBookService>(
-    Query(params): Query<HashMap<String, String>>,
+    Query(query): Query<HashMap<String, String>>,
     State(state): InternalState<THealthService, TBookService>,
 ) -> Response
 where
     THealthService: IHealthService,
     TBookService: IBookService,
 {
-    let code = match params.get("code") {
+    let code = match query.get("code") {
         Some(id) => id,
         None => return (StatusCode::BAD_REQUEST, Json(MISSING_OATH_CODE)).into_response(),
     };
@@ -49,14 +49,8 @@ where
         }
     };
 
-    let user = match get_user_from_token(&gh_oauth.access_token).await {
-        Ok(user) => user,
-        Err(e) => return response_unhandled_err(e),
-    };
-
     let jwt = match jwt::encode(
-        *user.id,
-        user.email.unwrap_or("".into()),
+        gh_oauth.access_token,
         &state.config.auth.jwt.secret,
         state.config.auth.jwt.expire_in,
     ) {
@@ -82,10 +76,10 @@ where
         .into_response()
 }
 
-pub async fn verify<THealthService, TBookService>(
+pub async fn me<THealthService, TBookService>(
     headers: HeaderMap,
     State(state): InternalState<THealthService, TBookService>,
-) -> StatusCode
+) -> Response
 where
     THealthService: IHealthService,
     TBookService: IBookService,
@@ -93,13 +87,20 @@ where
     let cookie = match headers.get("cookie") {
         Some(cookie) => match cookie.to_str() {
             Ok(cookie) => cookie,
-            Err(_) => return StatusCode::UNAUTHORIZED,
+            Err(_) => return StatusCode::UNAUTHORIZED.into_response(),
         },
-        None => return StatusCode::UNAUTHORIZED,
+        None => return StatusCode::UNAUTHORIZED.into_response(),
     };
 
-    match jwt::decode(&cookie[13..], &state.config.auth.jwt.secret) {
-        Ok(_) => StatusCode::OK,
-        Err(_) => StatusCode::UNAUTHORIZED,
-    }
+    let jwt_claim = match jwt::decode(&cookie[13..], &state.config.auth.jwt.secret) {
+        Ok(jwt_claim) => jwt_claim,
+        Err(_) => return StatusCode::UNAUTHORIZED.into_response(),
+    };
+
+    let user = match get_user_from_token(&jwt_claim.gh_token).await {
+        Ok(user) => user,
+        Err(e) => return response_unhandled_err(e),
+    };
+
+    (StatusCode::OK, Json(user)).into_response()
 }

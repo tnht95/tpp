@@ -12,7 +12,6 @@ use axum::{
     ServiceExt,
 };
 use controllers::book::get_books;
-use octocrab::Octocrab;
 use tokio::sync::RwLock;
 use tower::ServiceBuilder;
 use tower_http::{
@@ -38,7 +37,6 @@ use crate::{
 
 pub struct Server<THealthService: IHealthService, TBookService: IBookService> {
     config: Config,
-    _gh_client: Octocrab,
     services: Services<THealthService, TBookService>,
 }
 
@@ -52,15 +50,9 @@ where
     THealthService: IHealthService + Sync + Send + 'static,
     TBookService: IBookService + Sync + Send + 'static,
 {
-    pub fn new(
-        config: Config,
-        gh_client: Octocrab,
-        health: THealthService,
-        book: TBookService,
-    ) -> Self {
+    pub fn new(config: Config, health: THealthService, book: TBookService) -> Self {
         Self {
             config,
-            _gh_client: gh_client,
             services: Services {
                 health: RwLock::new(health),
                 book,
@@ -109,7 +101,7 @@ where
             Router::new().nest(
                 "/api/v1",
                 Router::new()
-                    .route("/me", get(auth::verify))
+                    .route("/me", get(auth::me))
                     .route("/authentication", get(auth::exchange_token))
                     .route("/books", get(get_books))
                     .route("/books", post(add_books))

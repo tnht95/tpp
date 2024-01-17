@@ -74,9 +74,9 @@ impl Default for Config {
                     secret: "".into(),
                     expire_in: 3600,
                 },
-                redirect_url: "".into(),
+                redirect_url: "http://localhost:3000".into(),
             },
-            site_url: "".into(),
+            site_url: "http://localhost:3000".into(),
         }
     }
 }

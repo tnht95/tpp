@@ -15,3 +15,4 @@ target/
 
 .idea
 data
+config.toml

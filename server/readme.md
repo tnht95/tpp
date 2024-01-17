@@ -35,7 +35,7 @@ $ cargo install sqlx-cli
 $ make docker
 
 # manual run
-$ cargo run -- start
+$ RUST_LOG=4 cargo run -- start
 ```
 
 <!--

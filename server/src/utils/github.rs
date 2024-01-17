@@ -4,7 +4,7 @@ use axum::http::{
     HeaderMap,
     HeaderValue,
 };
-use octocrab::{models::Author, Octocrab};
+use octocrab::models::Author;
 use serde::Deserialize;
 
 #[derive(Deserialize)]
@@ -33,16 +33,6 @@ fn build_headers(token: Option<&str>) -> Result<HeaderMap> {
         );
     }
     Ok(headers)
-}
-
-pub fn build_client(app_id: u64, secret: &str) -> Result<Octocrab> {
-    octocrab::Octocrab::builder()
-        .app(
-            app_id.into(),
-            jsonwebtoken::EncodingKey::from_rsa_pem(secret.as_bytes())?,
-        )
-        .build()
-        .map_err(|e| anyhow!(e))
 }
 
 pub async fn exchange_user_token(
