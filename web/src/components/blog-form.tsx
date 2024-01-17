@@ -1,8 +1,15 @@
+import { Ref } from 'solid-js';
+
 import { Button } from '@/components';
 
-export const BlogForm = () => (
+type BlogFormProps = {
+  modalRef: Ref<HTMLDivElement>;
+  onCloseHandler: () => void;
+};
+
+export const BlogForm = (props: BlogFormProps) => (
   <div
-    id="blog-modal"
+    ref={props.modalRef}
     tabindex="-1"
     aria-hidden="true"
     class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0  max-h-full "
@@ -17,7 +24,7 @@ export const BlogForm = () => (
           <button
             type="button"
             class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-            data-modal-hide="blog-modal"
+            onClick={() => props.onCloseHandler()}
           >
             <i class="fa-solid fa-xmark text-lg" />
             <span class="sr-only">Close modal</span>
