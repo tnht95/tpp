@@ -9,7 +9,7 @@ import { HeaderMenu } from './header-menu';
 import { SignInBtn, SignInBtnSkeleton } from './sign-in';
 
 export const Header = () => {
-  const { user, dispatch } = useAuth();
+  const { user } = useAuth();
 
   return (
     <header class="top-0 bg-indigo-900 text-white flex flex-row items-center justify-between sticky z-50">
@@ -21,7 +21,6 @@ export const Header = () => {
       <Suspense fallback={<SignInBtnSkeleton />}>
         <Show when={!!user()} fallback={<SignInBtn />}>
           <UserMenuGroup />
-          <button onClick={dispatch.logout}>dasdsa</button>
         </Show>
       </Suspense>
     </header>
