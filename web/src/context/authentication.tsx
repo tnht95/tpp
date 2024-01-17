@@ -18,12 +18,20 @@ const fetchUser = (): Promise<unknown> =>
     .then(r => r.json())
     .catch(() => {});
 
-const [user] = createResource(fetchUser);
+const [user, { mutate }] = createResource(fetchUser);
+
+const handleLogout = () =>
+  fetch(`${import.meta.env.VITE_SERVER_URL}/logout`, {
+    credentials: 'include',
+    method: 'post'
+  });
 
 const authContext = createContext<AuthContext>({
   user,
   dispatch: {
-    logout: () => {}
+    logout: () => {
+      handleLogout().then(() => mutate());
+    }
   }
 });
 

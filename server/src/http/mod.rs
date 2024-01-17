@@ -102,6 +102,7 @@ where
                 "/api/v1",
                 Router::new()
                     .route("/me", get(auth::me))
+                    .route("/logout", post(auth::log_out))
                     .route("/authentication", get(auth::exchange_token))
                     .route("/books", get(get_books))
                     .route("/books", post(add_books))
