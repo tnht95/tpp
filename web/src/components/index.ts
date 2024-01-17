@@ -21,3 +21,4 @@ export * from './vertical-game-card';
 export * from './ellipsis-text';
 export * from './user-card';
 export * from './show-more-button';
+export * from './markdown';
