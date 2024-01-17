@@ -6,10 +6,9 @@ import { Avatar, EllipsisText, Notification } from '@/components';
 export const UserMenuGroup = () => {
   const [dropdownRef, setDropdownRef] = createSignal<HTMLDivElement>();
   const [btnRef, setBtnRef] = createSignal<HTMLButtonElement>();
-  const [dropdown, setDropdown] = createSignal<Dropdown>();
 
   createEffect(() => {
-    setDropdown(new Dropdown(dropdownRef(), btnRef()));
+    new Dropdown(dropdownRef(), btnRef());
   });
 
   return (
@@ -32,9 +31,6 @@ export const UserMenuGroup = () => {
         ref={setBtnRef}
         class="py-0.5 mr-10 flex text-white font-bold  items-center text-sm pe-1  hover:text-blue-600"
         type="button"
-        onClick={() => {
-          dropdown()?.show();
-        }}
       >
         <span class="sr-only">Open user menu</span>
         <Avatar />

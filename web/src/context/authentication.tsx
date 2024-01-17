@@ -14,7 +14,7 @@ type AuthContext = {
 };
 
 const fetchUser = (): Promise<unknown> =>
-  fetch(`${import.meta.env.VITE_SERVER_URL}/me`, {credentials: 'include'})
+  fetch(`${import.meta.env.VITE_SERVER_URL}/me`, { credentials: 'include' })
     .then(r => r.json())
     .catch(() => {});
 
