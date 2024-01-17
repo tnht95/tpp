@@ -27,9 +27,9 @@ pub async fn exchange_token<THealthService, TBookService>(
     Query(query): Query<HashMap<String, String>>,
     State(state): InternalState<THealthService, TBookService>,
 ) -> Response
-    where
-        THealthService: IHealthService,
-        TBookService: IBookService,
+where
+    THealthService: IHealthService,
+    TBookService: IBookService,
 {
     let code = match query.get("code") {
         Some(id) => id,
@@ -41,7 +41,7 @@ pub async fn exchange_token<THealthService, TBookService>(
         &state.config.github_app.client_secret,
         code,
     )
-        .await
+    .await
     {
         Ok(response) => response,
         Err(_) => {
@@ -80,9 +80,9 @@ pub async fn me<THealthService, TBookService>(
     headers: HeaderMap,
     State(state): InternalState<THealthService, TBookService>,
 ) -> Response
-    where
-        THealthService: IHealthService,
-        TBookService: IBookService,
+where
+    THealthService: IHealthService,
+    TBookService: IBookService,
 {
     let cookie = match headers.get("cookie") {
         Some(cookie) => match cookie.to_str() {
@@ -106,5 +106,12 @@ pub async fn me<THealthService, TBookService>(
 }
 
 pub async fn log_out() -> Response {
-    (StatusCode::OK, [(SET_COOKIE, "access_token=;SameSite=None;Secure;HttpOnly;Max-Age=".to_string())]).into_response()
+    (
+        StatusCode::OK,
+        [(
+            SET_COOKIE,
+            "access_token=;SameSite=None;Secure;HttpOnly;Max-Age=0".to_string(),
+        )],
+    )
+        .into_response()
 }
