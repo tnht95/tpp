@@ -1,4 +1,4 @@
-import { Comment, CommentForm } from '@/components';
+import { Comment, CommentForm, OptionButton } from '@/components';
 
 export const BlogDetails = () => (
   <div class="w-4/6 my-10">
@@ -6,7 +6,7 @@ export const BlogDetails = () => (
       <div>
         <div class="flex items-center justify-between">
           <p class="text-3xl font-bold">This is the title</p>
-          <i class="fa-solid fa-ellipsis cursor-pointer text-lg text-gray-500" />
+          <OptionButton id="post1" isOwner={true} enableDelete />
         </div>
         <p class="text-base text-gray-400">26 Sep 2011</p>
       </div>
@@ -71,14 +71,16 @@ export const BlogDetails = () => (
       </p>
     </div>
 
-    <div class="ml-5 flex flex-col gap-5">
+    <div class="ml-8 flex flex-col gap-5">
       <Comment
+        id="c111"
         user="Harry@yahoo.com"
         date="15 Jan 2014"
         likeNumber={1}
         liked={false}
       />
       <Comment
+        id="c211"
         user="Harry@yahoo.com"
         date="15 Jan 2014"
         likeNumber={1}
@@ -86,12 +88,14 @@ export const BlogDetails = () => (
       />
 
       <Comment
+        id="c311"
         user="Harry@yahoo.com"
         date="15 Jan 2014"
         likeNumber={1}
         liked={false}
       />
       <Comment
+        id="c151"
         user="Harry@yahoo.com"
         date="15 Jan 2014"
         likeNumber={1}
@@ -99,7 +103,7 @@ export const BlogDetails = () => (
       />
     </div>
     <div class="ml-20 mt-10">
-      <CommentForm />
+      <CommentForm>New Comment</CommentForm>
     </div>
   </div>
 );

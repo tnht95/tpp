@@ -1,12 +1,13 @@
 import { Show } from 'solid-js';
 
-import { Avatar } from '@/components';
+import { Avatar, OptionButton } from '@/components';
 
 type CommentProp = {
   user: string;
   date: string;
   likeNumber: number;
   liked: boolean;
+  id: string;
 };
 export const Comment = (props: CommentProp) => (
   <div class="flex">
@@ -17,10 +18,10 @@ export const Comment = (props: CommentProp) => (
           <span class="font-semibold">{props.user}</span> commented on{' '}
           {props.date}
         </div>
-        <i class="fa-solid fa-ellipsis cursor-pointer text-lg text-gray-500" />
+        <OptionButton isOwner={false} id={props.id} />
       </div>
 
-      <div class="border border-gray-200 border-t-0 rounded-b px-5 py-3">
+      <div class="border border-gray-200 bor der-t-0 rounded-b px-5 py-3">
         I saw this and this at this website. I'm unable to access the content or
         provide direct assistance with the specific URL you provided, as it has
         returned a 403 (Forbidden) error. However, I can offer general guidance

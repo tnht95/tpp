@@ -1,4 +1,4 @@
-import { Avatar, Comment } from '@/components';
+import { Avatar, Comment, OptionButton } from '@/components';
 
 export const Post = () => (
   <div class="bg-white  p-10 rounded-xl border w-full">
@@ -14,7 +14,7 @@ export const Post = () => (
           </span>
         </div>
       </div>
-      <i class="fa-solid fa-ellipsis cursor-pointer" />
+      <OptionButton id={'post1'} isOwner={true} />
     </div>
     <p class="text-black dark:text-white block text-xl leading-snug mt-3">
       “No one ever made a decision because of a number. They need a story.” —
@@ -39,7 +39,13 @@ export const Post = () => (
     </div>
 
     <div class="mt-5 flex flex-col gap-5">
-      <Comment user="d" date="Jun 23 2023" likeNumber={4} liked={false} />
+      <Comment
+        id="cmt11"
+        user="d"
+        date="Jun 23 2023"
+        likeNumber={4}
+        liked={false}
+      />
     </div>
   </div>
 );

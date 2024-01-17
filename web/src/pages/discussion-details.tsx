@@ -45,7 +45,7 @@ export const DiscussionDetails = () => (
         />
       </div>
       <div class="my-9 pl-12 ">
-        <CommentForm />
+        <CommentForm>New Comment</CommentForm>
       </div>
     </div>
   </div>

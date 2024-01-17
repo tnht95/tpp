@@ -7,12 +7,9 @@ export const Dashboard = () => (
         <nav class="flex w-2/6 h-full border-r border-dashed" />
         <main class="flex flex-col  h-full w-full bg-white px-32 mb-10">
           <div class="flex w-full mx-auto my-10">
-            <CommentForm />
+            <CommentForm>New Post</CommentForm>
           </div>
           <div class="flex flex-col gap-10">
-            <Post />
-            <Post />
-            <Post />
             <Post />
           </div>
         </main>
