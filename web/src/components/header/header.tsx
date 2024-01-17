@@ -19,7 +19,7 @@ export const Header = () => {
         <Searchbar />
       </div>
       <Suspense fallback={<SignInBtnSkeleton />}>
-        <Show when={user()} fallback={<SignInBtn />}>
+        <Show when={!!user()} fallback={<SignInBtn />}>
           <UserMenuGroup />
         </Show>
       </Suspense>
