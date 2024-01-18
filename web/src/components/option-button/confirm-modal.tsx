@@ -21,7 +21,7 @@ export const ConfirmModal = (props: ConfirmModalProps) => (
           <i class="fa-solid fa-x text-xs" />
           <span class="sr-only">Close modal</span>
         </button>
-        <div class="px-4 py-6  text-center">
+        <div class="px-4 py-6 text-center">
           <i class="fa-regular fa-circle-question mb-3 text-4xl text-red-600" />
           <h3 class="mb-5 text-lg font-normal text-gray-700 ">
             Are you sure you want to delete this?
@@ -29,13 +29,13 @@ export const ConfirmModal = (props: ConfirmModalProps) => (
           <div class="flex items-center justify-center gap-4">
             <button
               type="button"
-              class="me-2 inline-flex items-center rounded-lg border border-red-600  bg-red-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-white hover:text-red-600 focus:outline-none"
+              class="me-2 inline-flex items-center rounded-lg border border-red-600 bg-red-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-white hover:text-red-600 focus:outline-none"
             >
               Yes, I'm sure
             </button>
             <button
               type="button"
-              class="me-2 rounded-lg border border-gray-100 bg-gray-100 px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-white focus:z-10  focus:outline-none "
+              class="me-2 rounded-lg border border-gray-100 bg-gray-100 px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-white focus:z-10 focus:outline-none "
               onClick={() => props.onCloseHandler()}
             >
               No, cancel

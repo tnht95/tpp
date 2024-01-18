@@ -5,7 +5,7 @@ type PreviewButtonGroupProp = {
 
 export const PreviewButtonGroup = (props: PreviewButtonGroupProp) => (
   <div class="flex w-full items-center px-3 md:w-full">
-    <div class="mr-auto flex  items-start px-2 text-gray-700" />
+    <div class="mr-auto flex items-start px-2 text-gray-700" />
     <div class="-mr-1">
       <button
         type="button"

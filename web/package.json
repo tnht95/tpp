@@ -11,7 +11,7 @@
   },
   "scripts": {
     "format:check": "prettier --check .",
-    "format": "prettier --write .",
+    "format": "node ./html-trimmer && prettier --write .",
     "lint:check": "eslint .",
     "lint": "eslint . --fix",
     "dev": "vite",
