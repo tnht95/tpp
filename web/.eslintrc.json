@@ -23,7 +23,8 @@
     "prettier",
     "plugin:unicorn/recommended",
     "plugin:sonarjs/recommended",
-    "plugin:solid/typescript"
+    "plugin:solid/typescript",
+    "plugin:tailwindcss/recommended"
   ],
   "rules": {
     // turn off rules that are covered already by others

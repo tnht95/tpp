@@ -2306,6 +2306,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eslint-plugin-tailwindcss@npm:^3.14.0":
+  version: 3.14.0
+  resolution: "eslint-plugin-tailwindcss@npm:3.14.0"
+  dependencies:
+    fast-glob: "npm:^3.2.5"
+    postcss: "npm:^8.4.4"
+  peerDependencies:
+    tailwindcss: ^3.4.0
+  checksum: cee6f5e82b0c6b5ea6339cb824b8b9ee342fcbbd3dba7572c066308c1088eda4dd2861b0c2ec789e6b75243a9ea736c88271b8d64dc3cea18a54ff34e79117cf
+  languageName: node
+  linkType: hard
+
 "eslint-plugin-unicorn@npm:^50.0.1":
   version: 50.0.1
   resolution: "eslint-plugin-unicorn@npm:50.0.1"
@@ -2478,7 +2490,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-glob@npm:^3.2.9, fast-glob@npm:^3.3.0, fast-glob@npm:^3.3.1":
+"fast-glob@npm:^3.2.5, fast-glob@npm:^3.2.9, fast-glob@npm:^3.3.0, fast-glob@npm:^3.3.1":
   version: 3.3.2
   resolution: "fast-glob@npm:3.3.2"
   dependencies:
@@ -4660,7 +4672,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss@npm:^8.4.23, postcss@npm:^8.4.32, postcss@npm:^8.4.33":
+"postcss@npm:^8.4.23, postcss@npm:^8.4.32, postcss@npm:^8.4.33, postcss@npm:^8.4.4":
   version: 8.4.33
   resolution: "postcss@npm:8.4.33"
   dependencies:
@@ -5516,6 +5528,7 @@ __metadata:
     eslint-plugin-promise: "npm:^6.1.1"
     eslint-plugin-solid: "npm:^0.13.1"
     eslint-plugin-sonarjs: "npm:^0.23.0"
+    eslint-plugin-tailwindcss: "npm:^3.14.0"
     eslint-plugin-unicorn: "npm:^50.0.1"
     filehound: "npm:^1.17.6"
     flowbite: "npm:^2.2.1"
