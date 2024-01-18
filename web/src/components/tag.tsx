@@ -15,7 +15,7 @@ export const Tag = (props: TagProps) => (
       </svg>
       <div class="-ml-px h-full grow rounded-md rounded-l-none bg-indigo-200 group-hover:bg-indigo-900 " />
     </div>
-    <span class="relative flex cursor-pointer items-center p-2 pr-px font-semibold uppercase text-indigo-500 group-hover:text-white">
+    <span class="relative flex cursor-pointer items-center p-0.5 pr-px font-semibold uppercase text-indigo-500 group-hover:text-white">
       <EllipsisText maxWidth="max-w-80" customStyle="ml-2 px-2">
         {props.name}
       </EllipsisText>
