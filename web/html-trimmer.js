@@ -11,15 +11,14 @@ const files = FileHound.create()
 files
   .then(filePaths => {
     for (const filepath of filePaths) {
-      fs.readFile(filepath, 'utf8', (err, data) => {
+      fs.readFile(filepath, 'utf8', (err, content) => {
         if (err) throw err;
-        const newData = data
-          .replace(/ +(?= )/g, '')
-          .replace(/ +"|" +/g, '"')
-          .replace(/ +"|" +/g, '"');
-        fs.writeFile(filepath, newData, e => {
-          if (e) throw e;
-        });
+        const match = content.match(/^\s*"\s*(.*?)\s*"\s*$/);
+        if (match) {
+          fs.writeFile(filepath, match[1].replace(/\s+/g, ' '), e => {
+            if (e) throw e;
+          });
+        }
       });
     }
   })
