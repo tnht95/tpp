@@ -51,7 +51,7 @@ export const UserDetails = () => (
             <Button
               title="Add new game"
               withIcon="fa-solid fa-plus"
-              customStyle="border-green-400 text-green-400 font-bold hover:bg-green-400 hover:text-white"
+              customStyle="border-green-400 text-green-500 font-bold hover:bg-green-500 hover:text-white"
               modalTargetId="game-modal"
             />
             <GameForm />

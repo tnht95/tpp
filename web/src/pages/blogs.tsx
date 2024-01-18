@@ -17,7 +17,7 @@ export const Blogs = () => {
         <p class="font-bold text-4xl ">Blogs</p>
         <button
           type="button"
-          class="bg-green-400 text-white font-bold hover:text-indigo-900 hover:bg-white border rounded-lg py-2 px-7"
+          class="bg-green-500 text-white font-bold hover:text-green-500 hover:bg-white border rounded-lg py-2 px-7"
           onClick={() => {
             modal()?.show();
           }}

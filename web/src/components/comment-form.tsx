@@ -31,13 +31,18 @@ export const CommentForm = (props: ParentProps) => {
             <textarea
               class="bg-gray-100 rounded border border-gray-100 leading-normal resize-none w-full h-20 py-2 px-3 placeholder-gray-400 focus:border-gray-300 focus:outline-none focus:bg-white"
               name="body"
-              placeholder="Type Your Comment"
+              placeholder="Type Your Comment (Support some markdowns)"
               required
               onFocusOut={e => setContent(e.target.value)}
               value={content()}
             />
           </Show>
-          <PreviewButtonGroup onClick={handleClick} isEditMode={isEditMode()} />
+          <div class="mt-2">
+            <PreviewButtonGroup
+              onClick={handleClick}
+              isEditMode={isEditMode()}
+            />
+          </div>
         </div>
       </div>
     </form>
