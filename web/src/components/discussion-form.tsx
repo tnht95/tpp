@@ -1,8 +1,13 @@
-import { createSignal, Show } from 'solid-js';
+import { createSignal, Ref, Show } from 'solid-js';
 
 import { Markdown, PreviewButtonGroup } from '@/components';
 
-export const DiscussionForm = () => {
+type DiscussionFormProps = {
+  ref: Ref<HTMLDivElement>;
+  onCloseHandler: () => void;
+};
+
+export const DiscussionForm = (props: DiscussionFormProps) => {
   const [isEditMode, setIsEditMode] = createSignal(true);
   const [content, setContent] = createSignal('');
   const displayMarkdown = (
@@ -17,7 +22,7 @@ export const DiscussionForm = () => {
 
   return (
     <div
-      id="discussion-modal"
+      ref={props.ref}
       tabindex="-1"
       aria-hidden="true"
       class="fixed inset-x-0 top-0 z-50 hidden max-h-full w-full items-center justify-center overflow-y-auto overflow-x-hidden md:inset-0"
@@ -32,7 +37,7 @@ export const DiscussionForm = () => {
             <button
               type="button"
               class="end-2.5 ms-auto inline-flex size-8 items-center justify-center rounded-lg bg-transparent text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900"
-              data-modal-hide="discussion-modal"
+              onClick={() => props.onCloseHandler()}
             >
               <i class="fa-solid fa-xmark text-lg" />
               <span class="sr-only">Close modal</span>

@@ -41,7 +41,6 @@ export const Post = () => {
             <span class="ml-2 ">Like (615)</span>
           </div>
           <div
-            id="cmtPost"
             class="flex w-1/2 cursor-pointer items-center justify-center hover:font-bold hover:text-blue-700"
             onClick={toggleComment}
           >

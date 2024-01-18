@@ -1,10 +1,16 @@
-import { createSignal, Show } from 'solid-js';
+import { createSignal, Ref, Show } from 'solid-js';
 
 import { Markdown, PreviewButtonGroup } from '@/components';
 
-export const GameForm = () => {
+type GameFormProps = {
+  ref: Ref<HTMLDivElement>;
+  onCloseHandler: () => void;
+};
+
+export const GameForm = (props: GameFormProps) => {
   const [isEditMode, setIsEditMode] = createSignal(true);
   const [content, setContent] = createSignal('');
+
   const displayMarkdown = (
     <div class="h-60 overflow-auto border border-white px-3 py-2">
       <Markdown content={content()} />
@@ -17,7 +23,7 @@ export const GameForm = () => {
 
   return (
     <div
-      id="game-modal"
+      ref={props.ref}
       tabindex="-1"
       aria-hidden="true"
       class="fixed inset-x-0 top-0 z-50 hidden max-h-full w-full items-center justify-center overflow-y-auto overflow-x-hidden md:inset-0"
@@ -32,7 +38,7 @@ export const GameForm = () => {
             <button
               type="button"
               class="end-2.5 ms-auto inline-flex size-8 items-center justify-center rounded-lg bg-transparent text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900"
-              data-modal-hide="game-modal"
+              onClick={() => props.onCloseHandler()}
             >
               <i class="fa-solid fa-xmark text-lg" />
               <span class="sr-only">Close modal</span>
@@ -50,7 +56,6 @@ export const GameForm = () => {
                 class="w-full rounded-xl border p-3 placeholder:text-gray-400"
               />
               <textarea
-                id="postContent"
                 name="postContent"
                 rows="4"
                 class="w-full resize-none rounded-xl border border-gray-200 py-2 transition duration-150 ease-in-out placeholder:text-gray-400 focus:border-blue-500 focus:outline-none"
@@ -59,7 +64,6 @@ export const GameForm = () => {
 
               <Show when={isEditMode()} fallback={displayMarkdown}>
                 <textarea
-                  id="postContent"
                   name="postContent"
                   rows="4"
                   class="h-60 w-full resize-none rounded-xl border border-gray-200 py-2 transition duration-150 ease-in-out placeholder:text-gray-400 focus:border-blue-500 focus:outline-none"
@@ -77,7 +81,6 @@ export const GameForm = () => {
                 <div class="relative flex items-center justify-between rounded-xl border bg-white px-4 py-3 transition duration-150 ease-in-out hover:border-blue-500">
                   <input
                     type="file"
-                    id="fileAttachment"
                     name="fileAttachment"
                     class="absolute inset-0 size-full cursor-pointer opacity-0"
                   />

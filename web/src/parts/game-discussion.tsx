@@ -1,161 +1,176 @@
+import { Modal } from 'flowbite';
+import { createEffect, createSignal } from 'solid-js';
+
 import { Button, DiscussionForm, TableRow } from '@/components';
 
-export const GameDiscussion = () => (
-  <>
-    <div class="flex flex-col ">
-      <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8 ">
-        <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-          <div class="overflow-hidden border border-gray-200 md:rounded-lg">
-            <div class="min-w-full divide-y divide-gray-200">
-              <div class="flex items-center justify-between px-8 py-3.5 text-left text-base font-bold text-black rtl:text-right">
-                <p class="text-lg">Total 2 discussions</p>
-                <Button
-                  withIcon="fa-solid fa-plus"
-                  title="New"
-                  customStyle="hover:text-white hover:bg-green-500 float-right text-green-500 font-bold"
-                  modalTargetId="discussion-modal"
+export const GameDiscussion = () => {
+  const [modalRef, setModalRef] = createSignal<HTMLDivElement>();
+  const [modal, setModal] = createSignal<Modal>();
+
+  createEffect(() => {
+    setModal(new Modal(modalRef()));
+  });
+
+  return (
+    <>
+      <div class="flex flex-col ">
+        <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8 ">
+          <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+            <div class="overflow-hidden border border-gray-200 md:rounded-lg">
+              <div class="min-w-full divide-y divide-gray-200">
+                <div class="flex items-center justify-between px-8 py-3.5 text-left text-base font-bold text-black rtl:text-right">
+                  <p class="text-lg">Total 2 discussions</p>
+                  <Button
+                    withIcon="fa-solid fa-plus"
+                    title="New"
+                    customStyle="hover:text-white hover:bg-green-500 float-right text-green-500 font-bold"
+                    onClickHandler={() => modal()?.show()}
+                  />
+                </div>
+                <DiscussionForm
+                  ref={setModalRef}
+                  onCloseHandler={() => modal()?.hide()}
+                />
+                <TableRow
+                  title="Found Bug"
+                  user="johnny@gmail.com"
+                  date="26 Jan 2022"
+                />
+                <TableRow
+                  title="Found Bug"
+                  user="johnny@gmail.com"
+                  date="26 Jan 2022"
+                />
+                <TableRow
+                  title="Found Bug"
+                  user="johnny@gmail.com"
+                  date="26 Jan 2022"
+                />
+                <TableRow
+                  title="Found Bug"
+                  user="johnny@gmail.com"
+                  date="26 Jan 2022"
+                />
+                <TableRow
+                  title="Found Bug"
+                  user="johnny@gmail.com"
+                  date="26 Jan 2022"
+                />
+                <TableRow
+                  title="Found Bug"
+                  user="johnny@gmail.com"
+                  date="26 Jan 2022"
+                />
+                <TableRow
+                  title="Found Bug"
+                  user="johnny@gmail.com"
+                  date="26 Jan 2022"
+                />
+                <TableRow
+                  title="Found Bug"
+                  user="johnny@gmail.com"
+                  date="26 Jan 2022"
+                />
+                <TableRow
+                  title="Found Bug"
+                  user="johnny@gmail.com"
+                  date="26 Jan 2022"
                 />
               </div>
-              <DiscussionForm />
-              <TableRow
-                title="Found Bug"
-                user="johnny@gmail.com"
-                date="26 Jan 2022"
-              />
-              <TableRow
-                title="Found Bug"
-                user="johnny@gmail.com"
-                date="26 Jan 2022"
-              />
-              <TableRow
-                title="Found Bug"
-                user="johnny@gmail.com"
-                date="26 Jan 2022"
-              />
-              <TableRow
-                title="Found Bug"
-                user="johnny@gmail.com"
-                date="26 Jan 2022"
-              />
-              <TableRow
-                title="Found Bug"
-                user="johnny@gmail.com"
-                date="26 Jan 2022"
-              />
-              <TableRow
-                title="Found Bug"
-                user="johnny@gmail.com"
-                date="26 Jan 2022"
-              />
-              <TableRow
-                title="Found Bug"
-                user="johnny@gmail.com"
-                date="26 Jan 2022"
-              />
-              <TableRow
-                title="Found Bug"
-                user="johnny@gmail.com"
-                date="26 Jan 2022"
-              />
-              <TableRow
-                title="Found Bug"
-                user="johnny@gmail.com"
-                date="26 Jan 2022"
-              />
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="mt-6 flex items-center justify-between">
-      <a
-        href="#"
-        class="flex items-center gap-x-2 rounded-md border bg-white px-5 py-2 text-sm capitalize text-gray-700 transition-colors duration-200 hover:bg-gray-100 "
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="currentColor"
-          class="size-5 rtl:-scale-x-100"
+      <div class="mt-6 flex items-center justify-between">
+        <a
+          href="#"
+          class="flex items-center gap-x-2 rounded-md border bg-white px-5 py-2 text-sm capitalize text-gray-700 transition-colors duration-200 hover:bg-gray-100 "
         >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18"
-          />
-        </svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-5 rtl:-scale-x-100"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18"
+            />
+          </svg>
 
-        <span>previous</span>
-      </a>
+          <span>previous</span>
+        </a>
 
-      <div class="hidden items-center gap-x-3 md:flex">
+        <div class="hidden items-center gap-x-3 md:flex">
+          <a
+            href="#"
+            class="rounded-md bg-blue-100/60 px-2 py-1 text-sm text-blue-500"
+          >
+            1
+          </a>
+          <a
+            href="#"
+            class="rounded-md px-2 py-1 text-sm text-gray-500 hover:bg-gray-100"
+          >
+            2
+          </a>
+          <a
+            href="#"
+            class="rounded-md px-2 py-1 text-sm text-gray-500 hover:bg-gray-100"
+          >
+            3
+          </a>
+          <a
+            href="#"
+            class="rounded-md px-2 py-1 text-sm text-gray-500 hover:bg-gray-100"
+          >
+            ...
+          </a>
+          <a
+            href="#"
+            class="rounded-md px-2 py-1 text-sm text-gray-500 hover:bg-gray-100"
+          >
+            12
+          </a>
+          <a
+            href="#"
+            class="rounded-md px-2 py-1 text-sm text-gray-500 hover:bg-gray-100"
+          >
+            13
+          </a>
+          <a
+            href="#"
+            class="rounded-md px-2 py-1 text-sm text-gray-500 hover:bg-gray-100"
+          >
+            14
+          </a>
+        </div>
+
         <a
           href="#"
-          class="rounded-md bg-blue-100/60 px-2 py-1 text-sm text-blue-500"
+          class="flex items-center gap-x-2 rounded-md border bg-white px-5 py-2 text-sm capitalize text-gray-700 transition-colors duration-200 hover:bg-gray-100"
         >
-          1
-        </a>
-        <a
-          href="#"
-          class="rounded-md px-2 py-1 text-sm text-gray-500 hover:bg-gray-100"
-        >
-          2
-        </a>
-        <a
-          href="#"
-          class="rounded-md px-2 py-1 text-sm text-gray-500 hover:bg-gray-100"
-        >
-          3
-        </a>
-        <a
-          href="#"
-          class="rounded-md px-2 py-1 text-sm text-gray-500 hover:bg-gray-100"
-        >
-          ...
-        </a>
-        <a
-          href="#"
-          class="rounded-md px-2 py-1 text-sm text-gray-500 hover:bg-gray-100"
-        >
-          12
-        </a>
-        <a
-          href="#"
-          class="rounded-md px-2 py-1 text-sm text-gray-500 hover:bg-gray-100"
-        >
-          13
-        </a>
-        <a
-          href="#"
-          class="rounded-md px-2 py-1 text-sm text-gray-500 hover:bg-gray-100"
-        >
-          14
+          <span>Next</span>
+
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-5 rtl:-scale-x-100"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
+            />
+          </svg>
         </a>
       </div>
-
-      <a
-        href="#"
-        class="flex items-center gap-x-2 rounded-md border bg-white px-5 py-2 text-sm capitalize text-gray-700 transition-colors duration-200 hover:bg-gray-100"
-      >
-        <span>Next</span>
-
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="currentColor"
-          class="size-5 rtl:-scale-x-100"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
-          />
-        </svg>
-      </a>
-    </div>
-  </>
-);
+    </>
+  );
+};
