@@ -6,7 +6,7 @@ export const DiscussionDetails = () => (
     <GameDetailsTabs />
 
     <div class="flex flex-col ml-14 mt-5 w-3/5">
-      <div class="border-b  py-5 ">
+      <div class="border-b py-5 ">
         <p class="text-3xl font-semibold"> Found bug at abc.com</p>
         <p class="text-base text-gray-400 mt-1">
           On 19 Jan 2011 by Bobby@gmail.com

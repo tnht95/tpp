@@ -33,7 +33,7 @@ export const GameDetailsSidebar = () => (
       <p class="text-base font-semibold text-black mb-5">Upload By</p>
       <Avatar />
     </div>
-    <div class="flex flex-col  flex-wrap gap-2 my-4">
+    <div class="flex flex-col flex-wrap gap-2 my-4">
       <p class="text-base font-semibold text-black mb-3">Tag</p>
       <div class="flex flex-wrap gap-2">
         <Tag name="Name" />

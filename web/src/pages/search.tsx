@@ -1,11 +1,11 @@
 import { BlogPost, GameCard, ShowMoreButton, UserCard } from '@/components';
 
 export const Search = () => (
-  <div class="flex  ">
-    <div class="flex-1 flex flex-col  ">
+  <div class="flex ">
+    <div class="flex-1 flex flex-col ">
       <div class="flex h-full ">
         <nav class="flex w-2/6 h-full border-r border-dashed" />
-        <main class="flex flex-col  h-full w-full bg-white px-32  gap-7 mt-10">
+        <main class="flex flex-col h-full w-full bg-white px-32 gap-7 mt-10">
           <p class="text-indigo-900 font-bold text-2xl">Result for "Game":</p>
           <div class="flex flex-col ">
             <div>
@@ -82,7 +82,7 @@ export const Search = () => (
             </div>
           </div>
         </main>
-        <nav class="flex w-1/2 h-full border-l border-dashed  relative -z-10 " />
+        <nav class="flex w-1/2 h-full border-l border-dashed relative -z-10 " />
       </div>
     </div>
   </div>

@@ -10,7 +10,7 @@ export const Searchbar = () => (
       <button
         id="dropdown-button"
         data-dropdown-toggle="dropdown"
-        class="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm  font-medium text-center text-white bg-indigo-900 border border-white rounded-s-lg hover:bg-white hover:text-indigo-900 hover:border-r-indigo-900 focus:outline-none  "
+        class="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-white bg-indigo-900 border border-white rounded-s-lg hover:bg-white hover:text-indigo-900 hover:border-r-indigo-900 focus:outline-none "
         type="button"
       >
         All categories <i class="fa-solid fa-angle-down ml-2" />

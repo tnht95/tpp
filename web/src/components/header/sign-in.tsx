@@ -1,7 +1,7 @@
 export const SignInBtn = () => (
   <a
     href={import.meta.env.VITE_GITHUB_SIGNIN_URL}
-    class="border border-white rounded-full font-bold px-8 py-2  hover:bg-white hover:text-indigo-900 mr-12"
+    class="border border-white rounded-full font-bold px-8 py-2 hover:bg-white hover:text-indigo-900 mr-12"
   >
     Sign In
   </a>

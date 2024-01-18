@@ -21,7 +21,7 @@ export const UserMenuGroup = () => {
   return (
     <div class="flex gap-7 items-center">
       <button
-        class="py-1.5 relative text-sm font-medium  text-black hover:text-gray-500 focus:outline-none "
+        class="py-1.5 relative text-sm font-medium text-black hover:text-gray-500 focus:outline-none "
         ref={setNotiBtnRef}
       >
         <i class="fa-solid fa-earth-americas text-2xl" />
@@ -39,7 +39,7 @@ export const UserMenuGroup = () => {
 
       <button
         ref={setUserBtnRef}
-        class="py-0.5 mr-10 flex text-white font-bold  items-center text-sm pe-1  hover:text-blue-600"
+        class="py-0.5 mr-10 flex text-white font-bold items-center text-sm pe-1 hover:text-blue-600"
       >
         <span class="sr-only">Open user menu</span>
         <Avatar />
@@ -72,7 +72,7 @@ export const UserMenuGroup = () => {
           <i class="fa-solid fa-arrow-right-from-bracket text-sm " />
           <a
             href="#"
-            class="block  text-sm   "
+            class="block text-sm "
             onClick={() => {
               dispatch.logout();
             }}

@@ -2,7 +2,7 @@ import { Comment, CommentForm, OptionButton } from '@/components';
 
 export const BlogDetails = () => (
   <div class="w-4/6 my-10">
-    <div class="border rounded-xl ml-20 px-10 py-7  flex flex-col gap-7 mb-10">
+    <div class="border rounded-xl ml-20 px-10 py-7 flex flex-col gap-7 mb-10">
       <div>
         <div class="flex items-center justify-between">
           <p class="text-3xl font-bold">This is the title</p>

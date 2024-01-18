@@ -12,11 +12,11 @@ export const BlogForm = (props: BlogFormProps) => (
     ref={props.modalRef}
     tabindex="-1"
     aria-hidden="true"
-    class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0  max-h-full "
+    class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 max-h-full "
   >
     <div class="relative p-6 w-1/2">
       <div class="relative bg-white rounded-xl shadow ">
-        <div class="flex items-center justify-between p-6   rounded-t ">
+        <div class="flex items-center justify-between p-6 rounded-t ">
           <div class=" text-center font-bold text-2xl text-gray-800 ml-1">
             New Post
           </div>
@@ -31,19 +31,19 @@ export const BlogForm = (props: BlogFormProps) => (
           </button>
         </div>
         <form action="#">
-          <div class=" mx-auto  flex flex-col text-gray-800 border-b  rounded-b-xl border-gray-300 px-6 shadow-lg gap-7">
+          <div class=" mx-auto flex flex-col text-gray-800 border-b rounded-b-xl border-gray-300 px-6 shadow-lg gap-7">
             <input
-              class="placeholder-gray-400  border border-gray-300 p-3 rounded-xl outline-none"
+              class="placeholder-gray-400 border border-gray-300 p-3 rounded-xl outline-none"
               placeholder="Title"
               type="text"
             />
             <textarea
-              class=" placeholder-gray-400   p-3  border rounded-xl border-gray-300 outline-none"
+              class=" placeholder-gray-400 p-3 border rounded-xl border-gray-300 outline-none"
               placeholder="Describe shortly about this post here"
             />
 
             <textarea
-              class="placeholder-gray-400  p-3 h-60 border rounded-xl border-gray-300 outline-none"
+              class="placeholder-gray-400 p-3 h-60 border rounded-xl border-gray-300 outline-none"
               placeholder="Describe everything about this post here"
             />
 

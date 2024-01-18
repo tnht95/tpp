@@ -93,19 +93,19 @@ export const GameDiscussion = () => (
       <div class="items-center hidden md:flex gap-x-3">
         <a
           href="#"
-          class="px-2 py-1 text-sm text-blue-500 rounded-md  bg-blue-100/60"
+          class="px-2 py-1 text-sm text-blue-500 rounded-md bg-blue-100/60"
         >
           1
         </a>
         <a
           href="#"
-          class="px-2 py-1 text-sm text-gray-500 rounded-md   hover:bg-gray-100"
+          class="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100"
         >
           2
         </a>
         <a
           href="#"
-          class="px-2 py-1 text-sm text-gray-500 rounded-md   hover:bg-gray-100"
+          class="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100"
         >
           3
         </a>
@@ -117,7 +117,7 @@ export const GameDiscussion = () => (
         </a>
         <a
           href="#"
-          class="px-2 py-1 text-sm text-gray-500 rounded-md  hover:bg-gray-100"
+          class="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100"
         >
           12
         </a>
@@ -129,7 +129,7 @@ export const GameDiscussion = () => (
         </a>
         <a
           href="#"
-          class="px-2 py-1 text-sm text-gray-500 rounded-md  hover:bg-gray-100"
+          class="px-2 py-1 text-sm text-gray-500 rounded-md hover:bg-gray-100"
         >
           14
         </a>

@@ -29,7 +29,7 @@ export const CommentForm = (props: ParentProps) => {
         <div class="w-full md:w-full px-3 mb-2 mt-2">
           <Show when={isEditMode()} fallback={displayMarkdown}>
             <textarea
-              class="bg-gray-100 rounded border border-gray-100 leading-normal resize-none w-full h-20 py-2 px-3  placeholder-gray-400 focus:border-gray-300 focus:outline-none focus:bg-white"
+              class="bg-gray-100 rounded border border-gray-100 leading-normal resize-none w-full h-20 py-2 px-3 placeholder-gray-400 focus:border-gray-300 focus:outline-none focus:bg-white"
               name="body"
               placeholder="Type Your Comment"
               required

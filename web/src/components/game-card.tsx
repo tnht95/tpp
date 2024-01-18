@@ -7,7 +7,7 @@ type GameCardProps = {
   img: string;
 };
 export const GameCard = (props: GameCardProps) => (
-  <div class=" w-40 bg-indigo-300 shadow-md rounded-lg hover:bg-white border-1  ">
+  <div class=" w-40 bg-indigo-300 shadow-md rounded-lg hover:bg-white border-1 ">
     <a href="">
       <img
         class="rounded-t-lg p-4 w-60 h-24"

@@ -1,11 +1,11 @@
 import { Avatar, Comment, OptionButton } from '@/components';
 
 export const Post = () => (
-  <div class="bg-white  p-10 rounded-xl border w-full">
+  <div class="bg-white p-10 rounded-xl border w-full">
     <div class="flex justify-between">
       <div class="flex items-center">
         <Avatar />
-        <div class="ml-2  leading-tight">
+        <div class="ml-2 leading-tight">
           <span class="text-black text-base dark:text-white font-bold block ">
             Visualize Value
           </span>

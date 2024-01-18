@@ -1,3 +1,4 @@
 .yarn
 dist
 coverage
+html-trimmer.js

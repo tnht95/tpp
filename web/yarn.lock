@@ -1511,6 +1511,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"bluebird@npm:^3.4.7, bluebird@npm:^3.7.2":
+  version: 3.7.2
+  resolution: "bluebird@npm:3.7.2"
+  checksum: 680de03adc54ff925eaa6c7bb9a47a0690e8b5de60f4792604aae8ed618c65e6b63a7893b57ca924beaf53eee69c5af4f8314148c08124c550fe1df1add897d2
+  languageName: node
+  linkType: hard
+
 "brace-expansion@npm:^1.1.7":
   version: 1.1.11
   resolution: "brace-expansion@npm:1.1.11"
@@ -1957,6 +1964,13 @@ __metadata:
   version: 2.2.1
   resolution: "env-paths@npm:2.2.1"
   checksum: 285325677bf00e30845e330eec32894f5105529db97496ee3f598478e50f008c5352a41a30e5e72ec9de8a542b5a570b85699cd63bd2bc646dbcb9f311d83bc4
+  languageName: node
+  linkType: hard
+
+"err-code@npm:^1.0.0":
+  version: 1.1.2
+  resolution: "err-code@npm:1.1.2"
+  checksum: c5c0daadf1f1fb6065e97f1f76d66a72a77d6b38e1e4069e170579ed4d99058acc6d61b9248e8fdd27a74a7f489eb3aa1e376f24342fd4b792b13fcc2065b2c3
   languageName: node
   linkType: hard
 
@@ -2509,6 +2523,31 @@ __metadata:
   languageName: node
   linkType: hard
 
+"file-js@npm:0.3.0":
+  version: 0.3.0
+  resolution: "file-js@npm:0.3.0"
+  dependencies:
+    bluebird: "npm:^3.4.7"
+    minimatch: "npm:^3.0.3"
+    proper-lockfile: "npm:^1.2.0"
+  checksum: e61a3400ddd3f9002a1b46380f471893a71266e5edf56882f97e1931e2f125136001a9e9f92ae875beea83ba7dec4aa7068f6312edc35a490ca28985c95eba01
+  languageName: node
+  linkType: hard
+
+"filehound@npm:^1.17.6":
+  version: 1.17.6
+  resolution: "filehound@npm:1.17.6"
+  dependencies:
+    bluebird: "npm:^3.7.2"
+    file-js: "npm:0.3.0"
+    lodash: "npm:^4.17.21"
+    minimatch: "npm:^5.0.0"
+    moment: "npm:^2.29.1"
+    unit-compare: "npm:^1.0.1"
+  checksum: 1af9714b709ddf51ee6bea875b62ca4d0d94cb12473e6226cf29c552f9ae1cce282b14782c96f6300fc1519a6f519d769e72a9d1952754e01b2bd94a66e70fe0
+  languageName: node
+  linkType: hard
+
 "fill-range@npm:^7.0.1":
   version: 7.0.1
   resolution: "fill-range@npm:7.0.1"
@@ -2795,7 +2834,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graceful-fs@npm:^4.2.4, graceful-fs@npm:^4.2.6":
+"graceful-fs@npm:^4.1.2, graceful-fs@npm:^4.2.4, graceful-fs@npm:^4.2.6":
   version: 4.2.11
   resolution: "graceful-fs@npm:4.2.11"
   checksum: 386d011a553e02bc594ac2ca0bd6d9e4c22d7fa8cfbfc448a6d148c59ea881b092db9dbe3547ae4b88e55f1b01f7c4a2ecc53b310c042793e63aa44cf6c257f2
@@ -3448,6 +3487,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lodash@npm:^4.17.21":
+  version: 4.17.21
+  resolution: "lodash@npm:4.17.21"
+  checksum: d8cbea072bb08655bb4c989da418994b073a608dffa608b09ac04b43a791b12aeae7cd7ad919aa4c925f33b48490b5cfe6c1f71d827956071dae2e7bb3a6b74c
+  languageName: node
+  linkType: hard
+
 "longest-streak@npm:^3.0.0":
   version: 3.1.0
   resolution: "longest-streak@npm:3.1.0"
@@ -4050,12 +4096,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minimatch@npm:^3.0.5, minimatch@npm:^3.1.1, minimatch@npm:^3.1.2":
+"minimatch@npm:^3.0.3, minimatch@npm:^3.0.5, minimatch@npm:^3.1.1, minimatch@npm:^3.1.2":
   version: 3.1.2
   resolution: "minimatch@npm:3.1.2"
   dependencies:
     brace-expansion: "npm:^1.1.7"
   checksum: 0262810a8fc2e72cca45d6fd86bd349eee435eb95ac6aa45c9ea2180e7ee875ef44c32b55b5973ceabe95ea12682f6e3725cbb63d7a2d1da3ae1163c8b210311
+  languageName: node
+  linkType: hard
+
+"minimatch@npm:^5.0.0":
+  version: 5.1.6
+  resolution: "minimatch@npm:5.1.6"
+  dependencies:
+    brace-expansion: "npm:^2.0.1"
+  checksum: 3defdfd230914f22a8da203747c42ee3c405c39d4d37ffda284dac5e45b7e1f6c49aa8be606509002898e73091ff2a3bbfc59c2c6c71d4660609f63aa92f98e3
   languageName: node
   linkType: hard
 
@@ -4156,6 +4211,13 @@ __metadata:
   bin:
     mkdirp: bin/cmd.js
   checksum: 46ea0f3ffa8bc6a5bc0c7081ffc3907777f0ed6516888d40a518c5111f8366d97d2678911ad1a6882bf592fa9de6c784fea32e1687bb94e1f4944170af48a5cf
+  languageName: node
+  linkType: hard
+
+"moment@npm:^2.14.1, moment@npm:^2.29.1":
+  version: 2.30.1
+  resolution: "moment@npm:2.30.1"
+  checksum: 865e4279418c6de666fca7786607705fd0189d8a7b7624e2e56be99290ac846f90878a6f602e34b4e0455c549b85385b1baf9966845962b313699e7cb847543a
   languageName: node
   linkType: hard
 
@@ -4642,6 +4704,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"proper-lockfile@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "proper-lockfile@npm:1.2.0"
+  dependencies:
+    err-code: "npm:^1.0.0"
+    extend: "npm:^3.0.0"
+    graceful-fs: "npm:^4.1.2"
+    retry: "npm:^0.10.0"
+  checksum: acb2cb1043d40b8fe2240ea49a6ad35081435e8a5ae5fd0ae2ec983058cf3634ec65b2eb8019121bcad80cf5d406e4b962b2842b343067311e9bb2231b0cb372
+  languageName: node
+  linkType: hard
+
 "property-information@npm:^6.3.0":
   version: 6.4.0
   resolution: "property-information@npm:6.4.0"
@@ -4807,6 +4881,13 @@ __metadata:
   bin:
     resolve: bin/resolve
   checksum: 0446f024439cd2e50c6c8fa8ba77eaa8370b4180f401a96abf3d1ebc770ac51c1955e12764cde449fde3fff480a61f84388e3505ecdbab778f4bef5f8212c729
+  languageName: node
+  linkType: hard
+
+"retry@npm:^0.10.0":
+  version: 0.10.1
+  resolution: "retry@npm:0.10.1"
+  checksum: d5a7cbc7eca5589a4cf048355150c6746965ace4193080c46b34fe92059506ce39887f5d2bbc58d1d14ecf3b53c5c86d01bd82d158eac9b58aa2f075c2ae7b21
   languageName: node
   linkType: hard
 
@@ -5436,6 +5517,7 @@ __metadata:
     eslint-plugin-solid: "npm:^0.13.1"
     eslint-plugin-sonarjs: "npm:^0.23.0"
     eslint-plugin-unicorn: "npm:^50.0.1"
+    filehound: "npm:^1.17.6"
     flowbite: "npm:^2.2.1"
     postcss: "npm:^8.4.33"
     prettier: "npm:^3.2.3"
@@ -5710,6 +5792,15 @@ __metadata:
     unist-util-is: "npm:^5.0.0"
     unist-util-visit-parents: "npm:^5.1.1"
   checksum: 56a1f49a4d8e321e75b3c7821d540a45165a031dd06324bb0e8c75e7737bc8d73bdddbf0b0ca82000f9708a4c36861c6ebe88d01f7cf00e925f5d75f13a3a017
+  languageName: node
+  linkType: hard
+
+"unit-compare@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "unit-compare@npm:1.0.1"
+  dependencies:
+    moment: "npm:^2.14.1"
+  checksum: d61b320dbff776592407a109521d17ecc0c0700ca0ddece98990a2ef87e457994613ecaa9fd608e18a4fdc3aad7b3aec66adafede30fbf38c354ea1860202d1d
   languageName: node
   linkType: hard
 

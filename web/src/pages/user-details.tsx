@@ -1,23 +1,23 @@
 import { Activity, Button, GameCard, GameForm, PillButton } from '@/components';
 
 export const UserDetails = () => (
-  <div class=" ml-10  my-5 p-5">
+  <div class=" ml-10 my-5 p-5">
     <div class="md:flex no-wrap md:-mx-2 ">
       <div class="w-full md:w-3/12 md:mx-2">
-        <div class=" w-full group max-w-md min-w-0  mt-6 mb-6 break-words bg-white border rounded-xl">
+        <div class=" w-full group max-w-md min-w-0 mt-6 mb-6 break-words bg-white border rounded-xl">
           <div>
             <div class="flex flex-wrap justify-center">
               <div class="flex justify-center w-full">
                 <div class="relative">
                   <img
                     src="https://source.unsplash.com/jmURdhtm7Ng/120x120"
-                    class="border-white  rounded-full align-middle border-8 absolute -m-16 -ml-18 lg:-ml-16 max-w-[150px]"
+                    class="border-white rounded-full align-middle border-8 absolute -m-16 -ml-18 lg:-ml-16 max-w-[150px]"
                     alt="d"
                   />
                 </div>
               </div>
             </div>
-            <div class="mt-20 text-center flex justify-center  ">
+            <div class="mt-20 text-center flex justify-center ">
               <h3 class="text-2xl font-bold leading-normal text-gray-700">
                 Ariel Cerda
               </h3>

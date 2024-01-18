@@ -5,11 +5,11 @@ export const GameForm = () => (
     id="game-modal"
     tabindex="-1"
     aria-hidden="true"
-    class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0  max-h-full hidden "
+    class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 max-h-full hidden "
   >
-    <div class="relative  w-1/2">
+    <div class="relative w-1/2">
       <div class="relative bg-white rounded-xl shadow p-4">
-        <div class="flex items-center justify-between p-6   rounded-t ">
+        <div class="flex items-center justify-between p-6 rounded-t ">
           <div class="text-center font-bold text-2xl text-gray-700 ml-1">
             Upload your game
           </div>
