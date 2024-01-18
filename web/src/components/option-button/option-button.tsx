@@ -1,5 +1,6 @@
-import { Dropdown } from 'flowbite';
+import { Dropdown, Modal } from 'flowbite';
 import { createEffect, createSignal, Show } from 'solid-js';
+import { ConfirmModal } from './confirm-modal';
 
 type OptionButtonProp = {
   id: string;
@@ -10,8 +11,12 @@ export const OptionButton = (props: OptionButtonProp) => {
   const [userDropdownRef, setUserDropdownRef] = createSignal<HTMLDivElement>();
   const [userBtnRef, setUserBtnRef] = createSignal<HTMLButtonElement>();
 
+  const [modalRef, setModalRef] = createSignal<HTMLDivElement>();
+  const [modal, setModal] = createSignal<Modal>();
+
   createEffect(() => {
     new Dropdown(userDropdownRef(), userBtnRef());
+    setModal(new Modal(modalRef()));
   });
 
   const otherContent = (
@@ -28,18 +33,13 @@ export const OptionButton = (props: OptionButtonProp) => {
 
   return (
     <>
-      <span
-        ref={setUserBtnRef}
-        id={`${props.id} + 'btn'`}
-        data-dropdown-toggle={`${props.id} + 'drop'`}
-      >
+      <span ref={setUserBtnRef}>
         <i
           class={`fa-solid fa-ellipsis cursor-pointer text-lg text-gray-300 hover:text-gray-500 ${props.customStyle}`}
         />
       </span>
       <div
         ref={setUserDropdownRef}
-        id={`${props.id} + 'drop'`}
         class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-28 dark:bg-gray-700"
       >
         <ul
@@ -58,8 +58,11 @@ export const OptionButton = (props: OptionButtonProp) => {
             </li>
             <li>
               <a
-                href="#"
+                href=""
                 class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                onclick={() => {
+                  modal()?.show();
+                }}
               >
                 <i class="fa-solid fa-trash-can mr-2" />
                 Delete
@@ -68,6 +71,10 @@ export const OptionButton = (props: OptionButtonProp) => {
           </Show>
         </ul>
       </div>
+      <ConfirmModal
+        setModalRef={setModalRef}
+        onCloseHandler={() => modal()?.hide()}
+      />
     </>
   );
 };
