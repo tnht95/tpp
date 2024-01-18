@@ -1,11 +1,11 @@
 import { GameTab, OptionButton, PillButton } from '@/components';
 
 export const GameDetailsTabs = () => (
-  <div class="px-6 mt-4 overflow-x-hidden lg:px-10">
+  <div class="mt-4 overflow-x-hidden px-6 lg:px-10">
     <div class="flex flex-row ">
-      <div class="flex items-center w-7/10">
-        <i class="fa-solid fa-puzzle-piece text-indigo-900 text-xl mr-2" />
-        <div class="text-2xl font-medium text-indigo-900 cursor-pointer hover:underline mr-3">
+      <div class="flex w-7/10 items-center">
+        <i class="fa-solid fa-puzzle-piece mr-2 text-xl text-indigo-900" />
+        <div class="mr-3 cursor-pointer text-2xl font-medium text-indigo-900 hover:underline">
           tailwindcss
         </div>
         <OptionButton id="gameinfo" isOwner={true} />
@@ -19,7 +19,7 @@ export const GameDetailsTabs = () => (
       </div>
     </div>
 
-    <div class="flex items-center justify-between px-10 mt-6 -mx-10 border-b select-none">
+    <div class="-mx-10 mt-6 flex select-none items-center justify-between border-b px-10">
       <div class="flex">
         <GameTab
           title="Info"

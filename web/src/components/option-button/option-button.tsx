@@ -4,7 +4,6 @@ import { createEffect, createSignal, Show } from 'solid-js';
 import { ConfirmModal } from './confirm-modal';
 
 type OptionButtonProp = {
-  id: string;
   isOwner: boolean;
   customStyle?: string;
 };
@@ -41,12 +40,9 @@ export const OptionButton = (props: OptionButtonProp) => {
       </span>
       <div
         ref={setUserDropdownRef}
-        class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-28 dark:bg-gray-700"
+        class="z-10 hidden w-28 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700"
       >
-        <ul
-          class="py-2 text-sm text-gray-700 dark:text-gray-200"
-          aria-labelledby={`${props.id} + 'btn'`}
-        >
+        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
           <Show when={props.isOwner} fallback={otherContent}>
             <li>
               <a

@@ -6,7 +6,7 @@ export const DiscussionForm = () => {
   const [isEditMode, setIsEditMode] = createSignal(true);
   const [content, setContent] = createSignal('');
   const displayMarkdown = (
-    <div class="p-3 h-60 overflow-auto border border-white">
+    <div class="h-60 overflow-auto border border-white p-3">
       <Markdown content={content()} />
     </div>
   );
@@ -20,18 +20,18 @@ export const DiscussionForm = () => {
       id="discussion-modal"
       tabindex="-1"
       aria-hidden="true"
-      class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 max-h-full "
+      class="fixed inset-x-0 top-0 z-50 hidden max-h-full w-full items-center justify-center overflow-y-auto overflow-x-hidden md:inset-0"
     >
-      <div class="relative p-6 w-1/2">
-        <div class="relative bg-white rounded-xl shadow ">
-          <div class="flex items-center justify-between p-6 rounded-t">
-            <div class=" text-center font-bold text-2xl text-gray-800 ml-1">
+      <div class="relative w-1/2 p-6">
+        <div class="relative rounded-xl bg-white shadow ">
+          <div class="flex items-center justify-between rounded-t p-6">
+            <div class=" ml-1 text-center text-2xl font-bold text-gray-800">
               New Discussion
             </div>
 
             <button
               type="button"
-              class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+              class="end-2.5 ms-auto inline-flex size-8 items-center justify-center rounded-lg bg-transparent text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900"
               data-modal-hide="discussion-modal"
             >
               <i class="fa-solid fa-xmark text-lg" />
@@ -39,15 +39,15 @@ export const DiscussionForm = () => {
             </button>
           </div>
           <form action="#">
-            <div class=" mx-auto flex flex-col text-gray-800 border-b rounded-b-xl border-gray-300 px-6 shadow-lg gap-7">
+            <div class=" mx-auto flex flex-col gap-7 rounded-b-xl border-b border-gray-300 px-6 text-gray-800 shadow-lg">
               <input
-                class="placeholder-gray-400 border border-gray-300 p-3 rounded-xl outline-none"
+                class="rounded-xl border border-gray-300 p-3 outline-none placeholder:text-gray-400"
                 placeholder="Discussion title"
                 type="text"
               />
               <Show when={isEditMode()} fallback={displayMarkdown}>
                 <textarea
-                  class="placeholder-gray-400 p-3 h-60 border rounded-xl border-gray-300 outline-none"
+                  class="h-60 rounded-xl border border-gray-300 p-3 outline-none placeholder:text-gray-400"
                   placeholder="Describe everything about this post here (Support some markdowns)"
                   onFocusOut={e => setContent(e.target.value)}
                   value={content()}

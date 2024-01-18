@@ -3,27 +3,27 @@ export const Searchbar = () => (
     <div class="flex">
       <label
         for="search-dropdown"
-        class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
+        class="sr-only mb-2 text-sm font-medium text-gray-900 dark:text-white"
       >
         Your Email
       </label>
       <button
         id="dropdown-button"
         data-dropdown-toggle="dropdown"
-        class="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-white bg-indigo-900 border border-white rounded-s-lg hover:bg-white hover:text-indigo-900 hover:border-r-indigo-900 focus:outline-none "
+        class="z-10 inline-flex shrink-0 items-center rounded-s-lg border border-white bg-indigo-900 px-4 py-2.5 text-center text-sm font-medium text-white hover:border-r-indigo-900 hover:bg-white hover:text-indigo-900 focus:outline-none "
         type="button"
       >
         All categories <i class="fa-solid fa-angle-down ml-2" />
       </button>
       <div
         id="dropdown"
-        class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-36 "
+        class="z-10 hidden w-36 divide-y divide-gray-100 rounded-lg bg-white shadow "
       >
         <ul class="text-sm text-indigo-900 " aria-labelledby="dropdown-button">
           <li>
             <button
               type="button"
-              class="inline-flex w-full px-4 py-2 hover:bg-indigo-900 hover:text-white rounded-t-lg"
+              class="inline-flex w-full rounded-t-lg px-4 py-2 hover:bg-indigo-900 hover:text-white"
             >
               Games
             </button>
@@ -47,7 +47,7 @@ export const Searchbar = () => (
           <li>
             <button
               type="button"
-              class="inline-flex w-full px-4 py-2 hover:bg-indigo-900 hover:text-white rounded-b-lg"
+              class="inline-flex w-full rounded-b-lg px-4 py-2 hover:bg-indigo-900 hover:text-white"
             >
               Posts
             </button>
@@ -57,7 +57,7 @@ export const Searchbar = () => (
       <div class="relative w-full">
         <input
           id="search-dropdown"
-          class="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-e-lg border-s-gray-50 border-s-2 border border-gray-300 "
+          class="z-20 block w-full rounded-e-lg border border-s-2 border-gray-300 border-s-gray-50 bg-gray-50 p-2.5 text-sm text-gray-900 "
           placeholder="Search Games, Blogs, Posts, Users..."
           required
         />

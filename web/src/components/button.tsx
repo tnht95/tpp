@@ -21,7 +21,7 @@ export const Button = (props: ButtonProps) => {
   return (
     <button
       {...dataAttributes()}
-      class={`${props.customStyle} border rounded-lg py-2 px-7`}
+      class={`${props.customStyle} rounded-lg border px-7 py-2`}
     >
       {props.withIcon && <i class={`${props.withIcon} mr-2`} />}
       {props.title}

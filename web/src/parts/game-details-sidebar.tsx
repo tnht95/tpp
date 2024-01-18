@@ -4,13 +4,13 @@ export const GameDetailsSidebar = () => (
   <div class="ml-4 md:w-1/4">
     <div class="hidden md:block">
       <p class="text-base font-semibold text-black">About</p>
-      <div class="pb-2 mt-4 border-b">
+      <div class="mt-4 border-b pb-2">
         <span class="text-sm lg:text-base">
           A utility-first CSS framework for rapid UI development.
         </span>
-        <div class="my-4 fl">
+        <div class="my-4">
           <a
-            class="flex items-center mb-2 text-base font-semibold text-blue-600 hover:text-blue-400"
+            class="mb-2 flex items-center text-base font-semibold text-blue-600 hover:text-blue-400"
             href="#"
           >
             <i class="fa-solid fa-link mr-2" />
@@ -19,12 +19,12 @@ export const GameDetailsSidebar = () => (
         </div>
       </div>
     </div>
-    <div class="px-6 py-6 -mx-10 border-b md:mx-0 md:px-0">
-      <p class="text-base font-semibold text-black mb-5">Upload By</p>
+    <div class="-mx-10 border-b p-6 md:mx-0 md:px-0">
+      <p class="mb-5 text-base font-semibold text-black">Upload By</p>
       <Avatar />
     </div>
-    <div class="flex flex-col flex-wrap gap-2 my-4">
-      <p class="text-base font-semibold text-black mb-3">Tag</p>
+    <div class="my-4 flex flex-col flex-wrap gap-2">
+      <p class="mb-3 text-base font-semibold text-black">Tag</p>
       <div class="flex flex-wrap gap-2">
         <Tag name="Name" />
         <Tag name="Name" />

@@ -17,7 +17,7 @@ export const Notification = (props: NotificationProp) => (
         </a>
         <span class="text-xs text-gray-500">11 Jan 2023 </span>
       </div>
-      {props.isNew && <i class="fa-solid fa-circle text-indigo-700 text-xs" />}
+      {props.isNew && <i class="fa-solid fa-circle text-xs text-indigo-700" />}
     </div>
   </div>
 );

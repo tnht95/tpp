@@ -1,23 +1,23 @@
 import { Activity, Button, GameCard, GameForm, PillButton } from '@/components';
 
 export const UserDetails = () => (
-  <div class=" ml-10 my-5 p-5">
-    <div class="md:flex no-wrap md:-mx-2 ">
-      <div class="w-full md:w-3/12 md:mx-2">
-        <div class=" w-full group max-w-md min-w-0 mt-6 mb-6 break-words bg-white border rounded-xl">
+  <div class=" my-5 ml-10 p-5">
+    <div class="md:-mx-2 md:flex ">
+      <div class="w-full md:mx-2 md:w-3/12">
+        <div class=" group my-6 w-full min-w-0 max-w-md break-words rounded-xl border bg-white">
           <div>
             <div class="flex flex-wrap justify-center">
-              <div class="flex justify-center w-full">
+              <div class="flex w-full justify-center">
                 <div class="relative">
                   <img
                     src="https://source.unsplash.com/jmURdhtm7Ng/120x120"
-                    class="border-white rounded-full align-middle border-8 absolute -m-16 -ml-18 lg:-ml-16 max-w-[150px]"
+                    class="absolute -m-16 max-w-[150px] rounded-full border-8 border-white align-middle lg:-ml-16"
                     alt="d"
                   />
                 </div>
               </div>
             </div>
-            <div class="mt-20 text-center flex justify-center ">
+            <div class="mt-20 flex justify-center text-center ">
               <h3 class="text-2xl font-bold leading-normal text-gray-700">
                 Ariel Cerda
               </h3>
@@ -28,8 +28,8 @@ export const UserDetails = () => (
                 <a href="">github.com/iota</a>
               </div>
             </div>
-            <div class="pt-6 mx-6 mt-6 text-center border-t border-gray-200 ">
-              <div class="flex flex-wrap justify-center mb-4">
+            <div class="mx-6 mt-6 border-t border-gray-200 pt-6 text-center">
+              <div class="mb-4 flex flex-wrap justify-center">
                 <PillButton
                   title="Subscribe"
                   icon="fa-solid fa-plus"
@@ -41,10 +41,10 @@ export const UserDetails = () => (
         </div>
         <div />
       </div>
-      <div class="w-4/6 ml-10 mt-6 ">
-        <div class="bg-white px-8 pt-3 pb-7 border rounded-xl">
+      <div class="ml-10 mt-6 w-4/6 ">
+        <div class="rounded-xl border bg-white px-8 pb-7 pt-3">
           <div class="mb-5 flex justify-between">
-            <div class="flex items-center space-x-2 font-semibold text-gray-900 leading-8 ">
+            <div class="flex items-center space-x-2 font-semibold leading-8 text-gray-900 ">
               <i class="fa-regular fa-paper-plane text-lg text-green-400" />
               <span class="tracking-wide">Games</span>
             </div>
@@ -56,7 +56,7 @@ export const UserDetails = () => (
             />
             <GameForm />
           </div>
-          <div class="flex gap-7 flex-wrap">
+          <div class="flex flex-wrap gap-7">
             <GameCard
               gameTitle="Bob"
               byUser="Harry"
@@ -125,9 +125,9 @@ export const UserDetails = () => (
 
         <div class="my-4" />
 
-        <div class="bg-white p-3 border rounded-xl">
+        <div class="rounded-xl border bg-white p-3">
           <div class="px-8 pt-3">
-            <div class=" items-center space-x-2 font-semibold text-gray-900 leading-8 mb-5">
+            <div class=" mb-5 items-center space-x-2 font-semibold leading-8 text-gray-900">
               <i class="fa-regular fa-newspaper text-lg text-green-400" />
               <span class="tracking-wide">Activity</span>
             </div>

@@ -6,7 +6,7 @@ export const GameForm = () => {
   const [isEditMode, setIsEditMode] = createSignal(true);
   const [content, setContent] = createSignal('');
   const displayMarkdown = (
-    <div class="py-2 px-3 h-60 overflow-auto border border-white">
+    <div class="h-60 overflow-auto border border-white px-3 py-2">
       <Markdown content={content()} />
     </div>
   );
@@ -20,18 +20,18 @@ export const GameForm = () => {
       id="game-modal"
       tabindex="-1"
       aria-hidden="true"
-      class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 max-h-full hidden "
+      class="fixed inset-x-0 top-0 z-50 hidden max-h-full w-full items-center justify-center overflow-y-auto overflow-x-hidden md:inset-0"
     >
       <div class="relative w-1/2 ">
-        <div class="relative bg-white rounded-xl shadow p-4 pb-10">
-          <div class="flex items-center justify-between p-6 rounded-t ">
-            <div class="text-center font-bold text-2xl text-gray-700 ml-1">
+        <div class="relative rounded-xl bg-white p-4 pb-10 shadow">
+          <div class="flex items-center justify-between rounded-t p-6 ">
+            <div class="ml-1 text-center text-2xl font-bold text-gray-700">
               Upload your game
             </div>
 
             <button
               type="button"
-              class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+              class="end-2.5 ms-auto inline-flex size-8 items-center justify-center rounded-lg bg-transparent text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900"
               data-modal-hide="game-modal"
             >
               <i class="fa-solid fa-xmark text-lg" />
@@ -43,17 +43,17 @@ export const GameForm = () => {
             <div class="flex flex-col gap-5">
               <input
                 placeholder="Game title"
-                class="border placeholder-gray-400 rounded-xl w-full p-3"
+                class="w-full rounded-xl border p-3 placeholder:text-gray-400"
               />
               <input
                 placeholder="Game link"
-                class="border placeholder-gray-400 rounded-xl w-full p-3"
+                class="w-full rounded-xl border p-3 placeholder:text-gray-400"
               />
               <textarea
                 id="postContent"
                 name="postContent"
                 rows="4"
-                class="w-full border border-gray-200 rounded-xl py-2 transition duration-150 ease-in-out resize-none placeholder-gray-400 focus:outline-none focus:border-blue-500"
+                class="w-full resize-none rounded-xl border border-gray-200 py-2 transition duration-150 ease-in-out placeholder:text-gray-400 focus:border-blue-500 focus:outline-none"
                 placeholder="About this game"
               />
 
@@ -62,7 +62,7 @@ export const GameForm = () => {
                   id="postContent"
                   name="postContent"
                   rows="4"
-                  class="w-full border border-gray-200 rounded-xl py-2 h-60 transition duration-150 ease-in-out resize-none placeholder-gray-400 focus:outline-none focus:border-blue-500"
+                  class="h-60 w-full resize-none rounded-xl border border-gray-200 py-2 transition duration-150 ease-in-out placeholder:text-gray-400 focus:border-blue-500 focus:outline-none"
                   placeholder="Game discription (Support some markdowns)"
                   onFocusOut={e => setContent(e.target.value)}
                   value={content()}
@@ -71,15 +71,15 @@ export const GameForm = () => {
 
               <input
                 placeholder="Game tags: separate each tag with a comma"
-                class="placeholder-gray-400 border rounded-xl w-full p-3"
+                class="w-full rounded-xl border p-3 placeholder:text-gray-400"
               />
               <div class="mb-6">
-                <div class="relative border rounded-xl px-4 py-3 bg-white flex items-center justify-between hover:border-blue-500 transition duration-150 ease-in-out">
+                <div class="relative flex items-center justify-between rounded-xl border bg-white px-4 py-3 transition duration-150 ease-in-out hover:border-blue-500">
                   <input
                     type="file"
                     id="fileAttachment"
                     name="fileAttachment"
-                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    class="absolute inset-0 size-full cursor-pointer opacity-0"
                   />
                   <div class="flex items-center ">
                     <i class="fa-solid fa-plus text-lg text-gray-400" />

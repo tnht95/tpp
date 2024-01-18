@@ -4,19 +4,19 @@ type PreviewButtonGroupProp = {
 };
 
 export const PreviewButtonGroup = (props: PreviewButtonGroupProp) => (
-  <div class="w-full md:w-full flex items-center px-3">
-    <div class="flex items-start  text-gray-700 px-2 mr-auto" />
+  <div class="flex w-full items-center px-3 md:w-full">
+    <div class="mr-auto flex  items-start px-2 text-gray-700" />
     <div class="-mr-1">
       <button
         type="button"
-        class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 me-2 "
+        class="me-2 rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 "
         onClick={() => props.onClick()}
       >
         {props.isEditMode ? 'Preview' : 'Edit'}
       </button>
       <button
         type="button"
-        class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2"
+        class="me-2 rounded-lg bg-green-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300"
       >
         Post
       </button>

@@ -2,20 +2,23 @@ import { CommentForm, Post, VerticalGameCard } from '@/components';
 
 export const Dashboard = () => (
   <div class="flex ">
-    <div class="flex-1 flex flex-col ">
+    <div class="flex flex-1 flex-col ">
       <div class="flex h-full ">
-        <nav class="flex w-2/6 h-full border-r border-dashed" />
-        <main class="flex flex-col h-full w-full bg-white px-32 mb-10">
-          <div class="flex w-full mx-auto my-10">
+        <nav class="flex h-full w-2/6 border-r border-dashed" />
+        <main class="mb-10 flex size-full flex-col bg-white px-32">
+          <div class="mx-auto my-10 flex w-full">
             <CommentForm>New Post</CommentForm>
           </div>
           <div class="flex flex-col gap-10">
             <Post />
+            <Post />
+            <Post />
+            <Post />
           </div>
         </main>
-        <nav class="flex w-1/2 h-full border-l border-dashed relative -z-10 ">
-          <div class="w-full flex flex-col mx-auto px-6 fixed overflow-y-auto ">
-            <p class="text-xl font-bold p-4 mt-7 text-indigo-900">
+        <nav class="relative -z-10 flex h-full w-1/2 border-l border-dashed ">
+          <div class="fixed mx-auto flex w-full flex-col overflow-y-auto px-6 ">
+            <p class="mt-7 p-4 text-xl font-bold text-indigo-900">
               Newest games
             </p>
             <div class="flex flex-col gap-5">

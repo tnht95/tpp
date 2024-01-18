@@ -1,7 +1,7 @@
 import { Avatar, EllipsisText } from '@/components';
 
 export const UserCard = () => (
-  <div class="flex flex-col items-center border border-indigo-900 rounded-lg px-4 py-10 justify-center">
+  <div class="flex flex-col items-center justify-center rounded-lg border border-indigo-900 px-4 py-10">
     <Avatar />
 
     <EllipsisText maxWidth="max-w-36" customStyle="font-bold mt-2">

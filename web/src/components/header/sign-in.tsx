@@ -1,17 +1,17 @@
 export const SignInBtn = () => (
   <a
     href={import.meta.env.VITE_GITHUB_SIGNIN_URL}
-    class="border border-white rounded-full font-bold px-8 py-2 hover:bg-white hover:text-indigo-900 mr-12"
+    class="mr-12 rounded-full border border-white px-8 py-2 font-bold hover:bg-white hover:text-indigo-900"
   >
     Sign In
   </a>
 );
 
 export const SignInBtnSkeleton = () => (
-  <div role="status" class="max-w-sm shadow animate-pulse dark:border-gray-700">
+  <div role="status" class="max-w-sm animate-pulse shadow dark:border-gray-700">
     <div class="flex items-center">
       <svg
-        class="w-10 h-10 me-12 text-gray-200 dark:text-gray-700"
+        class="me-12 size-10 text-gray-200 dark:text-gray-700"
         aria-hidden="true"
         xmlns="http://www.w3.org/2000/svg"
         fill="currentColor"

@@ -1,5 +1,5 @@
 export const GameInfo = () => (
-  <div class="py-6 border-b md:border md:rounded-lg md:px-8">
+  <div class="border-b py-6 md:rounded-lg md:border md:px-8">
     <div class="font-semibold text-black">README.md</div>
     <div class="my-6">
       <p>
@@ -7,19 +7,19 @@ export const GameInfo = () => (
         interfaces.{' '}
       </p>
       <div class="flex">
-        <div class="flex mr-2 items-center my-4">
-          <div class="flex items-center px-2 leading-none py-1 text-white bg-gray-800 rounded-l-md cursor-pointer">
+        <div class="my-4 mr-2 flex items-center">
+          <div class="flex cursor-pointer items-center rounded-l-md bg-gray-800 px-2 py-1 leading-none text-white">
             <span class="self-center text-xs font-medium">build</span>
           </div>
-          <div class="px-2 text-xs font-semibold text-white leading-none py-1 bg-green-500 rounded-r-md cursor-pointer">
+          <div class="cursor-pointer rounded-r-md bg-green-500 px-2 py-1 text-xs font-semibold leading-none text-white">
             passing
           </div>
         </div>
-        <div class="flex mr-2 items-center my-4">
-          <div class="flex items-center px-2 leading-none py-1 text-white bg-gray-800 rounded-l-md cursor-pointer">
+        <div class="my-4 mr-2 flex items-center">
+          <div class="flex cursor-pointer items-center rounded-l-md bg-gray-800 px-2 py-1 leading-none text-white">
             <span class="self-center text-xs font-medium">downloads</span>
           </div>
-          <div class="px-2 text-xs font-semibold text-white leading-none py-1 bg-green-500 rounded-r-md cursor-pointer">
+          <div class="cursor-pointer rounded-r-md bg-green-500 px-2 py-1 text-xs font-semibold leading-none text-white">
             8.7M
           </div>
         </div>
@@ -27,9 +27,9 @@ export const GameInfo = () => (
       <hr />
     </div>
     <div class="mb-6">
-      <div class="flex items-center pb-2 -mx-4 text-lg font-bold leading-normal text-transparent hover:text-gray-700">
+      <div class="-mx-4 flex items-center pb-2 text-lg font-bold leading-normal text-transparent hover:text-gray-700">
         <svg
-          class="w-4 h-4 mr-1 cursor-pointer"
+          class="mr-1 size-4 cursor-pointer"
           fill="none"
           stroke-linecap="round"
           stroke-linejoin="round"
@@ -50,9 +50,9 @@ export const GameInfo = () => (
       </div>
     </div>
     <div class="mb-6">
-      <div class="flex items-center pb-2 -mx-4 text-lg font-bold leading-normal text-transparent hover:text-gray-700">
+      <div class="-mx-4 flex items-center pb-2 text-lg font-bold leading-normal text-transparent hover:text-gray-700">
         <svg
-          class="w-4 h-4 mr-1 cursor-pointer"
+          class="mr-1 size-4 cursor-pointer"
           fill="none"
           stroke-linecap="round"
           stroke-linejoin="round"
@@ -80,9 +80,9 @@ export const GameInfo = () => (
       </a>
     </div>
     <div class="mb-6">
-      <div class="flex items-center pb-2 -mx-4 text-lg font-bold leading-normal text-transparent hover:text-gray-700">
+      <div class="-mx-4 flex items-center pb-2 text-lg font-bold leading-normal text-transparent hover:text-gray-700">
         <svg
-          class="w-4 h-4 mr-1 cursor-pointer"
+          class="mr-1 size-4 cursor-pointer"
           fill="none"
           stroke-linecap="round"
           stroke-linejoin="round"

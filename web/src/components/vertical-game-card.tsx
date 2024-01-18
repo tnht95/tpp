@@ -8,7 +8,7 @@ type VerticalGameCardProp = {
 export const VerticalGameCard = (props: VerticalGameCardProp) => (
   <div class="flex items-center">
     <img
-      class="rounded-t-lg p-4 w-40 h-24"
+      class="h-24 w-40 rounded-t-lg p-4"
       src={props.img}
       alt="product image"
     />

@@ -1,13 +1,13 @@
 import { Tag } from '@/components';
 
 export const BlogPost = () => (
-  <div class=" px-10 my-4 py-6 bg-white border rounded-xl">
-    <div class="flex justify-between items-center">
+  <div class=" my-4 rounded-xl border bg-white px-10 py-6">
+    <div class="flex items-center justify-between">
       <span class="font-light text-gray-600">mar 10, 2019</span>
       <Tag name="Game making" />
     </div>
     <div class="mt-2">
-      <a class="text-2xl text-gray-700 font-bold hover:text-gray-600" href="#">
+      <a class="text-2xl font-bold text-gray-700 hover:text-gray-600" href="#">
         Accessibility tools for designers and developers
       </a>
       <p class="mt-2 text-gray-600">
@@ -17,7 +17,7 @@ export const BlogPost = () => (
         ratione libero!
       </p>
     </div>
-    <div class="flex justify-between items-center mt-4">
+    <div class="mt-4 flex items-center justify-between">
       <a class="text-blue-600 hover:underline" href="#">
         Read more
       </a>

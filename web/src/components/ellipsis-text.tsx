@@ -4,9 +4,7 @@ type EllipsisTextProp = {
   maxWidth: string;
 };
 export const EllipsisText = (props: EllipsisTextProp) => (
-  <p
-    class={`whitespace-nowrap overflow-ellipsis overflow-hidden ${props.maxWidth} ${props.customStyle}`}
-  >
+  <p class={`truncate ${props.maxWidth} ${props.customStyle}`}>
     {props.children}
   </p>
 );

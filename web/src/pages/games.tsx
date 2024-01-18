@@ -4,7 +4,7 @@ export const Games = () => (
   <>
     <div class="ml-10 flex flex-row">
       <div class="flex-3">
-        <p class="text-2xl font-bold text-indigo-900 m-5 ml-0">Newest Games</p>
+        <p class="m-5 ml-0 text-2xl font-bold text-indigo-900">Newest Games</p>
         <div class="flex flex-row flex-wrap gap-7">
           <GameCard
             gameTitle="Space Invader"
@@ -38,8 +38,8 @@ export const Games = () => (
           />
         </div>
       </div>
-      <div class="flex-1 mr-10">
-        <p class="text-2xl font-bold text-indigo-900 m-5 ml-0 ">Tags</p>
+      <div class="mr-10 flex-1">
+        <p class="m-5 ml-0 text-2xl font-bold text-indigo-900 ">Tags</p>
         <div class="flex flex-row flex-wrap gap-3">
           <Tag name="Name dgndjgbdjgbdjghbdgkjhdgdgdsgsdgsgsgdggsgsgsdgs" />
           <Tag name="Name" />
@@ -54,7 +54,7 @@ export const Games = () => (
       <div class="ml-10 mt-10 flex">
         <div class="flex-3">
           <div class="flex flex-row items-center">
-            <p class="text-2xl font-bold text-indigo-900 m-5 ml-0">All Games</p>
+            <p class="m-5 ml-0 text-2xl font-bold text-indigo-900">All Games</p>
             <Selects />
           </div>
           <div class="flex flex-row flex-wrap gap-7">

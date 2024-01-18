@@ -12,8 +12,8 @@ export const Header = () => {
   const { user } = useAuth();
 
   return (
-    <header class="top-0 bg-indigo-900 text-white flex flex-row items-center justify-between sticky z-50">
-      <div class=" ml-12 flex items-center h-16 w-3/5">
+    <header class="sticky top-0 z-50 flex flex-row items-center justify-between bg-indigo-900 text-white">
+      <div class=" ml-12 flex h-16 w-3/5 items-center">
         <HeaderLogo />
         <HeaderMenu />
         <Searchbar />
