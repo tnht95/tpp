@@ -3,7 +3,7 @@ export const HeaderMenu = () => (
     <ul class="mr-3 flex h-full flex-1 items-center">
       <li class="flex h-full items-center px-5 hover:bg-indigo-300 hover:text-indigo-900">
         <a href="/">
-          <span>Home</span>
+          <span>Emulator</span>
         </a>
       </li>
       <li class="flex h-full items-center px-5 hover:bg-indigo-300 hover:text-indigo-900 ">

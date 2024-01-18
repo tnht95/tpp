@@ -23,13 +23,30 @@ export const GameDetailsSidebar = () => (
       <p class="mb-5 text-base font-semibold text-black">Upload By</p>
       <Avatar />
     </div>
-    <div class="my-4 flex flex-col flex-wrap gap-2">
+    <div class="my-4 flex flex-col flex-wrap gap-2 border-b pb-5">
       <p class="mb-3 text-base font-semibold text-black">Tag</p>
       <div class="flex flex-wrap gap-2">
         <Tag name="Name" />
         <Tag name="Name" />
         <Tag name="Name" />
       </div>
+    </div>
+    <div class="mt-3 flex gap-3">
+      <button
+        type="button"
+        class="mt-2 rounded-lg border border-green-600 bg-green-600 p-2.5 text-sm font-medium text-white hover:bg-white hover:text-green-600 focus:outline-none focus:ring-4 focus:ring-purple-300 "
+      >
+        <i class="fa-solid fa-gamepad mr-2" />
+        Play!
+      </button>
+
+      <button
+        type="button"
+        class="mt-2 rounded-lg border border-purple-700 bg-purple-700 p-2.5 text-sm font-medium text-white hover:bg-white hover:text-purple-700 focus:outline-none focus:ring-4 focus:ring-purple-300"
+      >
+        <i class="fa-solid fa-download mr-2" />
+        Download!
+      </button>
     </div>
   </div>
 );
