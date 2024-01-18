@@ -1,11 +1,19 @@
-import { Show } from 'solid-js';
+import { Dropdown } from 'flowbite';
+import { createEffect, createSignal, Show } from 'solid-js';
 
 type OptionButtonProp = {
   id: string;
-  isOwner: true;
+  isOwner: boolean;
   customStyle?: string;
 };
 export const OptionButton = (props: OptionButtonProp) => {
+  const [userDropdownRef, setUserDropdownRef] = createSignal<HTMLDivElement>();
+  const [userBtnRef, setUserBtnRef] = createSignal<HTMLButtonElement>();
+
+  createEffect(() => {
+    new Dropdown(userDropdownRef(), userBtnRef());
+  });
+
   const otherContent = (
     <li>
       <a
@@ -21,6 +29,7 @@ export const OptionButton = (props: OptionButtonProp) => {
   return (
     <>
       <span
+        ref={setUserBtnRef}
         id={`${props.id} + 'btn'`}
         data-dropdown-toggle={`${props.id} + 'drop'`}
       >
@@ -29,6 +38,7 @@ export const OptionButton = (props: OptionButtonProp) => {
         />
       </span>
       <div
+        ref={setUserDropdownRef}
         id={`${props.id} + 'drop'`}
         class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-28 dark:bg-gray-700"
       >
