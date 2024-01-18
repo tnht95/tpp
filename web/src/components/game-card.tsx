@@ -7,7 +7,7 @@ type GameCardProps = {
   img: string;
 };
 export const GameCard = (props: GameCardProps) => (
-  <div class=" w-40 rounded-lg border bg-indigo-300 shadow-md hover:bg-white ">
+  <div class="w-40 rounded-lg border bg-indigo-300 shadow-md hover:bg-white">
     <a href="">
       <img
         class="h-24 w-60 rounded-t-lg p-4"
@@ -17,7 +17,7 @@ export const GameCard = (props: GameCardProps) => (
       <div class="pb-2 pl-5">
         <EllipsisText
           maxWidth="max-w-28"
-          customStyle="text-indigo-900 font-bold text-xs "
+          customStyle="text-indigo-900 font-bold text-xs"
         >
           {props.gameTitle}
         </EllipsisText>
@@ -25,8 +25,8 @@ export const GameCard = (props: GameCardProps) => (
           {props.byUser}
         </EllipsisText>
         <div class="mb-5 mt-2.5 flex items-center">
-          <div class="flex items-center rounded bg-indigo-500 px-2.5 py-1 ">
-            <span class=" text-xs font-semibold text-white">
+          <div class="flex items-center rounded bg-indigo-500 px-2.5 py-1">
+            <span class="text-xs font-semibold text-white">
               <i class="fa-solid fa-star pr-1 text-xs text-yellow-400" />
               {props.stars}
             </span>

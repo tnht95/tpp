@@ -13,7 +13,11 @@ files
     for (const filepath of filePaths) {
       fs.readFile(filepath, 'utf8', (err, data) => {
         if (err) throw err;
-        fs.writeFile(filepath, data.replace(/^ +| +$| +(?= )/g, ''), e => {
+        const newData = data
+          .replace(/ +(?= )/g, '')
+          .replace(/ +"|" +/g, '"')
+          .replace(/ +"|" +/g, '"');
+        fs.writeFile(filepath, newData, e => {
           if (e) throw e;
         });
       });

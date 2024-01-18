@@ -6,12 +6,12 @@ type NotificationProp = {
 };
 export const Notification = (props: NotificationProp) => (
   <div
-    class="flex justify-between p-4 "
+    class="flex justify-between p-4"
     classList={{ 'bg-indigo-100': props.isNew }}
   >
     <div class="flex items-center space-x-4">
       <Avatar />
-      <div class="flex flex-col text-black ">
+      <div class="flex flex-col text-black">
         <a href="" class="text-sm">
           <b>{props.user}</b> dolor sit amet consectetur adipisicing elit.{' '}
         </a>

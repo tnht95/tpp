@@ -1,7 +1,7 @@
 import { Tag } from '@/components';
 
 export const BlogPost = () => (
-  <div class=" my-4 rounded-xl border bg-white px-10 py-6">
+  <div class="my-4 rounded-xl border bg-white px-10 py-6">
     <div class="flex items-center justify-between">
       <span class="font-light text-gray-600">mar 10, 2019</span>
       <Tag name="Game making" />

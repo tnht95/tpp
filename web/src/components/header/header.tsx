@@ -13,7 +13,7 @@ export const Header = () => {
 
   return (
     <header class="sticky top-0 z-50 flex flex-row items-center justify-between bg-indigo-900 text-white">
-      <div class=" ml-12 flex h-16 w-3/5 items-center">
+      <div class="ml-12 flex h-16 w-3/5 items-center">
         <HeaderLogo />
         <HeaderMenu />
         <Searchbar />

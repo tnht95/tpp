@@ -15,7 +15,7 @@ export const Post = () => {
         <div class="flex items-center">
           <Avatar />
           <div class="ml-2 leading-tight">
-            <span class="block text-base font-bold text-black dark:text-white ">
+            <span class="block text-base font-bold text-black dark:text-white">
               Visualize Value
             </span>
             <span class="block text-sm font-normal text-gray-500 dark:text-gray-400">
@@ -34,11 +34,11 @@ export const Post = () => {
         src="https://pbs.twimg.com/media/EpkuplDXEAEjbFc?format=jpg&name=medium"
         alt=""
       />
-      <div class="mt-3 flex w-full text-gray-500 ">
+      <div class="mt-3 flex w-full text-gray-500">
         <div class="flex w-full items-center gap-3 py-3">
           <div class="flex w-1/2 cursor-pointer items-center justify-center border-r-2 hover:font-bold hover:text-red-600">
-            <i class="fa-regular fa-heart " />
-            <span class="ml-2 ">Like (615)</span>
+            <i class="fa-regular fa-heart" />
+            <span class="ml-2">Like (615)</span>
           </div>
           <div
             class="flex w-1/2 cursor-pointer items-center justify-center hover:font-bold hover:text-blue-700"
@@ -49,7 +49,7 @@ export const Post = () => {
           </div>
         </div>
       </div>
-      <div class="flex flex-col gap-5 py-5 " classList={{ hidden: isHidden() }}>
+      <div class="flex flex-col gap-5 py-5" classList={{ hidden: isHidden() }}>
         <Comment user="Ron" date="10 Feb 2022" likeNumber={11} liked={true} />
         <Comment user="Ron" date="10 Feb 2022" likeNumber={1} liked={false} />
 

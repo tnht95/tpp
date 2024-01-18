@@ -28,9 +28,9 @@ export const GameForm = (props: GameFormProps) => {
       aria-hidden="true"
       class="fixed inset-x-0 top-0 z-50 hidden max-h-full w-full items-center justify-center overflow-y-auto overflow-x-hidden md:inset-0"
     >
-      <div class="relative w-1/2 ">
+      <div class="relative w-1/2">
         <div class="relative rounded-xl bg-white p-4 pb-10 shadow">
-          <div class="flex items-center justify-between rounded-t p-6 ">
+          <div class="flex items-center justify-between rounded-t p-6">
             <div class="ml-1 text-center text-2xl font-bold text-gray-700">
               Upload your game
             </div>
@@ -84,7 +84,7 @@ export const GameForm = (props: GameFormProps) => {
                     name="fileAttachment"
                     class="absolute inset-0 size-full cursor-pointer opacity-0"
                   />
-                  <div class="flex items-center ">
+                  <div class="flex items-center">
                     <i class="fa-solid fa-plus text-lg text-gray-400" />
                     <span class="ml-2 text-gray-400">Upload your ROM file</span>
                   </div>

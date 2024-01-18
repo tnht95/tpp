@@ -12,10 +12,10 @@ export const UserDetails = () => {
   });
 
   return (
-    <div class=" my-5 ml-10 p-5">
-      <div class="md:-mx-2 md:flex ">
+    <div class="my-5 ml-10 p-5">
+      <div class="md:-mx-2 md:flex">
         <div class="w-full md:mx-2 md:w-3/12">
-          <div class=" group my-6 w-full min-w-0 max-w-md break-words rounded-xl border bg-white">
+          <div class="group my-6 w-full min-w-0 max-w-md break-words rounded-xl border bg-white">
             <div>
               <div class="flex flex-wrap justify-center">
                 <div class="flex w-full justify-center">
@@ -28,13 +28,13 @@ export const UserDetails = () => {
                   </div>
                 </div>
               </div>
-              <div class="mt-20 flex justify-center text-center ">
+              <div class="mt-20 flex justify-center text-center">
                 <h3 class="text-2xl font-bold leading-normal text-gray-700">
                   Ariel Cerda
                 </h3>
               </div>
               <div class="flex flex-col items-center justify-center">
-                <div class=" text-sm text-gray-500">
+                <div class="text-sm text-gray-500">
                   <i class="fa-solid fa-link" />
                   <a href="">github.com/iota</a>
                 </div>
@@ -52,10 +52,10 @@ export const UserDetails = () => {
           </div>
           <div />
         </div>
-        <div class="ml-10 mt-6 w-4/6 ">
+        <div class="ml-10 mt-6 w-4/6">
           <div class="rounded-xl border bg-white px-8 pb-7 pt-3">
             <div class="mb-5 flex justify-between">
-              <div class="flex items-center space-x-2 font-semibold leading-8 text-gray-900 ">
+              <div class="flex items-center space-x-2 font-semibold leading-8 text-gray-900">
                 <i class="fa-regular fa-paper-plane text-lg text-green-400" />
                 <span class="tracking-wide">Games</span>
               </div>
@@ -141,7 +141,7 @@ export const UserDetails = () => {
           <div class="my-4" />
           <div class="rounded-xl border bg-white p-3">
             <div class="px-8 pt-3">
-              <div class=" mb-5 items-center space-x-2 font-semibold leading-8 text-gray-900">
+              <div class="mb-5 items-center space-x-2 font-semibold leading-8 text-gray-900">
                 <i class="fa-regular fa-newspaper text-lg text-green-400" />
                 <span class="tracking-wide">Activity</span>
               </div>

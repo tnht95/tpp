@@ -14,7 +14,7 @@ export const Blogs = () => {
   return (
     <div class="ml-10 mt-10 w-4/6">
       <div class="flex items-center justify-between">
-        <p class="text-4xl font-bold ">Blogs</p>
+        <p class="text-4xl font-bold">Blogs</p>
         <button
           type="button"
           class="rounded-lg border bg-green-500 px-7 py-2 font-bold text-white hover:bg-white hover:text-green-500"
@@ -32,7 +32,7 @@ export const Blogs = () => {
           }}
         />
       </div>
-      <div class=" mt-5 flex flex-col gap-5">
+      <div class="mt-5 flex flex-col gap-5">
         <BlogPost />
         <BlogPost />
         <BlogPost />

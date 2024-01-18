@@ -7,6 +7,6 @@ export const UserCard = () => (
     <EllipsisText maxWidth="max-w-36" customStyle="font-bold mt-2">
       JennySkywalker@gmail.com
     </EllipsisText>
-    <p class="text-xs text-gray-400 ">23 followers</p>
+    <p class="text-xs text-gray-400">23 followers</p>
   </div>
 );

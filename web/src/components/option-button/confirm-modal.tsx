@@ -12,7 +12,7 @@ export const ConfirmModal = (props: ConfirmModalProps) => (
     class="fixed inset-x-0 top-0 z-50 hidden h-[calc(100%-1rem)] max-h-full w-full items-center justify-center overflow-y-auto overflow-x-hidden md:inset-0"
   >
     <div class="relative max-h-full w-full max-w-md">
-      <div class="relative rounded-xl bg-white shadow ">
+      <div class="relative rounded-xl bg-white shadow">
         <button
           type="button"
           class="absolute end-2.5 top-3 ms-auto inline-flex size-8 items-center justify-center rounded-lg bg-transparent text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-600 dark:hover:text-white"
@@ -23,7 +23,7 @@ export const ConfirmModal = (props: ConfirmModalProps) => (
         </button>
         <div class="px-4 py-6 text-center">
           <i class="fa-regular fa-circle-question mb-3 text-4xl text-red-600" />
-          <h3 class="mb-5 text-lg font-normal text-gray-700 ">
+          <h3 class="mb-5 text-lg font-normal text-gray-700">
             Are you sure you want to delete this?
           </h3>
           <div class="flex items-center justify-center gap-4">
@@ -35,7 +35,7 @@ export const ConfirmModal = (props: ConfirmModalProps) => (
             </button>
             <button
               type="button"
-              class="me-2 rounded-lg border border-gray-100 bg-gray-100 px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-white focus:z-10 focus:outline-none "
+              class="me-2 rounded-lg border border-gray-100 bg-gray-100 px-5 py-2.5 text-sm font-medium text-gray-700 hover:bg-white focus:z-10 focus:outline-none"
               onClick={() => props.onCloseHandler()}
             >
               No, cancel

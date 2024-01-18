@@ -6,7 +6,7 @@ export const DiscussionDetails = () => (
     <GameDetailsTabs />
 
     <div class="ml-14 mt-5 flex w-3/5 flex-col">
-      <div class="border-b py-5 ">
+      <div class="border-b py-5">
         <p class="text-3xl font-semibold"> Found bug at abc.com</p>
         <p class="mt-1 text-base text-gray-400">
           On 19 Jan 2011 by Bobby@gmail.com
@@ -44,7 +44,7 @@ export const DiscussionDetails = () => (
           user="Nan@yahoo.com"
         />
       </div>
-      <div class="my-9 pl-12 ">
+      <div class="my-9 pl-12">
         <CommentForm>New Comment</CommentForm>
       </div>
     </div>

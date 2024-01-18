@@ -1,13 +1,13 @@
 import { BlogPost, GameCard, ShowMoreButton, UserCard } from '@/components';
 
 export const Search = () => (
-  <div class="flex ">
-    <div class="flex flex-1 flex-col ">
-      <div class="flex h-full ">
+  <div class="flex">
+    <div class="flex flex-1 flex-col">
+      <div class="flex h-full">
         <nav class="flex h-full w-2/6 border-r border-dashed" />
         <main class="mt-10 flex size-full flex-col gap-7 bg-white px-32">
-          <p class="text-2xl font-bold text-indigo-900">Result for "Game":</p>
-          <div class="flex flex-col ">
+          <p class="text-2xl font-bold text-indigo-900">Result for"Game":</p>
+          <div class="flex flex-col">
             <div>
               <p class="mb-5 text-xl font-bold text-indigo-900">
                 <i class="fa-solid fa-gamepad mr-2" />
@@ -61,7 +61,7 @@ export const Search = () => (
               <i class="fa-solid fa-highlighter mr-2" />
               Posts:
             </p>
-            <div class=" flex flex-col gap-7">
+            <div class="flex flex-col gap-7">
               <p class="text-center text-lg text-gray-400">
                 {' '}
                 -- Nothing to show --
@@ -82,7 +82,7 @@ export const Search = () => (
             </div>
           </div>
         </main>
-        <nav class="relative -z-10 flex h-full w-1/2 border-l border-dashed " />
+        <nav class="relative -z-10 flex h-full w-1/2 border-l border-dashed" />
       </div>
     </div>
   </div>

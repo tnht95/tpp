@@ -26,7 +26,7 @@ export const BlogDetails = () => (
         <p class="text-lg">
           Photography is the result of combining several technical discoveries,
           relating to seeing an image and capturing the image. The discovery of
-          the camera obscura ("dark chamber" in Latin) that provides an image of
+          the camera obscura ("dark chamber"in Latin) that provides an image of
           a scene dates back to ancient China. Greek mathematicians Aristotle
           and Euclid independently described a camera obscura in the 5th and 4th
           centuries BCE.[11][12] In the 6th century CE, Byzantine mathematician
@@ -68,9 +68,9 @@ export const BlogDetails = () => (
           leather treated with silver nitrate. Although he succeeded in
           capturing the shadows of objects placed on the surface in direct
           sunlight, and even made shadow copies of paintings on glass, it was
-          reported in 1802 that "the images formed by means of a camera obscura
+          reported in 1802 that"the images formed by means of a camera obscura
           have been found too faint to produce, in any moderate time, an effect
-          upon the nitrate of silver." The shadow images eventually darkened all
+          upon the nitrate of silver."The shadow images eventually darkened all
           over.[26]
         </p>
       </div>
@@ -104,7 +104,7 @@ export const BlogDetails = () => (
         likeNumber={1}
         liked={true}
       />
-      <div class="ml-10 mt-10 ">
+      <div class="ml-10 mt-10">
         <CommentForm>New Comment</CommentForm>
       </div>
     </div>

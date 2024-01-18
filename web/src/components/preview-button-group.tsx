@@ -9,7 +9,7 @@ export const PreviewButtonGroup = (props: PreviewButtonGroupProp) => (
     <div class="-mr-1">
       <button
         type="button"
-        class="me-2 rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 "
+        class="me-2 rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200"
         onClick={() => props.onClick()}
       >
         {props.isEditMode ? 'Preview' : 'Edit'}

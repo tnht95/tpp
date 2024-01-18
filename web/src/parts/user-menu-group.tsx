@@ -21,7 +21,7 @@ export const UserMenuGroup = () => {
   return (
     <div class="flex items-center gap-7">
       <button
-        class="relative py-1.5 text-sm font-medium text-black hover:text-gray-500 focus:outline-none "
+        class="relative py-1.5 text-sm font-medium text-black hover:text-gray-500 focus:outline-none"
         ref={setNotiBtnRef}
       >
         <i class="fa-solid fa-earth-americas text-2xl" />
@@ -54,12 +54,12 @@ export const UserMenuGroup = () => {
             name@flowbite.comfsdfdsfsfs
           </EllipsisText>
         </div>
-        <div class=" text-sm text-gray-700 ">
+        <div class="text-sm text-gray-700">
           <div class="flex items-center gap-2 px-4 py-5 hover:bg-gray-100">
             <i class="fa-solid fa-user" />
             <a
               href="/users/d"
-              class=" "
+              class=""
               onClick={() => {
                 userDropdown()?.hide();
               }}
@@ -69,10 +69,10 @@ export const UserMenuGroup = () => {
           </div>
         </div>
         <div class="flex items-center gap-2 rounded-b-lg px-4 py-5 text-gray-700 hover:bg-gray-100">
-          <i class="fa-solid fa-arrow-right-from-bracket text-sm " />
+          <i class="fa-solid fa-arrow-right-from-bracket text-sm" />
           <a
             href="#"
-            class="block text-sm "
+            class="block text-sm"
             onClick={() => {
               dispatch.logout();
             }}

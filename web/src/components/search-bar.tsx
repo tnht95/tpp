@@ -19,20 +19,17 @@ export const Searchbar = () => {
           Your Email
         </label>
         <button
-          class="z-10 inline-flex shrink-0 items-center rounded-s-lg border border-white bg-indigo-900 px-4 py-2.5 text-center text-sm font-medium text-white hover:border-r-indigo-900 hover:bg-white hover:text-indigo-900 focus:outline-none "
+          class="z-10 inline-flex shrink-0 items-center rounded-s-lg border border-white bg-indigo-900 px-4 py-2.5 text-center text-sm font-medium text-white hover:border-r-indigo-900 hover:bg-white hover:text-indigo-900 focus:outline-none"
           type="button"
           ref={setBtnRef}
         >
           All categories <i class="fa-solid fa-angle-down ml-2" />
         </button>
         <div
-          class="z-10 hidden w-36 divide-y divide-gray-100 rounded-lg bg-white shadow "
+          class="z-10 hidden w-36 divide-y divide-gray-100 rounded-lg bg-white shadow"
           ref={setdropdownRef}
         >
-          <ul
-            class="text-sm text-indigo-900 "
-            aria-labelledby="dropdown-button"
-          >
+          <ul class="text-sm text-indigo-900" aria-labelledby="dropdown-button">
             <li>
               <button
                 type="button"
@@ -69,7 +66,7 @@ export const Searchbar = () => {
         </div>
         <div class="relative w-full">
           <input
-            class="z-20 block w-full rounded-e-lg border border-s-2 border-gray-300 border-s-gray-50 bg-gray-50 p-2.5 text-sm text-gray-900 "
+            class="z-20 block w-full rounded-e-lg border border-s-2 border-gray-300 border-s-gray-50 bg-gray-50 p-2.5 text-sm text-gray-900"
             placeholder="Search Games, Blogs, Posts, Users..."
             required
           />
