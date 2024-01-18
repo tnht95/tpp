@@ -54,6 +54,10 @@ export const BlogForm = (props: BlogFormProps) => {
                 class=" rounded-xl border border-gray-300 p-3 outline-none placeholder:text-gray-400"
                 placeholder="Describe shortly about this post here"
               />
+              <input
+                placeholder="Blog tags: separate each tag with a comma"
+                class="w-full rounded-xl border p-3 placeholder:text-gray-400"
+              />
 
               <Show when={isEditMode()} fallback={displayMarkdown}>
                 <textarea
