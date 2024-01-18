@@ -8,7 +8,7 @@ export const GameDetailsTabs = () => (
         <div class="mr-3 cursor-pointer text-2xl font-medium text-indigo-900 hover:underline">
           tailwindcss
         </div>
-        <OptionButton id="gameinfo" isOwner={true} />
+        <OptionButton isOwner={true} />
       </div>
 
       <div class="flex ">

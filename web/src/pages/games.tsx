@@ -1,9 +1,10 @@
-import { GameCard, Selects, Tag } from '@/components';
+import { GameCard, Selects } from '@/components';
+import { TagSidebar } from '@/parts';
 
 export const Games = () => (
   <>
-    <div class="ml-10 flex flex-row">
-      <div class="flex-3">
+    <div class="ml-10 mt-5 flex flex-row justify-between">
+      <div class="w-3/5">
         <p class="m-5 ml-0 text-2xl font-bold text-indigo-900">Newest Games</p>
         <div class="flex flex-row flex-wrap gap-7">
           <GameCard
@@ -38,16 +39,8 @@ export const Games = () => (
           />
         </div>
       </div>
-      <div class="mr-10 flex-1">
-        <p class="m-5 ml-0 text-2xl font-bold text-indigo-900 ">Tags</p>
-        <div class="flex flex-row flex-wrap gap-3">
-          <Tag name="Name dgndjgbdjgbdjghbdgkjhdgdgdsgsdgsgsgdggsgsgsdgs" />
-          <Tag name="Name" />
-          <Tag name="Name" />
-          <Tag name="Name" />
-          <Tag name="Name" />
-          <Tag name="Name" />
-        </div>
+      <div class="mr-24 w-1/5">
+        <TagSidebar />
       </div>
     </div>
     <div>
