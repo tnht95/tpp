@@ -1,5 +1,5 @@
 .yarn
 dist
+public
 coverage
 tsconfig.json
-fa.min.css
