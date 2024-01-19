@@ -13,7 +13,7 @@ pub enum UserServiceErr {
 
 #[async_trait]
 pub trait IUserService {
-    async fn sync_user(&self, user: &User) -> Result<(), UserServiceErr>;
+    async fn sync_user(&self, user: &User) -> Result<User, UserServiceErr>;
 }
 
 pub struct UserService<T: IDatabase> {
@@ -34,26 +34,26 @@ impl<T> IUserService for UserService<T>
 where
     T: IDatabase + Send + Sync,
 {
-    async fn sync_user(&self, user: &User) -> Result<(), UserServiceErr> {
-        match sqlx::query!(
+    async fn sync_user(&self, user: &User) -> Result<User, UserServiceErr> {
+        match sqlx::query_as!(
+            User,
             "
 INSERT INTO users (id, name, avatar, github_url, bio, updated_at, created_at)
-VALUES ($1, $2, $3, $4, $5, $6, $7)
+VALUES ($1, $2, $3, $4, $5, now(), now())
 ON CONFLICT (id) DO UPDATE
-SET name = EXCLUDED.name, avatar = EXCLUDED.avatar, github_url = EXCLUDED.github_url, bio = EXCLUDED.bio, updated_at = EXCLUDED.updated_at
+SET name = $2, avatar = $3, github_url = $4, bio = $5, updated_at = now()
+RETURNING *;
             ",
             user.id,
             user.name,
             user.avatar,
             user.github_url,
             user.bio,
-            user.updated_at,
-            user.created_at
-            )
-            .fetch_optional(self.db.get_pool())
-            .await
+        )
+        .fetch_one(self.db.get_pool())
+        .await
         {
-            Ok(_) => Ok(()),
+            Ok(user) => Ok(user),
             Err(e) => Err(UserServiceErr::Other(e.into())),
         }
     }
