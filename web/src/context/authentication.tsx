@@ -26,7 +26,10 @@ const fetchUserAction = (): Promise<unknown> =>
     .catch(() => {});
 
 const logoutAction = () =>
-  fetch(`${import.meta.env.VITE_SERVER_URL}/logout`, { method: 'post' });
+  fetch(`${import.meta.env.VITE_SERVER_URL}/logout`, {
+    method: 'post',
+    credentials: 'include'
+  });
 
 // ============================================================================
 // Contexts
