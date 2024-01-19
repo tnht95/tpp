@@ -92,15 +92,21 @@ where
     TBookService: IBookService,
     TUserService: IUserService,
 {
-    let cookie = match headers.get("cookie") {
+    let jwt = match headers.get("cookie") {
         Some(cookie) => match cookie.to_str() {
-            Ok(cookie) => cookie,
+            Ok(cookie) => match cookie
+                .split(';')
+                .find(|item| item.starts_with("access_token="))
+            {
+                Some(token) => &token[13..],
+                None => return StatusCode::UNAUTHORIZED.into_response(),
+            },
             Err(_) => return StatusCode::UNAUTHORIZED.into_response(),
         },
         None => return StatusCode::UNAUTHORIZED.into_response(),
     };
 
-    let jwt_claim = match jwt::decode(&cookie[13..], &state.config.auth.jwt.secret) {
+    let jwt_claim = match jwt::decode(jwt, &state.config.auth.jwt.secret) {
         Ok(jwt_claim) => jwt_claim,
         Err(_) => return StatusCode::UNAUTHORIZED.into_response(),
     };
@@ -121,7 +127,7 @@ where
     };
 
     match state.services.user.sync_user(&new_user).await {
-        Ok(()) => (StatusCode::OK, Json(new_user)).into_response(),
+        Ok(user) => (StatusCode::OK, Json(user)).into_response(),
         Err(UserServiceErr::Other(e)) => response_unhandled_err(e),
     }
 }
