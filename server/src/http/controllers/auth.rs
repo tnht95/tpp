@@ -11,25 +11,32 @@ use axum::{
     response::{IntoResponse, Response},
     Json,
 };
+use chrono::Utc;
 
 use super::InternalState;
 use crate::{
+    database::entities::users::User,
     http::utils::err_handler::response_unhandled_err,
     model::responses::auth::{INVALID_OATH_CODE, MISSING_OATH_CODE},
-    services::{book::IBookService, health::IHealthService},
+    services::{
+        book::IBookService,
+        health::IHealthService,
+        user::{IUserService, UserServiceErr},
+    },
     utils::{
         github::{exchange_user_token, get_user_from_token},
         jwt,
     },
 };
 
-pub async fn exchange_token<THealthService, TBookService>(
+pub async fn exchange_token<THealthService, TBookService, TUserService>(
     Query(query): Query<HashMap<String, String>>,
-    State(state): InternalState<THealthService, TBookService>,
+    State(state): InternalState<THealthService, TBookService, TUserService>,
 ) -> Response
 where
     THealthService: IHealthService,
     TBookService: IBookService,
+    TUserService: IUserService,
 {
     let code = match query.get("code") {
         Some(id) => id,
@@ -76,13 +83,14 @@ where
         .into_response()
 }
 
-pub async fn me<THealthService, TBookService>(
+pub async fn me<THealthService, TBookService, TUserService>(
     headers: HeaderMap,
-    State(state): InternalState<THealthService, TBookService>,
+    State(state): InternalState<THealthService, TBookService, TUserService>,
 ) -> Response
 where
     THealthService: IHealthService,
     TBookService: IBookService,
+    TUserService: IUserService,
 {
     let cookie = match headers.get("cookie") {
         Some(cookie) => match cookie.to_str() {
@@ -102,7 +110,20 @@ where
         Err(e) => return response_unhandled_err(e),
     };
 
-    (StatusCode::OK, Json(user)).into_response()
+    let new_user = User {
+        id: user.id,
+        name: user.login,
+        github_url: user.html_url.to_string(),
+        bio: user.bio,
+        avatar: user.avatar_url.to_string(),
+        created_at: Utc::now(),
+        updated_at: Utc::now(),
+    };
+
+    match state.services.user.sync_user(&new_user).await {
+        Ok(()) => (StatusCode::OK, Json(new_user)).into_response(),
+        Err(UserServiceErr::Other(e)) => response_unhandled_err(e),
+    }
 }
 
 pub async fn log_out() -> Response {

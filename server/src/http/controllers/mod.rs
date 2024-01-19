@@ -8,4 +8,5 @@ use axum::extract::State;
 
 use super::Server;
 
-type InternalState<THealthService, TBookService> = State<Arc<Server<THealthService, TBookService>>>;
+type InternalState<THealthService, TBookService, TUserService> =
+    State<Arc<Server<THealthService, TBookService, TUserService>>>;

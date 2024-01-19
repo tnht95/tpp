@@ -4,13 +4,15 @@ use tracing::info;
 
 use crate::{
     http::Server,
-    services::{book::IBookService, health::IHealthService},
+    services::{book::IBookService, health::IHealthService, user::IUserService},
 };
 
-pub async fn handle<THealthService, TBookService>(state: Arc<Server<THealthService, TBookService>>)
-where
+pub async fn handle<THealthService, TBookService, TUSerService>(
+    state: Arc<Server<THealthService, TBookService, TUSerService>>,
+) where
     THealthService: IHealthService,
     TBookService: IBookService,
+    TUSerService: IUserService,
 {
     let ctrl_c = async {
         tokio::signal::ctrl_c()

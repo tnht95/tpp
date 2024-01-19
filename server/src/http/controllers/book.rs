@@ -10,15 +10,17 @@ use crate::{
     services::{
         book::{BookServiceErr, IBookService},
         health::IHealthService,
+        user::IUserService,
     },
 };
 
-pub async fn get_books<THealthService, TBookService>(
-    State(state): InternalState<THealthService, TBookService>,
+pub async fn get_books<THealthService, TBookService, TUSerService>(
+    State(state): InternalState<THealthService, TBookService, TUSerService>,
 ) -> Response
 where
     THealthService: IHealthService,
     TBookService: IBookService,
+    TUSerService: IUserService,
 {
     match state.services.book.get_books().await {
         Ok(books) => Json(HttpResponse { data: books }).into_response(),
@@ -26,13 +28,14 @@ where
     }
 }
 
-pub async fn add_books<THealthService, TBookService>(
-    State(state): InternalState<THealthService, TBookService>,
+pub async fn add_books<THealthService, TBookService, TUSerService>(
+    State(state): InternalState<THealthService, TBookService, TUSerService>,
     Json(book): Json<AddBookRequest>,
 ) -> Response
 where
     THealthService: IHealthService,
     TBookService: IBookService,
+    TUSerService: IUserService,
 {
     match state.services.book.add_books(book).await {
         Ok(book) => Json(HttpResponse { data: book }).into_response(),
