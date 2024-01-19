@@ -24,7 +24,7 @@ use crate::{
         user::{IUserService, UserServiceErr},
     },
     utils::{
-        github::{exchange_user_token, get_user_from_token},
+        github::{exchange_user_token, get_ghuser_from_token},
         jwt,
     },
 };
@@ -105,17 +105,17 @@ where
         Err(_) => return StatusCode::UNAUTHORIZED.into_response(),
     };
 
-    let user = match get_user_from_token(&jwt_claim.gh_token).await {
+    let gh_user = match get_ghuser_from_token(&jwt_claim.gh_token).await {
         Ok(user) => user,
         Err(e) => return response_unhandled_err(e),
     };
 
     let new_user = User {
-        id: user.id,
-        name: user.login,
-        github_url: user.html_url.to_string(),
-        bio: user.bio,
-        avatar: user.avatar_url.to_string(),
+        id: gh_user.id,
+        name: gh_user.login,
+        github_url: gh_user.html_url,
+        bio: gh_user.bio,
+        avatar: gh_user.avatar_url,
         created_at: Utc::now(),
         updated_at: Utc::now(),
     };

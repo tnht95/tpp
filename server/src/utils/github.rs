@@ -5,7 +5,6 @@ use axum::http::{
     HeaderValue,
 };
 use serde::{Deserialize, Serialize};
-use url::Url;
 
 #[derive(Deserialize)]
 pub struct GhOAuth {
@@ -16,12 +15,8 @@ pub struct GhOAuth {
 pub struct GithubUser {
     pub login: String,
     pub id: i64,
-    pub avatar_url: Url,
-    pub gravatar_id: String,
-    pub url: Url,
-    pub html_url: Url,
-    pub repos_url: Url,
-    pub email: Option<String>,
+    pub avatar_url: String,
+    pub html_url: String,
     pub bio: Option<String>,
 }
 
@@ -58,7 +53,7 @@ pub async fn exchange_user_token(
         .await.map_err(|e| anyhow!(e))
 }
 
-pub async fn get_user_from_token(token: &str) -> Result<GithubUser> {
+pub async fn get_ghuser_from_token(token: &str) -> Result<GithubUser> {
     octocrab::instance()
         .get_with_headers::<GithubUser, _, _>(
             "https://api.github.com/user",

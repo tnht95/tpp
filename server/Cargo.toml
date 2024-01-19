@@ -32,4 +32,3 @@ tower-http = { version = "0.4.4", features = [
 ] }
 octocrab = "0.32.0"
 jsonwebtoken = "9.2.0"
-url = "2.5.0"
