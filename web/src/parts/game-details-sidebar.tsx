@@ -34,7 +34,7 @@ export const GameDetailsSidebar = () => (
     <div class="mt-3 flex gap-3">
       <button
         type="button"
-        class="mt-2 rounded-lg border border-green-600 bg-green-600 p-2.5 text-sm font-medium text-white hover:bg-white hover:text-green-600 focus:outline-none focus:ring-4 focus:ring-purple-300 "
+        class="mt-2 rounded-lg border border-green-600 bg-green-600 p-2.5 text-sm font-medium text-white hover:bg-white hover:text-green-600 focus:outline-none focus:ring-4 focus:ring-purple-300"
       >
         <i class="fa-solid fa-gamepad mr-2" />
         Play!

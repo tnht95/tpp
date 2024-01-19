@@ -2,26 +2,49 @@ import fs from 'node:fs';
 
 import FileHound from 'filehound';
 
-const files = FileHound.create()
+const throwIfErr = e => {
+  if (e) throw e;
+};
+
+const trimSpaces = filePaths => {
+  for (const filePath of filePaths) {
+    fs.readFile(filePath, 'utf8', (e, content) => {
+      throwIfErr(e);
+
+      let newContent = '';
+
+      //   class=" 1   2 3  " id= "  1 3 3   "  flag x=  " "
+      //   class="1   2 3  " id= "1 3 3   "  flag x=  ""
+      const regExLeftOuterTrim = /(?<=") +(?=(?:(?:[^"]*"){2})*[^"]*"[^"]*$)/g;
+      if (regExLeftOuterTrim.test(content)) {
+        newContent = content.replaceAll(regExLeftOuterTrim, '');
+      }
+
+      //   class="1   2 3  " id= "1 3 3   "  flag x=  ""
+      //   class="1   2 3" id= "1 3 3"  flag x=  ""
+      const regExRightOuterTrim = / +(?=")(?=(?:(?:[^"]*"){2})*[^"]*"[^"]*$)/g;
+      if (regExRightOuterTrim.test(newContent)) {
+        newContent = newContent.replaceAll(regExRightOuterTrim, '');
+      }
+
+      //   class="1   2 3" id= "1 3 3"  flag x=  ""
+      //   class="1 2 3" id= "1 3 3"  flag x=  ""
+      const regExInnerTrim = /  +(?=(?:(?:[^"]*"){2})*[^"]*"[^"]*$)/g;
+      if (regExInnerTrim.test(newContent)) {
+        newContent = newContent.replaceAll(regExInnerTrim, ' ');
+      }
+
+      if (newContent) {
+        fs.writeFile(filePath, newContent, throwIfErr);
+      }
+    });
+  }
+};
+
+FileHound.create()
   .paths('./src/')
   .discard('node_modules')
   .ext('tsx')
-  .find();
-
-files
-  .then(filePaths => {
-    for (const filepath of filePaths) {
-      fs.readFile(filepath, 'utf8', (err, content) => {
-        if (err) throw err;
-        const match = content.match(/^\s*"\s*(.*?)\s*"\s*$/);
-        if (match) {
-          fs.writeFile(filepath, match[1].replace(/\s+/g, ' '), e => {
-            if (e) throw e;
-          });
-        }
-      });
-    }
-  })
-  .catch(error => {
-    throw error;
-  });
+  .find()
+  .then(trimSpaces)
+  .catch(throwIfErr);
