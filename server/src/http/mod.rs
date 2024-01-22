@@ -21,6 +21,7 @@ use tower_http::{
     normalize_path::NormalizePath,
     request_id::{MakeRequestUuid, PropagateRequestIdLayer, SetRequestIdLayer},
     sensitive_headers::SetSensitiveRequestHeadersLayer,
+    services::ServeDir,
     timeout::{RequestBodyTimeoutLayer, TimeoutLayer},
     trace::{DefaultMakeSpan, DefaultOnFailure, DefaultOnResponse, TraceLayer},
 };
@@ -102,6 +103,7 @@ where
         let state = Arc::new(self);
         let app = NormalizePath::trim_trailing_slash(Router::merge(
             Router::new()
+                .nest_service("/assets", ServeDir::new("assets"))
                 .route("/health", get(is_healthy))
                 .with_state(Arc::clone(&state)),
             Router::new().nest(
