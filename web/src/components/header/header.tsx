@@ -1,12 +1,12 @@
 import { Show, Suspense } from 'solid-js';
 
-import { Searchbar } from '@/components';
+import { LoadingButton, Searchbar } from '@/components';
 import { useAuth } from '@/context';
 import { UserMenuGroup } from '@/parts';
 
 import { HeaderLogo } from './header-logo';
 import { HeaderMenu } from './header-menu';
-import { SignInBtn, SignInBtnSkeleton } from './sign-in';
+import { SignInBtnSkeleton } from './sign-in';
 
 export const Header = () => {
   const { utils } = useAuth();
@@ -19,7 +19,15 @@ export const Header = () => {
         <Searchbar />
       </div>
       <Suspense fallback={<SignInBtnSkeleton />}>
-        <Show when={utils.isAuth()} fallback={<SignInBtn />}>
+        <Show
+          when={utils.isAuth()}
+          fallback={
+            <LoadingButton
+              url={import.meta.env.VITE_GITHUB_SIGNIN_URL}
+              title="Sign In"
+            />
+          }
+        >
           <UserMenuGroup />
         </Show>
       </Suspense>
