@@ -9,7 +9,7 @@ import { HeaderMenu } from './header-menu';
 import { SignInBtn, SignInBtnSkeleton } from './sign-in';
 
 export const Header = () => {
-  const { user } = useAuth();
+  const { utils } = useAuth();
 
   return (
     <header class="sticky top-0 z-50 flex flex-row items-center justify-between bg-indigo-900 text-white">
@@ -19,7 +19,7 @@ export const Header = () => {
         <Searchbar />
       </div>
       <Suspense fallback={<SignInBtnSkeleton />}>
-        <Show when={!!user()} fallback={<SignInBtn />}>
+        <Show when={utils.isAuth()} fallback={<SignInBtn />}>
           <UserMenuGroup />
         </Show>
       </Suspense>

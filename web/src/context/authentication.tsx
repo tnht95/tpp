@@ -11,6 +11,9 @@ import {
 // ============================================================================
 type AuthContext = {
   user: Resource<unknown>;
+  utils: {
+    isAuth: () => boolean;
+  };
   dispatch: {
     logout: () => void;
   };
@@ -34,11 +37,14 @@ const logoutAction = () =>
 // ============================================================================
 // Contexts
 // ============================================================================
-const authContext = createContext<AuthContext>();
+const authCtx = createContext<AuthContext>();
 export const AuthenticationProvider = (props: ParentProps) => {
   const [user, { mutate }] = createResource(fetchUserAction);
   const state = {
     user,
+    utils: {
+      isAuth: () => !!user()
+    },
     dispatch: {
       // TODO: handle error
       logout: () => {
@@ -48,12 +54,10 @@ export const AuthenticationProvider = (props: ParentProps) => {
       }
     }
   };
-  return (
-    <authContext.Provider value={state}>{props.children}</authContext.Provider>
-  );
+  return <authCtx.Provider value={state}>{props.children}</authCtx.Provider>;
 };
 
 // ============================================================================
 // Component Apis
 // ============================================================================
-export const useAuth = () => useContext(authContext) as AuthContext;
+export const useAuth = () => useContext(authCtx) as AuthContext;
