@@ -7,17 +7,19 @@ use anyhow::{anyhow, Result};
 use jsonwebtoken::{Algorithm, DecodingKey, EncodingKey, Header, Validation};
 use serde::{Deserialize, Serialize};
 
+use crate::database::entities::users::User;
+
 #[derive(Serialize, Deserialize)]
 pub struct JwtClaim {
-    pub gh_token: String,
+    pub user: User,
     exp_at: u128,
 }
 
-pub fn encode(gh_token: String, secret: &str, expire_in: u64) -> Result<String> {
+pub fn encode(user: User, secret: &str, expire_in: u64) -> Result<String> {
     Ok(jsonwebtoken::encode(
         &Header::new(Algorithm::HS256),
         &JwtClaim {
-            gh_token,
+            user,
             exp_at: SystemTime::now()
                 .add(Duration::from_secs(expire_in))
                 .duration_since(UNIX_EPOCH)?
