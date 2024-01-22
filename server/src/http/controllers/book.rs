@@ -9,34 +9,23 @@ use crate::{
     model::{requests::book::AddBookRequest, responses::HttpResponse},
     services::{
         book::{BookServiceErr, IBookService},
-        health::IHealthService,
-        user::IUserService,
+        IInternalServices,
     },
 };
 
-pub async fn get_books<THealthService, TBookService, TUSerService>(
-    State(state): InternalState<THealthService, TBookService, TUSerService>,
-) -> Response
-where
-    THealthService: IHealthService,
-    TBookService: IBookService,
-    TUSerService: IUserService,
-{
+pub async fn get_books<TInternalServices: IInternalServices>(
+    State(state): InternalState<TInternalServices>,
+) -> Response {
     match state.services.book.get_books().await {
         Ok(books) => Json(HttpResponse { data: books }).into_response(),
         Err(BookServiceErr::Other(e)) => response_unhandled_err(e),
     }
 }
 
-pub async fn add_books<THealthService, TBookService, TUSerService>(
-    State(state): InternalState<THealthService, TBookService, TUSerService>,
+pub async fn add_books<TInternalServices: IInternalServices>(
+    State(state): InternalState<TInternalServices>,
     Json(book): Json<AddBookRequest>,
-) -> Response
-where
-    THealthService: IHealthService,
-    TBookService: IBookService,
-    TUSerService: IUserService,
-{
+) -> Response {
     match state.services.book.add_books(book).await {
         Ok(book) => Json(HttpResponse { data: book }).into_response(),
         Err(BookServiceErr::Other(e)) => response_unhandled_err(e),

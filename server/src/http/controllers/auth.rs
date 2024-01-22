@@ -19,9 +19,8 @@ use crate::{
     http::utils::err_handler::response_unhandled_err,
     model::responses::auth::{INVALID_OATH_CODE, MISSING_OATH_CODE},
     services::{
-        book::IBookService,
-        health::IHealthService,
         user::{IUserService, UserServiceErr},
+        IInternalServices,
     },
     utils::{
         github::{exchange_user_token, get_ghuser_from_token},
@@ -29,15 +28,10 @@ use crate::{
     },
 };
 
-pub async fn exchange_token<THealthService, TBookService, TUserService>(
+pub async fn exchange_token<TInternalServices: IInternalServices>(
     Query(query): Query<HashMap<String, String>>,
-    State(state): InternalState<THealthService, TBookService, TUserService>,
-) -> Response
-where
-    THealthService: IHealthService,
-    TBookService: IBookService,
-    TUserService: IUserService,
-{
+    State(state): InternalState<TInternalServices>,
+) -> Response {
     let code = match query.get("code") {
         Some(id) => id,
         None => return (StatusCode::BAD_REQUEST, Json(MISSING_OATH_CODE)).into_response(),
@@ -83,15 +77,10 @@ where
         .into_response()
 }
 
-pub async fn me<THealthService, TBookService, TUserService>(
+pub async fn me<TInternalServices: IInternalServices>(
     headers: HeaderMap,
-    State(state): InternalState<THealthService, TBookService, TUserService>,
-) -> Response
-where
-    THealthService: IHealthService,
-    TBookService: IBookService,
-    TUserService: IUserService,
-{
+    State(state): InternalState<TInternalServices>,
+) -> Response {
     let jwt = match headers.get("cookie") {
         Some(cookie) => match cookie.to_str() {
             Ok(cookie) => match cookie

@@ -37,13 +37,11 @@ where
     async fn sync_user(&self, user: &User) -> Result<User, UserServiceErr> {
         match sqlx::query_as!(
             User,
-            "
-INSERT INTO users (id, name, avatar, github_url, bio, updated_at, created_at)
-VALUES ($1, $2, $3, $4, $5, now(), now())
-ON CONFLICT (id) DO UPDATE
-SET name = $2, avatar = $3, github_url = $4, bio = $5, updated_at = now()
-RETURNING *;
-            ",
+            "INSERT INTO users (id, name, avatar, github_url, bio, updated_at, created_at)
+            VALUES ($1, $2, $3, $4, $5, now(), now())
+            ON CONFLICT (id) DO UPDATE
+            SET name = $2, avatar = $3, github_url = $4, bio = $5, updated_at = now()
+            RETURNING *;",
             user.id,
             user.name,
             user.avatar,

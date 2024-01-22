@@ -32,39 +32,29 @@ use crate::{
         controllers::{auth, book::add_books, health::is_healthy},
         handlers::{panic, shutdown},
     },
-    services::{book::IBookService, health::IHealthService, user::IUserService},
+    services::IInternalServices,
 };
 
-pub struct Server<
-    THealthService: IHealthService,
-    TBookService: IBookService,
-    TUserService: IUserService,
-> {
+pub struct Server<TInternalServices: IInternalServices> {
     config: Config,
-    services: Services<THealthService, TBookService, TUserService>,
+    services: Services<TInternalServices>,
 }
 
-struct Services<
-    THealthService: IHealthService,
-    TBookService: IBookService,
-    TUserService: IUserService,
-> {
-    health: RwLock<THealthService>,
-    book: TBookService,
-    user: TUserService,
+struct Services<TInternalServices: IInternalServices> {
+    health: RwLock<TInternalServices::THealthService>,
+    book: TInternalServices::TBookService,
+    user: TInternalServices::TUserService,
 }
 
-impl<THealthService, TBookService, TUserService> Server<THealthService, TBookService, TUserService>
+impl<TInternalServices> Server<TInternalServices>
 where
-    THealthService: IHealthService + Sync + Send + 'static,
-    TBookService: IBookService + Sync + Send + 'static,
-    TUserService: IUserService + Sync + Send + 'static,
+    TInternalServices: IInternalServices + 'static,
 {
     pub fn new(
         config: Config,
-        health: THealthService,
-        book: TBookService,
-        user: TUserService,
+        health: TInternalServices::THealthService,
+        book: TInternalServices::TBookService,
+        user: TInternalServices::TUserService,
     ) -> Self {
         Self {
             config,
