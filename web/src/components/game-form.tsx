@@ -52,7 +52,15 @@ export const GameForm = (props: GameFormProps) => {
                 class="w-full rounded-xl border p-3 placeholder:text-gray-400"
               />
               <input
-                placeholder="Game link"
+                placeholder="Game repo link"
+                class="w-full rounded-xl border p-3 placeholder:text-gray-400"
+              />
+              <input
+                placeholder="Game avatar link"
+                class="w-full rounded-xl border p-3 placeholder:text-gray-400"
+              />
+              <input
+                placeholder="Game tags: separate each tag with a comma"
                 class="w-full rounded-xl border p-3 placeholder:text-gray-400"
               />
               <textarea
@@ -72,11 +80,6 @@ export const GameForm = (props: GameFormProps) => {
                   value={content()}
                 />
               </Show>
-
-              <input
-                placeholder="Game tags: separate each tag with a comma"
-                class="w-full rounded-xl border p-3 placeholder:text-gray-400"
-              />
               <div class="mb-6">
                 <div class="relative flex items-center justify-between rounded-xl border bg-white px-4 py-3 transition duration-150 ease-in-out hover:border-blue-500">
                   <input
