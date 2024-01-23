@@ -10,7 +10,7 @@ create table games
     ) default 'https://jacopofarina.eu/static/img/chip_8_screenshot.png',
     about varchar(255),
     info varchar(1000),
-    stars smallint not null,
+    stars smallint not null default 0,
     tags varchar(100),
     rom varchar(1000) not null,
     created_at timestamp (6) with time zone default now() not null,
