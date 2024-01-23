@@ -13,10 +13,10 @@ use axum::{
 };
 use chrono::Utc;
 
-use super::InternalState;
+use super::{extract_jwt_claim, InternalState};
 use crate::{
     database::entities::user::User,
-    http::utils::{cookie::extract_access_token, err_handler::response_unhandled_err},
+    http::utils::err_handler::response_unhandled_err,
     model::responses::auth::{INVALID_OATH_CODE, MISSING_OATH_CODE},
     services::{
         user::{IUserService, UserServiceErr},
@@ -102,12 +102,7 @@ pub async fn me<TInternalServices: IInternalServices>(
     headers: HeaderMap,
     State(state): InternalState<TInternalServices>,
 ) -> Response {
-    let jwt = match extract_access_token(&headers) {
-        Ok(jwt) => jwt,
-        Err(_) => return StatusCode::UNAUTHORIZED.into_response(),
-    };
-
-    match jwt::decode(jwt, &state.config.auth.jwt.secret) {
+    match extract_jwt_claim(headers, &state.config.auth.jwt.secret) {
         Ok(jwt_claim) => (StatusCode::OK, Json(jwt_claim.user)).into_response(),
         Err(_) => StatusCode::UNAUTHORIZED.into_response(),
     }

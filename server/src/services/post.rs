@@ -3,7 +3,10 @@ use std::sync::Arc;
 use async_trait::async_trait;
 use thiserror::Error;
 
-use crate::database::{entities::post::Post, IDatabase};
+use crate::{
+    database::{entities::post::Post, IDatabase},
+    model::requests::post::AddPostRequest,
+};
 
 #[derive(Error, Debug)]
 pub enum PostServiceErr {
@@ -14,6 +17,7 @@ pub enum PostServiceErr {
 #[async_trait]
 pub trait IPostService {
     async fn get_all(&self) -> Result<Post, PostServiceErr>;
+    async fn add(&self, author_id: i64, post: AddPostRequest) -> Result<Post, PostServiceErr>;
 }
 
 pub struct PostService<T: IDatabase> {
@@ -38,6 +42,21 @@ where
         match sqlx::query_as!(Post, "select * from posts")
             .fetch_one(self.db.get_pool())
             .await
+        {
+            Ok(posts) => Ok(posts),
+            Err(e) => Err(PostServiceErr::Other(e.into())),
+        }
+    }
+
+    async fn add(&self, author_id: i64, post: AddPostRequest) -> Result<Post, PostServiceErr> {
+        match sqlx::query_as!(
+            Post,
+            "insert into posts(author_id, content) values($1, $2) returning *",
+            author_id,
+            post.content
+        )
+        .fetch_one(self.db.get_pool())
+        .await
         {
             Ok(posts) => Ok(posts),
             Err(e) => Err(PostServiceErr::Other(e.into())),
