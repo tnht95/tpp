@@ -1,14 +1,19 @@
-import { CommentForm, Post, VerticalGameCard } from '@/components';
 import { createResource, For } from 'solid-js';
-import { Game, Reponse } from '@/models';
 
-const fetchNewestGame = (): Promise<Reponse<Game[]>> =>
-  fetch(`${import.meta.env.VITE_SERVER_URL}/newest_games`)
-    .then(r => r.json())
-    .catch(() => {}) as Promise<Reponse<Game[]>>;
+import { addPostAction, fetchNewestGameAction, fetchPostAction } from '@/apis';
+import { CommentForm, PostCard, VerticalGameCard } from '@/components';
+import { useAuth } from '@/context';
 
-export const Dashboard = () =>  {
-  const [games] = createResource(fetchNewestGame);
+export const Dashboard = () => {
+  const [games] = createResource(fetchNewestGameAction);
+  const [post, { mutate }] = createResource(fetchPostAction);
+  const { utils } = useAuth();
+
+  const onSubmitHandler = (content: string) => {
+    addPostAction({ content })
+      .then(newPost => mutate([newPost, ...(post() || [])]))
+      .catch(() => {});
+  };
 
   return (
     <div class="flex">
@@ -17,13 +22,16 @@ export const Dashboard = () =>  {
           <nav class="flex h-full w-2/6 border-r border-dashed" />
           <main class="mb-10 flex size-full flex-col bg-white px-32">
             <div class="mx-auto my-10 flex w-full">
-              <CommentForm>New Post</CommentForm>
+              {utils.isAuth() && (
+                <CommentForm onSubmitHandler={onSubmitHandler}>
+                  New Post
+                </CommentForm>
+              )}
             </div>
             <div class="flex flex-col gap-10">
-              <Post />
-              <Post />
-              <Post />
-              <Post />
+              <For each={post()}>
+                {post => <PostCard content={post.content} />}
+              </For>
             </div>
           </main>
           <nav class="relative -z-10 flex h-full w-1/2 border-l border-dashed">
@@ -32,7 +40,7 @@ export const Dashboard = () =>  {
                 Newest games
               </p>
               <div class="flex flex-col gap-5">
-                <For each={games()?.data}>
+                <For each={games()}>
                   {game => (
                     <VerticalGameCard
                       user={game.author_name}
@@ -47,6 +55,5 @@ export const Dashboard = () =>  {
         </div>
       </div>
     </div>
-  )
+  );
 };
-
