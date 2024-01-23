@@ -6,6 +6,8 @@ import {
   useContext
 } from 'solid-js';
 
+import { User } from '@/models';
+
 // ============================================================================
 // Interfaces
 // ============================================================================
@@ -23,10 +25,10 @@ type AuthContext = {
 // APIs
 // ============================================================================
 // TODO: handle error
-const fetchUserAction = (): Promise<unknown> =>
+const fetchUserAction = () =>
   fetch(`${import.meta.env.VITE_SERVER_URL}/me`, { credentials: 'include' })
     .then(r => r.json())
-    .catch(() => {});
+    .catch(() => {}) as Promise<User>;
 
 const logoutAction = () =>
   fetch(`${import.meta.env.VITE_SERVER_URL}/logout`, {
