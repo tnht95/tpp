@@ -7,3 +7,7 @@ export type Post = {
   created_at: Date;
   updated_at: Date;
 };
+
+export type AddPost = {
+  content: string;
+};
