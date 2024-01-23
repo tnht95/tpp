@@ -1,2 +1,2 @@
 -- Add down migration script here
-DELETE FROM users WHERE id = 40195902;
+delete from users where id = 40195902;

@@ -8,7 +8,7 @@ docker:
 
 fmt:
 	cargo +nightly fmt
-	sqlfluff format --disable-progress-bar --nocolor --dialect postgres migrations
+	sqlfluff format --disable-progress-bar --nocolor migrations
 
 lint:
 	cargo clippy --all-targets --all-features -- -D warnings -D clippy::all
@@ -20,4 +20,4 @@ pgup:
 	sqlx migrate run
 
 pgdown:
-	sqlx migrate revert
+	sqlx migrate revert --target-version 0
