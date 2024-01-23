@@ -27,7 +27,7 @@ pub struct Server {
     pub http_port: u16,
     pub pg_url: String,
     pub pg_max_pool: u32,
-    pub cors_max_age: u64,
+    pub cors_max_age: u64, // seconds
 }
 
 #[derive(Serialize, Deserialize, Debug, Default)]

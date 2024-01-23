@@ -1,3 +1,2 @@
 -- Add down migration script here
-
-DROP table games;
+DROP TABLE games;

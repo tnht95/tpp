@@ -21,7 +21,6 @@ mod services;
 mod utils;
 
 // TODO
-// auth
 // docker
 // swagger
 // redis

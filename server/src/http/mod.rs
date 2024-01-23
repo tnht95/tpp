@@ -11,7 +11,6 @@ use axum::{
     Router,
     ServiceExt,
 };
-use controllers::book::get_books;
 use tokio::sync::RwLock;
 use tower::ServiceBuilder;
 use tower_http::{
@@ -30,7 +29,7 @@ use tracing::{info, Level};
 use crate::{
     config::Config,
     http::{
-        controllers::{auth, book::add_books, game::get_games, health::is_healthy},
+        controllers::{auth, book, game, health},
         handlers::{panic, shutdown},
     },
     services::IInternalServices,
@@ -110,16 +109,16 @@ where
         let app = NormalizePath::trim_trailing_slash(
             Router::new()
                 .nest_service("/assets", ServeDir::new("assets"))
-                .route("/health", get(is_healthy))
+                .route("/health", get(health::is_healthy))
                 .nest(
                     "/api/v1",
                     Router::new()
                         .route("/me", get(auth::me))
                         .route("/logout", post(auth::log_out))
                         .route("/authentication", get(auth::authentication))
-                        .route("/books", get(get_books))
-                        .route("/books", post(add_books))
-                        .route("/games", get(get_games))
+                        .route("/books", get(book::get_all))
+                        .route("/books", post(book::add))
+                        .route("/games", get(game::get_all))
                         .layer(middleware),
                 )
                 .with_state(Arc::clone(&state)),

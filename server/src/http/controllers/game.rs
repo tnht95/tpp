@@ -13,7 +13,7 @@ use crate::{
     },
 };
 
-pub async fn get_games<TInternalServices: IInternalServices>(
+pub async fn get_all<TInternalServices: IInternalServices>(
     State(state): InternalState<TInternalServices>,
 ) -> Response {
     match state.services.game.get_all().await {
