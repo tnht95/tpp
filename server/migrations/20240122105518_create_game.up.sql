@@ -4,7 +4,7 @@ create table games
     id uuid default uuid_generate_v4() primary key,
     name varchar(40) not null,
     author_id bigint references users (id) on delete cascade not null,
-    github_url varchar(1000) not null,
+    url varchar(1000),
     avatar_url varchar(
         1000
     ) default 'https://jacopofarina.eu/static/img/chip_8_screenshot.png',

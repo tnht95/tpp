@@ -7,7 +7,7 @@ pub struct Game {
     pub id: Uuid,
     pub name: String,
     pub author_id: i64,
-    pub github_url: String,
+    pub url: Option<String>,
     pub avatar_url: Option<String>,
     pub about: Option<String>,
     pub info: Option<String>,
