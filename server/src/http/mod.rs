@@ -122,6 +122,7 @@ where
                         .route("/books", get(book::get_all))
                         .route("/books", post(book::add))
                         .route("/games", get(game::get_all))
+                        .route("/newest_games", get(game::get_newest))
                         .route("/post", get(post::get_all))
                         .route("/post", post(post::add))
                         .layer(middleware),

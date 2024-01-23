@@ -1,7 +1,7 @@
 import { EllipsisText } from '@/components';
 
 type GameCardProps = {
-  gameTitle: string;
+  name: string;
   byUser: string;
   stars: number;
   img: string;
@@ -19,7 +19,7 @@ export const GameCard = (props: GameCardProps) => (
           maxWidth="max-w-28"
           customStyle="text-indigo-900 font-bold text-xs"
         >
-          {props.gameTitle}
+          {props.name}
         </EllipsisText>
         <EllipsisText maxWidth="max-w-28" customStyle="text-xs text-indigo-700">
           {props.byUser}

@@ -2,7 +2,7 @@
 create table users
 (
     id bigint primary key not null,
-    name varchar(100) not null,
+    name varchar(100) not null unique,
     github_url text not null,
     avatar text not null,
     bio text,

@@ -3,11 +3,12 @@ create table games
 (
     id uuid default uuid_generate_v4() primary key,
     name varchar(40) not null,
+    author_name varchar(100) references users (name) on update cascade not null,
     author_id bigint references users (id) on delete cascade not null,
     url varchar(1000),
     avatar_url varchar(
         1000
-    ) default 'https://jacopofarina.eu/static/img/chip_8_screenshot.png',
+    ) default 'https://jacopofarina.eu/static/img/chip_8_screenshot.png' not null,
     about varchar(255),
     info varchar(1000),
     stars smallint not null default 0,

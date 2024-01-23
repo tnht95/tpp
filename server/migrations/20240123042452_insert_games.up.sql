@@ -1,8 +1,9 @@
 -- Add up migration script here
-insert into games (name, author_id, url, avatar_url, about, info, tags, rom)
+insert into games (name, author_id, author_name, url, avatar_url, about, info, tags, rom)
 values (
     '15 Puzzle',
     40195902,
+    'tnht95',
     'https://www.uvlist.net/game-38164-15+Puzzle',
     'https://s.uvlist.net/l/y2020/05/202499.jpg',
     'Scramble and slide pixelated tiles back into order, one satisfying blip at a time!',
@@ -13,6 +14,7 @@ values (
 (
     'Blinky',
     40195902,
+    'tnht95',
     'https://github.com/badlogic/chip8/blob/master/roms/sources/BLINKY.SRC',
     'https://user-images.githubusercontent.com/39998050/185288501-5d05b9bd-c127-4529-b4b6-7fce6584a8cc.png',
     'Help Pac-Man navigate a maze and gobble dots while avoiding pesky ghosts in this retro arcade classic.',
@@ -23,6 +25,7 @@ values (
 (
     'Space Invaders',
     40195902,
+    'tnht95',
     'https://firmwaresecurity.com/tag/space-invaders/',
     'https://imanolfotia.com/Chip-8-Emulator/captures/c3.png',
     'Blast those alien invaders!',
@@ -33,6 +36,7 @@ values (
 (
     'Tank',
     40195902,
+    'tnht95',
     '',
     'https://i.ytimg.com/vi/Ix5wIscBOW0/maxresdefault.jpg',
     'Shooting and dodging!',
@@ -43,6 +47,7 @@ values (
 (
     'Tetris',
     40195902,
+    'tnht95',
     'https://github.com/leonmavr/chip-8/blob/master/roms/Tetris.txt',
     'https://ajor.co.uk/images/chip8/tetris.png',
     'Stack, rotate, and clear!',
@@ -53,6 +58,7 @@ values (
 (
     'Pong',
     40195902,
+    'tnht95',
     'https://github.com/badlogic/chip8/blob/master/roms/sources/PONG.SRC',
     'https://i.ytimg.com/vi/MvI7mOd-o9E/maxresdefault.jpg',
     'Pixel Paddle War',
@@ -63,6 +69,7 @@ values (
 (
     'UFO',
     40195902,
+    'tnht95',
     'https://github.com/alexanderdickson/Chip-8-Emulator/blob/master/roms/UFO',
     'https://s.uvlist.net/107066/screenshot/UFO%20(Chip%208).jpg',
     'Defend your planet from UFO!',

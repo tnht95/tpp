@@ -74,64 +74,64 @@ export const UserDetails = () => {
             </div>
             <div class="flex flex-wrap gap-7">
               <GameCard
-                gameTitle="Bob"
+                name="Bob"
                 byUser="Harry"
                 stars={35}
                 img="https://i.ytimg.com/vi/73lnG3ArcDg/hqdefault.jpg"
               />
 
               <GameCard
-                gameTitle="Bob"
+                name="Bob"
                 byUser="Harry"
                 stars={35}
                 img="https://i.ytimg.com/vi/73lnG3ArcDg/hqdefault.jpg"
               />
 
               <GameCard
-                gameTitle="Bob"
+                name="Bob"
                 byUser="Harry"
                 stars={35}
                 img="https://i.ytimg.com/vi/73lnG3ArcDg/hqdefault.jpg"
               />
 
               <GameCard
-                gameTitle="Bob"
+                name="Bob"
                 byUser="Harry"
                 stars={35}
                 img="https://i.ytimg.com/vi/73lnG3ArcDg/hqdefault.jpg"
               />
               <GameCard
-                gameTitle="Bob"
+                name="Bob"
                 byUser="Harry"
                 stars={35}
                 img="https://i.ytimg.com/vi/73lnG3ArcDg/hqdefault.jpg"
               />
               <GameCard
-                gameTitle="Bob"
+                name="Bob"
                 byUser="Harry"
                 stars={35}
                 img="https://i.ytimg.com/vi/73lnG3ArcDg/hqdefault.jpg"
               />
               <GameCard
-                gameTitle="Bob"
+                name="Bob"
                 byUser="Harry"
                 stars={35}
                 img="https://i.ytimg.com/vi/73lnG3ArcDg/hqdefault.jpg"
               />
               <GameCard
-                gameTitle="Bob"
+                name="Bob"
                 byUser="Harry"
                 stars={35}
                 img="https://i.ytimg.com/vi/73lnG3ArcDg/hqdefault.jpg"
               />
               <GameCard
-                gameTitle="Bob"
+                name="Bob"
                 byUser="Harry"
                 stars={35}
                 img="https://i.ytimg.com/vi/73lnG3ArcDg/hqdefault.jpg"
               />
               <GameCard
-                gameTitle="Bob"
+                name="Bob"
                 byUser="Harry"
                 stars={35}
                 img="https://i.ytimg.com/vi/73lnG3ArcDg/hqdefault.jpg"
