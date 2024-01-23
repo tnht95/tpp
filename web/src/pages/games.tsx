@@ -1,16 +1,11 @@
 import { createResource, For } from 'solid-js';
 
+import { fetchGameAction } from '@/apis';
 import { GameCard, Selects } from '@/components';
-import { Game, Reponse } from '@/models';
 import { TagSidebar } from '@/parts';
 
-const fetchGame = (): Promise<Reponse<Game[]>> =>
-  fetch(`${import.meta.env.VITE_SERVER_URL}/games`)
-    .then(r => r.json())
-    .catch(() => {}) as Promise<Reponse<Game[]>>;
-
 export const Games = () => {
-  const [games] = createResource(fetchGame);
+  const [games] = createResource(fetchGameAction);
 
   return (
     <>
@@ -66,7 +61,7 @@ export const Games = () => {
               <Selects />
             </div>
             <div class="flex flex-row flex-wrap gap-7">
-              <For each={games()?.data}>
+              <For each={games()}>
                 {game => (
                   <GameCard
                     name={game.name}
