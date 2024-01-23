@@ -16,7 +16,7 @@ pub enum PostServiceErr {
 
 #[async_trait]
 pub trait IPostService {
-    async fn get_all(&self) -> Result<Post, PostServiceErr>;
+    async fn get_all(&self) -> Result<Vec<Post>, PostServiceErr>;
     async fn add(&self, author_id: i64, post: AddPostRequest) -> Result<Post, PostServiceErr>;
 }
 
@@ -38,9 +38,9 @@ impl<T> IPostService for PostService<T>
 where
     T: IDatabase + Send + Sync,
 {
-    async fn get_all(&self) -> Result<Post, PostServiceErr> {
-        match sqlx::query_as!(Post, "select * from posts")
-            .fetch_one(self.db.get_pool())
+    async fn get_all(&self) -> Result<Vec<Post>, PostServiceErr> {
+        match sqlx::query_as!(Post, "select * from posts order by created_at desc")
+            .fetch_all(self.db.get_pool())
             .await
         {
             Ok(posts) => Ok(posts),

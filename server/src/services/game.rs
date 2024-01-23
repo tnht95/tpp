@@ -24,8 +24,8 @@ pub struct GameService<T: IDatabase> {
 }
 
 impl<T> GameService<T>
-    where
-        T: IDatabase,
+where
+    T: IDatabase,
 {
     pub fn new(db: Arc<T>) -> Self {
         Self { db }
@@ -34,8 +34,8 @@ impl<T> GameService<T>
 
 #[async_trait]
 impl<T> IGameService for GameService<T>
-    where
-        T: IDatabase + Send + Sync,
+where
+    T: IDatabase + Send + Sync,
 {
     async fn get_all(&self) -> Result<Vec<Game>, GameServiceErr> {
         match sqlx::query_as!(Game, "SELECT * FROM games")
@@ -48,15 +48,17 @@ impl<T> IGameService for GameService<T>
     }
 
     async fn get_newest(&self) -> Result<Vec<Game>, GameServiceErr> {
-        match sqlx::query_as!(Game,
-        r#"
+        match sqlx::query_as!(
+            Game,
+            r#"
         SELECT *
         FROM games
         ORDER BY created_at DESC
         LIMIT 5
-        "#)
-            .fetch_all(self.db.get_pool())
-            .await
+        "#
+        )
+        .fetch_all(self.db.get_pool())
+        .await
         {
             Ok(games) => Ok(games),
             Err(e) => Err(GameServiceErr::Other(e.into())),

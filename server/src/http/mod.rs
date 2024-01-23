@@ -123,8 +123,8 @@ where
                         .route("/books", post(book::add))
                         .route("/games", get(game::get_all))
                         .route("/newest_games", get(game::get_newest))
-                        .route("/post", get(post::get_all))
-                        .route("/post", post(post::add))
+                        .route("/posts", get(post::get_all))
+                        .route("/posts", post(post::add))
                         .layer(middleware),
                 )
                 .with_state(Arc::clone(&state)),
