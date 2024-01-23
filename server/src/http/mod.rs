@@ -30,7 +30,7 @@ use tracing::{info, Level};
 use crate::{
     config::Config,
     http::{
-        controllers::{auth, book::add_books, health::is_healthy},
+        controllers::{auth, book::add_books, game::get_games, health::is_healthy},
         handlers::{panic, shutdown},
     },
     services::IInternalServices,
@@ -45,6 +45,7 @@ struct Services<TInternalServices: IInternalServices> {
     health: RwLock<TInternalServices::THealthService>,
     book: TInternalServices::TBookService,
     user: TInternalServices::TUserService,
+    game: TInternalServices::TGameService,
 }
 
 impl<TInternalServices> Server<TInternalServices>
@@ -56,6 +57,7 @@ where
         health: TInternalServices::THealthService,
         book: TInternalServices::TBookService,
         user: TInternalServices::TUserService,
+        game: TInternalServices::TGameService,
     ) -> Self {
         Self {
             config,
@@ -63,6 +65,7 @@ where
                 health: RwLock::new(health),
                 book,
                 user,
+                game,
             },
         }
     }
@@ -116,6 +119,7 @@ where
                         .route("/authentication", get(auth::authentication))
                         .route("/books", get(get_books))
                         .route("/books", post(add_books))
+                        .route("/games", get(get_games))
                         .layer(middleware),
                 )
                 .with_state(Arc::clone(&state)),

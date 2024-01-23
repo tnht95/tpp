@@ -1,2 +1,3 @@
-pub mod books;
-pub mod users;
+pub mod book;
+pub mod game;
+pub mod user;

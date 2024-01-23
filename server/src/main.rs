@@ -10,7 +10,7 @@ use services::{book::BookService, health::HealthService};
 use tracing::trace;
 use tracing_subscriber::{prelude::*, EnvFilter};
 
-use crate::services::{user::UserService, InternalServices};
+use crate::services::{game::GameService, user::UserService, InternalServices};
 
 mod cli;
 mod config;
@@ -67,9 +67,15 @@ async fn main() -> Result<()> {
             let health_service = HealthService::new(Database::new_with_default_log(&config).await?);
             let book_service = BookService::new(Arc::clone(&db));
             let user_service = UserService::new(Arc::clone(&db));
+            let game_service = GameService::new(Arc::clone(&db));
 
-            let server =
-                Server::<InternalServices>::new(config, health_service, book_service, user_service);
+            let server = Server::<InternalServices>::new(
+                config,
+                health_service,
+                book_service,
+                user_service,
+                game_service,
+            );
 
             server.start().await.context("Failed to start server {}")?;
         }

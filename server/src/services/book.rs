@@ -4,7 +4,7 @@ use async_trait::async_trait;
 use thiserror::Error;
 
 use crate::{
-    database::{entities::books::Book, IDatabase},
+    database::{entities::book::Book, IDatabase},
     model::requests::book::AddBookRequest,
 };
 

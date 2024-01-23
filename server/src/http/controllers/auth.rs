@@ -15,7 +15,7 @@ use chrono::Utc;
 
 use super::InternalState;
 use crate::{
-    database::entities::users::User,
+    database::entities::user::User,
     http::utils::{cookie::extract_access_token, err_handler::response_unhandled_err},
     model::responses::auth::{INVALID_OATH_CODE, MISSING_OATH_CODE},
     services::{

@@ -7,7 +7,7 @@ use anyhow::{anyhow, Result};
 use jsonwebtoken::{Algorithm, DecodingKey, EncodingKey, Header, Validation};
 use serde::{Deserialize, Serialize};
 
-use crate::database::entities::users::User;
+use crate::database::entities::user::User;
 
 #[derive(Serialize, Deserialize)]
 pub struct JwtClaim {

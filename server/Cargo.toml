@@ -16,7 +16,7 @@ tokio = { version = "1.32.0", features = ["full"] }
 toml = "0.8.0"
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
-sqlx = { version = "0.7", features = ["runtime-tokio", "postgres", "chrono"] }
+sqlx = { version = "0.7", features = ["runtime-tokio", "postgres", "chrono", "uuid"] }
 thiserror = "1.0.56"
 log = "0.4.20"
 tower = "0.4.13"
@@ -33,3 +33,4 @@ tower-http = { version = "0.4.4", features = [
 ] }
 octocrab = "0.32.0"
 jsonwebtoken = "9.2.0"
+uuid = { version = "1.7.0", features = ["serde"] }

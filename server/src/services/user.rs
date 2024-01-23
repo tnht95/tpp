@@ -3,7 +3,7 @@ use std::sync::Arc;
 use async_trait::async_trait;
 use thiserror::Error;
 
-use crate::database::{entities::users::User, IDatabase};
+use crate::database::{entities::user::User, IDatabase};
 
 #[derive(Error, Debug)]
 pub enum UserServiceErr {
