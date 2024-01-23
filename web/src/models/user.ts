@@ -1,4 +1,4 @@
-export interface User {
+export type User = {
   id: number;
   name: string;
   github_url: string;
@@ -6,4 +6,4 @@ export interface User {
   avatar: string;
   created_at: Date;
   updated_at: Date;
-}
+};

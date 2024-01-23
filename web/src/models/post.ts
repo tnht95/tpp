@@ -1,4 +1,4 @@
-export interface Post {
+export type Post = {
   id: string; // Assuming Uuid is represented as a string
   author_id: number;
   content: string;
@@ -6,4 +6,4 @@ export interface Post {
   comments: number;
   created_at: Date;
   updated_at: Date;
-}
+};

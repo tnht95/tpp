@@ -1,4 +1,4 @@
-export interface Game {
+export type Game = {
   id: string;
   name: string;
   author_id: number;
@@ -12,4 +12,4 @@ export interface Game {
   rom: string;
   created_at: Date;
   updated_at: Date;
-}
+};
