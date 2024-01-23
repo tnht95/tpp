@@ -1,10 +1,11 @@
-use book::{BookService, IBookService};
-use health::{HealthService, IHealthService};
-use user::{IUserService, UserService};
-
 use crate::{
     database::Database,
-    services::game::{GameService, IGameService},
+    services::{
+        book::{BookService, IBookService},
+        game::{GameService, IGameService},
+        health::{HealthService, IHealthService},
+        user::{IUserService, UserService},
+    },
 };
 
 pub mod book;

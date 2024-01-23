@@ -2,15 +2,22 @@ use std::{path::PathBuf, sync::Arc};
 
 use anyhow::{Context, Result};
 use clap::Parser;
-use cli::{Cli, Cmd};
-use config::{Config, LogFmt};
-use database::Database;
-use http::Server;
-use services::{book::BookService, health::HealthService};
 use tracing::trace;
 use tracing_subscriber::{prelude::*, EnvFilter};
 
-use crate::services::{game::GameService, user::UserService, InternalServices};
+use crate::{
+    cli::{Cli, Cmd},
+    config::{Config, LogFmt},
+    database::Database,
+    http::Server,
+    services::{
+        book::BookService,
+        game::GameService,
+        health::HealthService,
+        user::UserService,
+        InternalServices,
+    },
+};
 
 mod cli;
 mod config;
