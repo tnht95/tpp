@@ -41,7 +41,7 @@ impl Database {
         Ok(Database { pool })
     }
 
-    pub async fn new_with_no_log(config: &Config) -> Result<Self> {
+    pub async fn new_with_default_log(config: &Config) -> Result<Self> {
         let pool = PgPoolOptions::new()
             .max_connections(config.server.pg_max_pool)
             .acquire_timeout(Duration::from_secs(1))

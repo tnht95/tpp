@@ -23,7 +23,7 @@ use tower_http::{
     sensitive_headers::SetSensitiveRequestHeadersLayer,
     services::ServeDir,
     timeout::{RequestBodyTimeoutLayer, TimeoutLayer},
-    trace::{DefaultMakeSpan, DefaultOnFailure, DefaultOnResponse, TraceLayer},
+    trace::{DefaultMakeSpan, DefaultOnResponse, TraceLayer},
 };
 use tracing::{info, Level};
 
@@ -80,15 +80,18 @@ where
                         "x-request-id".parse().expect("invalid header"),
                         "content-type".parse().expect("invalid header"),
                     ])
-                    .max_age(Duration::from_secs(3600)),
+                    .max_age(Duration::from_secs(self.config.server.cors_max_age)),
             )
             .layer(SetSensitiveRequestHeadersLayer::new(once(AUTHORIZATION)))
             .layer(CompressionLayer::new().quality(CompressionLevel::Fastest))
             .layer(CatchPanicLayer::custom(panic::recover))
             .layer(
                 TraceLayer::new_for_http()
-                    .make_span_with(DefaultMakeSpan::new().include_headers(true))
-                    .on_failure(DefaultOnFailure::new().level(Level::ERROR))
+                    .make_span_with(
+                        DefaultMakeSpan::new()
+                            .level(Level::INFO)
+                            .include_headers(true),
+                    )
                     .on_response(
                         DefaultOnResponse::new()
                             .level(Level::INFO)
@@ -101,23 +104,22 @@ where
             .layer(TimeoutLayer::new(Duration::from_secs(5)));
 
         let state = Arc::new(self);
-        let app = NormalizePath::trim_trailing_slash(Router::merge(
+        let app = NormalizePath::trim_trailing_slash(
             Router::new()
                 .nest_service("/assets", ServeDir::new("assets"))
                 .route("/health", get(is_healthy))
+                .nest(
+                    "/api/v1",
+                    Router::new()
+                        .route("/me", get(auth::me))
+                        .route("/logout", post(auth::log_out))
+                        .route("/authentication", get(auth::authentication))
+                        .route("/books", get(get_books))
+                        .route("/books", post(add_books))
+                        .layer(middleware),
+                )
                 .with_state(Arc::clone(&state)),
-            Router::new().nest(
-                "/api/v1",
-                Router::new()
-                    .route("/me", get(auth::me))
-                    .route("/logout", post(auth::log_out))
-                    .route("/authentication", get(auth::authentication))
-                    .route("/books", get(get_books))
-                    .route("/books", post(add_books))
-                    .layer(middleware)
-                    .with_state(Arc::clone(&state)),
-            ),
-        ));
+        );
 
         info!("listening on {}", http_address);
 

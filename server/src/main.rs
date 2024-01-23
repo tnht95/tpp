@@ -64,7 +64,7 @@ async fn main() -> Result<()> {
                     .context("Failed to initialize database")?,
             );
 
-            let health_service = HealthService::new(Database::new_with_no_log(&config).await?);
+            let health_service = HealthService::new(Database::new_with_default_log(&config).await?);
             let book_service = BookService::new(Arc::clone(&db));
             let user_service = UserService::new(Arc::clone(&db));
 

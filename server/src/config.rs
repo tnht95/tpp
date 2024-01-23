@@ -24,18 +24,10 @@ pub enum LogFmt {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Server {
-    pub mode: Mode,
     pub http_port: u16,
     pub pg_url: String,
     pub pg_max_pool: u32,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub enum Mode {
-    Local,
-    Dev,
-    Uat,
-    Prod,
+    pub cors_max_age: u64,
 }
 
 #[derive(Serialize, Deserialize, Debug, Default)]
@@ -61,10 +53,10 @@ impl Default for Config {
         Self {
             log_format: LogFmt::Json,
             server: Server {
-                mode: Mode::Local,
                 http_port: 8080,
                 pg_url: "postgres://service:password@localhost:5432/book?sslmode=disable".into(),
                 pg_max_pool: 50,
+                cors_max_age: 3600,
             },
             github_app: GithubApp::default(),
             auth: Auth {
