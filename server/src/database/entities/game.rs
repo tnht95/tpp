@@ -12,7 +12,7 @@ pub struct Game {
     pub about: Option<String>,
     pub info: Option<String>,
     pub stars: i16,
-    pub tags: Option<String>,
+    pub tags: Option<Vec<String>>,
     pub rom: String,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
