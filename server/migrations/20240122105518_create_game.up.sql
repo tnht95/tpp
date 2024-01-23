@@ -11,7 +11,7 @@ create table games
     about varchar(255),
     info varchar(1000),
     stars smallint not null default 0,
-    tags varchar(20)[],
+    tags varchar(20) [],
     rom varchar(1000) not null,
     created_at timestamp (6) with time zone default now() not null,
     updated_at timestamp (6) with time zone default now() not null

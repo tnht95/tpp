@@ -2,6 +2,7 @@ pub mod auth;
 pub mod book;
 pub mod game;
 pub mod health;
+pub mod post;
 
 use std::sync::Arc;
 
