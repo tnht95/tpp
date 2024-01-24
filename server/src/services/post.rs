@@ -40,10 +40,10 @@ where
     T: IDatabase + Send + Sync,
 {
     async fn filter(&self, pagination: Pagination) -> Result<Vec<Post>, PostServiceErr> {
-        let mut query_builder: QueryBuilder<Postgres> = QueryBuilder::new("select * from posts ");
-        query_builder.push(format!("order by created_at {}\n", pagination.order_by));
-        query_builder.push(format!("offset {}", pagination.offset));
-        query_builder.push(format!("limit {}", pagination.limit));
+        let mut query_builder: QueryBuilder<Postgres> = QueryBuilder::new("select * from posts");
+        query_builder.push(format!(" order by created_at {}", pagination.order_by));
+        query_builder.push(format!(" offset {}", pagination.offset));
+        query_builder.push(format!(" limit {}", pagination.limit));
 
         match query_builder
             .build_query_as::<Post>()

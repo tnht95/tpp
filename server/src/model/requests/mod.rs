@@ -7,6 +7,7 @@ pub mod game;
 pub mod post;
 
 #[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct PaginationParam {
     pub order_by: Option<OrderBy>,
     pub offset: Option<u16>,
@@ -21,6 +22,7 @@ pub struct Pagination {
 }
 
 #[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub enum OrderBy {
     Asc,
     Desc,
