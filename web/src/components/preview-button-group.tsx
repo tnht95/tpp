@@ -1,5 +1,6 @@
 type PreviewButtonGroupProp = {
-  onClick: () => void;
+  onPreviewHandler: () => void;
+  onSubmitHandler: () => void;
   isEditMode: boolean;
 };
 
@@ -10,13 +11,14 @@ export const PreviewButtonGroup = (props: PreviewButtonGroupProp) => (
       <button
         type="button"
         class="me-2 rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200"
-        onClick={() => props.onClick()}
+        onClick={() => props.onPreviewHandler()}
       >
         {props.isEditMode ? 'Preview' : 'Edit'}
       </button>
       <button
         type="button"
         class="me-2 rounded-lg bg-green-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300"
+        onClick={() => props.onSubmitHandler()}
       >
         Post
       </button>

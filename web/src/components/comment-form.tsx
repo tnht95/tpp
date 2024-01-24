@@ -5,18 +5,13 @@ import { PreviewButtonGroup } from '@/components';
 
 import { Markdown } from './markdown';
 
-export const CommentForm = (props: ParentProps) => {
+type CommentFormProps = {
+  onSubmitHandler?: (content: string) => void;
+} & ParentProps;
+
+export const CommentForm = (props: CommentFormProps) => {
   const [isEditMode, setIsEditMode] = createSignal(true);
   const [content, setContent] = createSignal('');
-  const displayMarkdown = (
-    <div class="min-h-20 border border-white px-3 py-2">
-      <Markdown content={content()} />
-    </div>
-  );
-
-  const handleClick = () => {
-    setIsEditMode(mode => !mode);
-  };
 
   return (
     <form class="w-full rounded-lg border bg-white px-4 pt-2">
@@ -27,7 +22,7 @@ export const CommentForm = (props: ParentProps) => {
           </h2>
         </div>
         <div class="my-2 w-full px-3 md:w-full">
-          <Show when={isEditMode()} fallback={displayMarkdown}>
+          <Show when={isEditMode()} fallback={displayMarkdown(content())}>
             <textarea
               class="h-20 w-full resize-none rounded border border-gray-100 bg-gray-100 px-3 py-2 leading-normal placeholder:text-gray-400 focus:border-gray-300 focus:bg-white focus:outline-none"
               name="body"
@@ -39,8 +34,12 @@ export const CommentForm = (props: ParentProps) => {
           </Show>
           <div class="mt-2">
             <PreviewButtonGroup
-              onClick={handleClick}
               isEditMode={isEditMode()}
+              onPreviewHandler={() => setIsEditMode(mode => !mode)}
+              onSubmitHandler={() => {
+                props.onSubmitHandler && props.onSubmitHandler(content());
+                setContent('');
+              }}
             />
           </div>
         </div>
@@ -48,3 +47,9 @@ export const CommentForm = (props: ParentProps) => {
     </form>
   );
 };
+
+const displayMarkdown = (content: string) => (
+  <div class="min-h-20 border border-white px-3 py-2">
+    <Markdown content={content} />
+  </div>
+);

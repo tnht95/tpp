@@ -2,7 +2,11 @@ import { createSignal } from 'solid-js';
 
 import { Avatar, Comment, CommentForm, OptionButton } from '@/components';
 
-export const Post = () => {
+type PostCardProps = {
+  content: string;
+};
+
+export const PostCard = (props: PostCardProps) => {
   const [isHidden, setIsHidden] = createSignal(true);
 
   const toggleComment = () => {
@@ -26,8 +30,7 @@ export const Post = () => {
         <OptionButton isOwner={true} />
       </div>
       <p class="mt-3 block text-xl leading-snug text-black dark:text-white">
-        “No one ever made a decision because of a number. They need a story.” —
-        Daniel Kahneman
+        {props.content}
       </p>
       <img
         class="mt-2 rounded-2xl border border-gray-100 dark:border-gray-700"

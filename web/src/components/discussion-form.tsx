@@ -62,7 +62,8 @@ export const DiscussionForm = (props: DiscussionFormProps) => {
               <div class="mb-5">
                 <PreviewButtonGroup
                   isEditMode={isEditMode()}
-                  onClick={handleClick}
+                  onPreviewHandler={handleClick}
+                  onSubmitHandler={handleClick}
                 />
               </div>
             </div>

@@ -5,7 +5,7 @@ import { CommentForm, PostCard, VerticalGameCard } from '@/components';
 import { useAuth } from '@/context';
 
 export const Dashboard = () => {
-  const [games] = createResource(fetchNewestGameAction);
+  const [newestGames] = createResource(fetchNewestGameAction);
   const [post, { mutate }] = createResource(fetchPostAction);
   const { utils } = useAuth();
 
@@ -40,7 +40,7 @@ export const Dashboard = () => {
                 Newest games
               </p>
               <div class="flex flex-col gap-5">
-                <For each={games()}>
+                <For each={newestGames()}>
                   {game => (
                     <VerticalGameCard
                       user={game.author_name}

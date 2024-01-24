@@ -16,7 +16,7 @@ export * from './blog-form';
 export * from './discussion-form';
 export * from './game-form';
 export * from './notification';
-export * from './post';
+export * from './post-card';
 export * from './vertical-game-card';
 export * from './ellipsis-text';
 export * from './user-card';
