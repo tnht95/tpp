@@ -1,4 +1,4 @@
-import { BlogPost, GameCard, ShowMoreButton, UserCard } from '@/components';
+import { GameCard, ShowMoreButton, UserCard } from '@/components';
 
 export const Search = () => (
   <div class="flex">
@@ -74,10 +74,6 @@ export const Search = () => (
               Blogs:
             </p>
             <div class="flex flex-col gap-5">
-              <BlogPost />
-              <BlogPost />
-              <BlogPost />
-              <BlogPost />
               <ShowMoreButton vertical />
             </div>
           </div>
