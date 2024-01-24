@@ -1,15 +1,15 @@
 export type Game = {
   id: string;
   name: string;
-  author_id: number;
-  author_name: string;
+  authorId: number;
+  authorName: string;
   url: string | null;
-  avatar_url: string;
+  avatarUrl: string;
   about: string | null;
   info: string | null;
   stars: number;
   tags: string[] | null;
   rom: string;
-  created_at: Date;
-  updated_at: Date;
+  createdAt: string;
+  updatedAt: string;
 };

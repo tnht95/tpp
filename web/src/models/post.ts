@@ -1,11 +1,11 @@
 export type Post = {
-  id: string; // Assuming Uuid is represented as a string
-  author_id: number;
+  id: string;
+  authorId: number;
   content: string;
   likes: number;
   comments: number;
-  created_at: Date;
-  updated_at: Date;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type AddPost = {

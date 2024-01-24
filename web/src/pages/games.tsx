@@ -65,9 +65,9 @@ export const Games = () => {
                 {game => (
                   <GameCard
                     name={game.name}
-                    byUser={game.author_name}
+                    byUser={game.authorName}
                     stars={game.stars}
-                    img={game.avatar_url}
+                    img={game.avatarUrl}
                   />
                 )}
               </For>

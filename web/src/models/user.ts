@@ -1,9 +1,9 @@
 export type User = {
   id: number;
   name: string;
-  github_url: string;
+  githubUrl: string;
   bio: string | null;
   avatar: string;
-  created_at: Date;
-  updated_at: Date;
+  createdAt: string;
+  updatedAt: string;
 };

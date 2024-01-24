@@ -43,9 +43,9 @@ export const Dashboard = () => {
                 <For each={newestGames()}>
                   {game => (
                     <VerticalGameCard
-                      user={game.author_name}
+                      user={game.authorName}
                       name={game.name}
-                      img={game.avatar_url}
+                      img={game.avatarUrl}
                     />
                   )}
                 </For>
