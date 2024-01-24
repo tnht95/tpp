@@ -1,9 +1,17 @@
 import { createSignal } from 'solid-js';
 
-import { Avatar, Comment, CommentForm, OptionButton } from '@/components';
+import {
+  Avatar,
+  Comment,
+  CommentForm,
+  Markdown,
+  OptionButton
+} from '@/components';
 
 type PostCardProps = {
   content: string;
+  likes: number;
+  comments: number;
 };
 
 export const PostCard = (props: PostCardProps) => {
@@ -30,25 +38,20 @@ export const PostCard = (props: PostCardProps) => {
         <OptionButton isOwner={true} />
       </div>
       <p class="mt-3 block text-xl leading-snug text-black dark:text-white">
-        {props.content}
+        <Markdown content={props.content} />
       </p>
-      <img
-        class="mt-2 rounded-2xl border border-gray-100 dark:border-gray-700"
-        src="https://pbs.twimg.com/media/EpkuplDXEAEjbFc?format=jpg&name=medium"
-        alt=""
-      />
       <div class="mt-3 flex w-full text-gray-500">
         <div class="flex w-full items-center gap-3 py-3">
           <div class="flex w-1/2 cursor-pointer items-center justify-center border-r-2 hover:font-bold hover:text-red-600">
             <i class="fa-regular fa-heart" />
-            <span class="ml-2">Like (615)</span>
+            <span class="ml-2">{`Like (${props.likes})`}</span>
           </div>
           <div
             class="flex w-1/2 cursor-pointer items-center justify-center hover:font-bold hover:text-blue-700"
             onClick={toggleComment}
           >
             <i class="fa-regular fa-comment" />
-            <span class="ml-2">Comment (21)</span>
+            <span class="ml-2">{`Comment (${props.comments})`}</span>
           </div>
         </div>
       </div>

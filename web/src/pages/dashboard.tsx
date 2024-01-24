@@ -56,15 +56,16 @@ export const Dashboard = () => {
     window.removeEventListener('scroll', handleScroll);
   });
 
+  const batchSubmitHandler = () =>
+    batch(() => {
+      setPost([]);
+      if (currentOffset() === 0) refetch(0) as unknown;
+      else setCurrentOffset(0);
+    });
+
   const onSubmitHandler = (content: string) => {
     addPostAction({ content })
-      .then(() =>
-        batch(() => {
-          setPost([]);
-          if (currentOffset() === 0) refetch(0);
-          else setCurrentOffset(0);
-        })
-      )
+      .then(batchSubmitHandler)
       .catch(() => {});
   };
 
@@ -83,7 +84,13 @@ export const Dashboard = () => {
             </div>
             <div class="flex flex-col gap-10">
               <For each={post}>
-                {post => <PostCard content={post.content} />}
+                {post => (
+                  <PostCard
+                    content={post.content}
+                    likes={post.likes}
+                    comments={post.comments}
+                  />
+                )}
               </For>
             </div>
           </main>
