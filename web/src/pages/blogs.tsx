@@ -1,11 +1,14 @@
 import { Modal } from 'flowbite';
-import { createEffect, createSignal } from 'solid-js';
+import { createEffect, createResource, createSignal, For } from 'solid-js';
 
+import { fetchBlogAction } from '@/apis';
 import { BlogForm, BlogPost } from '@/components';
+import { formatTime } from '@/utils';
 
 export const Blogs = () => {
   const [modalRef, setModalRef] = createSignal<HTMLDivElement>();
   const [modal, setModal] = createSignal<Modal>();
+  const [blogs] = createResource(fetchBlogAction);
 
   createEffect(() => {
     setModal(new Modal(modalRef()));
@@ -33,9 +36,16 @@ export const Blogs = () => {
         />
       </div>
       <div class="mt-5 flex flex-col gap-5">
-        <BlogPost />
-        <BlogPost />
-        <BlogPost />
+        <For each={blogs()}>
+          {blog => (
+            <BlogPost
+              date={formatTime(blog.createdAt)}
+              title={blog.title}
+              description={blog.description}
+              tags={blog.tags}
+            />
+          )}
+        </For>
       </div>
     </div>
   );
