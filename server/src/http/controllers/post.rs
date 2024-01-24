@@ -4,13 +4,14 @@ use axum::{
     response::{IntoResponse, Response},
     Json,
 };
+use validator::Validate;
 
 use super::extract_jwt_claim;
 use crate::{
     http::{controllers::InternalState, utils::err_handler::response_unhandled_err},
     model::{
         requests::{post::AddPostRequest, PaginationParam},
-        responses::HttpResponse,
+        responses::{response_validation_err, HttpResponse},
     },
     services::{
         post::{IPostService, PostServiceErr},
@@ -33,6 +34,10 @@ pub async fn add<TInternalServices: IInternalServices>(
     State(state): InternalState<TInternalServices>,
     Json(post): Json<AddPostRequest>,
 ) -> Response {
+    if let Err(e) = post.validate() {
+        return (StatusCode::UNAUTHORIZED, Json(response_validation_err(e))).into_response();
+    }
+
     let user = match extract_jwt_claim(headers, &state.config.auth.jwt.secret) {
         Ok(jwt_claim) => jwt_claim.user,
         Err(_) => return StatusCode::UNAUTHORIZED.into_response(),

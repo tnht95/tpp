@@ -2,6 +2,7 @@ pub mod auth;
 pub mod book;
 
 use serde::Serialize;
+use validator::ValidationErrors;
 
 #[derive(Serialize)]
 pub struct HttpResponse<T> {
@@ -24,3 +25,10 @@ pub const INTERNAL_SERVER_ERR: ConstantErr = ConstantErr {
     code: "ERR_000",
     msg: "Internal Server Error",
 };
+
+pub fn response_validation_err(e: ValidationErrors) -> HttpResponseErr {
+    HttpResponseErr {
+        code: "ERR_001".into(),
+        msg: format!("Input validation error: [{e}]").replace('\n', ", "),
+    }
+}

@@ -1,5 +1,3 @@
-use std::fmt;
-
 use serde::Deserialize;
 
 pub mod book;
@@ -38,8 +36,8 @@ impl From<PaginationParam> for Pagination {
     }
 }
 
-impl fmt::Display for OrderBy {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+impl std::fmt::Display for OrderBy {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             OrderBy::Asc => write!(f, "asc"),
             OrderBy::Desc => write!(f, "desc"),

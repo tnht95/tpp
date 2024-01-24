@@ -19,6 +19,7 @@ pub struct AddGameRequest {
 }
 
 #[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub enum OrderField {
     Date,
     Name,
