@@ -123,7 +123,7 @@ where
                         .route("/books", post(book::add))
                         .route("/games", get(game::get_all))
                         .route("/newest_games", get(game::get_newest))
-                        .route("/posts", get(post::get_all))
+                        .route("/posts", get(post::filter))
                         .route("/posts", post(post::add))
                         .layer(middleware),
                 )
