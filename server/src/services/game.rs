@@ -1,9 +1,13 @@
 use std::sync::Arc;
 
 use async_trait::async_trait;
+use sqlx::{Postgres, QueryBuilder};
 use thiserror::Error;
 
-use crate::database::{entities::game::Game, IDatabase};
+use crate::{
+    database::{entities::game::Game, IDatabase},
+    model::requests::game::GameQuery,
+};
 
 #[derive(Error, Debug)]
 pub enum GameServiceErr {
@@ -13,10 +17,8 @@ pub enum GameServiceErr {
 
 #[async_trait]
 pub trait IGameService {
-    async fn get_all(&self) -> Result<Vec<Game>, GameServiceErr>;
+    async fn filter(&self, query: GameQuery) -> Result<Vec<Game>, GameServiceErr>;
     // async fn add(&self, game: AddGameRequest) -> Result<Game, GameServiceErr>;
-    // async fn get_by_tag(&self, tag: &String) -> Result<Option<Vec<Game>>, GameServiceErr>;
-    async fn get_newest(&self) -> Result<Vec<Game>, GameServiceErr>;
 }
 
 pub struct GameService<T: IDatabase> {
@@ -37,8 +39,32 @@ impl<T> IGameService for GameService<T>
 where
     T: IDatabase + Send + Sync,
 {
-    async fn get_all(&self) -> Result<Vec<Game>, GameServiceErr> {
-        match sqlx::query_as!(Game, "SELECT * FROM games")
+    async fn filter(&self, query: GameQuery) -> Result<Vec<Game>, GameServiceErr> {
+        let mut query_builder: QueryBuilder<Postgres> =
+            QueryBuilder::new("select * from games where 1 = 1");
+
+        if let Some(author_id) = query.author_id {
+            query_builder.push(format!(" and author_id = {}", author_id));
+        }
+
+        if let Some(tag) = query.tag {
+            query_builder.push(" and ");
+            query_builder.push_bind(tag);
+            query_builder.push(" = any(tags)");
+        }
+
+        if let Some(order_by) = query.order_by {
+            if let Some(order_field) = query.order_field {
+                query_builder.push(format!(" order by {} {}", order_field, order_by));
+            }
+        }
+
+        if let Some(limit) = query.limit {
+            query_builder.push(format!(" limit {}", limit));
+        }
+
+        match query_builder
+            .build_query_as::<Game>()
             .fetch_all(self.db.get_pool())
             .await
         {
@@ -60,31 +86,5 @@ where
     //         Ok(posts) => Ok(posts),
     //         Err(e) => Err(PostServiceErr::Other(e.into())),
     //     }
-    // }
-
-    async fn get_newest(&self) -> Result<Vec<Game>, GameServiceErr> {
-        match sqlx::query_as!(
-            Game,
-            r#"
-        SELECT *
-        FROM games
-        ORDER BY created_at DESC
-        LIMIT 5
-        "#
-        )
-        .fetch_all(self.db.get_pool())
-        .await
-        {
-            Ok(games) => Ok(games),
-            Err(e) => Err(GameServiceErr::Other(e.into())),
-        }
-    }
-
-    // async fn get_by_author(&self, author_id: i64) -> Result<Option<Vec<Game>>, GameServiceErr> {
-    //     todo!()
-    // }
-    //
-    // async fn get_by_tag(&self, tag: &String) -> Result<Option<Vec<Game>>, GameServiceErr> {
-    //     todo!()
     // }
 }
