@@ -3,6 +3,7 @@ use std::fmt;
 use serde::Deserialize;
 
 pub mod book;
+pub mod game;
 pub mod post;
 
 #[derive(Deserialize)]

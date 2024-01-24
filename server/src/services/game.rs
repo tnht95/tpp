@@ -14,7 +14,7 @@ pub enum GameServiceErr {
 #[async_trait]
 pub trait IGameService {
     async fn get_all(&self) -> Result<Vec<Game>, GameServiceErr>;
-    // async fn get_by_author(&self, author_id: i64) -> Result<Option<Vec<Game>>, GameServiceErr>;
+    // async fn add(&self, game: AddGameRequest) -> Result<Game, GameServiceErr>;
     // async fn get_by_tag(&self, tag: &String) -> Result<Option<Vec<Game>>, GameServiceErr>;
     async fn get_newest(&self) -> Result<Vec<Game>, GameServiceErr>;
 }
@@ -46,6 +46,21 @@ where
             Err(e) => Err(GameServiceErr::Other(e.into())),
         }
     }
+
+    // async fn add(&self, game: AddGameRequest) -> Result<Game, GameServiceErr> {
+    //     match sqlx::query_as!(
+    //         Game,
+    //         "insert into posts(name, author_id, author_name, url, avatar_url, ) values($1, $2) returning *",
+    //         author_id,
+    //         post.content
+    //     )
+    //         .fetch_one(self.db.get_pool())
+    //         .await
+    //     {
+    //         Ok(posts) => Ok(posts),
+    //         Err(e) => Err(PostServiceErr::Other(e.into())),
+    //     }
+    // }
 
     async fn get_newest(&self) -> Result<Vec<Game>, GameServiceErr> {
         match sqlx::query_as!(

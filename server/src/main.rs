@@ -11,6 +11,7 @@ use crate::{
     database::Database,
     http::Server,
     services::{
+        blog::BlogService,
         book::BookService,
         game::GameService,
         health::HealthService,
@@ -76,6 +77,7 @@ async fn main() -> Result<()> {
             let user_service = UserService::new(Arc::clone(&db));
             let game_service = GameService::new(Arc::clone(&db));
             let post_service = PostService::new(Arc::clone(&db));
+            let blog_service = BlogService::new(Arc::clone(&db));
 
             let server = Server::<InternalServices>::new(
                 config,
@@ -84,6 +86,7 @@ async fn main() -> Result<()> {
                 user_service,
                 game_service,
                 post_service,
+                blog_service,
             );
 
             server.start().await.context("Failed to start server {}")?;

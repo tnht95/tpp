@@ -29,7 +29,7 @@ use tracing::{info, Level};
 use crate::{
     config::Config,
     http::{
-        controllers::{auth, book, game, health, post},
+        controllers::{auth, blog, book, game, health, post},
         handlers::{panic, shutdown},
     },
     services::IInternalServices,
@@ -46,6 +46,7 @@ struct Services<TInternalServices: IInternalServices> {
     user: TInternalServices::TUserService,
     game: TInternalServices::TGameService,
     post: TInternalServices::TPostService,
+    blog: TInternalServices::TBlogService,
 }
 
 impl<TInternalServices> Server<TInternalServices>
@@ -59,6 +60,7 @@ where
         user: TInternalServices::TUserService,
         game: TInternalServices::TGameService,
         post: TInternalServices::TPostService,
+        blog: TInternalServices::TBlogService,
     ) -> Self {
         Self {
             config,
@@ -68,6 +70,7 @@ where
                 user,
                 game,
                 post,
+                blog,
             },
         }
     }
@@ -125,6 +128,7 @@ where
                         .route("/newest_games", get(game::get_newest))
                         .route("/posts", get(post::filter))
                         .route("/posts", post(post::add))
+                        .route("/blogs", get(blog::get_all))
                         .layer(middleware),
                 )
                 .with_state(Arc::clone(&state)),
