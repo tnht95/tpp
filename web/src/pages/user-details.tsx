@@ -1,29 +1,15 @@
 import { useParams } from '@solidjs/router';
-import { Modal } from 'flowbite';
-import {
-  createEffect,
-  createResource,
-  createSignal,
-  For,
-  Show
-} from 'solid-js';
+import { createResource, Show } from 'solid-js';
 
-import { fetchGameAction, fetchUserByIdAction } from '@/apis';
-import { Activity, Button, GameCard, GameForm, PillButton } from '@/components';
+import { fetchUserByIdAction } from '@/apis';
+import { PillButton } from '@/components';
 import { NotFound } from '@/pages';
+import { UserActivity, UserGames } from '@/parts';
 
 export const UserDetails = () => {
   const userID = useParams()['id'] as string;
 
   const [user] = createResource(userID, fetchUserByIdAction);
-
-  const [games] = createResource({ authorId: userID }, fetchGameAction);
-  const [modalRef, setModalRef] = createSignal<HTMLDivElement>();
-  const [modal, setModal] = createSignal<Modal>();
-
-  createEffect(() => {
-    setModal(new Modal(modalRef()));
-  });
 
   return (
     <Show when={user()} fallback={<NotFound />}>
@@ -67,67 +53,11 @@ export const UserDetails = () => {
             </div>
             <div />
           </div>
-          <div class="ml-10 mt-6 w-4/6">
-            <div class="rounded-xl border bg-white px-8 pb-7 pt-3">
-              <div class="mb-5 flex justify-between">
-                <div class="flex items-center space-x-2 font-semibold leading-8 text-gray-900">
-                  <i class="fa-regular fa-paper-plane text-lg text-green-400" />
-                  <span class="tracking-wide">Games</span>
-                </div>
-                <Button
-                  title="Add new game"
-                  withIcon="fa-solid fa-plus"
-                  customStyle="border-green-400 text-green-500 font-bold hover:bg-green-500 hover:text-white"
-                  onClickHandler={() => {
-                    modal()?.show();
-                  }}
-                />
-                <GameForm
-                  ref={setModalRef}
-                  onCloseHandler={() => modal()?.hide()}
-                />
-              </div>
-              <div class="flex flex-wrap items-center gap-7">
-                <Show
-                  when={games()}
-                  fallback={
-                    <div class="flex w-full justify-center p-7 text-gray-300">
-                      <div>--- Nothing to show ---</div>
-                    </div>
-                  }
-                >
-                  <For each={games()}>
-                    {game => (
-                      <GameCard
-                        name={game.name}
-                        byUser={game.authorName}
-                        stars={game.stars}
-                        img={game.avatarUrl}
-                      />
-                    )}
-                  </For>
-                </Show>
-              </div>
-            </div>
-            <div class="my-4" />
-            <div class="rounded-xl border bg-white p-3">
-              <div class="px-8 pt-3">
-                <div class="mb-5 items-center space-x-2 font-semibold leading-8 text-gray-900">
-                  <i class="fa-regular fa-newspaper text-lg text-green-400" />
-                  <span class="tracking-wide">Activity</span>
-                </div>
-                <ol class="relative border-s border-gray-200 dark:border-gray-700">
-                  <Activity
-                    title="Bob upload this game"
-                    date="09 Jun 2023"
-                    latest
-                  />
-                  <Activity title="Bob upload this game" date="09 Jun 2023" />
-                  <Activity title="Bob upload this game" date="09 Jun 2023" />
-                  <Activity title="Bob upload this game" date="09 Jun 2023" />
-                </ol>
-              </div>
-            </div>
+          <div class="ml-10 mt-6 flex w-4/6 flex-col gap-10">
+            <Show when={user()}>
+              <UserGames userId={user()?.id as number} />
+              <UserActivity />
+            </Show>
           </div>
         </div>
       </div>

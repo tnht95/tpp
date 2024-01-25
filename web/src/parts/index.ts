@@ -5,3 +5,5 @@ export * from './game-details-sidebar';
 export * from './game-activity';
 export * from './user-menu-group';
 export * from './tag-sidebar';
+export * from './user-activity';
+export * from './user-games';

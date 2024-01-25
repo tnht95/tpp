@@ -29,7 +29,7 @@ use tracing::{info, Level};
 use crate::{
     config::Config,
     http::{
-        controllers::{auth, blog, book, game, health, post},
+        controllers::{auth, blog, book, game, health, post, user},
         handlers::{panic, shutdown},
     },
     services::IInternalServices,
@@ -128,6 +128,7 @@ where
                         .route("/posts", get(post::filter))
                         .route("/posts", post(post::add))
                         .route("/blogs", get(blog::get_all))
+                        .route("/users/:id", get(user::get_by_id))
                         .layer(middleware),
                 )
                 .with_state(Arc::clone(&state)),

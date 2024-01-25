@@ -14,6 +14,7 @@ pub enum UserServiceErr {
 #[async_trait]
 pub trait IUserService {
     async fn sync_user(&self, user: &User) -> Result<User, UserServiceErr>;
+    async fn get_by_id(&self, id: i64) -> Result<Option<User>, UserServiceErr>;
 }
 
 pub struct UserService<T: IDatabase> {
@@ -50,6 +51,16 @@ where
         )
         .fetch_one(self.db.get_pool())
         .await
+        {
+            Ok(user) => Ok(user),
+            Err(e) => Err(UserServiceErr::Other(e.into())),
+        }
+    }
+
+    async fn get_by_id(&self, id: i64) -> Result<Option<User>, UserServiceErr> {
+        match sqlx::query_as!(User, "select * from users where id = $1", id)
+            .fetch_optional(self.db.get_pool())
+            .await
         {
             Ok(user) => Ok(user),
             Err(e) => Err(UserServiceErr::Other(e.into())),

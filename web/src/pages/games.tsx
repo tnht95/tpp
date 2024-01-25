@@ -1,6 +1,6 @@
 import { createResource, createSignal, For } from 'solid-js';
 
-import { fetchGameAction, GameQueryInput } from '@/apis';
+import { fetchGameAction, GameQueryInput, OrderBy, OrderField } from '@/apis';
 import { GameCard } from '@/components';
 import { TagSidebar } from '@/parts';
 
@@ -13,8 +13,8 @@ export const Games = () => {
     const valueArr = selectedOptionValue.split('-');
 
     setSelectValue({
-      orderField: valueArr[0] as string,
-      orderBy: valueArr[1] as string
+      orderField: valueArr[0] as OrderField,
+      orderBy: valueArr[1] as OrderBy
     });
   };
 

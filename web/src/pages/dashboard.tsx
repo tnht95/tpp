@@ -18,7 +18,7 @@ import { Post } from '@/models';
 export const Dashboard = () => {
   const { utils } = useAuth();
   const [newestGames] = createResource(
-    { orderField: 'createdAt', orderBy: 'desc', limit: '5' },
+    { orderField: 'createdAt', orderBy: 'desc', limit: 5 },
     fetchGameAction
   );
   const [currentOffset, setCurrentOffset] = createSignal(0);
