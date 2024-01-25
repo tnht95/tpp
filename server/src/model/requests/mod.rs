@@ -8,15 +8,15 @@ pub mod post;
 #[serde(rename_all = "camelCase")]
 pub struct PaginationParam {
     pub order_by: Option<OrderBy>,
-    pub offset: Option<u16>,
-    pub limit: Option<u16>,
+    pub offset: Option<i16>,
+    pub limit: Option<i16>,
 }
 
 #[derive(Deserialize)]
 pub struct Pagination {
     pub order_by: OrderBy,
-    pub offset: u16,
-    pub limit: u16,
+    pub offset: i16,
+    pub limit: i16,
 }
 
 #[derive(Deserialize)]
