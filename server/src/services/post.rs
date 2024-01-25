@@ -58,7 +58,7 @@ where
     async fn add(&self, author_id: i64, post: AddPostRequest) -> Result<Post, PostServiceErr> {
         match sqlx::query_as!(
             Post,
-            "insert into posts(author_id, content) values($1, $2) returning *",
+            "insert into posts (author_id, content) values ($1, $2) returning *",
             author_id,
             post.content
         )
