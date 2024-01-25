@@ -34,11 +34,7 @@ export const AuthenticationProvider = (props: ParentProps) => {
       isAuth: () => !!user()
     },
     dispatch: {
-      logout: () => {
-        logoutAction()
-          .then(() => mutate())
-          .catch(() => {});
-      }
+      logout: () => logoutAction().then(() => mutate())
     }
   };
   return <authCtx.Provider value={state}>{props.children}</authCtx.Provider>;

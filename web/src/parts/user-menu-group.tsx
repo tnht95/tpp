@@ -70,13 +70,7 @@ export const UserMenuGroup = () => {
         </div>
         <div class="flex items-center gap-2 rounded-b-lg px-4 py-5 text-gray-700 hover:bg-gray-100">
           <i class="fa-solid fa-arrow-right-from-bracket text-sm" />
-          <a
-            href="#"
-            class="block text-sm"
-            onClick={() => {
-              dispatch.logout();
-            }}
-          >
+          <a href="#" class="block text-sm" onClick={dispatch.logout}>
             Sign out
           </a>
         </div>

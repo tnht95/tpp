@@ -2,9 +2,7 @@ import { Game, Response } from '@/models';
 
 export type GameQueryInput = { [key: string]: string };
 
-export const fetchGameAction = (
-  queryInput?: GameQueryInput
-): Promise<Game[]> => {
+export const fetchGameAction = (queryInput?: GameQueryInput) => {
   const baseUrl = import.meta.env.VITE_SERVER_URL;
   const query: string[] = [] as const;
 
@@ -15,6 +13,5 @@ export const fetchGameAction = (
   }
   return fetch(`${baseUrl}/games?${query.join('&')}`)
     .then(r => r.json())
-    .then((r: Response<Game[]>) => r.data)
-    .catch(() => {}) as Promise<Game[]>;
+    .then((r: Response<Game[]>) => r.data);
 };
