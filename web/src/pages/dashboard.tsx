@@ -62,15 +62,12 @@ export const Dashboard = () => {
   const batchSubmitHandler = () =>
     batch(() => {
       setPost([]);
-      if (currentOffset() === 0) refetch(0) as unknown;
+      if (currentOffset() === 0) refetch() as unknown;
       else setCurrentOffset(0);
     });
 
-  const onSubmitHandler = (content: string) => {
-    addPostAction({ content })
-      .then(batchSubmitHandler)
-      .catch(() => {});
-  };
+  const onSubmitHandler = (content: string) =>
+    addPostAction({ content }).then(batchSubmitHandler) as unknown;
 
   return (
     <div class="flex">

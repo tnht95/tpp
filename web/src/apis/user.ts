@@ -1,9 +1,11 @@
-import { User } from '@/models';
+import { Response, User } from '@/models';
 
-// TODO: handle error
-export const fetchUserAction = () =>
-  fetch(`${import.meta.env.VITE_SERVER_URL}/me`, { credentials: 'include' })
+export const fetchUserAction = (): Promise<User> =>
+  fetch(`${import.meta.env.VITE_SERVER_URL}/me`, {
+    credentials: 'include'
+  })
     .then(r => r.json())
+    .then((r: Response<User>) => r.data)
     .catch(() => {}) as Promise<User>;
 
 export const logoutAction = () =>

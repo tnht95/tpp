@@ -7,12 +7,13 @@ import {
 } from 'solid-js';
 
 import { fetchUserAction, logoutAction } from '@/apis';
+import { User } from '@/models';
 
 // ============================================================================
 // Interfaces
 // ============================================================================
 type AuthContext = {
-  user: Resource<unknown>;
+  user: Resource<User>;
   utils: {
     isAuth: () => boolean;
   };
@@ -33,7 +34,6 @@ export const AuthenticationProvider = (props: ParentProps) => {
       isAuth: () => !!user()
     },
     dispatch: {
-      // TODO: handle error
       logout: () => {
         logoutAction()
           .then(() => mutate())
