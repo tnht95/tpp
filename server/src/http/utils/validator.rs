@@ -47,9 +47,7 @@ pub struct QueryValidator<T>(pub T);
 impl<T, S, B> FromRequest<S, B> for QueryValidator<T>
 where
     T: DeserializeOwned + Validate,
-    B: HttpBody + Send + 'static,
-    B::Data: Send,
-    B::Error: Into<BoxError>,
+    B: Send + 'static,
     S: Send + Sync,
 {
     type Rejection = (StatusCode, Json<HttpResponseErr>);

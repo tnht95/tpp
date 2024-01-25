@@ -1,11 +1,14 @@
 use axum::{
-    extract::{Query, State},
+    extract::State,
     response::{IntoResponse, Response},
     Json,
 };
 
 use crate::{
-    http::{controllers::InternalState, utils::err_handler::response_unhandled_err},
+    http::{
+        controllers::InternalState,
+        utils::{err_handler::response_unhandled_err, validator::QueryValidator},
+    },
     model::{requests::game::GameQuery, responses::HttpResponse},
     services::{
         game::{GameServiceErr, IGameService},
@@ -14,8 +17,8 @@ use crate::{
 };
 
 pub async fn filter<TInternalServices: IInternalServices>(
-    Query(query): Query<GameQuery>,
     State(state): InternalState<TInternalServices>,
+    QueryValidator(query): QueryValidator<GameQuery>,
 ) -> Response {
     //fixme: constraint orderBy && orderField || !orderBy && !orderField
     match state.services.game.filter(query).await {

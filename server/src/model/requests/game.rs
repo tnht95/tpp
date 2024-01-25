@@ -1,6 +1,7 @@
 use std::fmt;
 
 use serde::Deserialize;
+use validator::Validate;
 
 use crate::model::requests::OrderBy;
 
@@ -26,7 +27,7 @@ pub enum OrderField {
     Stars,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Validate)]
 #[serde(rename_all = "camelCase")]
 pub struct GameQuery {
     pub order_by: Option<OrderBy>,
