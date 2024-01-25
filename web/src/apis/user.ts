@@ -19,4 +19,4 @@ export const logoutAction = () =>
 export const fetchUserByIdAction = (id: string) =>
   fetch(`${import.meta.env.VITE_SERVER_URL}/users/${id}`)
     .then(errHandler)
-    .then((r: Response<User>) => r.data);
+    .then((r: Response<User | undefined>) => r.data);

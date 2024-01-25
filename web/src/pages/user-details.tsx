@@ -10,15 +10,12 @@ import {
 
 import { fetchGameAction, fetchUserByIdAction } from '@/apis';
 import { Activity, Button, GameCard, GameForm, PillButton } from '@/components';
-import { User } from '@/models';
 import { NotFound } from '@/pages';
 
 export const UserDetails = () => {
   const userID = useParams()['id'] as string;
 
-  const [user] = createResource(userID, fetchUserByIdAction, {
-    initialValue: {} as User
-  });
+  const [user] = createResource(userID, fetchUserByIdAction);
 
   const [games] = createResource({ authorId: userID }, fetchGameAction);
   const [modalRef, setModalRef] = createSignal<HTMLDivElement>();
@@ -39,7 +36,7 @@ export const UserDetails = () => {
                   <div class="flex w-full justify-center">
                     <div class="relative">
                       <img
-                        src={user().avatar}
+                        src={user()?.avatar as string}
                         class="absolute -m-16 max-w-[150px] rounded-full border-8 border-white align-middle lg:-ml-16"
                         alt="d"
                       />
@@ -48,13 +45,13 @@ export const UserDetails = () => {
                 </div>
                 <div class="mt-20 flex justify-center text-center">
                   <h3 class="text-2xl font-bold leading-normal text-gray-700">
-                    {user().name}
+                    {user()?.name}
                   </h3>
                 </div>
                 <div class="flex flex-col items-center justify-center">
                   <div class="text-sm text-gray-500">
                     <i class="fa-solid fa-link mr-1" />
-                    <a href="">{user().githubUrl}</a>
+                    <a href="">{user()?.githubUrl}</a>
                   </div>
                 </div>
                 <div class="mx-6 mt-6 border-t border-gray-200 pt-6 text-center">
@@ -90,10 +87,14 @@ export const UserDetails = () => {
                   onCloseHandler={() => modal()?.hide()}
                 />
               </div>
-              <div class="flex flex-wrap gap-7">
+              <div class="flex flex-wrap items-center gap-7">
                 <Show
                   when={games()}
-                  fallback={<div>--- Nothing to show ---</div>}
+                  fallback={
+                    <div class="flex w-full justify-center p-7 text-gray-300">
+                      <div>--- Nothing to show ---</div>
+                    </div>
+                  }
                 >
                   <For each={games()}>
                     {game => (
