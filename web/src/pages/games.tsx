@@ -12,11 +12,10 @@ export const Games = () => {
     const selectedOptionValue = (e.target as HTMLSelectElement).value;
     const valueArr = selectedOptionValue.split('-');
 
-    if (valueArr.length == 1) {
-      setSelectValue({ orderField: valueArr.at(0), orderBy: 'desc' });
-    } else if (valueArr.length > 1) {
-      setSelectValue({ orderField: valueArr.at(0), orderBy: valueArr.at(1) });
-    }
+    setSelectValue({
+      orderField: valueArr[0] as string,
+      orderBy: valueArr[1] as string
+    });
   };
 
   return (
@@ -78,10 +77,10 @@ export const Games = () => {
                   <option value="" disabled selected>
                     Sort by
                   </option>
-                  <option value="createdAt">Date</option>
+                  <option value="createdAt-desc">Date</option>
                   <option value="name-asc">Name A-Z</option>
                   <option value="name-desc">Name Z-A</option>
-                  <option value="stars">Stars</option>
+                  <option value="stars-desc">Stars</option>
                 </select>
               </div>
             </div>
