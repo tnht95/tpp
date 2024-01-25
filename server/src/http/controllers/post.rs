@@ -8,10 +8,13 @@ use validator::Validate;
 
 use super::extract_jwt_claim;
 use crate::{
-    http::{controllers::InternalState, utils::err_handler::response_unhandled_err},
+    http::{
+        controllers::InternalState,
+        utils::err_handler::{response_unhandled_err, response_validation_err},
+    },
     model::{
         requests::{post::AddPostRequest, PaginationParam},
-        responses::{response_validation_err, HttpResponse},
+        responses::HttpResponse,
     },
     services::{
         post::{IPostService, PostServiceErr},
@@ -35,7 +38,7 @@ pub async fn add<TInternalServices: IInternalServices>(
     Json(post): Json<AddPostRequest>,
 ) -> Response {
     if let Err(e) = post.validate() {
-        return (StatusCode::UNAUTHORIZED, Json(response_validation_err(e))).into_response();
+        return response_validation_err(e);
     }
 
     let user = match extract_jwt_claim(headers, &state.config.auth.jwt.secret) {
