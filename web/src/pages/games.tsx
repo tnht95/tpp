@@ -1,11 +1,23 @@
-import { createResource, For } from 'solid-js';
+import { createResource, createSignal, For } from 'solid-js';
 
-import { fetchGameAction } from '@/apis';
-import { GameCard, Selects } from '@/components';
+import { fetchGameAction, GameQueryInput } from '@/apis';
+import { GameCard } from '@/components';
 import { TagSidebar } from '@/parts';
 
 export const Games = () => {
-  const [games] = createResource(fetchGameAction);
+  const [selectValue, setSelectValue] = createSignal<GameQueryInput>({});
+  const [games] = createResource(selectValue, fetchGameAction);
+
+  const handleSelect = (e: Event) => {
+    const selectedOptionValue = (e.target as HTMLSelectElement).value;
+    const valueArr = selectedOptionValue.split('-');
+
+    if (valueArr.length == 1) {
+      setSelectValue({ orderField: valueArr.at(0), orderBy: 'desc' });
+    } else if (valueArr.length > 1) {
+      setSelectValue({ orderField: valueArr.at(0), orderBy: valueArr.at(1) });
+    }
+  };
 
   return (
     <>
@@ -58,7 +70,20 @@ export const Games = () => {
               <p class="m-5 ml-0 text-2xl font-bold text-indigo-900">
                 All Games
               </p>
-              <Selects />
+              <div class="flex items-center">
+                <select
+                  onChange={handleSelect}
+                  class="block rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+                >
+                  <option value="" disabled selected>
+                    Sort by
+                  </option>
+                  <option value="createdAt">Date</option>
+                  <option value="name-asc">Name A-Z</option>
+                  <option value="name-desc">Name Z-A</option>
+                  <option value="stars">Stars</option>
+                </select>
+              </div>
             </div>
             <div class="flex flex-row flex-wrap gap-7">
               <For each={games()}>

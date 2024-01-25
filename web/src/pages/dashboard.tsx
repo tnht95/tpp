@@ -9,7 +9,7 @@ import {
 } from 'solid-js';
 import { createStore, produce } from 'solid-js/store';
 
-import { addPostAction, fetchNewestGameAction, fetchPostAction } from '@/apis';
+import { addPostAction, fetchGameAction, fetchPostAction } from '@/apis';
 import { CommentForm, PostCard, VerticalGameCard } from '@/components';
 import { OFFSET } from '@/constant';
 import { useAuth } from '@/context';
@@ -17,7 +17,10 @@ import { Post } from '@/models';
 
 export const Dashboard = () => {
   const { utils } = useAuth();
-  const [newestGames] = createResource(fetchNewestGameAction);
+  const [newestGames] = createResource(
+    { orderField: 'createdAt', orderBy: 'desc', limit: '5' },
+    fetchGameAction
+  );
   const [currentOffset, setCurrentOffset] = createSignal(0);
   const [postResource, { refetch }] = createResource(
     currentOffset,

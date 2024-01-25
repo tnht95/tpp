@@ -1,13 +1,20 @@
 import { Game, Response } from '@/models';
 
-export const fetchNewestGameAction = (): Promise<Game[]> =>
-  fetch(`${import.meta.env.VITE_SERVER_URL}/newest_games`)
-    .then(r => r.json())
-    .then((r: Response<Game[]>) => r.data)
-    .catch(() => {}) as Promise<Game[]>;
+export type GameQueryInput = { [key: string]: string };
 
-export const fetchGameAction = (): Promise<Game[]> =>
-  fetch(`${import.meta.env.VITE_SERVER_URL}/games`)
+export const fetchGameAction = (
+  queryInput?: GameQueryInput
+): Promise<Game[]> => {
+  const baseUrl = import.meta.env.VITE_SERVER_URL;
+  const query: string[] = [] as const;
+
+  if (queryInput) {
+    for (const key in queryInput) {
+      query.push(`${key}=${queryInput[key]}`);
+    }
+  }
+  return fetch(`${baseUrl}/games?${query.join('&')}`)
     .then(r => r.json())
     .then((r: Response<Game[]>) => r.data)
     .catch(() => {}) as Promise<Game[]>;
+};

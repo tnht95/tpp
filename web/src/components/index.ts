@@ -1,7 +1,6 @@
 export * from './header';
 export * from './game-card';
 export * from './tag';
-export * from './select';
 export * from './search-bar';
 export * from './button';
 export * from './table-row';
