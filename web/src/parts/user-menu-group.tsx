@@ -1,3 +1,4 @@
+import { A } from '@solidjs/router';
 import { Dropdown } from 'flowbite';
 import { createEffect, createSignal } from 'solid-js';
 
@@ -5,7 +6,7 @@ import { Avatar, EllipsisText, Notification } from '@/components';
 import { useAuth } from '@/context';
 
 export const UserMenuGroup = () => {
-  const { dispatch } = useAuth();
+  const { user, dispatch } = useAuth();
   const [userDropdownRef, setUserDropdownRef] = createSignal<HTMLDivElement>();
   const [userBtnRef, setUserBtnRef] = createSignal<HTMLButtonElement>();
   const [userDropdown, setUserDropdown] = createSignal<Dropdown>();
@@ -42,7 +43,7 @@ export const UserMenuGroup = () => {
         class="mr-10 flex items-center py-0.5 pe-1 text-sm font-bold text-white hover:text-blue-600"
       >
         <span class="sr-only">Open user menu</span>
-        <Avatar />
+        <Avatar img={user()?.avatar as string} />
       </button>
 
       <div
@@ -51,21 +52,20 @@ export const UserMenuGroup = () => {
       >
         <div class="px-4 py-5 text-sm text-gray-900">
           <EllipsisText maxWidth="max-w-40" customStyle="font-bold">
-            name@flowbite.comfsdfdsfsfs
+            {user()?.name as string}
           </EllipsisText>
         </div>
         <div class="text-sm text-gray-700">
           <div class="flex items-center gap-2 px-4 py-5 hover:bg-gray-100">
             <i class="fa-solid fa-user" />
-            <a
-              href="/users/d"
-              class=""
+            <A
+              href={`/users/${user()?.id}`}
               onClick={() => {
                 userDropdown()?.hide();
               }}
             >
               My Page
-            </a>
+            </A>
           </div>
         </div>
         <div class="flex items-center gap-2 rounded-b-lg px-4 py-5 text-gray-700 hover:bg-gray-100">

@@ -1,5 +1,5 @@
 import { useParams } from '@solidjs/router';
-import { createResource, Show } from 'solid-js';
+import { createResource, createSignal, Show } from 'solid-js';
 
 import { fetchUserByIdAction } from '@/apis';
 import { PillButton } from '@/components';
@@ -7,7 +7,7 @@ import { NotFound } from '@/pages';
 import { UserActivity, UserGames } from '@/parts';
 
 export const UserDetails = () => {
-  const userID = useParams()['id'] as string;
+  const [userID] = createSignal(useParams()['id'] as string);
 
   const [user] = createResource(userID, fetchUserByIdAction);
 

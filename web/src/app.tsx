@@ -1,4 +1,5 @@
 import { Route, Router } from '@solidjs/router';
+import { ParentProps } from 'solid-js';
 
 import { Header } from '@/components';
 import { GameActivity, GameDiscussion, GameInfo } from '@/parts';
@@ -15,10 +16,16 @@ import {
   UserDetails
 } from './pages';
 
-export const App = () => (
+const Root = (props: ParentProps) => (
   <>
     <Header />
-    <Router>
+    {props.children}
+  </>
+);
+
+export const App = () => (
+  <>
+    <Router root={Root}>
       <Route path="/" component={Dashboard} />
       <Route path="/games" component={Games} />
       <Route path="/games/:id" component={GameDetails}>
