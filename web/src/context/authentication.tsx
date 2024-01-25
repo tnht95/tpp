@@ -13,7 +13,7 @@ import { User } from '@/models';
 // Interfaces
 // ============================================================================
 type AuthContext = {
-  user: Resource<User>;
+  user: Resource<User | undefined>;
   utils: {
     isAuth: () => boolean;
   };

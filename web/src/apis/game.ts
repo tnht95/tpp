@@ -1,5 +1,7 @@
 import { Game, Response } from '@/models';
 
+import { errHandler } from '.';
+
 export type GameQueryInput = { [key: string]: string };
 
 export const fetchGameAction = (queryInput?: GameQueryInput) => {
@@ -12,6 +14,6 @@ export const fetchGameAction = (queryInput?: GameQueryInput) => {
     }
   }
   return fetch(`${baseUrl}/games?${query.join('&')}`)
-    .then(r => r.json())
+    .then(errHandler)
     .then((r: Response<Game[]>) => r.data);
 };
