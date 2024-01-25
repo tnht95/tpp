@@ -21,7 +21,7 @@ pub struct AddGameRequest {
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub enum OrderField {
-    Date,
+    CreatedAt,
     Name,
     Stars,
 }
@@ -30,7 +30,7 @@ pub enum OrderField {
 #[serde(rename_all = "camelCase")]
 pub struct GameQuery {
     pub order_by: Option<OrderBy>,
-    pub limit: Option<u16>,
+    pub limit: Option<i16>,
     pub order_field: Option<OrderField>,
     pub author_id: Option<i64>,
     pub tag: Option<String>,
@@ -39,7 +39,7 @@ pub struct GameQuery {
 impl fmt::Display for OrderField {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            OrderField::Date => write!(f, "created_at"),
+            OrderField::CreatedAt => write!(f, "created_at"),
             OrderField::Stars => write!(f, "stars"),
             OrderField::Name => write!(f, "name"),
         }

@@ -40,27 +40,31 @@ where
     T: IDatabase + Send + Sync,
 {
     async fn filter(&self, query: GameQuery) -> Result<Vec<Game>, GameServiceErr> {
-        let mut query_builder: QueryBuilder<Postgres> =
-            QueryBuilder::new("select * from games where 1 = 1");
+        let mut query_builder: QueryBuilder<Postgres> = QueryBuilder::new("");
+
+        let mut separated = query_builder.separated(" ");
+        separated.push("select * from games where 1 = 1");
 
         if let Some(author_id) = query.author_id {
-            query_builder.push(format!(" and author_id = {}", author_id));
+            separated.push("and author_id =");
+            separated.push_bind(author_id);
         }
 
         if let Some(tag) = query.tag {
-            query_builder.push(" and ");
-            query_builder.push_bind(tag);
-            query_builder.push(" = any(tags)");
+            separated.push("and");
+            separated.push_bind(tag);
+            separated.push("= any(tags)");
         }
 
         if let Some(order_by) = query.order_by {
             if let Some(order_field) = query.order_field {
-                query_builder.push(format!(" order by {} {}", order_field, order_by));
+                separated.push(format!("order by {} {}", order_field, order_by));
             }
         }
 
         if let Some(limit) = query.limit {
-            query_builder.push(format!(" limit {}", limit));
+            separated.push("limit");
+            separated.push_bind(limit);
         }
 
         match query_builder
