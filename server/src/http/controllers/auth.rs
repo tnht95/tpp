@@ -17,7 +17,10 @@ use super::{extract_jwt_claim, InternalState};
 use crate::{
     database::entities::user::User,
     http::utils::err_handler::response_unhandled_err,
-    model::responses::auth::{INVALID_OATH_CODE, MISSING_OATH_CODE},
+    model::responses::{
+        auth::{INVALID_OATH_CODE, MISSING_OATH_CODE},
+        HttpResponse,
+    },
     services::{
         user::{IUserService, UserServiceErr},
         IInternalServices,
@@ -103,18 +106,15 @@ pub async fn me<TInternalServices: IInternalServices>(
     State(state): InternalState<TInternalServices>,
 ) -> Response {
     match extract_jwt_claim(headers, &state.config.auth.jwt.secret) {
-        Ok(jwt_claim) => (StatusCode::OK, Json(jwt_claim.user)).into_response(),
+        Ok(jwt::JwtClaim { user, .. }) => Json(HttpResponse { data: user }).into_response(),
         Err(_) => StatusCode::UNAUTHORIZED.into_response(),
     }
 }
 
 pub async fn log_out() -> Response {
-    (
-        StatusCode::OK,
-        [(
-            SET_COOKIE,
-            "access_token=;SameSite=None;Secure;HttpOnly;Max-Age=0".to_string(),
-        )],
-    )
-        .into_response()
+    [(
+        SET_COOKIE,
+        "access_token=;SameSite=None;Secure;HttpOnly;Max-Age=0".to_string(),
+    )]
+    .into_response()
 }
