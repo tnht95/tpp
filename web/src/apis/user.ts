@@ -8,7 +8,7 @@ export const fetchUserAction = () =>
   })
     .then(errHandler)
     .then((r: Response<User>) => r.data)
-    .catch(() => {}); // empty body
+    .catch(() => {}) as Promise<User | undefined>; // empty body
 
 export const logoutAction = () =>
   fetch(`${import.meta.env.VITE_SERVER_URL}/logout`, {
