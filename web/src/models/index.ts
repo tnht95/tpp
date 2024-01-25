@@ -6,3 +6,8 @@ export * from './blog';
 export type Response<T> = {
   data: T;
 };
+
+export type ResponseErr = {
+  code: string;
+  msg: string;
+};

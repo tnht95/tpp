@@ -12,11 +12,12 @@ import { createStore, produce } from 'solid-js/store';
 import { addPostAction, fetchGameAction, fetchPostAction } from '@/apis';
 import { CommentForm, PostCard, VerticalGameCard } from '@/components';
 import { OFFSET } from '@/constant';
-import { useAuth } from '@/context';
-import { Post } from '@/models';
+import { useAuth, useToast } from '@/context';
+import { Post, ResponseErr } from '@/models';
 
 export const Dashboard = () => {
   const { utils } = useAuth();
+  const { dispatch } = useToast();
   const [newestGames] = createResource(
     { orderField: 'createdAt', orderBy: 'desc', limit: 5 },
     fetchGameAction
@@ -67,7 +68,9 @@ export const Dashboard = () => {
     });
 
   const onSubmitHandler = (content: string) =>
-    addPostAction({ content }).then(batchSubmitHandler) as unknown;
+    addPostAction({ content })
+      .then(batchSubmitHandler)
+      .catch((error: ResponseErr) => dispatch.showToast(error.msg)) as unknown;
 
   return (
     <div class="flex">
