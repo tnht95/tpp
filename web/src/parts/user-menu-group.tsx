@@ -3,10 +3,10 @@ import { Dropdown } from 'flowbite';
 import { createEffect, createSignal } from 'solid-js';
 
 import { Avatar, EllipsisText, Notification } from '@/components';
-import { useAuth } from '@/context';
+import { useAuthCtx } from '@/context';
 
 export const UserMenuGroup = () => {
-  const { user, dispatch } = useAuth();
+  const { user, dispatch } = useAuthCtx();
   const [userDropdownRef, setUserDropdownRef] = createSignal<HTMLDivElement>();
   const [userBtnRef, setUserBtnRef] = createSignal<HTMLButtonElement>();
   const [userDropdown, setUserDropdown] = createSignal<Dropdown>();

@@ -12,12 +12,12 @@ import { createStore, produce } from 'solid-js/store';
 import { addPostAction, fetchGameAction, fetchPostAction } from '@/apis';
 import { CommentForm, PostCard, VerticalGameCard } from '@/components';
 import { OFFSET } from '@/constant';
-import { useAuth, useToast } from '@/context';
+import { useAuthCtx, useToastCtx } from '@/context';
 import { Post, ResponseErr } from '@/models';
 
 export const Dashboard = () => {
-  const { utils } = useAuth();
-  const { dispatch } = useToast();
+  const { utils } = useAuthCtx();
+  const { dispatch } = useToastCtx();
   const [newestGames] = createResource(
     { orderField: 'createdAt', orderBy: 'desc', limit: 5 },
     fetchGameAction

@@ -1,7 +1,7 @@
 import { Show, Suspense } from 'solid-js';
 
 import { LoadingButton, Searchbar } from '@/components';
-import { useAuth } from '@/context';
+import { useAuthCtx } from '@/context';
 import { UserMenuGroup } from '@/parts';
 
 import { HeaderLogo } from './header-logo';
@@ -9,7 +9,7 @@ import { HeaderMenu } from './header-menu';
 import { SignInBtnSkeleton } from './sign-in';
 
 export const Header = () => {
-  const { utils } = useAuth();
+  const { utils } = useAuthCtx();
 
   return (
     <header class="sticky top-0 z-50 flex flex-row items-center justify-between bg-indigo-900 text-white">

@@ -43,4 +43,4 @@ export const AuthenticationProvider = (props: ParentProps) => {
 // ============================================================================
 // Component Apis
 // ============================================================================
-export const useAuth = () => useContext(authCtx) as AuthContext;
+export const useAuthCtx = () => useContext(authCtx) as AuthContext;

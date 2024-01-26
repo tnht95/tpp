@@ -61,4 +61,4 @@ export const ToastProvider = (props: ParentProps) => {
 // ============================================================================
 // Component Apis
 // ============================================================================
-export const useToast = () => useContext(toastCtx) as ToastContext;
+export const useToastCtx = () => useContext(toastCtx) as ToastContext;
