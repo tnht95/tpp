@@ -98,7 +98,6 @@ export const GameForm = (props: GameFormProps) => {
           </form>
           <PreviewButtonGroup
             onPreviewHandler={handleClick}
-            onSubmitHandler={handleClick}
             isEditMode={isEditMode()}
           />
         </div>

@@ -12,9 +12,40 @@ type CommentFormProps = {
 export const CommentForm = (props: CommentFormProps) => {
   const [isEditMode, setIsEditMode] = createSignal(true);
   const [content, setContent] = createSignal('');
+  const [errMsg, setErrMsg] = createSignal('');
+
+  const onSubmitHandler = (e: Event) => {
+    e.preventDefault();
+    errChecking();
+    !errMsg() && props.onSubmitHandler && props.onSubmitHandler(content());
+    if (!errMsg()) {
+      setContent('');
+    }
+  };
+
+  const errChecking = () => {
+    const inputLen = content().length;
+
+    switch (true) {
+      case inputLen < 1: {
+        setErrMsg("Input can't be empty!");
+        break;
+      }
+      case inputLen > 200: {
+        setErrMsg("Input can't be longer than 200 characters!");
+        break;
+      }
+      default: {
+        setErrMsg('');
+      }
+    }
+  };
 
   return (
-    <form class="w-full rounded-lg border bg-white px-4 pt-2">
+    <form
+      class="w-full rounded-lg border bg-white px-4 pt-2"
+      onSubmit={onSubmitHandler}
+    >
       <div class="-mx-3 mb-6 flex flex-wrap">
         <div>
           <h2 class="px-4 pb-2 pt-3 text-xl font-bold text-gray-800">
@@ -25,21 +56,21 @@ export const CommentForm = (props: CommentFormProps) => {
           <Show when={isEditMode()} fallback={displayMarkdown(content())}>
             <textarea
               class="h-20 w-full resize-none rounded border border-gray-100 bg-gray-100 px-3 py-2 leading-normal placeholder:text-gray-400 focus:border-gray-300 focus:bg-white focus:outline-none"
+              classList={{ 'border-red-600': !!errMsg() }}
               name="body"
               placeholder="Type Your Comment (Support some markdowns)"
-              required
               onFocusOut={e => setContent(e.target.value)}
+              onFocusIn={() => setErrMsg('')}
               value={content()}
             />
+          </Show>
+          <Show when={errMsg()}>
+            <p class="text-red-600">{errMsg()}</p>
           </Show>
           <div class="mt-2">
             <PreviewButtonGroup
               isEditMode={isEditMode()}
               onPreviewHandler={() => setIsEditMode(mode => !mode)}
-              onSubmitHandler={() => {
-                props.onSubmitHandler && props.onSubmitHandler(content());
-                setContent('');
-              }}
             />
           </div>
         </div>

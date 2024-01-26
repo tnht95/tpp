@@ -72,7 +72,6 @@ export const BlogForm = (props: BlogFormProps) => {
                 <PreviewButtonGroup
                   isEditMode={isEditMode()}
                   onPreviewHandler={handleClick}
-                  onSubmitHandler={handleClick}
                 />
               </div>
             </div>
