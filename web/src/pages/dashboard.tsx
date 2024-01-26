@@ -9,7 +9,12 @@ import {
 } from 'solid-js';
 import { createStore, produce } from 'solid-js/store';
 
-import { addPostAction, fetchGameAction, fetchPostAction } from '@/apis';
+import {
+  addPostAction,
+  deletePostAction,
+  fetchGameAction,
+  fetchPostAction
+} from '@/apis';
 import { CommentForm, PostCard, VerticalGameCard } from '@/components';
 import { OFFSET } from '@/constant';
 import { useAuthCtx, useToastCtx } from '@/context';
@@ -72,6 +77,11 @@ export const Dashboard = () => {
       .then(batchSubmitHandler)
       .catch((error: ResponseErr) => dispatch.showToast(error.msg)) as unknown;
 
+  const onDeleteHandler = (postId: string) =>
+    deletePostAction(postId)
+      .then(batchSubmitHandler)
+      .catch((error: ResponseErr) => dispatch.showToast(error.msg)) as unknown;
+
   return (
     <div class="flex">
       <div class="flex flex-1 flex-col">
@@ -87,17 +97,11 @@ export const Dashboard = () => {
             </div>
             <div class="flex flex-col gap-10 ">
               <For each={post}>
-                {post => (
-                  <PostCard
-                    content={post.content}
-                    likes={post.likes}
-                    comments={post.comments}
-                  />
-                )}
+                {post => <PostCard post={post} onDelete={onDeleteHandler} />}
               </For>
             </div>
           </main>
-          <nav class="relative -z-10 flex h-screen w-1/2 border-l border-dashed ">
+          <nav class="relative -z-10 flex h-full w-1/2 border-l border-dashed ">
             <div class="fixed mx-auto flex w-full flex-col overflow-y-auto px-6">
               <p class="mt-7 p-4 text-xl font-bold text-indigo-900">
                 Newest games

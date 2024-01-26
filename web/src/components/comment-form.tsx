@@ -12,12 +12,15 @@ type CommentFormProps = {
 const checkErr = (content: string): string => {
   const inputLen = content.length;
   switch (true) {
-    case inputLen < 1:
+    case inputLen < 1: {
       return "Input can't be empty!";
-    case inputLen > 200:
+    }
+    case inputLen > 200: {
       return "Input can't be longer than 200 characters!";
-    default:
+    }
+    default: {
       return '';
+    }
   }
 };
 

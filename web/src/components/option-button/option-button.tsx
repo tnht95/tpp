@@ -6,7 +6,10 @@ import { ConfirmModal } from './confirm-modal';
 type OptionButtonProp = {
   isOwner: boolean;
   customStyle?: string;
+  onDelete: (postId: string) => void;
+  id: string;
 };
+
 export const OptionButton = (props: OptionButtonProp) => {
   const [userDropdownRef, setUserDropdownRef] = createSignal<HTMLDivElement>();
   const [userBtnRef, setUserBtnRef] = createSignal<HTMLButtonElement>();
@@ -69,6 +72,8 @@ export const OptionButton = (props: OptionButtonProp) => {
         </ul>
       </div>
       <ConfirmModal
+        onDelete={props.onDelete}
+        id={props.id}
         setModalRef={setModalRef}
         onCloseHandler={() => modal()?.hide()}
       />

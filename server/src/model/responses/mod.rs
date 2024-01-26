@@ -1,5 +1,6 @@
 pub mod auth;
 pub mod book;
+pub mod post;
 
 use serde::Serialize;
 
@@ -28,4 +29,9 @@ pub const INTERNAL_SERVER_ERR: HttpResponseConstErr = HttpResponseConstErr {
 pub const UNAUTHORIZED_ERR: HttpResponseConstErr = HttpResponseConstErr {
     code: "ERR_001",
     msg: "Unauthorized",
+};
+
+pub const INVALID_UUID_ERR: HttpResponseConstErr = HttpResponseConstErr {
+    code: "ERR_002",
+    msg: "Invalid Uuid",
 };

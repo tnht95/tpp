@@ -21,3 +21,11 @@ export const addPostAction = (body: AddPost) =>
   })
     .then(errHandler)
     .then((r: Response<Post>) => r.data);
+
+export const deletePostAction = (id: string) =>
+  fetch(`${import.meta.env.VITE_SERVER_URL}/posts/${id}`, {
+    method: 'delete',
+    credentials: 'include'
+  })
+    .then(errHandler)
+    .then((r: Response<Post>) => r.data);

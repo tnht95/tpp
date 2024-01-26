@@ -8,7 +8,7 @@ export const BlogDetails = () => (
         <div>
           <div class="flex items-center justify-between">
             <p class="text-3xl font-bold">This is the title</p>
-            <OptionButton isOwner={true} />
+            <OptionButton isOwner={true} onDelete={() => {}} id={''} />
           </div>
           <p class="text-base text-gray-400">26 Sep 2011</p>
         </div>

@@ -17,7 +17,7 @@ export const Comment = (props: CommentProp) => (
           <span class="font-semibold">{props.user}</span> commented on{' '}
           {props.date}
         </div>
-        <OptionButton isOwner={false} />
+        <OptionButton isOwner={false} onDelete={() => {}} id={''} />
       </div>
 
       <div class="rounded-b border border-gray-200 px-5 py-3">

@@ -3,6 +3,7 @@ use std::sync::Arc;
 use async_trait::async_trait;
 use sqlx::{Postgres, QueryBuilder};
 use thiserror::Error;
+use uuid::Uuid;
 
 use crate::{
     database::{entities::post::Post, IDatabase},
@@ -19,6 +20,8 @@ pub enum PostServiceErr {
 pub trait IPostService {
     async fn filter(&self, pagination: Pagination) -> Result<Vec<Post>, PostServiceErr>;
     async fn add(&self, author_id: i64, post: AddPostRequest) -> Result<Post, PostServiceErr>;
+    async fn delete(&self, id: Uuid) -> Result<(), PostServiceErr>;
+    async fn existed(&self, id: Uuid, author_id: i64) -> Result<bool, PostServiceErr>;
 }
 
 pub struct PostService<T: IDatabase> {
@@ -71,6 +74,33 @@ where
         .await
         {
             Ok(posts) => Ok(posts),
+            Err(e) => Err(PostServiceErr::Other(e.into())),
+        }
+    }
+
+    async fn delete(&self, id: Uuid) -> Result<(), PostServiceErr> {
+        match sqlx::query!("delete from posts where id = $1", id)
+            .execute(self.db.get_pool())
+            .await
+        {
+            Ok(_) => Ok(()),
+            Err(e) => Err(PostServiceErr::Other(e.into())),
+        }
+    }
+
+    async fn existed(&self, id: Uuid, author_id: i64) -> Result<bool, PostServiceErr> {
+        match sqlx::query!(
+            "select count(*) as post_count from posts where id = $1 and author_id = $2",
+            id,
+            author_id
+        )
+        .fetch_one(self.db.get_pool())
+        .await
+        {
+            Ok(result) => match result.post_count {
+                None => Ok(false),
+                Some(count) => Ok(count > 0),
+            },
             Err(e) => Err(PostServiceErr::Other(e.into())),
         }
     }
