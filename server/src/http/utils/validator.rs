@@ -1,8 +1,8 @@
 use axum::{
     async_trait,
     body::HttpBody,
-    extract::{FromRequest, Query},
-    http::{Request, StatusCode},
+    extract::{FromRequest, FromRequestParts, Query},
+    http::{request::Parts, Request, StatusCode},
     BoxError,
     Json,
 };
@@ -44,16 +44,15 @@ where
 pub struct QueryValidator<T>(pub T);
 
 #[async_trait]
-impl<T, S, B> FromRequest<S, B> for QueryValidator<T>
+impl<T, S> FromRequestParts<S> for QueryValidator<T>
 where
     T: DeserializeOwned + Validate,
-    B: Send + 'static,
     S: Send + Sync,
 {
     type Rejection = (StatusCode, Json<HttpResponseErr>);
 
-    async fn from_request(req: Request<B>, state: &S) -> Result<Self, Self::Rejection> {
-        match Query::<T>::from_request(req, state).await {
+    async fn from_request_parts(parts: &mut Parts, state: &S) -> Result<Self, Self::Rejection> {
+        match Query::<T>::from_request_parts(parts, state).await {
             Ok(Query(query)) => {
                 query.validate().map_err(response_validation_err)?;
                 Ok(Self(query))
