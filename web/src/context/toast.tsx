@@ -23,20 +23,31 @@ type ToastContext = {
 // ============================================================================
 const toastCtx = createContext<ToastContext>();
 export const ToastProvider = (props: ParentProps) => {
-  let prevTimeout: NodeJS.Timeout;
+  // keep track of the previous timer
+  let prevTimer: NodeJS.Timeout;
+
+  // duration per show
+  const duration = 5000; // 5s
+
   const [msg, setMsg] = createSignal('');
+
+  // destroy toast utility
   const onCloseHandler = () => setMsg('');
+
   createEffect(() => {
     if (msg()) {
-      clearTimeout(prevTimeout);
-      prevTimeout = setTimeout(onCloseHandler, 5000);
+      // clear the previous timer before setting a new one
+      clearTimeout(prevTimer);
+      prevTimer = setTimeout(onCloseHandler, duration);
     }
   });
+
   const state = {
     dispatch: {
-      showToast: (msg: string) => setMsg(msg)
+      showToast: setMsg
     }
   };
+
   return (
     <toastCtx.Provider value={state}>
       {props.children}
