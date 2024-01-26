@@ -16,7 +16,7 @@ use chrono::Utc;
 use super::{extract_jwt_claim, InternalState};
 use crate::{
     database::entities::user::User,
-    http::utils::err_handler::response_unhandled_err,
+    http::utils::err_handler::{response_400_with_const, response_unhandled_err},
     model::responses::{
         auth::{INVALID_OATH_CODE, MISSING_OATH_CODE},
         HttpResponse,
@@ -37,7 +37,7 @@ pub async fn authentication<TInternalServices: IInternalServices>(
 ) -> Response {
     let code = match query.get("code") {
         Some(id) => id,
-        None => return (StatusCode::BAD_REQUEST, Json(MISSING_OATH_CODE)).into_response(),
+        None => return response_400_with_const(MISSING_OATH_CODE),
     };
 
     let gh_oauth = match exchange_user_token(
@@ -48,9 +48,7 @@ pub async fn authentication<TInternalServices: IInternalServices>(
     .await
     {
         Ok(response) => response,
-        Err(_) => {
-            return (StatusCode::BAD_REQUEST, Json(INVALID_OATH_CODE)).into_response();
-        }
+        Err(_) => return response_400_with_const(INVALID_OATH_CODE),
     };
 
     let gh_user = match get_ghuser_from_token(&gh_oauth.access_token).await {
