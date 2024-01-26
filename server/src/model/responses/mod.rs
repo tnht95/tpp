@@ -24,3 +24,8 @@ pub const INTERNAL_SERVER_ERR: HttpResponseConstErr = HttpResponseConstErr {
     code: "ERR_000",
     msg: "Internal Server Error",
 };
+
+pub const UNAUTHORIZED_ERR: HttpResponseConstErr = HttpResponseConstErr {
+    code: "ERR_001",
+    msg: "Unauthorized",
+};

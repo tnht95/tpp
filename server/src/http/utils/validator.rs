@@ -33,7 +33,7 @@ where
             Err(rejection) => Err((
                 rejection.status(),
                 Json(HttpResponseErr {
-                    code: "ERR_001".into(),
+                    code: "ERR_002".into(),
                     msg: rejection.body_text(),
                 }),
             )),
@@ -61,7 +61,7 @@ where
             Err(rejection) => Err((
                 rejection.status(),
                 Json(HttpResponseErr {
-                    code: "ERR_002".into(),
+                    code: "ERR_003".into(),
                     msg: rejection.body_text(),
                 }),
             )),
@@ -73,7 +73,7 @@ fn response_validation_err(e: ValidationErrors) -> (StatusCode, Json<HttpRespons
     (
         StatusCode::BAD_REQUEST,
         Json(HttpResponseErr {
-            code: "ERR_003".into(),
+            code: "ERR_004".into(),
             msg: format!("Input validation error: [{e}]").replace('\n', ", "),
         }),
     )

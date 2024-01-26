@@ -51,7 +51,7 @@ struct Services<TInternalServices: IInternalServices> {
 
 impl<TInternalServices> Server<TInternalServices>
 where
-    TInternalServices: IInternalServices + 'static,
+    TInternalServices: IInternalServices + 'static + Send,
 {
     pub fn new(
         config: Config,

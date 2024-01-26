@@ -5,7 +5,6 @@ use axum::{
     extract::{Query, State},
     http::{
         header::{LOCATION, SET_COOKIE},
-        HeaderMap,
         StatusCode,
     },
     response::{IntoResponse, Response},
@@ -13,10 +12,13 @@ use axum::{
 };
 use chrono::Utc;
 
-use super::{extract_jwt_claim, InternalState};
+use super::InternalState;
 use crate::{
     database::entities::user::User,
-    http::utils::err_handler::{response_400_with_const, response_unhandled_err},
+    http::utils::{
+        auth::Authentication,
+        err_handler::{response_400_with_const, response_unhandled_err},
+    },
     model::responses::{
         auth::{INVALID_OATH_CODE, MISSING_OATH_CODE},
         HttpResponse,
@@ -95,24 +97,24 @@ pub async fn authentication<TInternalServices: IInternalServices>(
             ),
             (LOCATION, String::from(&state.config.auth.redirect_url)),
         ],
+        Json(HttpResponse { data: () }),
     )
         .into_response()
 }
 
 pub async fn me<TInternalServices: IInternalServices>(
-    headers: HeaderMap,
-    State(state): InternalState<TInternalServices>,
+    Authentication(user, _): Authentication<TInternalServices>,
 ) -> Response {
-    match extract_jwt_claim(headers, &state.config.auth.jwt.secret) {
-        Ok(jwt::JwtClaim { user, .. }) => Json(HttpResponse { data: user }).into_response(),
-        Err(_) => StatusCode::UNAUTHORIZED.into_response(),
-    }
+    Json(HttpResponse { data: user }).into_response()
 }
 
 pub async fn log_out() -> Response {
-    [(
-        SET_COOKIE,
-        "access_token=;SameSite=None;Secure;HttpOnly;Max-Age=0".to_string(),
-    )]
-    .into_response()
+    (
+        [(
+            SET_COOKIE,
+            "access_token=;SameSite=None;Secure;HttpOnly;Max-Age=0".to_string(),
+        )],
+        Json(HttpResponse { data: () }),
+    )
+        .into_response()
 }
