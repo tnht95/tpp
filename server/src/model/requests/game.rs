@@ -1,7 +1,7 @@
 use std::fmt;
 
 use serde::Deserialize;
-use validator::Validate;
+use validator::{Validate, ValidationError};
 
 use crate::model::requests::OrderBy;
 
@@ -29,12 +29,22 @@ pub enum OrderField {
 
 #[derive(Deserialize, Validate)]
 #[serde(rename_all = "camelCase")]
+#[validate(schema(function = "validate_order", message = "Invalid order"))]
 pub struct GameQuery {
+    pub order_field: Option<OrderField>,
     pub order_by: Option<OrderBy>,
     pub limit: Option<i16>,
-    pub order_field: Option<OrderField>,
     pub author_id: Option<i64>,
     pub tag: Option<String>,
+}
+
+fn validate_order(q: &GameQuery) -> Result<(), ValidationError> {
+    if (q.order_field.is_some() && q.order_by.is_none())
+        || (q.order_field.is_none() && q.order_by.is_some())
+    {
+        return Err(ValidationError::new("invalid_order"));
+    }
+    Ok(())
 }
 
 impl fmt::Display for OrderField {
