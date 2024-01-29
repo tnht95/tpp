@@ -31,7 +31,12 @@ pub const UNAUTHORIZED_ERR: HttpResponseConstErr = HttpResponseConstErr {
     msg: "Unauthorized",
 };
 
-pub const INVALID_UUID_ERR: HttpResponseConstErr = HttpResponseConstErr {
+pub const NOT_FOUND_ERR: HttpResponseConstErr = HttpResponseConstErr {
     code: "ERR_002",
+    msg: "Not Found",
+};
+
+pub const INVALID_UUID_ERR: HttpResponseConstErr = HttpResponseConstErr {
+    code: "ERR_100",
     msg: "Invalid Uuid",
 };

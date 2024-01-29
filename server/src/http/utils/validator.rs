@@ -12,7 +12,6 @@ use validator::{Validate, ValidationErrors};
 use crate::model::responses::HttpResponseErr;
 
 pub struct JsonValidator<T>(pub T);
-
 #[async_trait]
 impl<T, S, B> FromRequest<S, B> for JsonValidator<T>
 where
@@ -23,7 +22,6 @@ where
     S: Send + Sync,
 {
     type Rejection = (StatusCode, Json<HttpResponseErr>);
-
     async fn from_request(req: Request<B>, state: &S) -> Result<Self, Self::Rejection> {
         match Json::<T>::from_request(req, state).await {
             Ok(Json(body)) => {
@@ -33,7 +31,7 @@ where
             Err(rejection) => Err((
                 rejection.status(),
                 Json(HttpResponseErr {
-                    code: "ERR_002".into(),
+                    code: "ERR_998".into(),
                     msg: rejection.body_text(),
                 }),
             )),
@@ -42,7 +40,6 @@ where
 }
 
 pub struct QueryValidator<T>(pub T);
-
 #[async_trait]
 impl<T, S> FromRequestParts<S> for QueryValidator<T>
 where
@@ -50,7 +47,6 @@ where
     S: Send + Sync,
 {
     type Rejection = (StatusCode, Json<HttpResponseErr>);
-
     async fn from_request_parts(parts: &mut Parts, state: &S) -> Result<Self, Self::Rejection> {
         match Query::<T>::from_request_parts(parts, state).await {
             Ok(Query(query)) => {
@@ -60,7 +56,7 @@ where
             Err(rejection) => Err((
                 rejection.status(),
                 Json(HttpResponseErr {
-                    code: "ERR_003".into(),
+                    code: "ERR_997".into(),
                     msg: rejection.body_text(),
                 }),
             )),
@@ -72,7 +68,7 @@ fn response_validation_err(e: ValidationErrors) -> (StatusCode, Json<HttpRespons
     (
         StatusCode::BAD_REQUEST,
         Json(HttpResponseErr {
-            code: "ERR_004".into(),
+            code: "ERR_999".into(),
             msg: format!("Input validation error: [{e}]").replace('\n', ", "),
         }),
     )

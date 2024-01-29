@@ -31,6 +31,7 @@ use crate::{
     http::{
         controllers::{auth, blog, book, game, health, post, user},
         handlers::{panic, shutdown},
+        utils::err_handler::response_404_err,
     },
     services::IInternalServices,
 };
@@ -132,6 +133,7 @@ where
                         .route("/users/:id", get(user::get_by_id))
                         .layer(middleware),
                 )
+                .fallback(response_404_err)
                 .with_state(Arc::clone(&state)),
         );
 

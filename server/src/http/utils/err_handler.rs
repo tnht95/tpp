@@ -5,7 +5,12 @@ use axum::{
 };
 use tracing::error;
 
-use crate::model::responses::{HttpResponseConstErr, INTERNAL_SERVER_ERR, UNAUTHORIZED_ERR};
+use crate::model::responses::{
+    HttpResponseConstErr,
+    INTERNAL_SERVER_ERR,
+    NOT_FOUND_ERR,
+    UNAUTHORIZED_ERR,
+};
 
 pub fn response_unhandled_err(e: anyhow::Error) -> Response {
     error!("Unhandled error: {e:?}");
@@ -23,4 +28,8 @@ pub fn response_400_with_const(e: HttpResponseConstErr) -> Response {
 
 pub fn response_401_err() -> Response {
     (StatusCode::UNAUTHORIZED, Json(UNAUTHORIZED_ERR)).into_response()
+}
+
+pub async fn response_404_err() -> Response {
+    (StatusCode::NOT_FOUND, Json(NOT_FOUND_ERR)).into_response()
 }
