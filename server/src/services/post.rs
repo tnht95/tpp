@@ -7,7 +7,7 @@ use uuid::Uuid;
 
 use crate::{
     database::{entities::post::Post, IDatabase},
-    model::requests::{post::AddPostRequest, Pagination},
+    model::requests::{post::AddPostRequest, PaginationInternal},
 };
 
 #[derive(Error, Debug)]
@@ -18,7 +18,7 @@ pub enum PostServiceErr {
 
 #[async_trait]
 pub trait IPostService {
-    async fn filter(&self, pagination: Pagination) -> Result<Vec<Post>, PostServiceErr>;
+    async fn filter(&self, pagination: PaginationInternal) -> Result<Vec<Post>, PostServiceErr>;
     async fn add(&self, author_id: i64, post: AddPostRequest) -> Result<Post, PostServiceErr>;
     async fn delete(&self, id: Uuid) -> Result<(), PostServiceErr>;
     async fn existed(&self, id: Uuid, author_id: i64) -> Result<bool, PostServiceErr>;
@@ -42,7 +42,7 @@ impl<T> IPostService for PostService<T>
 where
     T: IDatabase + Send + Sync,
 {
-    async fn filter(&self, pagination: Pagination) -> Result<Vec<Post>, PostServiceErr> {
+    async fn filter(&self, pagination: PaginationInternal) -> Result<Vec<Post>, PostServiceErr> {
         let mut query_builder: QueryBuilder<Postgres> = QueryBuilder::new("");
 
         let mut separated = query_builder.separated(" ");

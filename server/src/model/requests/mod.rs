@@ -6,14 +6,14 @@ pub mod post;
 
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct PaginationParam {
+pub struct Pagination {
     pub order_by: Option<OrderBy>,
     pub offset: Option<i16>,
     pub limit: Option<i16>,
 }
 
 #[derive(Deserialize)]
-pub struct Pagination {
+pub struct PaginationInternal {
     pub order_by: OrderBy,
     pub offset: i16,
     pub limit: i16,
@@ -26,8 +26,8 @@ pub enum OrderBy {
     Desc,
 }
 
-impl From<PaginationParam> for Pagination {
-    fn from(pagination: PaginationParam) -> Self {
+impl From<Pagination> for PaginationInternal {
+    fn from(pagination: Pagination) -> Self {
         Self {
             order_by: pagination.order_by.unwrap_or(OrderBy::Asc),
             offset: pagination.offset.unwrap_or(0),

@@ -15,7 +15,7 @@ use crate::{
         },
     },
     model::{
-        requests::{post::AddPostRequest, PaginationParam},
+        requests::{post::AddPostRequest, Pagination},
         responses::{post::NOT_AUTH_DEL, HttpResponse, INVALID_UUID_ERR},
     },
     services::{
@@ -25,7 +25,7 @@ use crate::{
 };
 
 pub async fn filter<TInternalServices: IInternalServices>(
-    Query(pagination): Query<PaginationParam>,
+    Query(pagination): Query<Pagination>,
     State(state): InternalState<TInternalServices>,
 ) -> Response {
     match state.services.post.filter(pagination.into()).await {
