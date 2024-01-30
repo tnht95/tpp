@@ -31,8 +31,16 @@ impl From<Pagination> for PaginationInternal {
     fn from(pagination: Pagination) -> Self {
         Self {
             order_by: pagination.order_by.unwrap_or(OrderBy::Asc),
-            offset: pagination.offset.unwrap_or(0),
-            limit: pagination.limit.unwrap_or(20),
+            offset: match pagination.offset.unwrap_or(0) {
+                offset if offset < 0 => 0,
+                offset if offset > 20 => 20,
+                offset => offset,
+            },
+            limit: match pagination.limit.unwrap_or(20) {
+                limit if limit < 1 => 1,
+                limit if limit > 20 => 20,
+                offset => offset,
+            },
         }
     }
 }
