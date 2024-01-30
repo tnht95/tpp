@@ -5,7 +5,7 @@ use sqlx::{Postgres, QueryBuilder};
 use thiserror::Error;
 
 use crate::{
-    database::{entities::game::Game, IDatabase},
+    database::{entities::game::GameSummary, IDatabase},
     model::requests::game::GameQuery,
 };
 
@@ -17,7 +17,7 @@ pub enum GameServiceErr {
 
 #[async_trait]
 pub trait IGameService {
-    async fn filter(&self, query: GameQuery) -> Result<Vec<Game>, GameServiceErr>;
+    async fn filter(&self, query: GameQuery) -> Result<Vec<GameSummary>, GameServiceErr>;
     // async fn add(&self, game: AddGameRequest) -> Result<Game, GameServiceErr>;
 }
 
@@ -39,7 +39,7 @@ impl<T> IGameService for GameService<T>
 where
     T: IDatabase + Send + Sync,
 {
-    async fn filter(&self, query: GameQuery) -> Result<Vec<Game>, GameServiceErr> {
+    async fn filter(&self, query: GameQuery) -> Result<Vec<GameSummary>, GameServiceErr> {
         let mut query_builder: QueryBuilder<Postgres> = QueryBuilder::new("");
 
         let mut separated = query_builder.separated(" ");
@@ -62,13 +62,18 @@ where
             }
         }
 
+        if let Some(offset) = query.offset {
+            separated.push("offset");
+            separated.push(offset);
+        }
+
         if let Some(limit) = query.limit {
             separated.push("limit");
             separated.push_bind(limit);
         }
 
         match query_builder
-            .build_query_as::<Game>()
+            .build_query_as::<GameSummary>()
             .fetch_all(self.db.get_pool())
             .await
         {

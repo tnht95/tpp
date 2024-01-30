@@ -1,4 +1,4 @@
-export type Game = {
+export type GameSummary = {
   id: string;
   name: string;
   authorId: number;
@@ -12,4 +12,14 @@ export type Game = {
   rom: string;
   createdAt: string;
   updatedAt: string;
+};
+
+export type Game = {
+  id: string;
+  name: string;
+  authorName: string;
+  avatarUrl: string;
+  stars: number;
+  tags: string[] | null;
+  createdAt: string;
 };

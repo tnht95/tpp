@@ -1,22 +1,62 @@
-import { createResource, createSignal, For } from 'solid-js';
+import {
+  batch,
+  createEffect,
+  createResource,
+  createSignal,
+  For,
+  Show
+} from 'solid-js';
+import { createStore, produce } from 'solid-js/store';
 
 import { fetchGameAction, GameQueryInput, OrderBy, OrderField } from '@/apis';
-import { GameCard } from '@/components';
+import { GameCard, ShowMoreButton } from '@/components';
+import { LIMIT } from '@/constant';
+import { GameSummary } from '@/models';
 import { TagSidebar } from '@/parts';
 
 export const Games = () => {
   const [selectValue, setSelectValue] = createSignal<GameQueryInput>({});
-  const [games] = createResource(selectValue, fetchGameAction);
+  const [gameResource] = createResource(selectValue, fetchGameAction, {
+    initialValue: []
+  });
+  const [games, setGames] = createStore<GameSummary[]>(gameResource());
+  const [currentOffset, setCurrentOffset] = createSignal(0);
+
+  createEffect(() => {
+    if (gameResource().length > 0) {
+      batch(() => {
+        setGames(produce(oldGames => oldGames.push(...gameResource())));
+      });
+    }
+  });
 
   const handleSelect = (e: Event) => {
+    setGames([]);
+    setCurrentOffset(0);
     const selectedOptionValue = (e.target as HTMLSelectElement).value;
     const valueArr = selectedOptionValue.split('-');
 
     setSelectValue({
       orderField: valueArr[0] as OrderField,
-      orderBy: valueArr[1] as OrderBy
+      orderBy: valueArr[1] as OrderBy,
+      limit: LIMIT,
+      offset: 0
     });
   };
+
+  const handleGetMore = () => {
+    batch(() => {
+      setCurrentOffset(offset => offset + LIMIT);
+      setSelectValue(oldValue => ({
+        ...oldValue,
+        offset: currentOffset()
+      }));
+    });
+  };
+
+  const nothingMoreToShow = () => (
+    <div class="flex w-40 items-center text-gray-400">Nothing more to show</div>
+  );
 
   return (
     <>
@@ -85,7 +125,7 @@ export const Games = () => {
               </div>
             </div>
             <div class="flex flex-row flex-wrap gap-7">
-              <For each={games()}>
+              <For each={games}>
                 {game => (
                   <GameCard
                     name={game.name}
@@ -95,6 +135,12 @@ export const Games = () => {
                   />
                 )}
               </For>
+              <Show
+                when={gameResource().length > LIMIT - 1}
+                fallback={nothingMoreToShow()}
+              >
+                <ShowMoreButton onClick={handleGetMore} />
+              </Show>
             </div>
           </div>
           <div class="flex-1" />
