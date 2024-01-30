@@ -12,7 +12,6 @@ export const ShowMoreButton = (props: ShowMoreButtonProp) => (
     onClick={() => props.onClick()}
   >
     <p class="text-center">Show more</p>
-
     <Show
       when={props.vertical}
       fallback={<i class="fa-solid fa-angles-right" />}

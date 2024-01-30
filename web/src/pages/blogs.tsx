@@ -9,19 +9,27 @@ import {
 } from 'solid-js';
 import { createStore, produce } from 'solid-js/store';
 
-import { fetchBlogAction } from '@/apis';
+import { addBlogAction, fetchBlogAction } from '@/apis';
 import { BlogForm, BlogPost, ShowMoreButton } from '@/components';
-import { BlogSummary } from '@/models';
+import { useToastCtx } from '@/context';
+import { AddBlog, BlogSummary, ResponseErr } from '@/models';
 import { formatTime } from '@/utils';
 
+const nothingMoreToShow = (
+  <div class="mb-8 text-center text-gray-400">--- Nothing more to show ---</div>
+);
+
 export const Blogs = () => {
+  const { dispatch } = useToastCtx();
   const [modalRef, setModalRef] = createSignal<HTMLDivElement>();
   const [modal, setModal] = createSignal<Modal>();
   const [currentOffset, setCurrentOffset] = createSignal(0);
   const [blogResource, { refetch }] = createResource(
     currentOffset,
     fetchBlogAction,
-    { initialValue: [] }
+    {
+      initialValue: []
+    }
   );
   const [blogs, setBlogs] = createStore<BlogSummary[]>(blogResource());
 
@@ -34,29 +42,23 @@ export const Blogs = () => {
     }
   });
 
-  // const batchSubmitHandler = () =>
-  //   batch(() => {
-  //     setBlogs([]);
-  //     if (currentOffset() === 0) refetch() as unknown;
-  //     else setCurrentOffset(0);
-  //   });
+  const batchSubmitHandler = () =>
+    batch(() => {
+      setBlogs([]);
+      if (currentOffset() === 0) refetch() as unknown;
+      else setCurrentOffset(0);
+    });
 
-  // const onSubmitHandler = (blog: AddBlog) =>
-  //   addBlogAction(blog)
-  //     .then(batchSubmitHandler)
-  //     .catch((error: ResponseErr) => dispatch.showToast(error.msg)) as unknown;
+  const onSubmitHandler = (blog: AddBlog) =>
+    addBlogAction(blog)
+      .then(batchSubmitHandler)
+      .catch((error: ResponseErr) => dispatch.showToast(error.msg)) as unknown;
 
   const handleGetMore = () => {
     batch(() => {
       setCurrentOffset(offset => offset + 2);
     });
   };
-
-  const nothingMoreToShow = () => (
-    <div class="mb-8 text-center text-gray-400">
-      --- Nothing more to show ---
-    </div>
-  );
 
   return (
     <div class="ml-10 mt-10 w-4/6">
@@ -77,6 +79,7 @@ export const Blogs = () => {
           onCloseHandler={() => {
             modal()?.hide();
           }}
+          onSubmitHandler={onSubmitHandler}
         />
       </div>
       <div class="mt-5 flex flex-col gap-5">
@@ -90,7 +93,7 @@ export const Blogs = () => {
             />
           )}
         </For>
-        <Show when={blogResource().length > 1} fallback={nothingMoreToShow()}>
+        <Show when={blogResource().length > 1} fallback={nothingMoreToShow}>
           <ShowMoreButton vertical onClick={handleGetMore} />
         </Show>
       </div>
