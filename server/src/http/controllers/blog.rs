@@ -38,7 +38,7 @@ pub async fn add<TInternalServices: IInternalServices>(
         return response_403_err();
     }
     match state.services.blog.add(blog).await {
-        Ok(blogs) => Json(HttpResponse { data: blogs }).into_response(),
+        Ok(blog) => Json(HttpResponse { data: blog }).into_response(),
         Err(BlogServiceErr::Other(e)) => response_unhandled_err(e),
     }
 }
