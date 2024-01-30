@@ -1,4 +1,4 @@
-export type Blog = {
+export type BlogSummary = {
   id: string;
   title: string;
   description: string;
@@ -6,7 +6,7 @@ export type Blog = {
   createdAt: string;
 };
 
-export type BlogDetails = {
+export type Blog = {
   id: string;
   title: string;
   description: string | null;
@@ -14,4 +14,11 @@ export type BlogDetails = {
   tags: string[] | null;
   createdAt: string;
   updatedAt: string;
+};
+
+export type AddBlog = {
+  title: string;
+  description: string;
+  tags: string[] | null;
+  createdAt: string;
 };

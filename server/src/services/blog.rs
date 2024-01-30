@@ -1,6 +1,7 @@
 use std::sync::Arc;
 
 use async_trait::async_trait;
+use sqlx::{Postgres, QueryBuilder};
 use thiserror::Error;
 
 use crate::{
@@ -8,7 +9,7 @@ use crate::{
         entities::blog::{Blog, BlogSummary},
         IDatabase,
     },
-    model::requests::blog::AddBlogRequest,
+    model::requests::{blog::AddBlogRequest, PaginationInternal},
 };
 
 #[derive(Error, Debug)]
@@ -19,7 +20,10 @@ pub enum BlogServiceErr {
 
 #[async_trait]
 pub trait IBlogService {
-    async fn get_all(&self) -> Result<Vec<BlogSummary>, BlogServiceErr>;
+    async fn filter(
+        &self,
+        pagination: PaginationInternal,
+    ) -> Result<Vec<BlogSummary>, BlogServiceErr>;
     async fn add(&self, blog: AddBlogRequest) -> Result<Blog, BlogServiceErr>;
 }
 
@@ -41,13 +45,23 @@ impl<T> IBlogService for BlogService<T>
 where
     T: IDatabase + Send + Sync,
 {
-    async fn get_all(&self) -> Result<Vec<BlogSummary>, BlogServiceErr> {
-        match sqlx::query_as!(
-            BlogSummary,
-            "select id, title, description, tags, created_at from blogs order by created_at desc"
-        )
-        .fetch_all(self.db.get_pool())
-        .await
+    async fn filter(
+        &self,
+        pagination: PaginationInternal,
+    ) -> Result<Vec<BlogSummary>, BlogServiceErr> {
+        let mut query_builder: QueryBuilder<Postgres> = QueryBuilder::new("");
+        let mut separated = query_builder.separated(" ");
+        separated.push("select id, title, description, tags, created_at from blogs");
+        separated.push(format!("order by created_at {}", pagination.order_by));
+        separated.push("offset");
+        separated.push_bind(pagination.offset);
+        separated.push("limit");
+        separated.push_bind(pagination.limit);
+
+        match query_builder
+            .build_query_as::<BlogSummary>()
+            .fetch_all(self.db.get_pool())
+            .await
         {
             Ok(blogs) => Ok(blogs),
             Err(e) => Err(BlogServiceErr::Other(e.into())),

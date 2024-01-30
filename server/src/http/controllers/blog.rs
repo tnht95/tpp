@@ -1,5 +1,5 @@
 use axum::{
-    extract::State,
+    extract::{Query, State},
     response::{IntoResponse, Response},
     Json,
 };
@@ -13,17 +13,21 @@ use crate::{
             validator::JsonValidator,
         },
     },
-    model::{requests::blog::AddBlogRequest, responses::HttpResponse},
+    model::{
+        requests::{blog::AddBlogRequest, Pagination},
+        responses::HttpResponse,
+    },
     services::{
         blog::{BlogServiceErr, IBlogService},
         IInternalServices,
     },
 };
 
-pub async fn get_all<TInternalServices: IInternalServices>(
+pub async fn filter<TInternalServices: IInternalServices>(
+    Query(pagination): Query<Pagination>,
     State(state): InternalState<TInternalServices>,
 ) -> Response {
-    match state.services.blog.get_all().await {
+    match state.services.blog.filter(pagination.into()).await {
         Ok(blogs) => Json(HttpResponse { data: blogs }).into_response(),
         Err(BlogServiceErr::Other(e)) => response_unhandled_err(e),
     }

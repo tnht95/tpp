@@ -1,18 +1,62 @@
 import { Modal } from 'flowbite';
-import { createEffect, createResource, createSignal, For } from 'solid-js';
+import {
+  batch,
+  createEffect,
+  createResource,
+  createSignal,
+  For,
+  Show
+} from 'solid-js';
+import { createStore, produce } from 'solid-js/store';
 
 import { fetchBlogAction } from '@/apis';
-import { BlogForm, BlogPost } from '@/components';
+import { BlogForm, BlogPost, ShowMoreButton } from '@/components';
+import { BlogSummary } from '@/models';
 import { formatTime } from '@/utils';
 
 export const Blogs = () => {
   const [modalRef, setModalRef] = createSignal<HTMLDivElement>();
   const [modal, setModal] = createSignal<Modal>();
-  const [blogs] = createResource(fetchBlogAction);
+  const [currentOffset, setCurrentOffset] = createSignal(0);
+  const [blogResource, { refetch }] = createResource(
+    currentOffset,
+    fetchBlogAction,
+    { initialValue: [] }
+  );
+  const [blogs, setBlogs] = createStore<BlogSummary[]>(blogResource());
 
   createEffect(() => {
     setModal(new Modal(modalRef()));
+    if (blogResource().length > 0) {
+      batch(() => {
+        setBlogs(produce(oldBlogs => oldBlogs.push(...blogResource())));
+      });
+    }
   });
+
+  // const batchSubmitHandler = () =>
+  //   batch(() => {
+  //     setBlogs([]);
+  //     if (currentOffset() === 0) refetch() as unknown;
+  //     else setCurrentOffset(0);
+  //   });
+
+  // const onSubmitHandler = (blog: AddBlog) =>
+  //   addBlogAction(blog)
+  //     .then(batchSubmitHandler)
+  //     .catch((error: ResponseErr) => dispatch.showToast(error.msg)) as unknown;
+
+  const handleGetMore = () => {
+    batch(() => {
+      setCurrentOffset(offset => offset + 2);
+    });
+  };
+
+  const nothingMoreToShow = () => (
+    <div class="mb-8 text-center text-gray-400">
+      --- Nothing more to show ---
+    </div>
+  );
 
   return (
     <div class="ml-10 mt-10 w-4/6">
@@ -36,7 +80,7 @@ export const Blogs = () => {
         />
       </div>
       <div class="mt-5 flex flex-col gap-5">
-        <For each={blogs()}>
+        <For each={blogs}>
           {blog => (
             <BlogPost
               date={formatTime(blog.createdAt)}
@@ -46,6 +90,9 @@ export const Blogs = () => {
             />
           )}
         </For>
+        <Show when={blogResource().length > 1} fallback={nothingMoreToShow()}>
+          <ShowMoreButton vertical onClick={handleGetMore} />
+        </Show>
       </div>
     </div>
   );

@@ -19,7 +19,12 @@ export const BlogForm = (props: BlogFormProps) => {
   const handleClick = () => {
     setIsEditMode(mode => !mode);
   };
-
+  // const onSubmitHandler = (e: Event) => {
+  //   e.preventDefault();
+  //   props.onSubmitHandler(content());
+  //   props.onCloseHandler();
+  //   setContent('');
+  // };
   return (
     <div
       ref={props.modalRef}
@@ -43,7 +48,7 @@ export const BlogForm = (props: BlogFormProps) => {
               <span class="sr-only">Close modal</span>
             </button>
           </div>
-          <form action="#">
+          <form>
             <div class="mx-auto flex flex-col gap-7 rounded-b-xl border-b border-gray-300 px-6 text-gray-800 shadow-lg">
               <input
                 class="rounded-xl border border-gray-300 p-3 outline-none placeholder:text-gray-400"
