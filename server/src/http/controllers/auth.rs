@@ -11,6 +11,7 @@ use axum::{
     Json,
 };
 use chrono::Utc;
+use serde_json::json;
 
 use super::InternalState;
 use crate::{
@@ -76,11 +77,7 @@ pub async fn authentication<TInternalServices: IInternalServices>(
         Err(UserServiceErr::Other(e)) => return response_unhandled_err(e),
     };
 
-    let jwt = match jwt::encode(
-        user,
-        &state.config.auth.jwt.secret,
-        state.config.auth.jwt.expire_in,
-    ) {
+    let jwt = match jwt::encode(user, &state.config) {
         Ok(jwt) => jwt,
         Err(e) => return response_unhandled_err(anyhow!(e)),
     };
@@ -103,9 +100,12 @@ pub async fn authentication<TInternalServices: IInternalServices>(
 }
 
 pub async fn me<TInternalServices: IInternalServices>(
-    Authentication(user, _): Authentication<TInternalServices>,
+    Authentication(user, is_admin, _): Authentication<TInternalServices>,
 ) -> Response {
-    Json(HttpResponse { data: user }).into_response()
+    Json(HttpResponse {
+        data: json!({"user": user, "isAdmin": is_admin}),
+    })
+    .into_response()
 }
 
 pub async fn log_out() -> Response {

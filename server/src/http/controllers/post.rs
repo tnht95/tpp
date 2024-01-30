@@ -36,7 +36,7 @@ pub async fn filter<TInternalServices: IInternalServices>(
 
 pub async fn add<TInternalServices: IInternalServices>(
     State(state): InternalState<TInternalServices>,
-    Authentication(user, _): Authentication<TInternalServices>,
+    Authentication(user, ..): Authentication<TInternalServices>,
     JsonValidator(post): JsonValidator<AddPostRequest>,
 ) -> Response {
     match state.services.post.add(user.id, post).await {
@@ -48,7 +48,7 @@ pub async fn add<TInternalServices: IInternalServices>(
 pub async fn delete<TInternalServices: IInternalServices>(
     Path(id): Path<String>,
     State(state): InternalState<TInternalServices>,
-    Authentication(user, _): Authentication<TInternalServices>,
+    Authentication(user, ..): Authentication<TInternalServices>,
 ) -> Response {
     let id = match id.parse::<Uuid>() {
         Ok(id) => id,

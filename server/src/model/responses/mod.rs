@@ -36,6 +36,11 @@ pub const NOT_FOUND_ERR: HttpResponseConstErr = HttpResponseConstErr {
     msg: "Not Found",
 };
 
+pub const FORBIDDEN_ERR: HttpResponseConstErr = HttpResponseConstErr {
+    code: "ERR_003",
+    msg: "Forbidden",
+};
+
 pub const INVALID_UUID_ERR: HttpResponseConstErr = HttpResponseConstErr {
     code: "ERR_100",
     msg: "Invalid Uuid",

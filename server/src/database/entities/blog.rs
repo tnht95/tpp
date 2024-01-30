@@ -4,7 +4,7 @@ use uuid::Uuid;
 
 #[derive(Serialize, Deserialize, sqlx::FromRow)]
 #[serde(rename_all = "camelCase")]
-pub struct BlogDetails {
+pub struct Blog {
     pub id: Uuid,
     pub title: String,
     pub description: String,
@@ -16,7 +16,7 @@ pub struct BlogDetails {
 
 #[derive(Serialize, Deserialize, sqlx::FromRow)]
 #[serde(rename_all = "camelCase")]
-pub struct Blog {
+pub struct BlogSummary {
     pub id: Uuid,
     pub title: String,
     pub description: String,

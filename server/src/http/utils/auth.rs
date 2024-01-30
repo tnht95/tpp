@@ -17,6 +17,7 @@ use crate::{
 
 pub struct Authentication<TInternalServices: IInternalServices>(
     pub User,
+    pub bool,
     pub PhantomData<TInternalServices>,
 );
 
@@ -32,7 +33,7 @@ where
         let state = Arc::from_ref(state);
         let access_token = extract_access_token(&parts.headers).map_err(|_| response_401_err())?;
         match jwt::decode(access_token, &state.config.auth.jwt.secret) {
-            Ok(jwt::JwtClaim { user, .. }) => Ok(Self(user, PhantomData)),
+            Ok(jwt::JwtClaim { user, is_admin, .. }) => Ok(Self(user, is_admin, PhantomData)),
             Err(_) => Err(response_401_err()),
         }
     }

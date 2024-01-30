@@ -7,15 +7,17 @@ import {
 } from 'solid-js';
 
 import { fetchUserAction, logoutAction } from '@/apis';
-import { User } from '@/models';
+import { Auth, User } from '@/models';
 
 // ============================================================================
 // Interfaces
 // ============================================================================
 type AuthContext = {
-  user: Resource<User | undefined>;
+  auth: Resource<Auth | undefined>;
   utils: {
     isAuth: () => boolean;
+    isAdmin: () => boolean;
+    user: () => User | undefined;
   };
   dispatch: {
     logout: () => void;
@@ -27,11 +29,13 @@ type AuthContext = {
 // ============================================================================
 const authCtx = createContext<AuthContext>();
 export const AuthenticationProvider = (props: ParentProps) => {
-  const [user, { mutate }] = createResource(fetchUserAction);
+  const [auth, { mutate }] = createResource(fetchUserAction);
   const state = {
-    user,
+    auth,
     utils: {
-      isAuth: () => !!user()
+      isAuth: () => !!auth(),
+      isAdmin: () => !!auth()?.isAdmin,
+      user: () => auth()?.user
     },
     dispatch: {
       logout: () => logoutAction().then(() => mutate())

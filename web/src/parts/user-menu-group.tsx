@@ -6,7 +6,10 @@ import { Avatar, EllipsisText, Notification } from '@/components';
 import { useAuthCtx } from '@/context';
 
 export const UserMenuGroup = () => {
-  const { user, dispatch } = useAuthCtx();
+  const {
+    utils: { user },
+    dispatch
+  } = useAuthCtx();
   const [userDropdownRef, setUserDropdownRef] = createSignal<HTMLDivElement>();
   const [userBtnRef, setUserBtnRef] = createSignal<HTMLButtonElement>();
   const [userDropdown, setUserDropdown] = createSignal<Dropdown>();

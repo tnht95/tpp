@@ -40,6 +40,7 @@ pub struct GithubApp {
 pub struct Auth {
     pub jwt: Jwt,
     pub redirect_url: String,
+    pub admin_id: i64,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -65,6 +66,7 @@ impl Default for Config {
                     expire_in: 3600,
                 },
                 redirect_url: "http://localhost:3000".into(),
+                admin_id: 40195902,
             },
             site_url: "http://localhost:3000".into(),
         }

@@ -7,25 +7,27 @@ use anyhow::{anyhow, Result};
 use jsonwebtoken::{Algorithm, DecodingKey, EncodingKey, Header, Validation};
 use serde::{Deserialize, Serialize};
 
-use crate::database::entities::user::User;
+use crate::{config::Config, database::entities::user::User};
 
 #[derive(Serialize, Deserialize)]
 pub struct JwtClaim {
     pub user: User,
+    pub is_admin: bool,
     exp_at: u128,
 }
 
-pub fn encode(user: User, secret: &str, expire_in: u64) -> Result<String> {
+pub fn encode(user: User, config: &Config) -> Result<String> {
     Ok(jsonwebtoken::encode(
         &Header::new(Algorithm::HS256),
         &JwtClaim {
+            is_admin: user.id == config.auth.admin_id,
             user,
             exp_at: SystemTime::now()
-                .add(Duration::from_secs(expire_in))
+                .add(Duration::from_secs(config.auth.jwt.expire_in))
                 .duration_since(UNIX_EPOCH)?
                 .as_millis(),
         },
-        &EncodingKey::from_secret(secret.as_ref()),
+        &EncodingKey::from_secret(config.auth.jwt.secret.as_ref()),
     )?)
 }
 

@@ -1,4 +1,4 @@
-import { Response, User } from '@/models';
+import { Auth, Response, User } from '@/models';
 
 import { errHandler } from '.';
 
@@ -7,8 +7,8 @@ export const fetchUserAction = () =>
     credentials: 'include'
   })
     .then(errHandler)
-    .then((r: Response<User>) => r.data)
-    .catch(() => {}) as Promise<User | undefined>; // empty body
+    .then((r: Response<Auth>) => r.data)
+    .catch(() => {}) as Promise<Auth | undefined>; // empty body
 
 export const logoutAction = () =>
   fetch(`${import.meta.env.VITE_SERVER_URL}/logout`, {

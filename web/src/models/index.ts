@@ -1,7 +1,8 @@
 export * from './game';
-export * from './user';
+export * from './auth';
 export * from './post';
 export * from './blog';
+export * from './user';
 
 export type Response<T> = {
   data: T;

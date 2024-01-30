@@ -130,6 +130,7 @@ where
                         .route("/posts", post(post::add))
                         .route("/posts/:id", delete(post::delete))
                         .route("/blogs", get(blog::get_all))
+                        .route("/blogs", post(blog::add))
                         .route("/users/:id", get(user::get_by_id))
                         .layer(middleware),
                 )
