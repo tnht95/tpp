@@ -15,8 +15,15 @@ use crate::{
         },
     },
     model::{
-        requests::{post::AddPostRequest, Pagination},
-        responses::{post::NOT_AUTH_DEL, HttpResponse, INVALID_UUID_ERR},
+        requests::{
+            post::{AddPostRequest, EditPostRequest},
+            Pagination,
+        },
+        responses::{
+            post::{NOT_AUTH_DEL, NOT_AUTH_EDIT},
+            HttpResponse,
+            INVALID_UUID_ERR,
+        },
     },
     services::{
         post::{IPostService, PostServiceErr},
@@ -64,6 +71,31 @@ pub async fn delete<TInternalServices: IInternalServices>(
     };
 
     match state.services.post.delete(id).await {
+        Ok(post) => Json(HttpResponse { data: post }).into_response(),
+        Err(PostServiceErr::Other(e)) => response_unhandled_err(e),
+    }
+}
+
+pub async fn edit<TInternalServices: IInternalServices>(
+    Path(id): Path<String>,
+    State(state): InternalState<TInternalServices>,
+    Authentication(user, ..): Authentication<TInternalServices>,
+    JsonValidator(post): JsonValidator<EditPostRequest>,
+) -> Response {
+    let id = match id.parse::<Uuid>() {
+        Ok(id) => id,
+        Err(_) => return response_400_with_const(INVALID_UUID_ERR),
+    };
+
+    match state.services.post.existed(id, user.id).await {
+        Ok(existed) =>
+            if !existed {
+                return response_400_with_const(NOT_AUTH_EDIT);
+            },
+        Err(PostServiceErr::Other(e)) => return response_unhandled_err(e),
+    };
+
+    match state.services.post.edit(id, post).await {
         Ok(post) => Json(HttpResponse { data: post }).into_response(),
         Err(PostServiceErr::Other(e)) => response_unhandled_err(e),
     }

@@ -85,7 +85,7 @@ export const Dashboard = () => {
 
   const onEditHandler = (postId: string, content: string) =>
     editPostAction(postId, { content })
-      // .then(batchSubmitHandler)
+      .then(post => setPost(p => p.id === post.id, post))
       .catch((error: ResponseErr) => dispatch.showToast(error.msg)) as unknown;
 
   return (

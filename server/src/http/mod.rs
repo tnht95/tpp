@@ -7,7 +7,7 @@ use std::{iter::once, net::SocketAddr, sync::Arc, time::Duration};
 use anyhow::Result;
 use axum::{
     http::{header::AUTHORIZATION, Method},
-    routing::{delete, get, post},
+    routing::{delete, get, post, put},
     Router,
     ServiceExt,
 };
@@ -130,6 +130,7 @@ where
                         .route("/posts", get(post::filter))
                         .route("/posts", post(post::add))
                         .route("/posts/:id", delete(post::delete))
+                        .route("/posts/:id", put(post::edit))
                         .route("/blogs", get(blog::filter))
                         .route("/blogs", post(blog::add))
                         .route("/users/:id", get(user::get_by_id))

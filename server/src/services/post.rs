@@ -7,7 +7,10 @@ use uuid::Uuid;
 
 use crate::{
     database::{entities::post::Post, IDatabase},
-    model::requests::{post::AddPostRequest, PaginationInternal},
+    model::requests::{
+        post::{AddPostRequest, EditPostRequest},
+        PaginationInternal,
+    },
 };
 
 #[derive(Error, Debug)]
@@ -22,6 +25,7 @@ pub trait IPostService {
     async fn add(&self, author_id: i64, post: AddPostRequest) -> Result<Post, PostServiceErr>;
     async fn delete(&self, id: Uuid) -> Result<(), PostServiceErr>;
     async fn existed(&self, id: Uuid, author_id: i64) -> Result<bool, PostServiceErr>;
+    async fn edit(&self, id: Uuid, post: EditPostRequest) -> Result<Post, PostServiceErr>;
 }
 
 pub struct PostService<T: IDatabase> {
@@ -101,6 +105,21 @@ where
                 None => Ok(false),
                 Some(count) => Ok(count > 0),
             },
+            Err(e) => Err(PostServiceErr::Other(e.into())),
+        }
+    }
+
+    async fn edit(&self, id: Uuid, post: EditPostRequest) -> Result<Post, PostServiceErr> {
+        match sqlx::query_as!(
+            Post,
+            "update posts set content = $1, updated_at = now() where id = $2 returning *",
+            post.content,
+            id,
+        )
+        .fetch_one(self.db.get_pool())
+        .await
+        {
+            Ok(posts) => Ok(posts),
             Err(e) => Err(PostServiceErr::Other(e.into())),
         }
     }
