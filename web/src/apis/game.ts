@@ -19,9 +19,7 @@ export const fetchGameAction = (queryInput: GameQueryInput) => {
   const query: string[] = [] as const;
 
   for (const key in queryInput) {
-    if (queryInput[key as keyof GameQueryInput]) {
-      query.push(`${key}=${queryInput[key as keyof GameQueryInput]}`);
-    }
+    query.push(`${key}=${queryInput[key as keyof GameQueryInput]}`);
   }
 
   return fetch(`${baseUrl}/games?${query.join('&')}`)

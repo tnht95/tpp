@@ -10,51 +10,48 @@ import { createStore, produce } from 'solid-js/store';
 
 import { fetchGameAction, GameQueryInput, OrderBy, OrderField } from '@/apis';
 import { GameCard, ShowMoreButton } from '@/components';
-import { LIMIT } from '@/constant';
+import { LIMIT, OFFSET } from '@/constant';
 import { GameSummary } from '@/models';
 import { TagSidebar } from '@/parts';
 
+const nothingMoreToShow = (
+  <div class="flex w-40 items-center text-gray-400">Nothing more to show</div>
+);
+
 export const Games = () => {
-  const [selectValue, setSelectValue] = createSignal<GameQueryInput>({});
+  const [selectValue, setSelectValue] = createSignal<GameQueryInput>({
+    offset: 0,
+    limit: LIMIT
+  });
   const [gameResource] = createResource(selectValue, fetchGameAction, {
     initialValue: []
   });
   const [games, setGames] = createStore<GameSummary[]>(gameResource());
-  const [currentOffset, setCurrentOffset] = createSignal(0);
 
   createEffect(() => {
     if (gameResource().length > 0) {
-      batch(() => {
-        setGames(produce(oldGames => oldGames.push(...gameResource())));
-      });
+      setGames(produce(oldGames => oldGames.push(...gameResource())));
     }
   });
 
-  const handleSelect = (e: Event) => {
-    setGames([]);
-    setCurrentOffset(0);
-    const selectedOptionValue = (e.target as HTMLSelectElement).value;
-    const valueArr = selectedOptionValue.split('-');
-
-    setSelectValue({
-      orderField: valueArr[0] as OrderField,
-      orderBy: valueArr[1] as OrderBy
+  const handleSelect = (e: Event) =>
+    batch(() => {
+      setGames([]);
+      const valueArr = (e.target as HTMLSelectElement).value.split('-');
+      setSelectValue({
+        orderField: valueArr[0] as OrderField,
+        orderBy: valueArr[1] as OrderBy,
+        offset: 0,
+        limit: LIMIT
+      });
     });
-  };
 
   const handleGetMore = () => {
-    batch(() => {
-      setCurrentOffset(offset => offset + LIMIT);
-      setSelectValue(oldValue => ({
-        ...oldValue,
-        offset: currentOffset()
-      }));
-    });
+    setSelectValue(oldValue => ({
+      ...oldValue,
+      offset: (oldValue.offset as number) + OFFSET
+    }));
   };
-
-  const nothingMoreToShow = () => (
-    <div class="flex w-40 items-center text-gray-400">Nothing more to show</div>
-  );
 
   return (
     <>
@@ -133,11 +130,16 @@ export const Games = () => {
                   />
                 )}
               </For>
-              <Show
-                when={gameResource().length === LIMIT}
-                fallback={nothingMoreToShow()}
-              >
+              <Show when={gameResource().length === LIMIT}>
                 <ShowMoreButton onClick={handleGetMore} />
+              </Show>
+              <Show
+                when={
+                  (selectValue().offset as number) < 0 &&
+                  gameResource().length < LIMIT
+                }
+              >
+                {nothingMoreToShow}
               </Show>
             </div>
           </div>
