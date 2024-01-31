@@ -1,10 +1,13 @@
+import { LIMIT } from '@/constant';
 import { AddBlog, Blog, BlogSummary, Response } from '@/models';
 
 import { errHandler } from '.';
 
 export const fetchBlogAction = (offset: number) =>
   fetch(
-    `${import.meta.env.VITE_SERVER_URL}/blogs?orderBy=desc&offset=${offset}&limit=2`
+    `${
+      import.meta.env.VITE_SERVER_URL
+    }/blogs?orderBy=desc&offset=${offset}&limit=${LIMIT}`
   )
     .then(errHandler)
     .then((r: Response<BlogSummary[]>) => r.data);

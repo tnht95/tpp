@@ -68,14 +68,14 @@ export const BlogForm = (props: BlogFormProps) => {
                 placeholder="Title"
                 type="text"
                 name="title"
-                ref={el => [validate(el, () => [MinStr(1)])]}
+                ref={el => [validate(el, () => [MinStr(1, 'Required')])]}
               />
               {errors['title'] && <ErrorMessage msg={errors['title']} />}
               <textarea
                 class="rounded-xl border border-gray-300 p-3 outline-none placeholder:text-gray-400"
                 placeholder="Describe shortly about this post here"
                 name="description"
-                ref={el => [validate(el, () => [MinStr(1)])]}
+                ref={el => [validate(el, () => [MinStr(1, 'Required')])]}
               />
               {errors['description'] && (
                 <ErrorMessage msg={errors['description']} />
@@ -84,8 +84,9 @@ export const BlogForm = (props: BlogFormProps) => {
                 placeholder="Blog tags: separate each tag with a comma"
                 class="w-full rounded-xl border p-3 placeholder:text-gray-400"
                 name="tags"
-                required
+                ref={el => [validate(el, () => [validateTags])]}
               />
+              {errors['tags'] && <ErrorMessage msg={errors['tags']} />}
               <Show when={isEditMode()} fallback={displayMarkdown}>
                 <textarea
                   class="h-60 rounded-xl border border-gray-300 p-3 outline-none placeholder:text-gray-400"
@@ -93,7 +94,7 @@ export const BlogForm = (props: BlogFormProps) => {
                   onFocusOut={e => setContent(e.target.value)}
                   name="content"
                   value={content()}
-                  ref={el => [validate(el, () => [MinStr(1)])]}
+                  ref={el => [validate(el, () => [MinStr(1, 'Required')])]}
                 />
                 {errors['content'] && <ErrorMessage msg={errors['content']} />}
               </Show>
@@ -109,4 +110,17 @@ export const BlogForm = (props: BlogFormProps) => {
       </div>
     </div>
   );
+};
+
+const validateTags = ({ value }: { value: string }) => {
+  if (value === '') return '';
+  const tagsArr = value.split(',');
+  if (tagsArr.length > 5) return 'The maximum total of tags is 5.';
+  for (const tag of tagsArr) {
+    if (tag.startsWith(' ') || tag.endsWith(' '))
+      return 'Tag can not contain spacing';
+    if (tag === '') return 'The minimun length of a tag is 1';
+    if (tag.length > 20) return 'The maximum length of a tag is 20';
+  }
+  return '';
 };

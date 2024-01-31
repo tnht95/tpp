@@ -113,7 +113,7 @@ export const Games = () => {
               </Show>
               <Show
                 when={
-                  (selectValue().offset as number) < 0 &&
+                  (selectValue().offset as number) > 0 &&
                   gameResource().length < LIMIT
                 }
               >
