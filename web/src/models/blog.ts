@@ -19,6 +19,6 @@ export type Blog = {
 export type AddBlog = {
   title: string;
   description: string;
-  tags: string[] | null;
+  tags: string[] | undefined;
   content: string;
 };

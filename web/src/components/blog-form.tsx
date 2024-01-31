@@ -34,9 +34,10 @@ export const BlogForm = (props: BlogFormProps) => {
     props.onSubmitHandler({
       title: formData.get('title') as string,
       description: formData.get('description') as string,
-      tags: (formData.get('tags') as string).split(','),
+      tags: getTagValue(formData.get('tags') as string),
       content: formData.get('content') as string
     });
+    formEl.reset();
   };
 
   return (
@@ -118,9 +119,14 @@ const validateTags = ({ value }: { value: string }) => {
   if (tagsArr.length > 5) return 'The maximum total of tags is 5.';
   for (const tag of tagsArr) {
     if (tag.startsWith(' ') || tag.endsWith(' '))
-      return 'Tag can not contain spacing';
+      return 'Tags can not contain spacing';
     if (tag === '') return 'The minimun length of a tag is 1';
     if (tag.length > 20) return 'The maximum length of a tag is 20';
   }
   return '';
+};
+
+const getTagValue = (tags: string): string[] | undefined => {
+  if (tags === '') return undefined;
+  return tags.split(',');
 };

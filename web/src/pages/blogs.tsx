@@ -47,6 +47,7 @@ export const Blogs = () => {
       setBlogs([]);
       if (currentOffset() === 0) refetch() as unknown;
       else setCurrentOffset(0);
+      modal()?.hide();
     });
 
   const onSubmitHandler = (blog: AddBlog) =>
