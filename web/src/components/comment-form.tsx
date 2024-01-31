@@ -26,8 +26,9 @@ const checkErr = (content: string): string => {
 };
 
 export const CommentForm = (props: CommentFormProps) => {
-  const [isEditMode, setIsEditMode] = createSignal(true);
+  // eslint-disable-next-line solid/reactivity
   const [content, setContent] = createSignal(props.content || '');
+  const [isEditMode, setIsEditMode] = createSignal(true);
   const [errMsg, setErrMsg] = createSignal('');
 
   const onSubmitHandler = (e: Event) => {
