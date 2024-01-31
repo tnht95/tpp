@@ -17,6 +17,7 @@ export type Game = {
 export type GameSummary = {
   id: string;
   name: string;
+  authorId: number;
   authorName: string;
   avatarUrl: string;
   stars: number;

@@ -101,7 +101,7 @@ export const Dashboard = () => {
               </For>
             </div>
           </main>
-          <nav class="relative -z-10 flex h-full w-1/2 border-l border-dashed ">
+          <nav class="flex h-full w-1/2 border-l border-dashed ">
             <div class="fixed mx-auto flex w-full flex-col overflow-y-auto px-6">
               <p class="mt-7 p-4 text-xl font-bold text-indigo-900">
                 Newest games
@@ -110,9 +110,7 @@ export const Dashboard = () => {
                 <For each={newestGames()}>
                   {game => (
                     <VerticalGameCard
-                      user={game.authorName}
-                      name={game.name}
-                      img={game.avatarUrl}
+                      game={game}
                     />
                   )}
                 </For>

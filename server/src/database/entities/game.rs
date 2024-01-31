@@ -25,6 +25,7 @@ pub struct Game {
 pub struct GameSummary {
     pub id: Uuid,
     pub name: String,
+    pub author_id: i64,
     pub author_name: String,
     pub avatar_url: String,
     pub stars: i16,

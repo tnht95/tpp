@@ -51,7 +51,7 @@ where
     ) -> Result<Vec<BlogSummary>, BlogServiceErr> {
         let mut query_builder: QueryBuilder<Postgres> = QueryBuilder::new("");
         let mut separated = query_builder.separated(" ");
-        separated.push("select id, title, description, tags, created_at from blogs");
+        separated.push("select * from blogs");
         separated.push(format!("order by created_at {}", pagination.order_by));
         separated.push("offset");
         separated.push_bind(pagination.offset);
