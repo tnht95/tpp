@@ -17,7 +17,7 @@ const ErrorMessage = (props: { msg: string }) => (
 export const BlogForm = (props: BlogFormProps) => {
   const [isEditMode, setIsEditMode] = createSignal(true);
   const [content, setContent] = createSignal('');
-  const { validate, submit, errors } = useForm('border-red-600');
+  const { validate, submit, errors } = useForm({ errClass: 'border-red-600' });
 
   const displayMarkdown = (
     <div class="h-60 overflow-auto border border-white p-3">
@@ -32,9 +32,10 @@ export const BlogForm = (props: BlogFormProps) => {
   const onSubmitHandler = (formEl: HTMLFormElement) => {
     const formData = new FormData(formEl);
     props.onSubmitHandler({
-      title: formData.get('title'),
-      tags: formData.get('tags'),
-      description: formData.get('description')
+      title: formData.get('title') as string,
+      description: formData.get('description') as string,
+      tags: (formData.get('tags') as string).split(','),
+      content: formData.get('content') as string
     });
   };
 
@@ -73,7 +74,12 @@ export const BlogForm = (props: BlogFormProps) => {
               <textarea
                 class="rounded-xl border border-gray-300 p-3 outline-none placeholder:text-gray-400"
                 placeholder="Describe shortly about this post here"
+                name="description"
+                ref={el => [validate(el, () => [MinStr(1)])]}
               />
+              {errors['description'] && (
+                <ErrorMessage msg={errors['description']} />
+              )}
               <input
                 placeholder="Blog tags: separate each tag with a comma"
                 class="w-full rounded-xl border p-3 placeholder:text-gray-400"
@@ -85,8 +91,11 @@ export const BlogForm = (props: BlogFormProps) => {
                   class="h-60 rounded-xl border border-gray-300 p-3 outline-none placeholder:text-gray-400"
                   placeholder="Describe everything about this post here (Support some markdowns)"
                   onFocusOut={e => setContent(e.target.value)}
+                  name="content"
                   value={content()}
+                  ref={el => [validate(el, () => [MinStr(1)])]}
                 />
+                {errors['content'] && <ErrorMessage msg={errors['content']} />}
               </Show>
               <div class="mb-10">
                 <PreviewButtonGroup

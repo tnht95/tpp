@@ -20,4 +20,5 @@ export type AddBlog = {
   title: string;
   description: string;
   tags: string[] | null;
+  content: string;
 };

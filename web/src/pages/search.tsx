@@ -39,7 +39,7 @@ export const Search = () => (
                   stars={2}
                   img="https://ajor.co.uk/images/chip8/super-alien.png"
                 />
-                <ShowMoreButton />
+                <ShowMoreButton onClick={() => {}} />
               </div>
             </div>
           </div>
@@ -51,9 +51,8 @@ export const Search = () => (
             <div class="flex gap-5">
               <UserCard />
               <UserCard />
-
               <UserCard />
-              <ShowMoreButton />
+              <ShowMoreButton onClick={() => {}} />
             </div>
           </div>
           <div>
@@ -74,7 +73,7 @@ export const Search = () => (
               Blogs:
             </p>
             <div class="flex flex-col gap-5">
-              <ShowMoreButton vertical />
+              <ShowMoreButton vertical onClick={() => {}} />
             </div>
           </div>
         </main>

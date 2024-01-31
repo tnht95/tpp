@@ -44,7 +44,7 @@ const checkValid =
     }
   };
 
-export const useForm = (errClass: string) => {
+export const useForm = ({ errClass }: { errClass: string }) => {
   const [errors, setErrors] = createStore<PlainObject>({});
   const fields = {} as Record<string, Config>;
 
