@@ -3,6 +3,7 @@ use crate::{
     services::{
         blog::{BlogService, IBlogService},
         book::{BookService, IBookService},
+        comment::{CommentService, ICommentService},
         game::{GameService, IGameService},
         health::{HealthService, IHealthService},
         post::{IPostService, PostService},
@@ -12,6 +13,7 @@ use crate::{
 
 pub mod blog;
 pub mod book;
+pub mod comment;
 pub mod game;
 pub mod health;
 pub mod post;
@@ -24,6 +26,7 @@ pub trait IInternalServices {
     type TGameService: IGameService + Send + Sync;
     type TPostService: IPostService + Send + Sync;
     type TBlogService: IBlogService + Send + Sync;
+    type TCommentService: ICommentService + Send + Sync;
 }
 
 pub struct InternalServices;
@@ -34,4 +37,5 @@ impl IInternalServices for InternalServices {
     type TGameService = GameService<Database>;
     type TPostService = PostService<Database>;
     type TBlogService = BlogService<Database>;
+    type TCommentService = CommentService<Database>;
 }

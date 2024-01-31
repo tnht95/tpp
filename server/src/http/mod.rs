@@ -29,7 +29,7 @@ use tracing::{info, Level};
 use crate::{
     config::Config,
     http::{
-        controllers::{auth, blog, book, game, health, post, user},
+        controllers::{auth, blog, book, comment, game, health, post, user},
         handlers::{panic, shutdown},
         utils::err_handler::response_404_err,
     },
@@ -48,6 +48,7 @@ struct Services<TInternalServices: IInternalServices> {
     game: TInternalServices::TGameService,
     post: TInternalServices::TPostService,
     blog: TInternalServices::TBlogService,
+    comment: TInternalServices::TCommentService,
 }
 
 impl<TInternalServices> Server<TInternalServices>
@@ -62,6 +63,7 @@ where
         game: TInternalServices::TGameService,
         post: TInternalServices::TPostService,
         blog: TInternalServices::TBlogService,
+        comment: TInternalServices::TCommentService,
     ) -> Self {
         Self {
             config,
@@ -72,6 +74,7 @@ where
                 game,
                 post,
                 blog,
+                comment,
             },
         }
     }
@@ -134,6 +137,7 @@ where
                         .route("/blogs", get(blog::filter))
                         .route("/blogs", post(blog::add))
                         .route("/users/:id", get(user::get_by_id))
+                        .route("/comments", get(comment::filter))
                         .layer(middleware),
                 )
                 .fallback(response_404_err)

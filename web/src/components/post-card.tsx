@@ -1,14 +1,23 @@
-import { createSignal, Show } from 'solid-js';
+import {
+  batch,
+  createEffect,
+  createResource,
+  createSignal,
+  For,
+  Show
+} from 'solid-js';
+import { createStore, produce } from 'solid-js/store';
 
+import { CommentQueryInput, fetchCommentAction } from '@/apis';
 import {
   Avatar,
-  Comment,
+  CommentContainer,
   CommentForm,
   Markdown,
   OptionButton
 } from '@/components';
 import { useAuthCtx } from '@/context';
-import { Post } from '@/models';
+import { Comment, Post } from '@/models';
 import { formatTime } from '@/utils';
 
 type PostCardProps = {
@@ -21,14 +30,42 @@ export const PostCard = (props: PostCardProps) => {
   const { utils } = useAuthCtx();
   const [isEditMode, setIsEditMode] = createSignal(false);
   const [isCommentHidden, setIsCommentHidden] = createSignal(true);
+  const [queryValue, setQueryValue] = createSignal<CommentQueryInput>();
+  const [commentResource] = createResource(queryValue, fetchCommentAction, {
+    initialValue: []
+  });
+  const [comments, setComments] = createStore<Comment[]>(commentResource());
+
+  createEffect(() => {
+    if (commentResource().length > 0) {
+      setComments(
+        produce(oldComments => oldComments.push(...commentResource()))
+      );
+    }
+  });
 
   const toggleComment = () => {
-    setIsCommentHidden(!isCommentHidden());
+    batch(() => {
+      setIsCommentHidden(!isCommentHidden());
+      !queryValue() &&
+        setQueryValue({
+          targetId: props.post.id,
+          offset: 0,
+          limit: 2
+        });
+    });
   };
 
   const onSubmitHandler = (content: string) => {
     setIsEditMode(false);
     props.onEdit(props.post.id, content);
+  };
+
+  const handleGetMore = () => {
+    setQueryValue(oldValue => ({
+      ...(oldValue as CommentQueryInput),
+      offset: (oldValue?.offset as number) + 2
+    }));
   };
 
   return (
@@ -83,11 +120,20 @@ export const PostCard = (props: PostCardProps) => {
         class="flex flex-col gap-5 py-5"
         classList={{ hidden: isCommentHidden() }}
       >
-        <Comment user="Ron" date="10 Feb 2022" likeNumber={11} liked={true} />
-        <Comment user="Ron" date="10 Feb 2022" likeNumber={1} liked={false} />
-        <p class="-mt-1 cursor-pointer text-gray-400 hover:text-gray-600">
-          Load more...
-        </p>
+        <Show when={comments}>
+          <For each={comments}>
+            {comment => <CommentContainer comment={comment} />}
+          </For>
+        </Show>
+        <Show when={commentResource().length == 2}>
+          <p
+            class="-mt-1 cursor-pointer text-gray-400 hover:text-gray-600"
+            onClick={handleGetMore}
+          >
+            Load more...
+          </p>
+        </Show>
+
         <CommentForm />
       </div>
     </div>

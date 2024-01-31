@@ -1,4 +1,5 @@
-import { Comment, CommentForm } from '@/components';
+import { CommentContainer, CommentForm } from '@/components';
+import { cmt } from '@/models';
 import { GameDetailsTabs } from '@/parts';
 
 export const DiscussionDetails = () => (
@@ -13,36 +14,10 @@ export const DiscussionDetails = () => (
         </p>
       </div>
       <div class="mt-9 flex flex-col gap-9 border-b pb-9">
-        <Comment
-          liked={true}
-          likeNumber={10}
-          date="20 Nov 2023"
-          user="Bob@yahoo.com"
-        />
-        <Comment
-          liked={false}
-          likeNumber={2}
-          date="20 Nov 2023"
-          user="Alen@yahoo.com"
-        />
-        <Comment
-          liked={false}
-          likeNumber={0}
-          date="23 Nov 2023"
-          user="Anna@gmail.com"
-        />
-        <Comment
-          liked={false}
-          likeNumber={0}
-          date="25 Dec 2023"
-          user="Alice@yahoo.com"
-        />
-        <Comment
-          liked={true}
-          likeNumber={5}
-          date="30 Jan 2024"
-          user="Nan@yahoo.com"
-        />
+        <CommentContainer comment={cmt} />
+        <CommentContainer comment={cmt} />
+        <CommentContainer comment={cmt} />
+        <CommentContainer comment={cmt} />
       </div>
       <div class="my-9 pl-12">
         <CommentForm>New Comment</CommentForm>

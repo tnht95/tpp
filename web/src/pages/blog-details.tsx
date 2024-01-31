@@ -1,4 +1,5 @@
-import { Comment, CommentForm, OptionButton } from '@/components';
+import { CommentContainer, CommentForm, OptionButton } from '@/components';
+import { cmt } from '@/models';
 import { TagSidebar } from '@/parts';
 
 export const BlogDetails = () => (
@@ -79,31 +80,11 @@ export const BlogDetails = () => (
       </div>
     </div>
     <div class="ml-8 flex w-3/5 flex-col gap-5">
-      <Comment
-        user="Harry@yahoo.com"
-        date="15 Jan 2014"
-        likeNumber={1}
-        liked={false}
-      />
-      <Comment
-        user="Harry@yahoo.com"
-        date="15 Jan 2014"
-        likeNumber={1}
-        liked={false}
-      />
+      <CommentContainer comment={cmt} />
+      <CommentContainer comment={cmt} />
+      <CommentContainer comment={cmt} />
+      <CommentContainer comment={cmt} />
 
-      <Comment
-        user="Harry@yahoo.com"
-        date="15 Jan 2014"
-        likeNumber={1}
-        liked={false}
-      />
-      <Comment
-        user="Harry@yahoo.com"
-        date="15 Jan 2014"
-        likeNumber={1}
-        liked={true}
-      />
       <div class="ml-10 mt-10">
         <CommentForm>New Comment</CommentForm>
       </div>

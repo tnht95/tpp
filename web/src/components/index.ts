@@ -7,7 +7,7 @@ export * from './table-row';
 export * from './activity';
 export * from './game-tab';
 export * from './avatar';
-export * from './comment';
+export * from './comment-container';
 export * from './comment-form';
 export * from './pill-button';
 export * from './blog-card';

@@ -15,7 +15,7 @@ export const UserDetails = () => {
   const [user] = createResource(userId, fetchUserByIdAction);
 
   return (
-    <Show when={user()} fallback={<NotFound />}>
+    <Show when={user} fallback={<NotFound />}>
       <div class="my-5 ml-10 p-5">
         <div class="md:-mx-2 md:flex">
           <div class="w-full md:mx-2 md:w-3/12">

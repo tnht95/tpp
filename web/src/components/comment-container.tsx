@@ -1,41 +1,38 @@
 import { Show } from 'solid-js';
 
 import { Avatar, OptionButton } from '@/components';
+import { Comment } from '@/models';
+import { formatTime } from '@/utils';
 
 type CommentProp = {
-  user: string;
-  date: string;
-  likeNumber: number;
-  liked: boolean;
+  comment: Comment;
 };
-export const Comment = (props: CommentProp) => (
+export const CommentContainer = (props: CommentProp) => (
   <div class="flex">
     <Avatar />
-    <div class="ml-2">
+    <div class="ml-2 w-full">
       <div class="flex items-center justify-between rounded-t border border-gray-200 bg-gray-200 p-2 px-5">
         <div>
-          <span class="font-semibold">{props.user}</span> commented on{' '}
-          {props.date}
+          <span class="font-semibold">{props.comment.userName}</span>
+          <span> commented on </span>
+          <span>{formatTime(props.comment.createdAt)}</span>
         </div>
         <OptionButton isOwner={false} onDelete={() => {}} id={''} />
       </div>
 
       <div class="rounded-b border border-gray-200 px-5 py-3">
-        I saw this and this at this website. I'm unable to access the content or
-        provide direct assistance with the specific URL you provided, as it has
-        returned a 403 (Forbidden) error. However, I can offer general guidance
-        and potential troubleshooting steps:
+        {props.comment.content}
         <div class="mt-2">
           <Show
-            when={props.liked}
+            when={props.comment.likes}
             fallback={
               <i class="fa-regular fa-heart cursor-pointer text-xl hover:text-gray-400" />
             }
           >
             <i class="fa-solid fa-heart cursor-pointer text-xl text-red-500 hover:text-gray-400" />
           </Show>
-          {props.likeNumber > 0 && (
-            <span class="ml-1.5">{props.likeNumber}</span>
+          {props.comment.likes > 0 && (
+            <span class="ml-1.5">{props.comment.likes}</span>
           )}
         </div>
       </div>
