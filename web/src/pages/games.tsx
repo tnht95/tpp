@@ -38,9 +38,7 @@ export const Games = () => {
 
     setSelectValue({
       orderField: valueArr[0] as OrderField,
-      orderBy: valueArr[1] as OrderBy,
-      limit: LIMIT,
-      offset: 0
+      orderBy: valueArr[1] as OrderBy
     });
   };
 
@@ -136,7 +134,7 @@ export const Games = () => {
                 )}
               </For>
               <Show
-                when={gameResource().length > LIMIT - 1}
+                when={gameResource().length === LIMIT}
                 fallback={nothingMoreToShow()}
               >
                 <ShowMoreButton onClick={handleGetMore} />

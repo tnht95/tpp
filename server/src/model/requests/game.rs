@@ -30,7 +30,6 @@ pub enum OrderField {
 #[derive(Deserialize, Validate)]
 #[serde(rename_all = "camelCase")]
 #[validate(schema(function = "validate_order", message = "Invalid order"))]
-#[validate(schema(function = "validate_offset", message = "Invalid offset"))]
 pub struct GameQuery {
     pub order_field: Option<OrderField>,
     pub order_by: Option<OrderBy>,
@@ -45,13 +44,6 @@ fn validate_order(q: &GameQuery) -> Result<(), ValidationError> {
         || (q.order_field.is_none() && q.order_by.is_some())
     {
         return Err(ValidationError::new("invalid_order"));
-    }
-    Ok(())
-}
-
-fn validate_offset(q: &GameQuery) -> Result<(), ValidationError> {
-    if q.offset.is_some() && q.limit.is_none() {
-        return Err(ValidationError::new("invalid_offset"));
     }
     Ok(())
 }

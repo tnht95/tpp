@@ -1,4 +1,3 @@
-import { LIMIT } from '@/constant';
 import { GameSummary, Response } from '@/models';
 
 import { errHandler } from '.';
@@ -18,14 +17,6 @@ export type GameQueryInput = {
 export const fetchGameAction = (queryInput: GameQueryInput) => {
   const baseUrl = import.meta.env.VITE_SERVER_URL;
   const query: string[] = [] as const;
-
-  if (queryInput.offset == undefined) {
-    query.push('offset=0');
-  }
-
-  if (!queryInput.limit) {
-    query.push(`limit=${LIMIT}`);
-  }
 
   for (const key in queryInput) {
     if (queryInput[key as keyof GameQueryInput]) {
