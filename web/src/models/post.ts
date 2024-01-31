@@ -11,3 +11,5 @@ export type Post = {
 export type AddPost = {
   content: string;
 };
+
+export type EditPost = AddPost;

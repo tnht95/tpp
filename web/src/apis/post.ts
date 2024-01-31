@@ -1,5 +1,5 @@
 import { LIMIT } from '@/constant';
-import { AddPost, Post, Response } from '@/models';
+import { AddPost, EditPost, Post, Response } from '@/models';
 
 import { errHandler } from '.';
 
@@ -26,6 +26,18 @@ export const deletePostAction = (id: string) =>
   fetch(`${import.meta.env.VITE_SERVER_URL}/posts/${id}`, {
     method: 'delete',
     credentials: 'include'
+  })
+    .then(errHandler)
+    .then((r: Response<Post>) => r.data);
+
+export const editPostAction = (id: string, body: EditPost) =>
+  fetch(`${import.meta.env.VITE_SERVER_URL}/posts/${id}`, {
+    method: 'put',
+    credentials: 'include',
+    headers: {
+      'content-type': 'application/json'
+    },
+    body: JSON.stringify(body)
   })
     .then(errHandler)
     .then((r: Response<Post>) => r.data);

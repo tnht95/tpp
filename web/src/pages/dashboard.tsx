@@ -12,6 +12,7 @@ import { createStore, produce } from 'solid-js/store';
 import {
   addPostAction,
   deletePostAction,
+  editPostAction,
   fetchGameAction,
   fetchPostAction
 } from '@/apis';
@@ -82,6 +83,11 @@ export const Dashboard = () => {
       .then(batchSubmitHandler)
       .catch((error: ResponseErr) => dispatch.showToast(error.msg)) as unknown;
 
+  const onEditHandler = (postId: string, content: string) =>
+    editPostAction(postId, { content })
+      // .then(batchSubmitHandler)
+      .catch((error: ResponseErr) => dispatch.showToast(error.msg)) as unknown;
+
   return (
     <div class="flex">
       <div class="flex flex-1 flex-col">
@@ -91,13 +97,19 @@ export const Dashboard = () => {
             <div class="mx-auto my-10 flex w-full">
               {utils.isAuth() && (
                 <CommentForm onSubmitHandler={onSubmitHandler}>
-                  New Post
+                  New post
                 </CommentForm>
               )}
             </div>
             <div class="flex flex-col gap-10 ">
               <For each={post}>
-                {post => <PostCard post={post} onDelete={onDeleteHandler} />}
+                {post => (
+                  <PostCard
+                    post={post}
+                    onDelete={onDeleteHandler}
+                    onEdit={onEditHandler}
+                  />
+                )}
               </For>
             </div>
           </main>

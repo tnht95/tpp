@@ -6,6 +6,7 @@ import { PreviewButtonGroup } from '@/components';
 import { Markdown } from './markdown';
 
 type CommentFormProps = {
+  content?: string;
   onSubmitHandler?: (content: string) => void;
 } & ParentProps;
 
@@ -26,7 +27,7 @@ const checkErr = (content: string): string => {
 
 export const CommentForm = (props: CommentFormProps) => {
   const [isEditMode, setIsEditMode] = createSignal(true);
-  const [content, setContent] = createSignal('');
+  const [content, setContent] = createSignal(props.content || '');
   const [errMsg, setErrMsg] = createSignal('');
 
   const onSubmitHandler = (e: Event) => {

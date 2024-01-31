@@ -1,4 +1,4 @@
-import { createSignal } from 'solid-js';
+import { createSignal, Show } from 'solid-js';
 
 import {
   Avatar,
@@ -14,16 +14,21 @@ import { formatTime } from '@/utils';
 type PostCardProps = {
   post: Post;
   onDelete: (postId: string) => void;
+  onEdit: (postId: string, content: string) => void;
 };
 
 export const PostCard = (props: PostCardProps) => {
-  const [isHidden, setIsHidden] = createSignal(true);
-  const {
-    utils: { user }
-  } = useAuthCtx();
+  const { utils } = useAuthCtx();
+  const [isEditMode, setIsEditMode] = createSignal(false);
+  const [isCommentHidden, setIsCommentHidden] = createSignal(true);
 
   const toggleComment = () => {
-    setIsHidden(!isHidden());
+    setIsCommentHidden(!isCommentHidden());
+  };
+
+  const onSubmitHandler = (content: string) => {
+    setIsEditMode(false);
+    props.onEdit(props.post.id, content);
   };
 
   return (
@@ -35,9 +40,11 @@ export const PostCard = (props: PostCardProps) => {
             <div class="flex items-center justify-between">
               <p class="text-base font-bold text-black">Visualize Value</p>
               <OptionButton
-                isOwner={props.post.authorId === user()?.id}
+                isOwner={utils.isSameUser(props.post.authorId)}
                 onDelete={props.onDelete}
                 id={props.post.id}
+                isEditMode={isEditMode}
+                setIsEditMode={setIsEditMode}
               />
             </div>
             <span class="block text-sm font-normal text-gray-500 dark:text-gray-400">
@@ -47,7 +54,15 @@ export const PostCard = (props: PostCardProps) => {
         </div>
       </div>
       <p class="mt-3 block text-xl leading-snug text-black dark:text-white">
-        <Markdown content={props.post.content} />
+        <Show
+          when={isEditMode()}
+          fallback={<Markdown content={props.post.content} />}
+        >
+          <CommentForm
+            content={props.post.content}
+            onSubmitHandler={onSubmitHandler}
+          />
+        </Show>
       </p>
       <div class="mt-3 flex w-full text-gray-500">
         <div class="flex w-full items-center gap-3 py-3">
@@ -64,14 +79,15 @@ export const PostCard = (props: PostCardProps) => {
           </div>
         </div>
       </div>
-      <div class="flex flex-col gap-5 py-5" classList={{ hidden: isHidden() }}>
+      <div
+        class="flex flex-col gap-5 py-5"
+        classList={{ hidden: isCommentHidden() }}
+      >
         <Comment user="Ron" date="10 Feb 2022" likeNumber={11} liked={true} />
         <Comment user="Ron" date="10 Feb 2022" likeNumber={1} liked={false} />
-
         <p class="-mt-1 cursor-pointer text-gray-400 hover:text-gray-600">
           Load more...
         </p>
-
         <CommentForm />
       </div>
     </div>

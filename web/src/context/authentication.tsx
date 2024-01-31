@@ -17,6 +17,7 @@ type AuthContext = {
   utils: {
     isAuth: () => boolean;
     isAdmin: () => boolean;
+    isSameUser: (id: number) => boolean;
     user: () => User | undefined;
   };
   dispatch: {
@@ -35,6 +36,7 @@ export const AuthenticationProvider = (props: ParentProps) => {
     utils: {
       isAuth: () => !!auth(),
       isAdmin: () => !!auth()?.isAdmin,
+      isSameUser: (id: number) => auth()?.user.id === id,
       user: () => auth()?.user
     },
     dispatch: {

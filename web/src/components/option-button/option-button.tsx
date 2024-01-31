@@ -1,5 +1,5 @@
 import { Dropdown, Modal } from 'flowbite';
-import { createEffect, createSignal, Show } from 'solid-js';
+import { Accessor, createEffect, createSignal, Setter, Show } from 'solid-js';
 
 import { ConfirmModal } from './confirm-modal';
 
@@ -8,6 +8,8 @@ type OptionButtonProp = {
   customStyle?: string;
   onDelete: (postId: string) => void;
   id: string;
+  isEditMode: Accessor<boolean>;
+  setIsEditMode: Setter<boolean>;
 };
 
 export const OptionButton = (props: OptionButtonProp) => {
@@ -51,9 +53,12 @@ export const OptionButton = (props: OptionButtonProp) => {
               <a
                 href="#"
                 class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                onClick={() => props.setIsEditMode(!props.isEditMode())}
               >
                 <i class="fa-solid fa-pencil mr-2" />
-                Edit
+                <Show when={props.isEditMode()} fallback={'Edit'}>
+                  Cancel
+                </Show>
               </a>
             </li>
             <li>
