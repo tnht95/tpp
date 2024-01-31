@@ -3,9 +3,13 @@ use std::sync::Arc;
 use async_trait::async_trait;
 use sqlx::{Postgres, QueryBuilder};
 use thiserror::Error;
+use uuid::Uuid;
 
 use crate::{
-    database::{entities::game::GameSummary, IDatabase},
+    database::{
+        entities::game::{Game, GameSummary},
+        IDatabase,
+    },
     model::requests::game::GameQuery,
 };
 
@@ -19,6 +23,7 @@ pub enum GameServiceErr {
 pub trait IGameService {
     async fn filter(&self, query: GameQuery) -> Result<Vec<GameSummary>, GameServiceErr>;
     // async fn add(&self, game: AddGameRequest) -> Result<Game, GameServiceErr>;
+    async fn get_by_id(&self, id: Uuid) -> Result<Option<Game>, GameServiceErr>;
 }
 
 pub struct GameService<T: IDatabase> {
@@ -78,6 +83,16 @@ where
             .await
         {
             Ok(games) => Ok(games),
+            Err(e) => Err(GameServiceErr::Other(e.into())),
+        }
+    }
+
+    async fn get_by_id(&self, id: Uuid) -> Result<Option<Game>, GameServiceErr> {
+        match sqlx::query_as!(Game, "select * from games where id = $1", id)
+            .fetch_optional(self.db.get_pool())
+            .await
+        {
+            Ok(game) => Ok(game),
             Err(e) => Err(GameServiceErr::Other(e.into())),
         }
     }

@@ -7,9 +7,9 @@ import { NotFound } from '@/pages';
 import { UserActivity, UserGames } from '@/parts';
 
 export const UserDetails = () => {
-  const [userID] = createSignal(useParams()['id'] as string);
+  const [userId] = createSignal(useParams()['id'] as string);
 
-  const [user] = createResource(userID, fetchUserByIdAction);
+  const [user] = createResource(userId, fetchUserByIdAction);
 
   return (
     <Show when={user()} fallback={<NotFound />}>

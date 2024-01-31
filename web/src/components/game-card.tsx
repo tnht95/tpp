@@ -1,6 +1,7 @@
 import { EllipsisText } from '@/components';
 
 type GameCardProps = {
+  id: string;
   name: string;
   byUser: string;
   stars: number;
@@ -8,7 +9,7 @@ type GameCardProps = {
 };
 export const GameCard = (props: GameCardProps) => (
   <div class="w-40 rounded-lg border bg-indigo-300 shadow-md hover:bg-white">
-    <a href="">
+    <a href={`/games/${props.id}/info`}>
       <img
         class="h-24 w-60 rounded-t-lg p-4"
         src={props.img}

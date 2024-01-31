@@ -15,30 +15,34 @@ export const Search = () => (
               </p>
               <div class="flex gap-5">
                 <GameCard
+                  id="1"
                   name="Space Invader"
                   byUser="N@gmail.com"
                   stars={2}
                   img="https://ajor.co.uk/images/chip8/super-alien.png"
                 />
                 <GameCard
-                  name="Balls"
+                  id="1"
+                  name="Space Invader"
+                  byUser="N@gmail.com"
+                  stars={2}
+                  img="https://ajor.co.uk/images/chip8/super-alien.png"
+                />
+                <GameCard
+                  id="1"
+                  name="Space Invader"
+                  byUser="N@gmail.com"
+                  stars={2}
+                  img="https://ajor.co.uk/images/chip8/super-alien.png"
+                />
+                <GameCard
+                  id="1"
+                  name="Space Invader"
                   byUser="N@gmail.com"
                   stars={2}
                   img="https://ajor.co.uk/images/chip8/super-alien.png"
                 />
 
-                <GameCard
-                  name="This is a long name"
-                  byUser="N@gmail.com"
-                  stars={2}
-                  img="https://ajor.co.uk/images/chip8/super-alien.png"
-                />
-                <GameCard
-                  name="Balls"
-                  byUser="N@gmail.comcscscsfcsfsdfsf"
-                  stars={2}
-                  img="https://ajor.co.uk/images/chip8/super-alien.png"
-                />
                 <ShowMoreButton onClick={() => {}} />
               </div>
             </div>

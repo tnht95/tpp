@@ -62,30 +62,7 @@ export const Games = () => {
           </p>
           <div class="flex flex-row flex-wrap gap-7">
             <GameCard
-              name="Space Invader"
-              byUser="jack@gmail.com"
-              stars={10}
-              img="https://ajor.co.uk/images/chip8/connect4.png"
-            />
-            <GameCard
-              name="Space Invader"
-              byUser="jack@gmail.com"
-              stars={10}
-              img="https://ajor.co.uk/images/chip8/connect4.png"
-            />
-            <GameCard
-              name="Space Invader"
-              byUser="jack@gmail.com"
-              stars={10}
-              img="https://ajor.co.uk/images/chip8/connect4.png"
-            />
-            <GameCard
-              name="Space Invader"
-              byUser="jack@gmail.com"
-              stars={10}
-              img="https://ajor.co.uk/images/chip8/connect4.png"
-            />
-            <GameCard
+              id="1"
               name="Space Invader"
               byUser="jack@gmail.com"
               stars={10}
@@ -123,6 +100,7 @@ export const Games = () => {
               <For each={games}>
                 {game => (
                   <GameCard
+                    id={game.id}
                     name={game.name}
                     byUser={game.authorName}
                     stars={game.stars}

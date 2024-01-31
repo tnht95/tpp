@@ -1,4 +1,4 @@
-export type GameSummary = {
+export type Game = {
   id: string;
   name: string;
   authorId: number;
@@ -14,7 +14,7 @@ export type GameSummary = {
   updatedAt: string;
 };
 
-export type Game = {
+export type GameSummary = {
   id: string;
   name: string;
   authorName: string;

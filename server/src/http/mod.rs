@@ -126,6 +126,7 @@ where
                         .route("/books", get(book::get_all))
                         .route("/books", post(book::add))
                         .route("/games", get(game::filter))
+                        .route("/games/:id", get(game::get_by_id))
                         .route("/posts", get(post::filter))
                         .route("/posts", post(post::add))
                         .route("/posts/:id", delete(post::delete))

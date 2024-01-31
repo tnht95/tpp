@@ -7,6 +7,7 @@ import {
   Markdown,
   OptionButton
 } from '@/components';
+import { useAuthCtx } from '@/context';
 import { Post } from '@/models';
 import { formatTime } from '@/utils';
 
@@ -17,6 +18,9 @@ type PostCardProps = {
 
 export const PostCard = (props: PostCardProps) => {
   const [isHidden, setIsHidden] = createSignal(true);
+  const {
+    utils: { user }
+  } = useAuthCtx();
 
   const toggleComment = () => {
     setIsHidden(!isHidden());
@@ -31,7 +35,7 @@ export const PostCard = (props: PostCardProps) => {
             <div class="flex items-center justify-between">
               <p class="text-base font-bold text-black">Visualize Value</p>
               <OptionButton
-                isOwner={true}
+                isOwner={props.post.authorId === user()?.id}
                 onDelete={props.onDelete}
                 id={props.post.id}
               />

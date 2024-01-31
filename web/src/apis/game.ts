@@ -1,4 +1,4 @@
-import { GameSummary, Response } from '@/models';
+import { Game, GameSummary, Response } from '@/models';
 
 import { errHandler } from '.';
 
@@ -26,3 +26,8 @@ export const fetchGameAction = (queryInput: GameQueryInput) => {
     .then(errHandler)
     .then((r: Response<GameSummary[]>) => r.data);
 };
+
+export const fetchGameByIdAction = (id: string) =>
+  fetch(`${import.meta.env.VITE_SERVER_URL}/games/${id}`)
+    .then(errHandler)
+    .then((r: Response<Game | undefined>) => r.data);

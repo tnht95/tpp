@@ -57,6 +57,7 @@ export const UserGames = (props: UserGamesProp) => {
                 byUser={game.authorName}
                 stars={game.stars}
                 img={game.avatarUrl}
+                id={game.id}
               />
             )}
           </For>
