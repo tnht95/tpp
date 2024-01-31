@@ -50,7 +50,7 @@ export const BlogForm = (props: BlogFormProps) => {
         <div class="relative rounded-xl bg-white shadow">
           <div class="flex items-center justify-between rounded-t p-6">
             <div class="ml-1 text-center text-2xl font-bold text-gray-800">
-              New Post
+              New Blog
             </div>
             <button
               type="button"
