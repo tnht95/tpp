@@ -10,10 +10,9 @@ import {
 import { createStore, produce } from 'solid-js/store';
 
 import { addBlogAction, fetchBlogAction } from '@/apis';
-import { BlogForm, BlogPost, ShowMoreButton } from '@/components';
+import { BlogCard, BlogForm, ShowMoreButton } from '@/components';
 import { useToastCtx } from '@/context';
 import { AddBlog, BlogSummary, ResponseErr } from '@/models';
-import { formatTime } from '@/utils';
 
 const nothingMoreToShow = (
   <div class="mb-8 text-center text-gray-400">--- Nothing more to show ---</div>
@@ -83,16 +82,7 @@ export const Blogs = () => {
         />
       </div>
       <div class="mt-5 flex flex-col gap-5">
-        <For each={blogs}>
-          {blog => (
-            <BlogPost
-              date={formatTime(blog.createdAt)}
-              title={blog.title}
-              description={blog.description}
-              tags={blog.tags}
-            />
-          )}
-        </For>
+        <For each={blogs}>{blog => <BlogCard blog={blog} />}</For>
         <Show when={blogResource().length > 1} fallback={nothingMoreToShow}>
           <ShowMoreButton vertical onClick={handleGetMore} />
         </Show>

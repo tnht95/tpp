@@ -10,7 +10,7 @@ export * from './avatar';
 export * from './comment';
 export * from './comment-form';
 export * from './pill-button';
-export * from './blog-post';
+export * from './blog-card';
 export * from './blog-form';
 export * from './discussion-form';
 export * from './game-form';
