@@ -59,17 +59,17 @@ export const UserMenuGroup = () => {
           </EllipsisText>
         </div>
         <div class="text-sm text-gray-700">
-          <div class="flex items-center gap-2 px-4 py-5 hover:bg-gray-100">
+          <A
+            class="flex items-center gap-2 px-4 py-5 hover:bg-gray-100"
+            activeClass="bg-gray-100"
+            href={`/users/${user()?.id}`}
+            onClick={() => {
+              userDropdown()?.hide();
+            }}
+          >
             <i class="fa-solid fa-user" />
-            <A
-              href={`/users/${user()?.id}`}
-              onClick={() => {
-                userDropdown()?.hide();
-              }}
-            >
-              My Page
-            </A>
-          </div>
+            My Page
+          </A>
         </div>
         <div class="flex items-center gap-2 rounded-b-lg px-4 py-5 text-gray-700 hover:bg-gray-100">
           <i class="fa-solid fa-arrow-right-from-bracket text-sm" />
