@@ -120,11 +120,7 @@ export const Dashboard = () => {
               </p>
               <div class="flex flex-col gap-5">
                 <For each={newestGames()}>
-                  {game => (
-                    <VerticalGameCard
-                      game={game}
-                    />
-                  )}
+                  {game => <VerticalGameCard game={game} />}
                 </For>
               </div>
             </div>

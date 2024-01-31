@@ -2,7 +2,7 @@ import { EllipsisText } from '@/components';
 import { GameSummary } from '@/models';
 
 type VerticalGameCardProp = {
-  game: GameSummary
+  game: GameSummary;
 };
 export const VerticalGameCard = (props: VerticalGameCardProp) => (
   <div class="flex items-center">
@@ -12,14 +12,19 @@ export const VerticalGameCard = (props: VerticalGameCardProp) => (
       alt={`${props.game.name} img`}
     />
     <div>
-
       <a href={`/games/${props.game.id}/info`}>
-        <EllipsisText maxWidth="max-w-40" customStyle="font-bold text-lg hover:text-indigo-700">
+        <EllipsisText
+          maxWidth="max-w-40"
+          customStyle="font-bold text-lg hover:text-indigo-700"
+        >
           {props.game.name}
         </EllipsisText>
       </a>
       <a href={`/users/${props.game.authorId}`}>
-        <EllipsisText maxWidth="max-w-40" customStyle="text-sm text-gray-400 hover:text-indigo-700">
+        <EllipsisText
+          maxWidth="max-w-40"
+          customStyle="text-sm text-gray-400 hover:text-indigo-700"
+        >
           {props.game.authorName}
         </EllipsisText>
       </a>

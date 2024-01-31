@@ -3,12 +3,15 @@ import { createResource, createSignal, Show } from 'solid-js';
 
 import { fetchUserByIdAction } from '@/apis';
 import { PillButton } from '@/components';
+import { useAuthCtx } from '@/context';
 import { NotFound } from '@/pages';
 import { UserActivity, UserGames } from '@/parts';
 
 export const UserDetails = () => {
+  const {
+    utils: { isSameUser }
+  } = useAuthCtx();
   const [userId] = createSignal(useParams()['id'] as string);
-
   const [user] = createResource(userId, fetchUserByIdAction);
 
   return (
@@ -34,11 +37,16 @@ export const UserDetails = () => {
                     {user()?.name}
                   </h3>
                 </div>
-                <div class="flex flex-col items-center justify-center">
+                <div class="mt-2 flex flex-col items-center justify-center gap-2">
                   <div class="text-sm text-gray-500">
-                    <i class="fa-solid fa-link mr-1" />
-                    <a href="">{user()?.githubUrl}</a>
+                    <i class="fa-solid fa-link mr-2" />
+                    <a href={user()?.githubUrl} target="_blank">
+                      {user()?.githubUrl}
+                    </a>
                   </div>
+                  <Show when={user()?.bio}>
+                    <div>{user()?.bio}</div>
+                  </Show>
                 </div>
                 <div class="mx-6 mt-6 border-t border-gray-200 pt-6 text-center">
                   <div class="mb-4 flex flex-wrap justify-center">
@@ -46,6 +54,7 @@ export const UserDetails = () => {
                       title="Subscribe"
                       icon="fa-solid fa-plus"
                       number={30}
+                      disabled={isSameUser(Number.parseInt(userId()))}
                     />
                   </div>
                 </div>
