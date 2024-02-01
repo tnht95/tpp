@@ -16,14 +16,4 @@ export type AddComment = {
   content: string;
 };
 
-export const cmt: Comment = {
-  content: '',
-  createdAt: '',
-  id: '',
-  likes: 0,
-  targetId: '',
-  targetType: 'Blog',
-  updatedAt: '',
-  userId: 1,
-  userName: ''
-};
+export type EditComment = AddComment;

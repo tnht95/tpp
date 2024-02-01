@@ -1,5 +1,5 @@
 import { errHandler } from '@/apis';
-import { AddComment, Comment, Response } from '@/models';
+import { AddComment, Comment, EditComment, Response } from '@/models';
 
 export type CommentQueryInput = {
   targetId: string;
@@ -35,6 +35,18 @@ export const deleteCommentAction = (id: string) =>
   fetch(`${import.meta.env.VITE_SERVER_URL}/comments/${id}`, {
     method: 'delete',
     credentials: 'include'
+  })
+    .then(errHandler)
+    .then((r: Response<Comment>) => r.data);
+
+export const editCommentAction = (id: string, body: EditComment) =>
+  fetch(`${import.meta.env.VITE_SERVER_URL}/comments/${id}`, {
+    method: 'put',
+    credentials: 'include',
+    headers: {
+      'content-type': 'application/json'
+    },
+    body: JSON.stringify(body)
   })
     .then(errHandler)
     .then((r: Response<Comment>) => r.data);

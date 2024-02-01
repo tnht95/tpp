@@ -1,5 +1,4 @@
-import { CommentContainer, CommentForm } from '@/components';
-import { cmt } from '@/models';
+import { CommentForm } from '@/components';
 import { GameDetailsTabs } from '@/parts';
 
 export const DiscussionDetails = () => (
@@ -13,10 +12,7 @@ export const DiscussionDetails = () => (
           On 19 Jan 2011 by Bobby@gmail.com
         </p>
       </div>
-      <div class="mt-9 flex flex-col gap-9 border-b pb-9">
-        <CommentContainer comment={cmt} index={() => 1} onDelete={() => {}} />
-        <CommentContainer comment={cmt} index={() => 1} onDelete={() => {}} />
-      </div>
+      <div class="mt-9 flex flex-col gap-9 border-b pb-9" />
       <div class="my-9 pl-12">
         <CommentForm>New Comment</CommentForm>
       </div>

@@ -109,6 +109,7 @@ where
                         .route("/comments", get(comment::filter))
                         .route("/comments", post(comment::add))
                         .route("/comments/:id", delete(comment::delete))
+                        .route("/comments/:id", put(comment::edit))
                         .layer(middleware),
                 )
                 .fallback(response_404_err)

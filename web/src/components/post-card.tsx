@@ -13,6 +13,7 @@ import {
   addCommentAction,
   CommentQueryInput,
   deleteCommentAction,
+  editCommentAction,
   fetchCommentAction
 } from '@/apis';
 import {
@@ -87,13 +88,22 @@ export const PostCard = (props: PostCardProps) => {
     }));
   };
 
+  const onEditHandler = (commentId: string, content: string) =>
+    editCommentAction(commentId, {
+      content,
+      targetId: props.post.id,
+      targetType: 'Post'
+    })
+      .then(comment => setComments(c => c.id === comment.id, comment))
+      .catch((error: ResponseErr) => dispatch.showToast(error.msg)) as unknown;
+
   const onDeleteHandler = (commentId: string, index: number) =>
     deleteCommentAction(commentId)
       .then(() => setComments(produce(comments => comments.splice(index, 1))))
       .catch((error: ResponseErr) => dispatch.showToast(error.msg)) as unknown;
 
   return (
-    <div class="w-full rounded-xl border bg-white p-10 pb-2">
+    <div class="max-w-full break-all rounded-xl border bg-white p-10 pb-2">
       <div class="flex justify-between">
         <div class="flex w-full items-center">
           <Avatar />
@@ -152,6 +162,7 @@ export const PostCard = (props: PostCardProps) => {
                 comment={comment}
                 index={index}
                 onDelete={onDeleteHandler}
+                onEdit={onEditHandler}
               />
             )}
           </For>

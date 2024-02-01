@@ -93,7 +93,7 @@ export const Dashboard = () => {
       <div class="flex flex-1 flex-col">
         <div class="flex h-full">
           <nav class="flex h-full w-1/2 border-r border-dashed" />
-          <main class="mb-10 flex size-full flex-col bg-white px-32">
+          <main class="mb-10 flex size-full flex-col bg-white px-32 ">
             <div class="mx-auto my-10 flex w-full">
               {utils.isAuth() && (
                 <CommentForm onSubmitHandler={onSubmitHandler}>

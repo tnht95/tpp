@@ -10,7 +10,7 @@ use crate::{
         entities::comment::{Comment, TargetTypes},
         IDatabase,
     },
-    model::requests::comment::{AddCommentRequest, CommentQuery},
+    model::requests::comment::{AddCommentRequest, CommentQuery, EditCommentRequest},
 };
 
 #[derive(Error, Debug)]
@@ -31,6 +31,11 @@ pub trait ICommentService {
 
     async fn delete(&self, id: Uuid) -> Result<(), CommentServiceErr>;
     async fn existed(&self, id: Uuid, author_id: i64) -> Result<bool, CommentServiceErr>;
+    async fn edit(
+        &self,
+        id: Uuid,
+        comment: EditCommentRequest,
+    ) -> Result<Comment, CommentServiceErr>;
 }
 
 pub struct CommentService<T: IDatabase> {
@@ -125,6 +130,26 @@ where
                 None => Ok(false),
                 Some(count) => Ok(count > 0),
             },
+            Err(e) => Err(CommentServiceErr::Other(e.into())),
+        }
+    }
+
+    async fn edit(
+        &self,
+        id: Uuid,
+        comment: EditCommentRequest,
+    ) -> Result<Comment, CommentServiceErr> {
+        match sqlx::query_as!(
+            Comment,
+            r#"update comments set content = $1, updated_at = now() where id = $2
+            returning id, user_id, user_name, target_id, content, likes, target_type as "target_type!: TargetTypes", created_at, updated_at"#,
+            comment.content,
+            id,
+        )
+        .fetch_one(self.db.get_pool())
+        .await
+        {
+            Ok(posts) => Ok(posts),
             Err(e) => Err(CommentServiceErr::Other(e.into())),
         }
     }

@@ -21,3 +21,5 @@ pub struct AddCommentRequest {
     #[validate(length(max = 200, message = "Too long, exceeding 200 characters."))]
     pub content: String,
 }
+
+pub type EditCommentRequest = AddCommentRequest;

@@ -15,8 +15,12 @@ use crate::{
         },
     },
     model::{
-        requests::comment::{AddCommentRequest, CommentQuery},
-        responses::{post::NOT_AUTH_DEL, HttpResponse, INVALID_UUID_ERR},
+        requests::comment::{AddCommentRequest, CommentQuery, EditCommentRequest},
+        responses::{
+            post::{NOT_AUTH_DEL, NOT_AUTH_EDIT},
+            HttpResponse,
+            INVALID_UUID_ERR,
+        },
     },
     services::{
         comment::{CommentServiceErr, ICommentService},
@@ -70,6 +74,31 @@ pub async fn delete<TInternalServices: IInternalServices>(
 
     match state.services.comment.delete(id).await {
         Ok(comment) => Json(HttpResponse { data: comment }).into_response(),
+        Err(CommentServiceErr::Other(e)) => response_unhandled_err(e),
+    }
+}
+
+pub async fn edit<TInternalServices: IInternalServices>(
+    Path(id): Path<String>,
+    State(state): InternalState<TInternalServices>,
+    Authentication(user, ..): Authentication<TInternalServices>,
+    JsonValidator(comment): JsonValidator<EditCommentRequest>,
+) -> Response {
+    let id = match id.parse::<Uuid>() {
+        Ok(id) => id,
+        Err(_) => return response_400_with_const(INVALID_UUID_ERR),
+    };
+
+    match state.services.comment.existed(id, user.id).await {
+        Ok(existed) =>
+            if !existed {
+                return response_400_with_const(NOT_AUTH_EDIT);
+            },
+        Err(CommentServiceErr::Other(e)) => return response_unhandled_err(e),
+    };
+
+    match state.services.comment.edit(id, comment).await {
+        Ok(post) => Json(HttpResponse { data: post }).into_response(),
         Err(CommentServiceErr::Other(e)) => response_unhandled_err(e),
     }
 }
