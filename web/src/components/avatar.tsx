@@ -2,6 +2,7 @@ import { mergeProps } from 'solid-js';
 
 type AvatarProp = {
   img?: string;
+  userId?: number;
 };
 export const Avatar = (p: AvatarProp) => {
   const props = mergeProps(
@@ -11,6 +12,6 @@ export const Avatar = (p: AvatarProp) => {
     p
   );
   return (
-    <img class="size-10 rounded-full" src={props.img} alt="Rounded avatar" />
+    <a href={`/users/${props.userId}`}><img class="size-10 rounded-full" src={props.img} alt="Rounded avatar" /></a>
   );
 };
