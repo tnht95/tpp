@@ -26,7 +26,7 @@ export const CommentContainer = (props: CommentProp) => {
   return (
     <div class="flex">
       <Avatar />
-      <div class="ml-2 ">
+      <div class="ml-2 w-full">
         <div class="flex items-center justify-between rounded-t border border-gray-200 bg-gray-200 p-2 px-5">
           <div>
             <span class="font-semibold">{props.comment.userName}</span>
