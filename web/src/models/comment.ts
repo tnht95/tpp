@@ -1,19 +1,19 @@
-export enum TargetTypes {
-  Blog,
-  Discussion,
-  Post
-}
-
 export type Comment = {
   id: number;
-  userId: string;
+  userId: number;
   userName: string;
   targetId: string;
   content: string;
   likes: number;
-  targetType: TargetTypes;
+  targetType: 'Blog' | 'Post' | 'Discussion';
   createdAt: string;
   updatedAt: string;
+};
+
+export type AddComment = {
+  targetId: string;
+  targetType: 'Blog' | 'Post' | 'Discussion';
+  content: string;
 };
 
 export const cmt: Comment = {
@@ -22,8 +22,8 @@ export const cmt: Comment = {
   id: 0,
   likes: 0,
   targetId: '',
-  targetType: TargetTypes.Blog,
+  targetType: 'Blog',
   updatedAt: '',
-  userId: '',
+  userId: 1,
   userName: ''
 };

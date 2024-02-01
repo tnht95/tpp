@@ -5,8 +5,11 @@ use sqlx::{Postgres, QueryBuilder};
 use thiserror::Error;
 
 use crate::{
-    database::{entities::comment::Comment, IDatabase},
-    model::requests::comment::CommentQuery,
+    database::{
+        entities::comment::{Comment, TargetTypes},
+        IDatabase,
+    },
+    model::requests::comment::{AddCommentRequest, CommentQuery},
 };
 
 #[derive(Error, Debug)]
@@ -18,7 +21,12 @@ pub enum CommentServiceErr {
 #[async_trait]
 pub trait ICommentService {
     async fn filter(&self, query: CommentQuery) -> Result<Vec<Comment>, CommentServiceErr>;
-    // async fn add(&self, comment: AddCommentRequest) -> Result<Comment, CommentServiceErr>;
+    async fn add(
+        &self,
+        user_id: i64,
+        user_name: String,
+        comment: AddCommentRequest,
+    ) -> Result<Comment, CommentServiceErr>;
 }
 
 pub struct CommentService<T: IDatabase> {
@@ -62,6 +70,30 @@ where
             .await
         {
             Ok(blogs) => Ok(blogs),
+            Err(e) => Err(CommentServiceErr::Other(e.into())),
+        }
+    }
+
+    async fn add(
+        &self,
+        user_id: i64,
+        user_name: String,
+        comment: AddCommentRequest,
+    ) -> Result<Comment, CommentServiceErr> {
+        match sqlx::query_as!(
+        Comment,
+        r#"INSERT INTO comments (user_id, user_name, target_id, target_type, content) VALUES ($1, $2, $3, $4, $5)
+        returning id, user_id, user_name, target_id, content, likes, target_type as "target_type!: TargetTypes", created_at, updated_at"#,
+        user_id,
+        user_name,
+        comment.target_id,
+        comment.target_type as TargetTypes,
+        comment.content
+    )
+            .fetch_one(self.db.get_pool())
+            .await
+        {
+            Ok(comment) => Ok(comment),
             Err(e) => Err(CommentServiceErr::Other(e.into())),
         }
     }

@@ -12,6 +12,8 @@ export const Avatar = (p: AvatarProp) => {
     p
   );
   return (
-    <a href={`/users/${props.userId}`}><img class="size-10 rounded-full" src={props.img} alt="Rounded avatar" /></a>
+    <a href={`/users/${props.userId}`}>
+      <img class="size-10 rounded-full" src={props.img} alt="Rounded avatar" />
+    </a>
   );
 };

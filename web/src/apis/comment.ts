@@ -1,5 +1,5 @@
 import { errHandler } from '@/apis';
-import { Comment, Response } from '@/models';
+import { AddComment, Comment, Response } from '@/models';
 
 export type CommentQueryInput = {
   targetId: string;
@@ -18,3 +18,15 @@ export const fetchCommentAction = (queryInput: CommentQueryInput) => {
     .then(errHandler)
     .then((r: Response<Comment[]>) => r.data);
 };
+
+export const addCommentAction = (body: AddComment) =>
+  fetch(`${import.meta.env.VITE_SERVER_URL}/comments`, {
+    method: 'post',
+    credentials: 'include',
+    headers: {
+      'content-type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  })
+    .then(errHandler)
+    .then((r: Response<Comment>) => r.data);

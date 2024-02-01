@@ -8,7 +8,11 @@ import {
 } from 'solid-js';
 import { createStore, produce } from 'solid-js/store';
 
-import { CommentQueryInput, fetchCommentAction } from '@/apis';
+import {
+  addCommentAction,
+  CommentQueryInput,
+  fetchCommentAction
+} from '@/apis';
 import {
   Avatar,
   CommentContainer,
@@ -16,8 +20,8 @@ import {
   Markdown,
   OptionButton
 } from '@/components';
-import { useAuthCtx } from '@/context';
-import { Comment, Post } from '@/models';
+import { useAuthCtx, useToastCtx } from '@/context';
+import { Comment, Post, ResponseErr } from '@/models';
 import { formatTime } from '@/utils';
 
 type PostCardProps = {
@@ -28,6 +32,8 @@ type PostCardProps = {
 
 export const PostCard = (props: PostCardProps) => {
   const { utils } = useAuthCtx();
+  const { dispatch } = useToastCtx();
+
   const [isEditMode, setIsEditMode] = createSignal(false);
   const [isCommentHidden, setIsCommentHidden] = createSignal(true);
   const [queryValue, setQueryValue] = createSignal<CommentQueryInput>();
@@ -59,6 +65,16 @@ export const PostCard = (props: PostCardProps) => {
   const onSubmitHandler = (content: string) => {
     setIsEditMode(false);
     props.onEdit(props.post.id, content);
+  };
+
+  const onAddCommentHandler = (content: string) => {
+    addCommentAction({
+      content,
+      targetId: props.post.id,
+      targetType: 'Post'
+    }).catch((error: ResponseErr) => {
+      dispatch.showToast(error.msg);
+    });
   };
 
   const handleGetMore = () => {
@@ -134,7 +150,7 @@ export const PostCard = (props: PostCardProps) => {
           </p>
         </Show>
 
-        <CommentForm />
+        <CommentForm onSubmitHandler={onAddCommentHandler} />
       </div>
     </div>
   );
