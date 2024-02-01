@@ -13,10 +13,11 @@ import { ConfirmModal } from './confirm-modal';
 type OptionButtonProp = {
   isOwner: boolean;
   customStyle?: string;
-  onDelete: (postId: string) => void;
+  onDelete: (postId: string, index: number) => void;
   id: string;
   isEditMode?: Accessor<boolean>;
   setIsEditMode?: Setter<boolean>;
+  index: Accessor<number>;
 };
 
 export const OptionButton = (propInput: OptionButtonProp) => {
@@ -90,6 +91,7 @@ export const OptionButton = (propInput: OptionButtonProp) => {
       <ConfirmModal
         onDelete={props.onDelete}
         id={props.id}
+        index={props.index}
         setModalRef={setModalRef}
         onCloseHandler={() => modal()?.hide()}
       />

@@ -1,4 +1,5 @@
 import {
+  Accessor,
   batch,
   createEffect,
   createResource,
@@ -25,8 +26,9 @@ import { Comment, Post, ResponseErr } from '@/models';
 import { formatTime } from '@/utils';
 
 type PostCardProps = {
+  index: Accessor<number>;
   post: Post;
-  onDelete: (postId: string) => void;
+  onDelete: (postId: string, index: number) => void;
   onEdit: (postId: string, content: string) => void;
 };
 
@@ -93,6 +95,7 @@ export const PostCard = (props: PostCardProps) => {
             <div class="flex items-center justify-between">
               <p class="text-base font-bold text-black">Visualize Value</p>
               <OptionButton
+                index={props.index}
                 isOwner={utils.isSameUser(props.post.authorId)}
                 onDelete={props.onDelete}
                 id={props.post.id}

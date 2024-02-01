@@ -78,9 +78,9 @@ export const Dashboard = () => {
       .then(batchSubmitHandler)
       .catch((error: ResponseErr) => dispatch.showToast(error.msg)) as unknown;
 
-  const onDeleteHandler = (postId: string) =>
+  const onDeleteHandler = (postId: string, index: number) =>
     deletePostAction(postId)
-      .then(batchSubmitHandler)
+      .then(() => setPost(produce(post => post.splice(index, 1))))
       .catch((error: ResponseErr) => dispatch.showToast(error.msg)) as unknown;
 
   const onEditHandler = (postId: string, content: string) =>
@@ -103,8 +103,9 @@ export const Dashboard = () => {
             </div>
             <div class="flex flex-col gap-10 ">
               <For each={post}>
-                {post => (
+                {(post, i) => (
                   <PostCard
+                    index={i}
                     post={post}
                     onDelete={onDeleteHandler}
                     onEdit={onEditHandler}

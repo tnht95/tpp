@@ -27,6 +27,7 @@ export const CommentContainer = (props: CommentProp) => {
             isOwner={isSameUser(props.comment.userId)}
             onDelete={() => {}}
             id={''}
+            index={() => -1}
           />
         </div>
 
