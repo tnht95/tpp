@@ -11,7 +11,6 @@ use axum::{
     Router,
     ServiceExt,
 };
-use tokio::sync::RwLock;
 use tower::ServiceBuilder;
 use tower_http::{
     catch_panic::CatchPanicLayer,
@@ -33,7 +32,7 @@ use crate::{
         handlers::{panic, shutdown},
         utils::err_handler::response_404_err,
     },
-    services::IInternalServices,
+    services::{IInternalServices, Services},
 };
 
 pub struct Server<TInternalServices: IInternalServices> {
@@ -41,42 +40,12 @@ pub struct Server<TInternalServices: IInternalServices> {
     services: Services<TInternalServices>,
 }
 
-struct Services<TInternalServices: IInternalServices> {
-    health: RwLock<TInternalServices::THealthService>,
-    book: TInternalServices::TBookService,
-    user: TInternalServices::TUserService,
-    game: TInternalServices::TGameService,
-    post: TInternalServices::TPostService,
-    blog: TInternalServices::TBlogService,
-    comment: TInternalServices::TCommentService,
-}
-
 impl<TInternalServices> Server<TInternalServices>
 where
     TInternalServices: IInternalServices + 'static + Send,
 {
-    pub fn new(
-        config: Config,
-        health: TInternalServices::THealthService,
-        book: TInternalServices::TBookService,
-        user: TInternalServices::TUserService,
-        game: TInternalServices::TGameService,
-        post: TInternalServices::TPostService,
-        blog: TInternalServices::TBlogService,
-        comment: TInternalServices::TCommentService,
-    ) -> Self {
-        Self {
-            config,
-            services: Services {
-                health: RwLock::new(health),
-                book,
-                user,
-                game,
-                post,
-                blog,
-                comment,
-            },
-        }
+    pub fn new(config: Config, services: Services<TInternalServices>) -> Self {
+        Self { config, services }
     }
 
     pub async fn start(self) -> Result<()> {

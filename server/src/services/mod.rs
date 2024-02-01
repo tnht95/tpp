@@ -1,3 +1,5 @@
+use tokio::sync::RwLock;
+
 use crate::{
     database::Database,
     services::{
@@ -38,4 +40,85 @@ impl IInternalServices for InternalServices {
     type TPostService = PostService<Database>;
     type TBlogService = BlogService<Database>;
     type TCommentService = CommentService<Database>;
+}
+
+pub struct Services<TInternalServices: IInternalServices> {
+    pub health: RwLock<TInternalServices::THealthService>,
+    pub book: TInternalServices::TBookService,
+    pub user: TInternalServices::TUserService,
+    pub game: TInternalServices::TGameService,
+    pub post: TInternalServices::TPostService,
+    pub blog: TInternalServices::TBlogService,
+    pub comment: TInternalServices::TCommentService,
+}
+
+pub struct ServicesBuilder<TInternalServices: IInternalServices> {
+    health: Option<RwLock<TInternalServices::THealthService>>,
+    book: Option<TInternalServices::TBookService>,
+    user: Option<TInternalServices::TUserService>,
+    game: Option<TInternalServices::TGameService>,
+    post: Option<TInternalServices::TPostService>,
+    blog: Option<TInternalServices::TBlogService>,
+    comment: Option<TInternalServices::TCommentService>,
+}
+
+impl<TInternalServices: IInternalServices> ServicesBuilder<TInternalServices> {
+    pub fn new() -> Self {
+        ServicesBuilder {
+            health: None,
+            book: None,
+            user: None,
+            game: None,
+            post: None,
+            blog: None,
+            comment: None,
+        }
+    }
+
+    pub fn health(mut self, health: RwLock<TInternalServices::THealthService>) -> Self {
+        self.health = Some(health);
+        self
+    }
+
+    pub fn book(mut self, book: TInternalServices::TBookService) -> Self {
+        self.book = Some(book);
+        self
+    }
+
+    pub fn user(mut self, user: TInternalServices::TUserService) -> Self {
+        self.user = Some(user);
+        self
+    }
+
+    pub fn game(mut self, game: TInternalServices::TGameService) -> Self {
+        self.game = Some(game);
+        self
+    }
+
+    pub fn post(mut self, post: TInternalServices::TPostService) -> Self {
+        self.post = Some(post);
+        self
+    }
+
+    pub fn blog(mut self, blog: TInternalServices::TBlogService) -> Self {
+        self.blog = Some(blog);
+        self
+    }
+
+    pub fn comment(mut self, comment: TInternalServices::TCommentService) -> Self {
+        self.comment = Some(comment);
+        self
+    }
+
+    pub fn build(self) -> Services<TInternalServices> {
+        Services {
+            health: self.health.unwrap(),
+            book: self.book.unwrap(),
+            user: self.user.unwrap(),
+            game: self.game.unwrap(),
+            post: self.post.unwrap(),
+            blog: self.blog.unwrap(),
+            comment: self.comment.unwrap(),
+        }
+    }
 }

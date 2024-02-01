@@ -2,6 +2,7 @@ use std::{path::PathBuf, sync::Arc};
 
 use anyhow::{Context, Result};
 use clap::Parser;
+use tokio::sync::RwLock;
 use tracing::trace;
 use tracing_subscriber::{prelude::*, EnvFilter};
 
@@ -19,6 +20,7 @@ use crate::{
         post::PostService,
         user::UserService,
         InternalServices,
+        ServicesBuilder,
     },
 };
 
@@ -81,16 +83,17 @@ async fn main() -> Result<()> {
             let blog_service = BlogService::new(Arc::clone(&db));
             let comment_service = CommentService::new(Arc::clone(&db));
 
-            let server = Server::<InternalServices>::new(
-                config,
-                health_service,
-                book_service,
-                user_service,
-                game_service,
-                post_service,
-                blog_service,
-                comment_service,
-            );
+            let services = ServicesBuilder::new()
+                .health(RwLock::new(health_service))
+                .book(book_service)
+                .user(user_service)
+                .game(game_service)
+                .post(post_service)
+                .blog(blog_service)
+                .comment(comment_service)
+                .build();
+
+            let server = Server::<InternalServices>::new(config, services);
 
             server.start().await.context("Failed to start server {}")?;
         }
