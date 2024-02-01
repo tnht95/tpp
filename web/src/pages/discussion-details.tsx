@@ -14,10 +14,8 @@ export const DiscussionDetails = () => (
         </p>
       </div>
       <div class="mt-9 flex flex-col gap-9 border-b pb-9">
-        <CommentContainer comment={cmt} />
-        <CommentContainer comment={cmt} />
-        <CommentContainer comment={cmt} />
-        <CommentContainer comment={cmt} />
+        <CommentContainer comment={cmt} index={() => 1} onDelete={() => {}} />
+        <CommentContainer comment={cmt} index={() => 1} onDelete={() => {}} />
       </div>
       <div class="my-9 pl-12">
         <CommentForm>New Comment</CommentForm>

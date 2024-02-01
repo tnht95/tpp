@@ -1,4 +1,4 @@
-import { Show } from 'solid-js';
+import { Accessor, Show } from 'solid-js';
 
 import { Avatar, OptionButton } from '@/components';
 import { useAuthCtx } from '@/context';
@@ -7,6 +7,8 @@ import { formatTime } from '@/utils';
 
 type CommentProp = {
   comment: Comment;
+  index: Accessor<number>;
+  onDelete: (commentId: string, index: number) => void;
 };
 export const CommentContainer = (props: CommentProp) => {
   const {
@@ -25,9 +27,9 @@ export const CommentContainer = (props: CommentProp) => {
           </div>
           <OptionButton
             isOwner={isSameUser(props.comment.userId)}
-            onDelete={() => {}}
-            id={''}
-            index={() => -1}
+            onDelete={props.onDelete}
+            id={props.comment.id}
+            index={props.index}
           />
         </div>
 

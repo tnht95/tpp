@@ -30,3 +30,11 @@ export const addCommentAction = (body: AddComment) =>
   })
     .then(errHandler)
     .then((r: Response<Comment>) => r.data);
+
+export const deleteCommentAction = (id: string) =>
+  fetch(`${import.meta.env.VITE_SERVER_URL}/comments/${id}`, {
+    method: 'delete',
+    credentials: 'include'
+  })
+    .then(errHandler)
+    .then((r: Response<Comment>) => r.data);

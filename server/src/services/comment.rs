@@ -3,6 +3,7 @@ use std::sync::Arc;
 use async_trait::async_trait;
 use sqlx::{Postgres, QueryBuilder};
 use thiserror::Error;
+use uuid::Uuid;
 
 use crate::{
     database::{
@@ -27,6 +28,9 @@ pub trait ICommentService {
         user_name: String,
         comment: AddCommentRequest,
     ) -> Result<Comment, CommentServiceErr>;
+
+    async fn delete(&self, id: Uuid) -> Result<(), CommentServiceErr>;
+    async fn existed(&self, id: Uuid, author_id: i64) -> Result<bool, CommentServiceErr>;
 }
 
 pub struct CommentService<T: IDatabase> {
@@ -94,6 +98,33 @@ where
             .await
         {
             Ok(comment) => Ok(comment),
+            Err(e) => Err(CommentServiceErr::Other(e.into())),
+        }
+    }
+
+    async fn delete(&self, id: Uuid) -> Result<(), CommentServiceErr> {
+        match sqlx::query!("delete from comments where id = $1", id)
+            .execute(self.db.get_pool())
+            .await
+        {
+            Ok(_) => Ok(()),
+            Err(e) => Err(CommentServiceErr::Other(e.into())),
+        }
+    }
+
+    async fn existed(&self, id: Uuid, author_id: i64) -> Result<bool, CommentServiceErr> {
+        match sqlx::query!(
+            "select count(*) as comment_count from comments where id = $1 and user_id = $2",
+            id,
+            author_id
+        )
+        .fetch_one(self.db.get_pool())
+        .await
+        {
+            Ok(result) => match result.comment_count {
+                None => Ok(false),
+                Some(count) => Ok(count > 0),
+            },
             Err(e) => Err(CommentServiceErr::Other(e.into())),
         }
     }

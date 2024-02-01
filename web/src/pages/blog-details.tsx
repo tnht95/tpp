@@ -85,11 +85,8 @@ export const BlogDetails = () => (
       </div>
     </div>
     <div class="ml-8 flex w-3/5 flex-col gap-5">
-      <CommentContainer comment={cmt} />
-      <CommentContainer comment={cmt} />
-      <CommentContainer comment={cmt} />
-      <CommentContainer comment={cmt} />
-
+      <CommentContainer comment={cmt} index={() => 1} onDelete={() => {}} />
+      <CommentContainer comment={cmt} index={() => 1} onDelete={() => {}} />
       <div class="ml-10 mt-10">
         <CommentForm>New Comment</CommentForm>
       </div>

@@ -46,7 +46,9 @@ export const UserMenuGroup = () => {
         class="mr-10 flex items-center py-0.5 pe-1 text-sm font-bold text-white hover:text-blue-600"
       >
         <span class="sr-only">Open user menu</span>
-        <Avatar img={user()?.avatar as string} />
+        <div class="pointer-events-none">
+          <Avatar img={user()?.avatar as string} />
+        </div>
       </button>
 
       <div

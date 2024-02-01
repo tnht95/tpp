@@ -12,6 +12,7 @@ import { createStore, produce } from 'solid-js/store';
 import {
   addCommentAction,
   CommentQueryInput,
+  deleteCommentAction,
   fetchCommentAction
 } from '@/apis';
 import {
@@ -79,12 +80,17 @@ export const PostCard = (props: PostCardProps) => {
     });
   };
 
-  const handleGetMore = () => {
+  const onLoadMoreHandler = () => {
     setQueryValue(oldValue => ({
       ...(oldValue as CommentQueryInput),
       offset: (oldValue?.offset as number) + 2
     }));
   };
+
+  const onDeleteHandler = (commentId: string, index: number) =>
+    deleteCommentAction(commentId)
+      .then(() => setComments(produce(comments => comments.splice(index, 1))))
+      .catch((error: ResponseErr) => dispatch.showToast(error.msg)) as unknown;
 
   return (
     <div class="w-full rounded-xl border bg-white p-10 pb-2">
@@ -141,13 +147,19 @@ export const PostCard = (props: PostCardProps) => {
       >
         <Show when={comments}>
           <For each={comments}>
-            {comment => <CommentContainer comment={comment} />}
+            {(comment, index) => (
+              <CommentContainer
+                comment={comment}
+                index={index}
+                onDelete={onDeleteHandler}
+              />
+            )}
           </For>
         </Show>
         <Show when={commentResource().length == 2}>
           <p
             class="-mt-1 cursor-pointer text-gray-400 hover:text-gray-600"
-            onClick={handleGetMore}
+            onClick={onLoadMoreHandler}
           >
             Load more...
           </p>

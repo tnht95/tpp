@@ -1,5 +1,5 @@
 export type Comment = {
-  id: number;
+  id: string;
   userId: number;
   userName: string;
   targetId: string;
@@ -19,7 +19,7 @@ export type AddComment = {
 export const cmt: Comment = {
   content: '',
   createdAt: '',
-  id: 0,
+  id: '',
   likes: 0,
   targetId: '',
   targetType: 'Blog',
