@@ -31,7 +31,7 @@ export const Blogs = () => {
       initialValue: []
     }
   );
-  const [blogs, setBlogs] = createStore<BlogSummary[]>(blogResource());
+  const [blogs, setBlogs] = createStore<BlogSummary[]>([]);
 
   createEffect(() => {
     setModal(new Modal(modalRef()));

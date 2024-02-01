@@ -44,12 +44,20 @@ export const PostCard = (props: PostCardProps) => {
   const [commentResource] = createResource(queryValue, fetchCommentAction, {
     initialValue: []
   });
-  const [comments, setComments] = createStore<Comment[]>(commentResource());
+  const [comments, setComments] = createStore<Comment[]>([]);
+
+  const addedCmts: Comment[] = [];
 
   createEffect(() => {
     if (commentResource().length > 0) {
       setComments(
-        produce(oldComments => oldComments.push(...commentResource()))
+        produce(oldComments =>
+          oldComments.push(
+            ...commentResource().filter(
+              c => addedCmts.length === 0 || !addedCmts.some(d => d.id === c.id)
+            )
+          )
+        )
       );
     }
   });
@@ -57,11 +65,12 @@ export const PostCard = (props: PostCardProps) => {
   const toggleComment = () => {
     batch(() => {
       setIsCommentHidden(!isCommentHidden());
+      // first time only
       !queryValue() &&
         setQueryValue({
           targetId: props.post.id,
           offset: 0,
-          limit: 2
+          limit: 5
         });
     });
   };
@@ -76,15 +85,20 @@ export const PostCard = (props: PostCardProps) => {
       content,
       targetId: props.post.id,
       targetType: 'Post'
-    }).catch((error: ResponseErr) => {
-      dispatch.showToast(error.msg);
-    });
+    })
+      .then(newCmt =>
+        batch(() => {
+          setComments(produce(c => c.unshift(newCmt)));
+          addedCmts.push(newCmt);
+        })
+      )
+      .catch((error: ResponseErr) => dispatch.showToast(error.msg));
   };
 
   const onLoadMoreHandler = () => {
     setQueryValue(oldValue => ({
       ...(oldValue as CommentQueryInput),
-      offset: (oldValue?.offset as number) + 2
+      offset: (oldValue?.offset as number) + 5
     }));
   };
 
@@ -167,7 +181,7 @@ export const PostCard = (props: PostCardProps) => {
             )}
           </For>
         </Show>
-        <Show when={commentResource().length == 2}>
+        <Show when={commentResource().length == 5}>
           <p
             class="-mt-1 cursor-pointer text-gray-400 hover:text-gray-600"
             onClick={onLoadMoreHandler}

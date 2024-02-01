@@ -26,7 +26,7 @@ export const Games = () => {
   const [gameResource] = createResource(selectValue, fetchGameAction, {
     initialValue: []
   });
-  const [games, setGames] = createStore<GameSummary[]>(gameResource());
+  const [games, setGames] = createStore<GameSummary[]>([]);
 
   createEffect(() => {
     if (gameResource().length > 0) {

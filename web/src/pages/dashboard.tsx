@@ -36,7 +36,7 @@ export const Dashboard = () => {
       initialValue: []
     }
   );
-  const [post, setPost] = createStore<Post[]>(postResource());
+  const [post, setPost] = createStore<Post[]>([]);
   const [hasReachedBottom, setHasReachedBottom] = createSignal(false);
 
   createEffect(() => {
