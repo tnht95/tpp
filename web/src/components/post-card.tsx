@@ -124,14 +124,16 @@ export const PostCard = (props: PostCardProps) => {
           <div class="ml-2 w-full leading-tight">
             <div class="flex items-center justify-between">
               <p class="text-base font-bold text-black">Visualize Value</p>
-              <OptionButton
-                index={props.index}
-                isOwner={utils.isSameUser(props.post.authorId)}
-                onDelete={props.onDelete}
-                id={props.post.id}
-                isEditMode={isEditMode}
-                setIsEditMode={setIsEditMode}
-              />
+              {utils.isAuth() && (
+                <OptionButton
+                  index={props.index}
+                  isOwner={utils.isSameUser(props.post.authorId)}
+                  onDelete={props.onDelete}
+                  id={props.post.id}
+                  isEditMode={isEditMode}
+                  setIsEditMode={setIsEditMode}
+                />
+              )}
             </div>
             <span class="block text-sm font-normal text-gray-500 dark:text-gray-400">
               {formatTime(props.post.createdAt)}
@@ -166,8 +168,11 @@ export const PostCard = (props: PostCardProps) => {
         </div>
       </div>
       <div
-        class="flex flex-col gap-5 py-5"
-        classList={{ hidden: isCommentHidden() }}
+        class="flex flex-col gap-5"
+        classList={{
+          hidden: isCommentHidden(),
+          'py-5': comments.length > 0 || utils.isAuth()
+        }}
       >
         <Show when={comments}>
           <For each={comments}>
@@ -189,8 +194,9 @@ export const PostCard = (props: PostCardProps) => {
             Load more...
           </p>
         </Show>
-
-        <CommentForm onSubmitHandler={onAddCommentHandler} />
+        {utils.isAuth() && (
+          <CommentForm onSubmitHandler={onAddCommentHandler} />
+        )}
       </div>
     </div>
   );

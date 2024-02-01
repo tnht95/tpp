@@ -15,7 +15,7 @@ export const CommentContainer = (props: CommentProp) => {
   const [isEditMode, setIsEditMode] = createSignal(false);
 
   const {
-    utils: { isSameUser }
+    utils: { isSameUser, isAuth }
   } = useAuthCtx();
 
   const onSubmitHandler = (content: string) => {
@@ -33,14 +33,16 @@ export const CommentContainer = (props: CommentProp) => {
             <span> commented on </span>
             <span>{formatTime(props.comment.createdAt)}</span>
           </div>
-          <OptionButton
-            isOwner={isSameUser(props.comment.userId)}
-            onDelete={props.onDelete}
-            id={props.comment.id}
-            index={props.index}
-            isEditMode={isEditMode}
-            setIsEditMode={setIsEditMode}
-          />
+          {isAuth() && (
+            <OptionButton
+              isOwner={isSameUser(props.comment.userId)}
+              onDelete={props.onDelete}
+              id={props.comment.id}
+              index={props.index}
+              isEditMode={isEditMode}
+              setIsEditMode={setIsEditMode}
+            />
+          )}
         </div>
 
         <div class="rounded-b border border-gray-200 px-5 py-3">
