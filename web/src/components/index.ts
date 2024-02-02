@@ -24,4 +24,5 @@ export * from './markdown';
 export * from './option-button';
 export * from './preview-button-group';
 export * from './loading-button';
+export * from './loading-spinner';
 export * from './toast';
