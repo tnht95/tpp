@@ -29,6 +29,9 @@ pub trait IGameService {
         author_name: &str,
         game: AddGameRequest,
     ) -> Result<Game, GameServiceErr>;
+
+    async fn delete(&self, id: Uuid) -> Result<(), GameServiceErr>;
+    async fn existed(&self, id: Uuid, author_id: i64) -> Result<bool, GameServiceErr>;
 }
 
 pub struct GameService<T: IDatabase> {
@@ -129,6 +132,33 @@ where
         .await
         {
             Ok(game) => Ok(game),
+            Err(e) => Err(GameServiceErr::Other(e.into())),
+        }
+    }
+
+    async fn delete(&self, id: Uuid) -> Result<(), GameServiceErr> {
+        match sqlx::query!("delete from games where id = $1", id)
+            .execute(self.db.get_pool())
+            .await
+        {
+            Ok(_) => Ok(()),
+            Err(e) => Err(GameServiceErr::Other(e.into())),
+        }
+    }
+
+    async fn existed(&self, id: Uuid, author_id: i64) -> Result<bool, GameServiceErr> {
+        match sqlx::query!(
+            "select count(*) as game_count from games where id = $1 and author_id = $2",
+            id,
+            author_id
+        )
+        .fetch_one(self.db.get_pool())
+        .await
+        {
+            Ok(result) => match result.game_count {
+                None => Ok(false),
+                Some(count) => Ok(count > 0),
+            },
             Err(e) => Err(GameServiceErr::Other(e.into())),
         }
     }

@@ -1,11 +1,26 @@
+import { useNavigate } from '@solidjs/router';
+
+import { deleteGameAction } from '@/apis';
 import { GameTab, OptionButton, PillButton } from '@/components';
-import { useAuthCtx, useGameCtx } from '@/context';
+import { useAuthCtx, useGameCtx, useToastCtx } from '@/context';
+import { ResponseErr } from '@/models';
 
 export const GameDetailsTabs = () => {
   const { game } = useGameCtx();
+  const { dispatch } = useToastCtx();
+  const navigate = useNavigate();
   const {
     utils: { user }
   } = useAuthCtx();
+
+  const onDeleteHandler = () => {
+    deleteGameAction(game()?.id as string).catch((error: ResponseErr) => {
+      dispatch.showToast({ msg: error.msg, type: 'Err' });
+    });
+
+    navigate(`/users/${user()?.id}`, { replace: true });
+    dispatch.showToast({ msg: 'Game deleted', type: 'Ok' });
+  };
 
   return (
     <div class="mt-4 overflow-x-hidden px-6 lg:px-10">
@@ -17,8 +32,8 @@ export const GameDetailsTabs = () => {
           </div>
           <OptionButton
             isOwner={user()?.id === game()?.authorId}
-            onDelete={() => {}}
-            id={''}
+            onDelete={onDeleteHandler}
+            id={game()?.id as string}
             index={() => -1}
           />
         </div>

@@ -56,7 +56,9 @@ export const Blogs = () => {
   const onSubmitHandler = (blog: AddBlog) =>
     addBlogAction(blog)
       .then(batchSubmitHandler)
-      .catch((error: ResponseErr) => dispatch.showToast(error.msg)) as unknown;
+      .catch((error: ResponseErr) =>
+        dispatch.showToast({ msg: error.msg, type: 'Err' })
+      ) as unknown;
 
   const handleGetMore = () => {
     batch(() => {

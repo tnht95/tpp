@@ -76,17 +76,23 @@ export const Dashboard = () => {
   const onSubmitHandler = (content: string) =>
     addPostAction({ content })
       .then(batchSubmitHandler)
-      .catch((error: ResponseErr) => dispatch.showToast(error.msg)) as unknown;
+      .catch((error: ResponseErr) =>
+        dispatch.showToast({ msg: error.msg, type: 'Err' })
+      ) as unknown;
 
   const onDeleteHandler = (postId: string, index: number) =>
     deletePostAction(postId)
       .then(() => setPost(produce(post => post.splice(index, 1))))
-      .catch((error: ResponseErr) => dispatch.showToast(error.msg)) as unknown;
+      .catch((error: ResponseErr) =>
+        dispatch.showToast({ msg: error.msg, type: 'Err' })
+      ) as unknown;
 
   const onEditHandler = (postId: string, content: string) =>
     editPostAction(postId, { content })
       .then(post => setPost(p => p.id === post.id, post))
-      .catch((error: ResponseErr) => dispatch.showToast(error.msg)) as unknown;
+      .catch((error: ResponseErr) =>
+        dispatch.showToast({ msg: error.msg, type: 'Err' })
+      ) as unknown;
 
   return (
     <div class="flex">

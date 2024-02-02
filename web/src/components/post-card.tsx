@@ -92,7 +92,9 @@ export const PostCard = (props: PostCardProps) => {
           addedCmts.push(newCmt);
         })
       )
-      .catch((error: ResponseErr) => dispatch.showToast(error.msg));
+      .catch((error: ResponseErr) =>
+        dispatch.showToast({ msg: error.msg, type: 'Err' })
+      );
   };
 
   const onLoadMoreHandler = () => {
@@ -109,12 +111,16 @@ export const PostCard = (props: PostCardProps) => {
       targetType: 'Post'
     })
       .then(comment => setComments(c => c.id === comment.id, comment))
-      .catch((error: ResponseErr) => dispatch.showToast(error.msg)) as unknown;
+      .catch((error: ResponseErr) =>
+        dispatch.showToast({ msg: error.msg, type: 'Err' })
+      ) as unknown;
 
   const onDeleteHandler = (commentId: string, index: number) =>
     deleteCommentAction(commentId)
       .then(() => setComments(produce(comments => comments.splice(index, 1))))
-      .catch((error: ResponseErr) => dispatch.showToast(error.msg)) as unknown;
+      .catch((error: ResponseErr) =>
+        dispatch.showToast({ msg: error.msg, type: 'Err' })
+      ) as unknown;
 
   return (
     <div class="max-w-full break-all rounded-xl border bg-white p-10 pb-2">

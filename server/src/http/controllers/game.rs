@@ -16,7 +16,7 @@ use crate::{
     },
     model::{
         requests::game::{AddGameRequest, GameQuery},
-        responses::{HttpResponse, INVALID_UUID_ERR},
+        responses::{game::NOT_AUTH_DEL, HttpResponse, INVALID_UUID_ERR},
     },
     services::{
         game::{GameServiceErr, IGameService},
@@ -55,6 +55,30 @@ pub async fn add<TInternalServices: IInternalServices>(
     JsonValidator(game): JsonValidator<AddGameRequest>,
 ) -> Response {
     match state.services.game.add(user.id, &user.name, game).await {
+        Ok(game) => Json(HttpResponse { data: game }).into_response(),
+        Err(GameServiceErr::Other(e)) => response_unhandled_err(e),
+    }
+}
+
+pub async fn delete<TInternalServices: IInternalServices>(
+    Path(id): Path<String>,
+    State(state): InternalState<TInternalServices>,
+    Authentication(user, ..): Authentication<TInternalServices>,
+) -> Response {
+    let id = match id.parse::<Uuid>() {
+        Ok(id) => id,
+        Err(_) => return response_400_with_const(INVALID_UUID_ERR),
+    };
+
+    match state.services.game.existed(id, user.id).await {
+        Ok(existed) =>
+            if !existed {
+                return response_400_with_const(NOT_AUTH_DEL);
+            },
+        Err(GameServiceErr::Other(e)) => return response_unhandled_err(e),
+    };
+
+    match state.services.game.delete(id).await {
         Ok(game) => Json(HttpResponse { data: game }).into_response(),
         Err(GameServiceErr::Other(e)) => response_unhandled_err(e),
     }

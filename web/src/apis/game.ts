@@ -31,3 +31,11 @@ export const fetchGameByIdAction = (id: string) =>
   fetch(`${import.meta.env.VITE_SERVER_URL}/games/${id}`)
     .then(errHandler)
     .then((r: Response<Game | undefined>) => r.data);
+
+export const deleteGameAction = (id: string) =>
+  fetch(`${import.meta.env.VITE_SERVER_URL}/games/${id}`, {
+    method: 'delete',
+    credentials: 'include'
+  })
+    .then(errHandler)
+    .then((r: Response<Game>) => r.data);

@@ -1,6 +1,7 @@
 pub mod auth;
 pub mod book;
 pub mod comment;
+pub mod game;
 pub mod post;
 
 use serde::Serialize;

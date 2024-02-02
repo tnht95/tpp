@@ -7,15 +7,20 @@ import {
   useContext
 } from 'solid-js';
 
-import { ValidationToast } from '@/components';
+import { Toast } from '@/components';
 
 // ============================================================================
 // Interfaces
 // ============================================================================
 type ToastContext = {
   dispatch: {
-    showToast: (msg: string) => void;
+    showToast: (input: ToastInput) => void;
   };
+};
+
+export type ToastInput = {
+  msg: string;
+  type: 'Err' | 'Ok';
 };
 
 // ============================================================================
@@ -29,13 +34,13 @@ export const ToastProvider = (props: ParentProps) => {
   // duration per show
   const duration = 5000; // 5s
 
-  const [msg, setMsg] = createSignal('');
+  const [input, setInput] = createSignal<ToastInput>();
 
   // destroy toast utility
-  const onCloseHandler = () => setMsg('');
+  const onCloseHandler = () => setInput();
 
   createEffect(() => {
-    if (msg()) {
+    if (input()) {
       // clear the previous timer before setting a new one
       clearTimeout(prevTimer);
       prevTimer = setTimeout(onCloseHandler, duration);
@@ -44,15 +49,15 @@ export const ToastProvider = (props: ParentProps) => {
 
   const state = {
     dispatch: {
-      showToast: setMsg
+      showToast: setInput
     }
   };
 
   return (
     <toastCtx.Provider value={state}>
       {props.children}
-      <Show when={msg()}>
-        <ValidationToast msg={msg()} onClose={onCloseHandler} />
+      <Show when={input()}>
+        <Toast input={input() as ToastInput} onClose={onCloseHandler} />
       </Show>
     </toastCtx.Provider>
   );
