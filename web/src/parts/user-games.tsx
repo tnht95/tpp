@@ -1,15 +1,18 @@
 import { Modal } from 'flowbite';
 import {
+  batch,
   createEffect,
   createResource,
   createSignal,
   For,
   Show
 } from 'solid-js';
+import { createStore, produce } from 'solid-js/store';
 
-import { fetchGameAction } from '@/apis';
+import { addGameAction, fetchGameAction } from '@/apis';
 import { Button, GameCard, GameForm } from '@/components';
-import { useAuthCtx } from '@/context';
+import { useAuthCtx, useToastCtx } from '@/context';
+import { AddGame, GameSummary, ResponseErr } from '@/models';
 
 type UserGamesProps = {
   userId: number;
@@ -19,13 +22,34 @@ export const UserGames = (props: UserGamesProps) => {
   const {
     utils: { isSameUser }
   } = useAuthCtx();
+  const { dispatch } = useToastCtx();
   const [userId] = createSignal({ authorId: props.userId });
-  const [games] = createResource(userId, fetchGameAction);
+  const [gameResource] = createResource(userId, fetchGameAction, {
+    initialValue: []
+  });
+  const [games, setGames] = createStore<GameSummary[]>([]);
+
   const [modalRef, setModalRef] = createSignal<HTMLDivElement>();
   const [modal, setModal] = createSignal<Modal>();
 
+  const batchSubmitHandler = (game: GameSummary) =>
+    batch(() => {
+      setGames(produce(oldGames => oldGames.push(game)));
+      modal()?.hide();
+    });
+
+  const onSubmitHandler = (file: File, game: AddGame) =>
+    addGameAction(file, game)
+      .then(batchSubmitHandler)
+      .catch((error: ResponseErr) =>
+        dispatch.showToast({ msg: error.msg, type: 'Err' })
+      ) as unknown;
+
   createEffect(() => {
     setModal(new Modal(modalRef()));
+    if (gameResource().length > 0) {
+      setGames(produce(oldGames => oldGames.push(...gameResource())));
+    }
   });
 
   return (
@@ -45,11 +69,15 @@ export const UserGames = (props: UserGamesProps) => {
             }}
           />
         )}
-        <GameForm ref={setModalRef} onCloseHandler={() => modal()?.hide()} />
+        <GameForm
+          ref={setModalRef}
+          onCloseHandler={() => modal()?.hide()}
+          onSubmitHandler={onSubmitHandler}
+        />
       </div>
       <div class="flex flex-wrap items-center gap-7">
-        <Show when={!!games()?.length} fallback={nothingMoreToShow}>
-          <For each={games()}>
+        <Show when={games.length > 0} fallback={nothingMoreToShow}>
+          <For each={games}>
             {game => (
               <GameCard
                 name={game.name}

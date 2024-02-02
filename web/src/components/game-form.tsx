@@ -1,15 +1,23 @@
 import { createSignal, Ref, Show } from 'solid-js';
 
 import { Markdown, PreviewButtonGroup } from '@/components';
+import { AddGame } from '@/models';
+import { MinStr, useForm } from '@/utils';
 
 type GameFormProps = {
   ref: Ref<HTMLDivElement>;
   onCloseHandler: () => void;
+  onSubmitHandler: (file: File, game: AddGame) => void;
 };
+
+const ErrorMessage = (props: { msg: string }) => (
+  <span class="text-red-600">{props.msg}</span>
+);
 
 export const GameForm = (props: GameFormProps) => {
   const [isEditMode, setIsEditMode] = createSignal(true);
   const [content, setContent] = createSignal('');
+  const { validate, submit, errors } = useForm({ errClass: 'border-red-600' });
 
   const displayMarkdown = (
     <div class="h-60 overflow-auto border border-white px-3 py-2">
@@ -17,8 +25,21 @@ export const GameForm = (props: GameFormProps) => {
     </div>
   );
 
-  const handleClick = () => {
+  const togglePreviewHandler = () => {
     setIsEditMode(mode => !mode);
+  };
+
+  const onSubmitHandler = (formEl: HTMLFormElement) => {
+    const formData = new FormData(formEl);
+    props.onSubmitHandler(formData.get('rom') as File, {
+      name: formData.get('name') as string,
+      url: formData.get('url') as string,
+      avatarUrl: formData.get('avatarUrl') as string,
+      about: formData.get('about') as string,
+      info: formData.get('info') as string,
+      tags: getTagValue(formData.get('tags') as string)
+    });
+    formEl.reset();
   };
 
   return (
@@ -34,7 +55,6 @@ export const GameForm = (props: GameFormProps) => {
             <div class="ml-1 text-center text-2xl font-bold text-gray-700">
               Upload your game
             </div>
-
             <button
               type="button"
               class="end-2.5 ms-auto inline-flex size-8 items-center justify-center rounded-lg bg-transparent text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900"
@@ -44,35 +64,41 @@ export const GameForm = (props: GameFormProps) => {
               <span class="sr-only">Close modal</span>
             </button>
           </div>
-
-          <form class="px-6">
+          <form ref={el => [submit(el, () => onSubmitHandler)]} class="px-6">
             <div class="flex flex-col gap-5">
               <input
-                placeholder="Game title"
+                placeholder="Game name"
                 class="w-full rounded-xl border p-3 placeholder:text-gray-400"
+                ref={el => [validate(el, () => [MinStr(1, 'Required')])]}
+                name="name"
+              />
+              {errors['name'] && <ErrorMessage msg={errors['name']} />}
+              <input
+                placeholder="Game url"
+                class="w-full rounded-xl border p-3 placeholder:text-gray-400"
+                name="url"
               />
               <input
-                placeholder="Game repo link"
+                placeholder="Game avatar url"
                 class="w-full rounded-xl border p-3 placeholder:text-gray-400"
-              />
-              <input
-                placeholder="Game avatar link"
-                class="w-full rounded-xl border p-3 placeholder:text-gray-400"
+                name="avatarUrl"
               />
               <input
                 placeholder="Game tags: separate each tag with a comma"
                 class="w-full rounded-xl border p-3 placeholder:text-gray-400"
+                name="tags"
+                ref={el => [validate(el, () => [validateTags])]}
               />
+              {errors['tags'] && <ErrorMessage msg={errors['tags']} />}
               <textarea
-                name="postContent"
+                name="about"
                 rows="4"
                 class="w-full resize-none rounded-xl border border-gray-200 py-2 transition duration-150 ease-in-out placeholder:text-gray-400 focus:border-blue-500 focus:outline-none"
                 placeholder="About this game"
               />
-
               <Show when={isEditMode()} fallback={displayMarkdown}>
                 <textarea
-                  name="postContent"
+                  name="info"
                   rows="4"
                   class="h-60 w-full resize-none rounded-xl border border-gray-200 py-2 transition duration-150 ease-in-out placeholder:text-gray-400 focus:border-blue-500 focus:outline-none"
                   placeholder="Game discription (Support some markdowns)"
@@ -84,7 +110,7 @@ export const GameForm = (props: GameFormProps) => {
                 <div class="relative flex items-center justify-between rounded-xl border bg-white px-4 py-3 transition duration-150 ease-in-out hover:border-blue-500">
                   <input
                     type="file"
-                    name="fileAttachment"
+                    name="rom"
                     class="absolute inset-0 size-full cursor-pointer opacity-0"
                   />
                   <div class="flex items-center">
@@ -95,13 +121,31 @@ export const GameForm = (props: GameFormProps) => {
                 </div>
               </div>
             </div>
+            <PreviewButtonGroup
+              onPreviewHandler={togglePreviewHandler}
+              isEditMode={isEditMode()}
+            />
           </form>
-          <PreviewButtonGroup
-            onPreviewHandler={handleClick}
-            isEditMode={isEditMode()}
-          />
         </div>
       </div>
     </div>
   );
+};
+
+const validateTags = ({ value }: { value: string }) => {
+  if (value === '') return '';
+  const tagsArr = value.split(',');
+  if (tagsArr.length > 5) return 'The maximum total of tags is 5.';
+  for (const tag of tagsArr) {
+    if (tag.startsWith(' ') || tag.endsWith(' '))
+      return 'Tags can not contain spacing';
+    if (tag === '') return 'The minimun length of a tag is 1';
+    if (tag.length > 20) return 'The maximum length of a tag is 20';
+  }
+  return '';
+};
+
+const getTagValue = (tags: string): string[] | undefined => {
+  if (tags === '') return undefined;
+  return tags.split(',');
 };
