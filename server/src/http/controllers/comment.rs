@@ -17,7 +17,7 @@ use crate::{
     model::{
         requests::comment::{AddCommentRequest, CommentQuery, EditCommentRequest},
         responses::{
-            post::{NOT_AUTH_DEL, NOT_AUTH_EDIT},
+            comment::{NOT_AUTH_DEL, NOT_AUTH_EDIT},
             HttpResponse,
             INVALID_UUID_ERR,
         },
@@ -98,7 +98,7 @@ pub async fn edit<TInternalServices: IInternalServices>(
     };
 
     match state.services.comment.edit(id, comment).await {
-        Ok(post) => Json(HttpResponse { data: post }).into_response(),
+        Ok(comment) => Json(HttpResponse { data: comment }).into_response(),
         Err(CommentServiceErr::Other(e)) => response_unhandled_err(e),
     }
 }

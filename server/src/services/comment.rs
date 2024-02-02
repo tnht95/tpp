@@ -78,7 +78,7 @@ where
             .fetch_all(self.db.get_pool())
             .await
         {
-            Ok(blogs) => Ok(blogs),
+            Ok(comments) => Ok(comments),
             Err(e) => Err(CommentServiceErr::Other(e.into())),
         }
     }
@@ -91,7 +91,7 @@ where
     ) -> Result<Comment, CommentServiceErr> {
         match sqlx::query_as!(
         Comment,
-        r#"INSERT INTO comments (user_id, user_name, target_id, target_type, content) VALUES ($1, $2, $3, $4, $5)
+        r#"insert into comments (user_id, user_name, target_id, target_type, content) values ($1, $2, $3, $4, $5)
         returning id, user_id, user_name, target_id, content, likes, target_type as "target_type!: TargetTypes", created_at, updated_at"#,
         user_id,
         user_name,
@@ -149,7 +149,7 @@ where
         .fetch_one(self.db.get_pool())
         .await
         {
-            Ok(posts) => Ok(posts),
+            Ok(comment) => Ok(comment),
             Err(e) => Err(CommentServiceErr::Other(e.into())),
         }
     }
