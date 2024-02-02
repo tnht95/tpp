@@ -1,5 +1,11 @@
 import { useParams } from '@solidjs/router';
-import { createResource, createSignal, Show, Suspense } from 'solid-js';
+import {
+  createResource,
+  createSignal,
+  ErrorBoundary,
+  Show,
+  Suspense
+} from 'solid-js';
 
 import { fetchUserByIdAction } from '@/apis';
 import { LoadingSpinner, PillButton } from '@/components';
@@ -22,7 +28,7 @@ export const UserDetails = () => {
         </div>
       }
     >
-      <Show when={user()} fallback={<NotFound />}>
+      <ErrorBoundary fallback={<NotFound />}>
         <div class="my-5 ml-10 p-5">
           <div class="md:-mx-2 md:flex">
             <div class="w-full md:mx-2 md:w-3/12">
@@ -77,7 +83,7 @@ export const UserDetails = () => {
             </div>
           </div>
         </div>
-      </Show>
+      </ErrorBoundary>
     </Suspense>
   );
 };

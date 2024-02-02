@@ -16,7 +16,11 @@ use crate::{
     },
     model::{
         requests::game::{AddGameRequest, GameQuery},
-        responses::{game::NOT_AUTH_DEL, HttpResponse, INVALID_UUID_ERR},
+        responses::{
+            game::{NOT_AUTH_DEL, NOT_FOUND},
+            HttpResponse,
+            INVALID_UUID_ERR,
+        },
     },
     services::{
         game::{GameServiceErr, IGameService},
@@ -44,7 +48,10 @@ pub async fn get_by_id<TInternalServices: IInternalServices>(
     };
 
     match state.services.game.get_by_id(id).await {
-        Ok(game) => Json(HttpResponse { data: game }).into_response(),
+        Ok(game) => match game {
+            Some(game) => Json(HttpResponse { data: game }).into_response(),
+            None => response_400_with_const(NOT_FOUND),
+        },
         Err(GameServiceErr::Other(e)) => response_unhandled_err(e),
     }
 }

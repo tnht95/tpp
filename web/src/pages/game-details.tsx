@@ -1,15 +1,12 @@
-import { Show, Suspense } from 'solid-js';
+import { ErrorBoundary, Suspense } from 'solid-js';
 import { ParentProps } from 'solid-js/types/render/component';
 
 import { LoadingSpinner } from '@/components';
-import { GameProvider, useGameCtx } from '@/context';
+import { GameProvider } from '@/context';
 import { NotFound } from '@/pages';
 import { GameDetailsSidebar, GameDetailsTabs } from '@/parts';
 
-const Game = (props: ParentProps) => {
-  const { game } = useGameCtx();
-
-  return (
+const Game = (props: ParentProps) => (
     <Suspense
       fallback={
         <div class="flex h-svh items-center justify-center">
@@ -17,7 +14,7 @@ const Game = (props: ParentProps) => {
         </div>
       }
     >
-      <Show when={game()} fallback={<NotFound />}>
+      <ErrorBoundary fallback={<NotFound />}>
         <div class="bg-white">
           <GameDetailsTabs />
           <div class="ml-10 mt-8 pb-10">
@@ -27,10 +24,9 @@ const Game = (props: ParentProps) => {
             </div>
           </div>
         </div>
-      </Show>
+      </ErrorBoundary>
     </Suspense>
   );
-};
 
 export const GameDetails = (props: ParentProps) => (
   <GameProvider>

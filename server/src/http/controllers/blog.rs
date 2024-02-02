@@ -16,7 +16,7 @@ use crate::{
     },
     model::{
         requests::{blog::AddBlogRequest, Pagination},
-        responses::{HttpResponse, INVALID_UUID_ERR},
+        responses::{blog::NOT_FOUND, HttpResponse, INVALID_UUID_ERR},
     },
     services::{
         blog::{BlogServiceErr, IBlogService},
@@ -58,7 +58,10 @@ pub async fn get_by_id<TInternalServices: IInternalServices>(
     };
 
     match state.services.blog.get_by_id(id).await {
-        Ok(game) => Json(HttpResponse { data: game }).into_response(),
+        Ok(blog) => match blog {
+            Some(blog) => Json(HttpResponse { data: blog }).into_response(),
+            None => response_400_with_const(NOT_FOUND),
+        },
         Err(BlogServiceErr::Other(e)) => response_unhandled_err(e),
     }
 }

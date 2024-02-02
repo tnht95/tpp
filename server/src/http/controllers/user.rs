@@ -5,9 +5,11 @@ use axum::{
 };
 
 use crate::{
-    database::entities::user::User,
-    http::{controllers::InternalState, utils::err_handler::response_unhandled_err},
-    model::responses::HttpResponse,
+    http::{
+        controllers::InternalState,
+        utils::err_handler::{response_400_with_const, response_unhandled_err},
+    },
+    model::responses::{user::NOT_FOUND, HttpResponse, INVALID_UUID_ERR},
     services::{
         user::{IUserService, UserServiceErr},
         IInternalServices,
@@ -20,11 +22,14 @@ pub async fn get_by_id<TInternalServices: IInternalServices>(
 ) -> Response {
     let id = match id.parse::<i64>() {
         Ok(id) => id,
-        Err(_) => return Json(HttpResponse { data: None::<User> }).into_response(),
+        Err(_) => return response_400_with_const(INVALID_UUID_ERR),
     };
 
     match state.services.user.get_by_id(id).await {
-        Ok(user) => Json(HttpResponse { data: user }).into_response(),
+        Ok(user) => match user {
+            Some(user) => Json(HttpResponse { data: user }).into_response(),
+            None => response_400_with_const(NOT_FOUND),
+        },
         Err(UserServiceErr::Other(e)) => response_unhandled_err(e),
     }
 }
