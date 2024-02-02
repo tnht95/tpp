@@ -10,11 +10,11 @@ import {
 import { fetchGameAction } from '@/apis';
 import { Button, GameCard, GameForm } from '@/components';
 
-type UserGamesProp = {
+type UserGamesProps = {
   userId: number;
 };
 
-export const UserGames = (props: UserGamesProp) => {
+export const UserGames = (props: UserGamesProps) => {
   const [userId] = createSignal({ authorId: props.userId });
   const [games] = createResource(userId, fetchGameAction);
   const [modalRef, setModalRef] = createSignal<HTMLDivElement>();

@@ -12,7 +12,7 @@ import { createStore, produce } from 'solid-js/store';
 import { addBlogAction, fetchBlogAction } from '@/apis';
 import { BlogCard, BlogForm, ShowMoreButton } from '@/components';
 import { LIMIT, OFFSET } from '@/constant';
-import { useToastCtx } from '@/context';
+import { useAuthCtx, useToastCtx } from '@/context';
 import { AddBlog, BlogSummary, ResponseErr } from '@/models';
 
 const nothingMoreToShow = (
@@ -20,6 +20,9 @@ const nothingMoreToShow = (
 );
 
 export const Blogs = () => {
+  const {
+    utils: { isAdmin }
+  } = useAuthCtx();
   const { dispatch } = useToastCtx();
   const [modalRef, setModalRef] = createSignal<HTMLDivElement>();
   const [modal, setModal] = createSignal<Modal>();
@@ -65,16 +68,18 @@ export const Blogs = () => {
     <div class="ml-10 mt-10 w-4/6">
       <div class="flex items-center justify-between">
         <p class="text-4xl font-bold">Blogs</p>
-        <button
-          type="button"
-          class="rounded-lg border bg-green-500 px-7 py-2 font-bold text-white hover:bg-white hover:text-green-500"
-          onClick={() => {
-            modal()?.show();
-          }}
-        >
-          <i class="fa-solid fa-plus mr-2" />
-          Add New Blog
-        </button>
+        {isAdmin() && (
+          <button
+            type="button"
+            class="rounded-lg border bg-green-500 px-7 py-2 font-bold text-white hover:bg-white hover:text-green-500"
+            onClick={() => {
+              modal()?.show();
+            }}
+          >
+            <i class="fa-solid fa-plus mr-2" />
+            Add New Blog
+          </button>
+        )}
         <BlogForm
           modalRef={setModalRef}
           onCloseHandler={() => {

@@ -1,10 +1,11 @@
 import { createSignal } from 'solid-js';
 
-type LoadingButtonProp = {
+type LoadingButtonProps = {
   title: string;
   url: string;
 };
-export const LoadingButton = (props: LoadingButtonProp) => {
+
+export const LoadingButton = (props: LoadingButtonProps) => {
   const [isClick, setIsClick] = createSignal(false);
 
   const loadingBtn = (

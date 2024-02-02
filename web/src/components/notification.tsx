@@ -1,10 +1,11 @@
 import { Avatar } from '@/components';
 
-type NotificationProp = {
+type NotificationProps = {
   user: string;
   isNew: boolean;
 };
-export const Notification = (props: NotificationProp) => (
+
+export const Notification = (props: NotificationProps) => (
   <div
     class="flex justify-between p-4"
     classList={{ 'bg-indigo-100': props.isNew }}

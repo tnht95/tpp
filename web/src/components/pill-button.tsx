@@ -1,12 +1,13 @@
 import { Show } from 'solid-js';
 
-type PillButtonProp = {
+type PillButtonProps = {
   title: string;
   number: number;
   icon: string;
   disabled?: boolean;
 };
-export const PillButton = (props: PillButtonProp) => (
+
+export const PillButton = (props: PillButtonProps) => (
   <div class="flex rounded-lg border text-center md:border-none">
     <button
       disabled={!!props.disabled}

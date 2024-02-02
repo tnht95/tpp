@@ -1,9 +1,10 @@
-type ActivityProp = {
+type ActivityProps = {
   title: string;
   date: string;
   latest?: boolean;
 };
-export const Activity = (props: ActivityProp) => (
+
+export const Activity = (props: ActivityProps) => (
   <li class="mb-10 ms-6">
     <span class="absolute -start-3 flex size-6 items-center justify-center rounded-full bg-green-100 ring-8 ring-white dark:bg-blue-900 dark:ring-gray-900">
       <i class="fa-solid fa-wave-square text-xs text-green-500" />

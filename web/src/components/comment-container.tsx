@@ -5,13 +5,14 @@ import { useAuthCtx } from '@/context';
 import { Comment } from '@/models';
 import { formatTime } from '@/utils';
 
-type CommentProp = {
+type CommentProps = {
   comment: Comment;
   index: Accessor<number>;
   onDelete: (commentId: string, index: number) => void;
   onEdit: (commentId: string, content: string) => void;
 };
-export const CommentContainer = (props: CommentProp) => {
+
+export const CommentContainer = (props: CommentProps) => {
   const [isEditMode, setIsEditMode] = createSignal(false);
 
   const {

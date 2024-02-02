@@ -1,9 +1,9 @@
-type PreviewButtonGroupProp = {
+type PreviewButtonGroupProps = {
   onPreviewHandler: () => void;
   isEditMode: boolean;
 };
 
-export const PreviewButtonGroup = (props: PreviewButtonGroupProp) => (
+export const PreviewButtonGroup = (props: PreviewButtonGroupProps) => (
   <div class="flex w-full items-center px-3 md:w-full">
     <div class="mr-auto flex items-start px-2 text-gray-700" />
     <div class="-mr-1">

@@ -1,11 +1,13 @@
-import { errHandler } from '@/apis';
 import { AddComment, Comment, EditComment, Response } from '@/models';
+
+import { errHandler } from '.';
 
 export type CommentQueryInput = {
   targetId: string;
   limit?: number;
   offset?: number;
 };
+
 export const fetchCommentAction = (queryInput: CommentQueryInput) => {
   const baseUrl = import.meta.env.VITE_SERVER_URL;
   const query: string[] = [] as const;
