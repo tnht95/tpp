@@ -26,7 +26,7 @@ export const Searchbar = () => {
           All categories <i class="fa-solid fa-angle-down ml-2" />
         </button>
         <div
-          class="z-10 hidden w-36 divide-y divide-gray-100 rounded-lg bg-white shadow"
+          class="!top-0.5 z-10 hidden w-36 divide-y divide-gray-100 rounded-lg bg-white shadow"
           ref={setdropdownRef}
         >
           <ul class="text-sm text-indigo-900" aria-labelledby="dropdown-button">
