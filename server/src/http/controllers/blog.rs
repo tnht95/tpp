@@ -1,21 +1,22 @@
 use axum::{
-    extract::{Query, State},
+    extract::{Path, Query, State},
     response::{IntoResponse, Response},
     Json,
 };
+use uuid::Uuid;
 
 use crate::{
     http::{
         controllers::InternalState,
         utils::{
             auth::Authentication,
-            err_handler::{response_403_err, response_unhandled_err},
+            err_handler::{response_400_with_const, response_403_err, response_unhandled_err},
             validator::JsonValidator,
         },
     },
     model::{
         requests::{blog::AddBlogRequest, Pagination},
-        responses::HttpResponse,
+        responses::{HttpResponse, INVALID_UUID_ERR},
     },
     services::{
         blog::{BlogServiceErr, IBlogService},
@@ -43,6 +44,21 @@ pub async fn add<TInternalServices: IInternalServices>(
     }
     match state.services.blog.add(blog).await {
         Ok(blog) => Json(HttpResponse { data: blog }).into_response(),
+        Err(BlogServiceErr::Other(e)) => response_unhandled_err(e),
+    }
+}
+
+pub async fn get_by_id<TInternalServices: IInternalServices>(
+    Path(id): Path<String>,
+    State(state): InternalState<TInternalServices>,
+) -> Response {
+    let id = match id.parse::<Uuid>() {
+        Ok(id) => id,
+        Err(_) => return response_400_with_const(INVALID_UUID_ERR),
+    };
+
+    match state.services.blog.get_by_id(id).await {
+        Ok(game) => Json(HttpResponse { data: game }).into_response(),
         Err(BlogServiceErr::Other(e)) => response_unhandled_err(e),
     }
 }

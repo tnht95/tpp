@@ -23,3 +23,8 @@ export const addBlogAction = (body: AddBlog) =>
   })
     .then(errHandler)
     .then((r: Response<Blog>) => r.data);
+
+export const fetchBlogByIdAction = (id: string) =>
+  fetch(`${import.meta.env.VITE_SERVER_URL}/blogs/${id}`)
+    .then(errHandler)
+    .then((r: Response<Blog | undefined>) => r.data);

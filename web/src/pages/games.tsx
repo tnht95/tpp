@@ -71,7 +71,7 @@ export const Games = () => {
           </div>
         </div>
         <div class="mr-24 w-1/5">
-          <TagSidebar />
+          <TagSidebar tags={['tag1', 'tag2', 'tag3']} />
         </div>
       </div>
       <div>

@@ -3,6 +3,7 @@ use std::sync::Arc;
 use async_trait::async_trait;
 use sqlx::{Postgres, QueryBuilder};
 use thiserror::Error;
+use uuid::Uuid;
 
 use crate::{
     database::{
@@ -25,6 +26,7 @@ pub trait IBlogService {
         pagination: PaginationInternal,
     ) -> Result<Vec<BlogSummary>, BlogServiceErr>;
     async fn add(&self, blog: AddBlogRequest) -> Result<Blog, BlogServiceErr>;
+    async fn get_by_id(&self, id: Uuid) -> Result<Option<Blog>, BlogServiceErr>;
 }
 
 pub struct BlogService<T: IDatabase> {
@@ -81,6 +83,16 @@ where
             .await
         {
             Ok(blog) => Ok(blog),
+            Err(e) => Err(BlogServiceErr::Other(e.into())),
+        }
+    }
+
+    async fn get_by_id(&self, id: Uuid) -> Result<Option<Blog>, BlogServiceErr> {
+        match sqlx::query_as!(Blog, "select * from blogs where id = $1", id)
+            .fetch_optional(self.db.get_pool())
+            .await
+        {
+            Ok(game) => Ok(game),
             Err(e) => Err(BlogServiceErr::Other(e.into())),
         }
     }
