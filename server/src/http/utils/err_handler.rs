@@ -4,9 +4,11 @@ use axum::{
     Json,
 };
 use tracing::error;
+use validator::ValidationErrors;
 
 use crate::model::responses::{
     HttpResponseConstErr,
+    HttpResponseErr,
     FORBIDDEN_ERR,
     INTERNAL_SERVER_ERR,
     NOT_FOUND_ERR,
@@ -37,4 +39,14 @@ pub fn response_403_err() -> Response {
 
 pub async fn response_404_err() -> Response {
     (StatusCode::NOT_FOUND, Json(NOT_FOUND_ERR)).into_response()
+}
+
+pub fn response_validation_err(e: ValidationErrors) -> (StatusCode, Json<HttpResponseErr>) {
+    (
+        StatusCode::BAD_REQUEST,
+        Json(HttpResponseErr {
+            code: "ERR_999".into(),
+            msg: format!("Input validation error: [{e}]").replace('\n', ", "),
+        }),
+    )
 }

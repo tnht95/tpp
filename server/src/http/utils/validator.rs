@@ -7,8 +7,9 @@ use axum::{
     Json,
 };
 use serde::de::DeserializeOwned;
-use validator::{Validate, ValidationErrors};
+use validator::Validate;
 
+use super::err_handler::response_validation_err;
 use crate::model::responses::HttpResponseErr;
 
 pub struct JsonValidator<T>(pub T);
@@ -62,14 +63,4 @@ where
             )),
         }
     }
-}
-
-fn response_validation_err(e: ValidationErrors) -> (StatusCode, Json<HttpResponseErr>) {
-    (
-        StatusCode::BAD_REQUEST,
-        Json(HttpResponseErr {
-            code: "ERR_999".into(),
-            msg: format!("Input validation error: [{e}]").replace('\n', ", "),
-        }),
-    )
 }
