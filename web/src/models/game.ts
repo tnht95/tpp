@@ -24,3 +24,12 @@ export type GameSummary = {
   tags: string[] | null;
   createdAt: string;
 };
+
+export type AddGame = {
+  name: string;
+  url: string | undefined;
+  avatarUrl: string | undefined;
+  about: string | undefined;
+  info: string | undefined;
+  tags: string[] | undefined;
+}
