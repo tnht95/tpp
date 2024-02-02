@@ -14,12 +14,14 @@ export const GameDetailsTabs = () => {
   } = useAuthCtx();
 
   const onDeleteHandler = () => {
-    deleteGameAction(game()?.id as string).catch((error: ResponseErr) => {
-      dispatch.showToast({ msg: error.msg, type: 'Err' });
-    });
-
-    navigate(`/users/${user()?.id}`, { replace: true });
-    dispatch.showToast({ msg: 'Game deleted', type: 'Ok' });
+    deleteGameAction(game()?.id as string)
+      .then(() => {
+        navigate(`/users/${user()?.id}`, { replace: true });
+        return dispatch.showToast({ msg: 'Game deleted', type: 'Ok' });
+      })
+      .catch((error: ResponseErr) => {
+        dispatch.showToast({ msg: error.msg, type: 'Err' });
+      });
   };
 
   return (
