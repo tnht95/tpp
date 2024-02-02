@@ -124,14 +124,14 @@ impl<TInternalServices: IInternalServices> ServicesBuilder<TInternalServices> {
 
     pub fn build(self) -> Services<TInternalServices> {
         Services {
-            health: self.health.unwrap(),
-            book: self.book.unwrap(),
-            user: self.user.unwrap(),
-            game: self.game.unwrap(),
-            post: self.post.unwrap(),
-            blog: self.blog.unwrap(),
-            comment: self.comment.unwrap(),
-            discussion: self.discussion.unwrap(),
+            health: self.health.expect("missing initialization"),
+            book: self.book.expect("missing initialization"),
+            user: self.user.expect("missing initialization"),
+            game: self.game.expect("missing initialization"),
+            post: self.post.expect("missing initialization"),
+            blog: self.blog.expect("missing initialization"),
+            comment: self.comment.expect("missing initialization"),
+            discussion: self.discussion.expect("missing initialization"),
         }
     }
 }

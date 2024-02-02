@@ -1,4 +1,4 @@
-use std::sync::Arc;
+use std::{future::Future, pin::Pin, sync::Arc};
 
 use async_trait::async_trait;
 use sqlx::{Postgres, QueryBuilder};
@@ -23,13 +23,15 @@ pub enum GameServiceErr {
 pub trait IGameService {
     async fn filter(&self, query: GameQuery) -> Result<Vec<GameSummary>, GameServiceErr>;
     async fn get_by_id(&self, id: Uuid) -> Result<Option<Game>, GameServiceErr>;
-    async fn add(
+    async fn add<
+        F: Send + Fn(Uuid) -> Pin<Box<dyn Future<Output = Result<String, anyhow::Error>> + Send>>,
+    >(
         &self,
         author_id: i64,
-        author_name: &str,
+        author_name: String,
         game: AddGameRequest,
+        rom_path_cb: F,
     ) -> Result<Game, GameServiceErr>;
-
     async fn delete(&self, id: Uuid) -> Result<(), GameServiceErr>;
     async fn existed(&self, id: Uuid, author_id: i64) -> Result<bool, GameServiceErr>;
 }
@@ -105,18 +107,27 @@ where
         }
     }
 
-    async fn add(
+    async fn add<
+        F: Send + Fn(Uuid) -> Pin<Box<dyn Future<Output = Result<String, anyhow::Error>> + Send>>,
+    >(
         &self,
         author_id: i64,
-        author_name: &str,
+        author_name: String,
         game: AddGameRequest,
+        rom_path_cb: F,
     ) -> Result<Game, GameServiceErr> {
-        match sqlx::query_as!(
-            Game,
+        let mut tx = self
+            .db
+            .get_pool()
+            .begin()
+            .await
+            .map_err(|e| GameServiceErr::Other(e.into()))?;
+
+        let game = sqlx::query!(
             r#"insert into games
             (name, author_id, author_name, url, avatar_url, about, info, stars, tags, rom) values
-            ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-            returning *"#,
+            ($1, $2, $3, $4, $5, $6, $7, $8, $9, '')
+            returning id"#,
             game.name,
             author_id,
             author_name,
@@ -126,14 +137,28 @@ where
             game.info,
             0,
             game.tags.as_deref(),
-            game.rom,
         )
-        .fetch_one(self.db.get_pool())
+        .fetch_one(&mut *tx)
         .await
-        {
-            Ok(game) => Ok(game),
-            Err(e) => Err(GameServiceErr::Other(e.into())),
-        }
+        .map_err(|e| GameServiceErr::Other(e.into()))?;
+
+        let rom_path = rom_path_cb(game.id).await.map_err(GameServiceErr::Other)?;
+
+        let game = sqlx::query_as!(
+            Game,
+            "update games set rom = $1 where id = $2 returning *",
+            rom_path,
+            game.id
+        )
+        .fetch_one(&mut *tx)
+        .await
+        .map_err(|e| GameServiceErr::Other(e.into()))?;
+
+        tx.commit()
+            .await
+            .map_err(|e| GameServiceErr::Other(e.into()))?;
+
+        Ok(game)
     }
 
     async fn delete(&self, id: Uuid) -> Result<(), GameServiceErr> {
