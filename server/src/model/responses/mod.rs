@@ -49,3 +49,13 @@ pub const INVALID_UUID_ERR: HttpResponseConstErr = HttpResponseConstErr {
     code: "ERR_100",
     msg: "Invalid Uuid",
 };
+
+pub const FIELD_MPART_ERR: HttpResponseConstErr = HttpResponseConstErr {
+    code: "ERR_101",
+    msg: "Failed to get multipart field",
+};
+
+pub const BYTES_MPART_ERR: HttpResponseConstErr = HttpResponseConstErr {
+    code: "ERR_102",
+    msg: "Failed to get multipart bytes",
+};

@@ -27,8 +27,6 @@ pub struct AddGameRequest {
 
     #[validate(custom(function = "validate_tags"))]
     pub tags: Option<Vec<String>>,
-
-    pub rom: String,
 }
 
 #[derive(Deserialize)]
