@@ -2,7 +2,7 @@ import { createSignal, Ref, Show } from 'solid-js';
 
 import { Markdown, PreviewButtonGroup } from '@/components';
 import { AddBlog } from '@/models';
-import { MinStr, useForm } from '@/utils';
+import { MaxStr, MinStr, useForm } from '@/utils';
 
 type BlogFormProps = {
   modalRef: Ref<HTMLDivElement>;
@@ -69,14 +69,18 @@ export const BlogForm = (props: BlogFormProps) => {
                 placeholder="Title"
                 type="text"
                 name="title"
-                ref={el => [validate(el, () => [MinStr(1, 'Required')])]}
+                ref={el => [
+                  validate(el, () => [MinStr(1, 'Required'), MaxStr(200)])
+                ]}
               />
               {errors['title'] && <ErrorMessage msg={errors['title']} />}
               <textarea
                 class="rounded-xl border border-gray-300 p-3 outline-none placeholder:text-gray-400"
                 placeholder="Describe shortly about this post here"
                 name="description"
-                ref={el => [validate(el, () => [MinStr(1, 'Required')])]}
+                ref={el => [
+                  validate(el, () => [MinStr(1, 'Required'), MaxStr(200)])
+                ]}
               />
               {errors['description'] && (
                 <ErrorMessage msg={errors['description']} />
@@ -95,7 +99,9 @@ export const BlogForm = (props: BlogFormProps) => {
                   onFocusOut={e => setContent(e.target.value)}
                   name="content"
                   value={content()}
-                  ref={el => [validate(el, () => [MinStr(1, 'Required')])]}
+                  ref={el => [
+                    validate(el, () => [MinStr(1, 'Required'), MaxStr(1000)])
+                  ]}
                 />
                 {errors['content'] && <ErrorMessage msg={errors['content']} />}
               </Show>
