@@ -1,15 +1,53 @@
 import { Modal } from 'flowbite';
-import { createEffect, createSignal } from 'solid-js';
+import {
+  createEffect,
+  createResource,
+  createSignal,
+  For,
+  Show
+} from 'solid-js';
+import { createStore, produce } from 'solid-js/store';
 
-import { Button, DiscussionForm, TableRow } from '@/components';
+import { fetchDiscussionAction , QueryWIthTargetInput } from '@/apis';
+import { Button, DiscussionForm, ShowMoreButton, TableRow } from '@/components';
+import { LIMIT, OFFSET } from '@/constant';
+import { useGameCtx } from '@/context';
+import { Discussion } from '@/models';
+import { formatTime } from '@/utils';
 
 export const GameDiscussion = () => {
+  const { game } = useGameCtx();
   const [modalRef, setModalRef] = createSignal<HTMLDivElement>();
   const [modal, setModal] = createSignal<Modal>();
+  const [queryValue, setQueryValue] = createSignal<QueryWIthTargetInput>({
+    targetId: game()?.id as string,
+    offset: 0,
+    limit: LIMIT
+  });
+  const [discussionResource] = createResource(
+    queryValue,
+    fetchDiscussionAction,
+    {
+      initialValue: []
+    }
+  );
+  const [discussions, setDiscussions] = createStore<Discussion[]>([]);
 
   createEffect(() => {
     setModal(new Modal(modalRef()));
+    if (discussionResource().length > 0) {
+      setDiscussions(
+        produce(oldValues => oldValues.push(...discussionResource()))
+      );
+    }
   });
+
+  const onShowMoreHandler = () => {
+    setQueryValue(oldValue => ({
+      ...oldValue,
+      offset: (oldValue.offset as number) + OFFSET
+    }));
+  };
 
   return (
     <>
@@ -31,145 +69,27 @@ export const GameDiscussion = () => {
                   ref={setModalRef}
                   onCloseHandler={() => modal()?.hide()}
                 />
-                <TableRow
-                  title="Found Bug"
-                  user="johnny@gmail.com"
-                  date="26 Jan 2022"
-                />
-                <TableRow
-                  title="Found Bug"
-                  user="johnny@gmail.com"
-                  date="26 Jan 2022"
-                />
-                <TableRow
-                  title="Found Bug"
-                  user="johnny@gmail.com"
-                  date="26 Jan 2022"
-                />
-                <TableRow
-                  title="Found Bug"
-                  user="johnny@gmail.com"
-                  date="26 Jan 2022"
-                />
-                <TableRow
-                  title="Found Bug"
-                  user="johnny@gmail.com"
-                  date="26 Jan 2022"
-                />
-                <TableRow
-                  title="Found Bug"
-                  user="johnny@gmail.com"
-                  date="26 Jan 2022"
-                />
-                <TableRow
-                  title="Found Bug"
-                  user="johnny@gmail.com"
-                  date="26 Jan 2022"
-                />
-                <TableRow
-                  title="Found Bug"
-                  user="johnny@gmail.com"
-                  date="26 Jan 2022"
-                />
-                <TableRow
-                  title="Found Bug"
-                  user="johnny@gmail.com"
-                  date="26 Jan 2022"
-                />
+                <For each={discussions}>
+                  {d => (
+                    <TableRow
+                      title={d.title}
+                      date={formatTime(d.createdAt)}
+                      username={d.userName}
+                      url={`/games/${game()?.id}/discussions/${d.id}`}
+                    />
+                  )}
+                </For>
+                <Show when={discussionResource().length == LIMIT}>
+                  <ShowMoreButton
+                    onClick={onShowMoreHandler}
+                    vertical
+                    customStyle="border-none py-3"
+                  />
+                </Show>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="mt-6 flex items-center justify-between">
-        <a
-          href="#"
-          class="flex items-center gap-x-2 rounded-md border bg-white px-5 py-2 text-sm capitalize text-gray-700 transition-colors duration-200 hover:bg-gray-100"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="size-5 rtl:-scale-x-100"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18"
-            />
-          </svg>
-
-          <span>previous</span>
-        </a>
-
-        <div class="hidden items-center gap-x-3 md:flex">
-          <a
-            href="#"
-            class="rounded-md bg-blue-100/60 px-2 py-1 text-sm text-blue-500"
-          >
-            1
-          </a>
-          <a
-            href="#"
-            class="rounded-md px-2 py-1 text-sm text-gray-500 hover:bg-gray-100"
-          >
-            2
-          </a>
-          <a
-            href="#"
-            class="rounded-md px-2 py-1 text-sm text-gray-500 hover:bg-gray-100"
-          >
-            3
-          </a>
-          <a
-            href="#"
-            class="rounded-md px-2 py-1 text-sm text-gray-500 hover:bg-gray-100"
-          >
-            ...
-          </a>
-          <a
-            href="#"
-            class="rounded-md px-2 py-1 text-sm text-gray-500 hover:bg-gray-100"
-          >
-            12
-          </a>
-          <a
-            href="#"
-            class="rounded-md px-2 py-1 text-sm text-gray-500 hover:bg-gray-100"
-          >
-            13
-          </a>
-          <a
-            href="#"
-            class="rounded-md px-2 py-1 text-sm text-gray-500 hover:bg-gray-100"
-          >
-            14
-          </a>
-        </div>
-
-        <a
-          href="#"
-          class="flex items-center gap-x-2 rounded-md border bg-white px-5 py-2 text-sm capitalize text-gray-700 transition-colors duration-200 hover:bg-gray-100"
-        >
-          <span>Next</span>
-
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="size-5 rtl:-scale-x-100"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
-            />
-          </svg>
-        </a>
       </div>
     </>
   );

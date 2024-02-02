@@ -11,10 +11,10 @@ import { createStore, produce } from 'solid-js/store';
 
 import {
   addCommentAction,
-  CommentQueryInput,
   deleteCommentAction,
   editCommentAction,
-  fetchCommentAction
+  fetchCommentAction,
+  QueryWIthTargetInput
 } from '@/apis';
 import {
   Avatar,
@@ -40,7 +40,7 @@ export const PostCard = (props: PostCardProps) => {
 
   const [isEditMode, setIsEditMode] = createSignal(false);
   const [isCommentHidden, setIsCommentHidden] = createSignal(true);
-  const [queryValue, setQueryValue] = createSignal<CommentQueryInput>();
+  const [queryValue, setQueryValue] = createSignal<QueryWIthTargetInput>();
   const [commentResource] = createResource(queryValue, fetchCommentAction, {
     initialValue: []
   });
@@ -97,7 +97,7 @@ export const PostCard = (props: PostCardProps) => {
 
   const onLoadMoreHandler = () => {
     setQueryValue(oldValue => ({
-      ...(oldValue as CommentQueryInput),
+      ...(oldValue as QueryWIthTargetInput),
       offset: (oldValue?.offset as number) + 5
     }));
   };

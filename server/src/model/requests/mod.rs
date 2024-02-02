@@ -1,9 +1,11 @@
 use serde::Deserialize;
+use uuid::Uuid;
 use validator::ValidationError;
 
 pub mod blog;
 pub mod book;
 pub mod comment;
+pub mod discussion;
 pub mod game;
 pub mod post;
 
@@ -20,6 +22,14 @@ pub struct PaginationInternal {
     pub order_by: OrderBy,
     pub offset: i16,
     pub limit: i16,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct QueryWithTarget {
+    pub target_id: Uuid,
+    pub offset: Option<i16>,
+    pub limit: Option<i16>,
 }
 
 #[derive(Deserialize)]

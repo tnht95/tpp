@@ -46,7 +46,7 @@ export const Games = () => {
       });
     });
 
-  const handleGetMore = () => {
+  const onShowMoreHandler = () => {
     setSelectValue(oldValue => ({
       ...oldValue,
       offset: (oldValue.offset as number) + OFFSET
@@ -109,7 +109,7 @@ export const Games = () => {
                 )}
               </For>
               <Show when={gameResource().length === LIMIT}>
-                <ShowMoreButton onClick={handleGetMore} />
+                <ShowMoreButton onClick={onShowMoreHandler} />
               </Show>
               <Show
                 when={

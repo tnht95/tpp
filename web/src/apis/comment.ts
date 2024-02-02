@@ -1,19 +1,13 @@
 import { AddComment, Comment, EditComment, Response } from '@/models';
 
-import { errHandler } from '.';
+import { errHandler, QueryWIthTargetInput } from '.';
 
-export type CommentQueryInput = {
-  targetId: string;
-  limit?: number;
-  offset?: number;
-};
-
-export const fetchCommentAction = (queryInput: CommentQueryInput) => {
+export const fetchCommentAction = (queryInput: QueryWIthTargetInput) => {
   const baseUrl = import.meta.env.VITE_SERVER_URL;
   const query: string[] = [] as const;
 
   for (const key in queryInput) {
-    query.push(`${key}=${queryInput[key as keyof CommentQueryInput]}`);
+    query.push(`${key}=${queryInput[key as keyof QueryWIthTargetInput]}`);
   }
 
   return fetch(`${baseUrl}/comments?${query.join('&')}`)

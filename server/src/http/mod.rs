@@ -28,7 +28,7 @@ use tracing::{info, Level};
 use crate::{
     config::Config,
     http::{
-        controllers::{auth, blog, book, comment, game, health, post, user},
+        controllers::{auth, blog, book, comment, discussion, game, health, post, user},
         handlers::{panic, shutdown},
         utils::err_handler::response_404_err,
     },
@@ -111,6 +111,7 @@ where
                         .route("/comments", post(comment::add))
                         .route("/comments/:id", delete(comment::delete))
                         .route("/comments/:id", put(comment::edit))
+                        .route("/discussions", get(discussion::filter))
                         .layer(middleware),
                 )
                 .fallback(response_404_err)

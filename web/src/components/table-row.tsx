@@ -1,17 +1,18 @@
 type TableRowProps = {
   title: string;
-  user: string;
+  username: string;
   date: string;
+  url: string;
 };
 export const TableRow = (props: TableRowProps) => (
   <div class="hover:bg-gray-100">
     <div class="whitespace-nowrap px-8 py-4 text-sm text-gray-500">
       <div>
-        <a href="" class="text-lg font-bold text-gray-800">
+        <a href={props.url} class="text-lg font-bold text-gray-800">
           {props.title}
         </a>
         <p class="text-xs font-normal text-gray-400">
-          {props.date} by {props.user}
+          {props.date} by {props.username}
         </p>
       </div>
     </div>

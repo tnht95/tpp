@@ -4,6 +4,7 @@ export * from './post';
 export * from './blog';
 export * from './user';
 export * from './comment';
+export * from './discussion';
 
 export type Response<T> = {
   data: T;

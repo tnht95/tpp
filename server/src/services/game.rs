@@ -74,7 +74,7 @@ where
 
         if let Some(offset) = query.offset {
             separated.push("offset");
-            separated.push(offset);
+            separated.push_bind(offset);
         }
 
         if let Some(limit) = query.limit {

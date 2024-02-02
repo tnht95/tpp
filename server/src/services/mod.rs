@@ -6,6 +6,7 @@ use crate::{
         blog::{BlogService, IBlogService},
         book::{BookService, IBookService},
         comment::{CommentService, ICommentService},
+        discussion::{DiscussionService, IDiscussionService},
         game::{GameService, IGameService},
         health::{HealthService, IHealthService},
         post::{IPostService, PostService},
@@ -16,6 +17,7 @@ use crate::{
 pub mod blog;
 pub mod book;
 pub mod comment;
+pub mod discussion;
 pub mod game;
 pub mod health;
 pub mod post;
@@ -29,6 +31,7 @@ pub trait IInternalServices {
     type TPostService: IPostService + Send + Sync;
     type TBlogService: IBlogService + Send + Sync;
     type TCommentService: ICommentService + Send + Sync;
+    type TDiscussionService: IDiscussionService + Send + Sync;
 }
 
 pub struct InternalServices;
@@ -40,6 +43,7 @@ impl IInternalServices for InternalServices {
     type TPostService = PostService<Database>;
     type TBlogService = BlogService<Database>;
     type TCommentService = CommentService<Database>;
+    type TDiscussionService = DiscussionService<Database>;
 }
 
 pub struct Services<TInternalServices: IInternalServices> {
@@ -50,6 +54,7 @@ pub struct Services<TInternalServices: IInternalServices> {
     pub post: TInternalServices::TPostService,
     pub blog: TInternalServices::TBlogService,
     pub comment: TInternalServices::TCommentService,
+    pub discussion: TInternalServices::TDiscussionService,
 }
 
 pub struct ServicesBuilder<TInternalServices: IInternalServices> {
@@ -60,6 +65,7 @@ pub struct ServicesBuilder<TInternalServices: IInternalServices> {
     post: Option<TInternalServices::TPostService>,
     blog: Option<TInternalServices::TBlogService>,
     comment: Option<TInternalServices::TCommentService>,
+    discussion: Option<TInternalServices::TDiscussionService>,
 }
 
 impl<TInternalServices: IInternalServices> ServicesBuilder<TInternalServices> {
@@ -72,6 +78,7 @@ impl<TInternalServices: IInternalServices> ServicesBuilder<TInternalServices> {
             post: None,
             blog: None,
             comment: None,
+            discussion: None,
         }
     }
 
@@ -110,6 +117,11 @@ impl<TInternalServices: IInternalServices> ServicesBuilder<TInternalServices> {
         self
     }
 
+    pub fn discussion(mut self, discussion: TInternalServices::TDiscussionService) -> Self {
+        self.discussion = Some(discussion);
+        self
+    }
+
     pub fn build(self) -> Services<TInternalServices> {
         Services {
             health: self.health.unwrap(),
@@ -119,6 +131,7 @@ impl<TInternalServices: IInternalServices> ServicesBuilder<TInternalServices> {
             post: self.post.unwrap(),
             blog: self.blog.unwrap(),
             comment: self.comment.unwrap(),
+            discussion: self.discussion.unwrap(),
         }
     }
 }

@@ -15,7 +15,10 @@ use crate::{
         },
     },
     model::{
-        requests::comment::{AddCommentRequest, CommentQuery, EditCommentRequest},
+        requests::{
+            comment::{AddCommentRequest, EditCommentRequest},
+            QueryWithTarget,
+        },
         responses::{
             comment::{NOT_AUTH_DEL, NOT_AUTH_EDIT},
             HttpResponse,
@@ -30,7 +33,7 @@ use crate::{
 
 pub async fn filter<TInternalServices: IInternalServices>(
     State(state): InternalState<TInternalServices>,
-    Query(query): Query<CommentQuery>,
+    Query(query): Query<QueryWithTarget>,
 ) -> Response {
     match state.services.comment.filter(query).await {
         Ok(comments) => Json(HttpResponse { data: comments }).into_response(),
