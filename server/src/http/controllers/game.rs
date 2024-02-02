@@ -1,23 +1,31 @@
+use std::sync::Arc;
+
 use axum::{
-    extract::{Path, State},
+    extract::{Multipart, Path, State},
     response::{IntoResponse, Response},
     Json,
 };
 use uuid::Uuid;
+use validator::Validate;
 
 use crate::{
     http::{
         controllers::InternalState,
         utils::{
             auth::Authentication,
-            err_handler::{response_400_with_const, response_unhandled_err},
-            validator::{JsonValidator, QueryValidator},
+            err_handler::{
+                response_400_with_const,
+                response_unhandled_err,
+                response_validation_err,
+            },
+            multipart::extract_bytes_from_multipart,
+            validator::QueryValidator,
         },
     },
     model::{
         requests::game::{AddGameRequest, GameQuery},
         responses::{
-            game::{NOT_AUTH_DEL, NOT_FOUND},
+            game::{DESERIALIZE_GAME_ERR, NOT_AUTH_DEL, NOT_FOUND},
             HttpResponse,
             INVALID_UUID_ERR,
         },
@@ -56,17 +64,6 @@ pub async fn get_by_id<TInternalServices: IInternalServices>(
     }
 }
 
-pub async fn add<TInternalServices: IInternalServices>(
-    State(state): InternalState<TInternalServices>,
-    Authentication(user, ..): Authentication<TInternalServices>,
-    JsonValidator(game): JsonValidator<AddGameRequest>,
-) -> Response {
-    match state.services.game.add(user.id, &user.name, game).await {
-        Ok(game) => Json(HttpResponse { data: game }).into_response(),
-        Err(GameServiceErr::Other(e)) => response_unhandled_err(e),
-    }
-}
-
 pub async fn delete<TInternalServices: IInternalServices>(
     Path(id): Path<String>,
     State(state): InternalState<TInternalServices>,
@@ -86,6 +83,47 @@ pub async fn delete<TInternalServices: IInternalServices>(
     };
 
     match state.services.game.delete(id).await {
+        Ok(game) => Json(HttpResponse { data: game }).into_response(),
+        Err(GameServiceErr::Other(e)) => response_unhandled_err(e),
+    }
+}
+
+pub async fn add<TInternalServices: IInternalServices>(
+    State(state): InternalState<TInternalServices>,
+    Authentication(user, ..): Authentication<TInternalServices>,
+    mut multipart: Multipart,
+) -> Response {
+    let rom = match extract_bytes_from_multipart(&mut multipart).await {
+        Ok(bytes) => Arc::new(bytes),
+        Err(e) => return e,
+    };
+
+    let game = match extract_bytes_from_multipart(&mut multipart).await {
+        Ok(bytes) => match serde_json::from_slice::<AddGameRequest>(&bytes) {
+            Ok(game) => game,
+            Err(_) => return response_400_with_const(DESERIALIZE_GAME_ERR),
+        },
+        Err(e) => return e,
+    };
+
+    match game.validate() {
+        Ok(_) => (),
+        Err(e) => return response_validation_err(e).into_response(),
+    };
+
+    match state
+        .services
+        .game
+        .add(user.id, user.name, game, |id| {
+            let rom = Arc::clone(&rom);
+            Box::pin(async move {
+                let rel_rom_path = format!("/roms/{}", id);
+                tokio::fs::write(format!("{}{}", env!("PWD"), rel_rom_path), rom.as_ref()).await?;
+                Ok(rel_rom_path)
+            })
+        })
+        .await
+    {
         Ok(game) => Json(HttpResponse { data: game }).into_response(),
         Err(GameServiceErr::Other(e)) => response_unhandled_err(e),
     }
