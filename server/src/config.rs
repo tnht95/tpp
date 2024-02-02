@@ -87,6 +87,8 @@ impl Config {
             bail!("parent dir not found");
         }
 
+        // FIXME: init /roms folder
+
         let toml = read_to_string(file)?;
         Ok(toml::from_str(&toml)?)
     }

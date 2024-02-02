@@ -93,11 +93,13 @@ pub async fn add<TInternalServices: IInternalServices>(
     Authentication(user, ..): Authentication<TInternalServices>,
     mut multipart: Multipart,
 ) -> Response {
+    // FIXME: validate rom
     let rom = match extract_bytes_from_multipart(&mut multipart).await {
         Ok(bytes) => Arc::new(bytes),
         Err(e) => return e,
     };
 
+    // FIXME: validate game
     let game = match extract_bytes_from_multipart(&mut multipart).await {
         Ok(bytes) => match serde_json::from_slice::<AddGameRequest>(&bytes) {
             Ok(game) => game,

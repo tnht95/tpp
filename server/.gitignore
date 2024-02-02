@@ -18,4 +18,4 @@ target/
 assets
 data
 config.toml
-roms
+roms/*
