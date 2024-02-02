@@ -3,19 +3,31 @@ use std::fmt;
 use serde::Deserialize;
 use validator::{Validate, ValidationError};
 
+use super::validate_tags;
 use crate::model::requests::OrderBy;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Validate)]
 #[serde(rename_all = "camelCase")]
 pub struct AddGameRequest {
+    #[validate(length(min = 1, message = "Can not be empty"))]
+    #[validate(length(max = 40, message = "Too long, exceeding 40 characters."))]
     pub name: String,
-    pub author_id: i64,
-    pub author_name: String,
+
+    #[validate(length(max = 1000, message = "Too long, exceeding 1000 characters."))]
     pub url: Option<String>,
+
+    #[validate(length(max = 1000, message = "Too long, exceeding 1000 characters."))]
     pub avatar_url: Option<String>,
+
+    #[validate(length(max = 255, message = "Too long, exceeding 255 characters."))]
     pub about: Option<String>,
+
+    #[validate(length(max = 1000, message = "Too long, exceeding 1000 characters."))]
     pub info: Option<String>,
+
+    #[validate(custom(function = "validate_tags"))]
     pub tags: Option<Vec<String>>,
+
     pub rom: String,
 }
 

@@ -1,4 +1,5 @@
 use serde::Deserialize;
+use validator::ValidationError;
 
 pub mod blog;
 pub mod book;
@@ -53,4 +54,27 @@ impl std::fmt::Display for OrderBy {
             OrderBy::Desc => write!(f, "desc"),
         }
     }
+}
+
+fn validate_tags(tags: &Vec<String>) -> Result<(), ValidationError> {
+    if tags.len() > 5 {
+        return Err(ValidationError::new("invalid_tag_size"));
+    }
+
+    let has_spacing = tags.iter().any(|t| t.starts_with(' ') || t.ends_with(' '));
+    if has_spacing {
+        return Err(ValidationError::new("invalid_tag_spacing"));
+    }
+
+    let is_empty = tags.iter().any(|t| t.is_empty());
+    if is_empty {
+        return Err(ValidationError::new("invalid_tag_empty"));
+    }
+
+    let too_long = tags.iter().any(|t| t.len() > 20);
+    if too_long {
+        return Err(ValidationError::new("invalid_tag_too_long"));
+    }
+
+    Ok(())
 }

@@ -10,7 +10,7 @@ use crate::{
         entities::game::{Game, GameSummary},
         IDatabase,
     },
-    model::requests::game::GameQuery,
+    model::requests::game::{AddGameRequest, GameQuery},
 };
 
 #[derive(Error, Debug)]
@@ -22,8 +22,13 @@ pub enum GameServiceErr {
 #[async_trait]
 pub trait IGameService {
     async fn filter(&self, query: GameQuery) -> Result<Vec<GameSummary>, GameServiceErr>;
-    // async fn add(&self, game: AddGameRequest) -> Result<Game, GameServiceErr>;
     async fn get_by_id(&self, id: Uuid) -> Result<Option<Game>, GameServiceErr>;
+    async fn add(
+        &self,
+        author_id: i64,
+        author_name: &str,
+        game: AddGameRequest,
+    ) -> Result<Game, GameServiceErr>;
 }
 
 pub struct GameService<T: IDatabase> {
@@ -97,18 +102,34 @@ where
         }
     }
 
-    // async fn add(&self, game: AddGameRequest) -> Result<Game, GameServiceErr> {
-    //     match sqlx::query_as!(
-    //         Game,
-    //         "insert into posts(name, author_id, author_name, url, avatar_url, ) values($1, $2) returning *",
-    //         author_id,
-    //         post.content
-    //     )
-    //         .fetch_one(self.db.get_pool())
-    //         .await
-    //     {
-    //         Ok(posts) => Ok(posts),
-    //         Err(e) => Err(PostServiceErr::Other(e.into())),
-    //     }
-    // }
+    async fn add(
+        &self,
+        author_id: i64,
+        author_name: &str,
+        game: AddGameRequest,
+    ) -> Result<Game, GameServiceErr> {
+        match sqlx::query_as!(
+            Game,
+            r#"insert into games
+            (name, author_id, author_name, url, avatar_url, about, info, stars, tags, rom) values
+            ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+            returning *"#,
+            game.name,
+            author_id,
+            author_name,
+            game.url,
+            game.avatar_url,
+            game.about,
+            game.info,
+            0,
+            game.tags.as_deref(),
+            game.rom,
+        )
+        .fetch_one(self.db.get_pool())
+        .await
+        {
+            Ok(game) => Ok(game),
+            Err(e) => Err(GameServiceErr::Other(e.into())),
+        }
+    }
 }

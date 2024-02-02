@@ -9,12 +9,13 @@ use crate::{
     http::{
         controllers::InternalState,
         utils::{
+            auth::Authentication,
             err_handler::{response_400_with_const, response_unhandled_err},
-            validator::QueryValidator,
+            validator::{JsonValidator, QueryValidator},
         },
     },
     model::{
-        requests::game::GameQuery,
+        requests::game::{AddGameRequest, GameQuery},
         responses::{HttpResponse, INVALID_UUID_ERR},
     },
     services::{
@@ -43,6 +44,17 @@ pub async fn get_by_id<TInternalServices: IInternalServices>(
     };
 
     match state.services.game.get_by_id(id).await {
+        Ok(game) => Json(HttpResponse { data: game }).into_response(),
+        Err(GameServiceErr::Other(e)) => response_unhandled_err(e),
+    }
+}
+
+pub async fn add<TInternalServices: IInternalServices>(
+    State(state): InternalState<TInternalServices>,
+    Authentication(user, ..): Authentication<TInternalServices>,
+    JsonValidator(game): JsonValidator<AddGameRequest>,
+) -> Response {
+    match state.services.game.add(user.id, &user.name, game).await {
         Ok(game) => Json(HttpResponse { data: game }).into_response(),
         Err(GameServiceErr::Other(e)) => response_unhandled_err(e),
     }
