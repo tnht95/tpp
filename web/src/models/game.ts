@@ -32,4 +32,4 @@ export type AddGame = {
   about: string | undefined;
   info: string | undefined;
   tags: string[] | undefined;
-}
+};
