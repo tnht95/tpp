@@ -63,7 +63,7 @@ export const BlogForm = (props: BlogFormProps) => {
             </button>
           </div>
           <form ref={el => [submit(el, () => onSubmitHandler)]}>
-            <div class="mx-auto flex flex-col gap-7 rounded-b-xl border-b border-gray-300 px-6 text-gray-800 shadow-lg">
+            <div class="mx-auto flex flex-col gap-3 rounded-b-xl border-b border-gray-300 px-6 text-gray-800 shadow-lg">
               <input
                 class="rounded-xl border border-gray-300 p-3 outline-none placeholder:text-gray-400"
                 placeholder="Title"

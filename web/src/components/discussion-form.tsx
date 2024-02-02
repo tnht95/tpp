@@ -1,15 +1,26 @@
 import { createSignal, Ref, Show } from 'solid-js';
 
 import { Markdown, PreviewButtonGroup } from '@/components';
+import { useGameCtx } from '@/context';
+import { AddDiscussion } from '@/models';
+import { MaxStr, MinStr, useForm } from '@/utils';
 
 type DiscussionFormProps = {
   ref: Ref<HTMLDivElement>;
   onCloseHandler: () => void;
+  onSubmitHandler: (discussion: AddDiscussion) => void;
 };
 
+const ErrorMessage = (props: { msg: string }) => (
+  <span class="text-red-600">{props.msg}</span>
+);
+
 export const DiscussionForm = (props: DiscussionFormProps) => {
+  const { game } = useGameCtx();
   const [isEditMode, setIsEditMode] = createSignal(true);
   const [content, setContent] = createSignal('');
+  const { validate, submit, errors } = useForm({ errClass: 'border-red-600' });
+
   const displayMarkdown = (
     <div class="h-60 overflow-auto border border-white p-3">
       <Markdown content={content()} />
@@ -18,6 +29,16 @@ export const DiscussionForm = (props: DiscussionFormProps) => {
 
   const handleClick = () => {
     setIsEditMode(mode => !mode);
+  };
+
+  const onSubmitHandler = (formEl: HTMLFormElement) => {
+    const formData = new FormData(formEl);
+    props.onSubmitHandler({
+      gameId: game()?.id as string,
+      title: formData.get('title') as string,
+      content: formData.get('content') as string
+    });
+    formEl.reset();
   };
 
   return (
@@ -43,22 +64,31 @@ export const DiscussionForm = (props: DiscussionFormProps) => {
               <span class="sr-only">Close modal</span>
             </button>
           </div>
-          <form action="#">
-            <div class="mx-auto flex flex-col gap-7 rounded-b-xl border-b border-gray-300 px-6 text-gray-800 shadow-lg">
+          <form ref={el => [submit(el, () => onSubmitHandler)]}>
+            <div class="mx-auto flex flex-col gap-3 rounded-b-xl border-b border-gray-300 px-6 text-gray-800 shadow-lg">
               <input
                 class="rounded-xl border border-gray-300 p-3 outline-none placeholder:text-gray-400"
                 placeholder="Discussion title"
                 type="text"
+                name="title"
+                ref={el => [
+                  validate(el, () => [MinStr(1, 'Required'), MaxStr(100)])
+                ]}
               />
+              {errors['title'] && <ErrorMessage msg={errors['title']} />}
               <Show when={isEditMode()} fallback={displayMarkdown}>
                 <textarea
                   class="h-60 rounded-xl border border-gray-300 p-3 outline-none placeholder:text-gray-400"
-                  placeholder="Describe everything about this post here (Support some markdowns)"
+                  placeholder="What do you want to discuss about? (Support some markdowns)"
                   onFocusOut={e => setContent(e.target.value)}
                   value={content()}
+                  name="content"
+                  ref={el => [
+                    validate(el, () => [MinStr(1, 'Required'), MaxStr(1000)])
+                  ]}
                 />
+                {errors['content'] && <ErrorMessage msg={errors['content']} />}
               </Show>
-
               <div class="mb-5">
                 <PreviewButtonGroup
                   isEditMode={isEditMode()}

@@ -6,7 +6,7 @@ use thiserror::Error;
 
 use crate::{
     database::{entities::discussion::Discussion, IDatabase},
-    model::requests::QueryWithTarget,
+    model::requests::{discussion::AddDiscussionRequest, QueryWithTarget},
 };
 
 #[derive(Error, Debug)]
@@ -19,6 +19,12 @@ pub enum DiscussionServiceErr {
 pub trait IDiscussionService {
     async fn filter(&self, query: QueryWithTarget)
         -> Result<Vec<Discussion>, DiscussionServiceErr>;
+    async fn add(
+        &self,
+        user_id: i64,
+        user_name: String,
+        discussion: AddDiscussionRequest,
+    ) -> Result<Discussion, DiscussionServiceErr>;
 }
 
 pub struct DiscussionService<T: IDatabase> {
@@ -59,6 +65,29 @@ where
             .await
         {
             Ok(discussions) => Ok(discussions),
+            Err(e) => Err(DiscussionServiceErr::Other(e.into())),
+        }
+    }
+
+    async fn add(
+        &self,
+        user_id: i64,
+        user_name: String,
+        discussion: AddDiscussionRequest,
+    ) -> Result<Discussion, DiscussionServiceErr> {
+        match sqlx::query_as!(
+            Discussion,
+            "insert into discussions (user_id, user_name, game_id, title, content) values ($1, $2, $3, $4, $5) returning *",
+            user_id,
+            user_name,
+            discussion.game_id,
+            discussion.title,
+            discussion.content
+        )
+            .fetch_one(self.db.get_pool())
+            .await
+        {
+            Ok(posts) => Ok(posts),
             Err(e) => Err(DiscussionServiceErr::Other(e.into())),
         }
     }

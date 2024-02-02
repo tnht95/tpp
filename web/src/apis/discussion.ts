@@ -1,5 +1,5 @@
 import { errHandler, QueryWIthTargetInput } from '@/apis';
-import { Discussion, Response } from '@/models';
+import { AddDiscussion, Discussion, Response } from '@/models';
 
 export const fetchDiscussionAction = (queryInput: QueryWIthTargetInput) => {
   const baseUrl = import.meta.env.VITE_SERVER_URL;
@@ -13,3 +13,15 @@ export const fetchDiscussionAction = (queryInput: QueryWIthTargetInput) => {
     .then(errHandler)
     .then((r: Response<Discussion[]>) => r.data);
 };
+
+export const addDiscussionAction = (body: AddDiscussion) =>
+  fetch(`${import.meta.env.VITE_SERVER_URL}/discussions`, {
+    method: 'post',
+    credentials: 'include',
+    headers: {
+      'content-type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  })
+    .then(errHandler)
+    .then((r: Response<Discussion>) => r.data);

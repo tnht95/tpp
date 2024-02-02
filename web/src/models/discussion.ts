@@ -8,3 +8,9 @@ export type Discussion = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type AddDiscussion = {
+  gameId: string;
+  title: string;
+  content: string;
+};

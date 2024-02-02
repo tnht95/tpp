@@ -1,5 +1,6 @@
 import { Modal } from 'flowbite';
 import {
+  batch,
   createEffect,
   createResource,
   createSignal,
@@ -8,15 +9,20 @@ import {
 } from 'solid-js';
 import { createStore, produce } from 'solid-js/store';
 
-import { fetchDiscussionAction, QueryWIthTargetInput } from '@/apis';
+import {
+  addDiscussionAction,
+  fetchDiscussionAction,
+  QueryWIthTargetInput
+} from '@/apis';
 import { Button, DiscussionForm, ShowMoreButton, TableRow } from '@/components';
 import { LIMIT, OFFSET } from '@/constant';
-import { useGameCtx } from '@/context';
-import { Discussion } from '@/models';
+import { useGameCtx, useToastCtx } from '@/context';
+import { AddDiscussion, Discussion, ResponseErr } from '@/models';
 import { formatTime } from '@/utils';
 
 export const GameDiscussion = () => {
   const { game } = useGameCtx();
+  const { dispatch } = useToastCtx();
   const [modalRef, setModalRef] = createSignal<HTMLDivElement>();
   const [modal, setModal] = createSignal<Modal>();
   const [queryValue, setQueryValue] = createSignal<QueryWIthTargetInput>({
@@ -41,6 +47,23 @@ export const GameDiscussion = () => {
       );
     }
   });
+
+  const batchSubmitHandler = () =>
+    batch(() => {
+      setDiscussions([]);
+      setQueryValue(oldValues => ({
+        ...oldValues,
+        offset: 0
+      }));
+      modal()?.hide();
+    });
+
+  const onSubmitHandler = (discussion: AddDiscussion) =>
+    addDiscussionAction(discussion)
+      .then(batchSubmitHandler)
+      .catch((error: ResponseErr) =>
+        dispatch.showToast({ msg: error.msg, type: 'Err' })
+      ) as unknown;
 
   const onShowMoreHandler = () => {
     setQueryValue(oldValue => ({
@@ -68,6 +91,7 @@ export const GameDiscussion = () => {
                 <DiscussionForm
                   ref={setModalRef}
                   onCloseHandler={() => modal()?.hide()}
+                  onSubmitHandler={onSubmitHandler}
                 />
                 <For each={discussions}>
                   {d => (
@@ -75,7 +99,7 @@ export const GameDiscussion = () => {
                       title={d.title}
                       date={formatTime(d.createdAt)}
                       username={d.userName}
-                      url={`/games/${game()?.id}/discussions/${d.id}`}
+                      url={`/games/${game()?.id}/discussion/${d.id}`}
                     />
                   )}
                 </For>
