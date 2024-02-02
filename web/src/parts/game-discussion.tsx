@@ -8,7 +8,7 @@ import {
 } from 'solid-js';
 import { createStore, produce } from 'solid-js/store';
 
-import { fetchDiscussionAction , QueryWIthTargetInput } from '@/apis';
+import { fetchDiscussionAction, QueryWIthTargetInput } from '@/apis';
 import { Button, DiscussionForm, ShowMoreButton, TableRow } from '@/components';
 import { LIMIT, OFFSET } from '@/constant';
 import { useGameCtx } from '@/context';

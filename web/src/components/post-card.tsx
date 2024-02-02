@@ -152,7 +152,7 @@ export const PostCard = (props: PostCardProps) => {
           />
         </Show>
       </p>
-      <div class="mt-3 flex w-full text-gray-500">
+      <div class="mt-3 flex w-full select-none text-gray-500">
         <div class="flex w-full items-center gap-3 py-3">
           <div class="flex w-1/2 cursor-pointer items-center justify-center border-r-2 hover:font-bold hover:text-red-600">
             <i class="fa-regular fa-heart" />

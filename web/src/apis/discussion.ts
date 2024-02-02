@@ -1,5 +1,5 @@
 import { errHandler, QueryWIthTargetInput } from '@/apis';
-import { Discussion , Response } from '@/models';
+import { Discussion, Response } from '@/models';
 
 export const fetchDiscussionAction = (queryInput: QueryWIthTargetInput) => {
   const baseUrl = import.meta.env.VITE_SERVER_URL;
