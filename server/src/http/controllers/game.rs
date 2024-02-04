@@ -97,7 +97,6 @@ pub async fn add<TInternalServices: IInternalServices>(
         Err(e) => return e,
     };
 
-    // FIXME: validate game
     let game = match extract_bytes_from_multipart(&mut multipart).await {
         Ok(bytes) => match serde_json::from_slice::<AddGameRequest>(&bytes) {
             Ok(game) => game,

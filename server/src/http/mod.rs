@@ -6,6 +6,7 @@ use std::{iter::once, net::SocketAddr, sync::Arc, time::Duration};
 
 use anyhow::Result;
 use axum::{
+    extract::DefaultBodyLimit,
     http::{header::AUTHORIZATION, Method},
     routing::{delete, get, post, put},
     Router,
@@ -16,6 +17,7 @@ use tower_http::{
     catch_panic::CatchPanicLayer,
     compression::{CompressionLayer, CompressionLevel},
     cors::CorsLayer,
+    limit::RequestBodyLimitLayer,
     normalize_path::NormalizePath,
     request_id::{MakeRequestUuid, PropagateRequestIdLayer, SetRequestIdLayer},
     sensitive_headers::SetSensitiveRequestHeadersLayer,
@@ -118,6 +120,8 @@ where
                         .route("/discussions", post(discussion::add))
                         .layer(middleware),
                 )
+                .layer(DefaultBodyLimit::max(5 * 1024)) // 5KB
+                .layer(RequestBodyLimitLayer::new(5 * 1024)) // 5KB
                 .fallback(response_404_err)
                 .with_state(Arc::clone(&state)),
         );
