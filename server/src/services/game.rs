@@ -103,24 +103,18 @@ where
             separated.push_bind(limit);
         }
 
-        match query_builder
+        query_builder
             .build_query_as::<GameSummary>()
             .fetch_all(self.db.get_pool())
             .await
-        {
-            Ok(games) => Ok(games),
-            Err(e) => Err(GameServiceErr::Other(e.into())),
-        }
+            .map_err(|e| GameServiceErr::Other(e.into()))
     }
 
     async fn get_by_id(&self, id: Uuid) -> Result<Option<Game>, GameServiceErr> {
-        match sqlx::query_as!(Game, "select * from games where id = $1", id)
+        sqlx::query_as!(Game, "select * from games where id = $1", id)
             .fetch_optional(self.db.get_pool())
             .await
-        {
-            Ok(game) => Ok(game),
-            Err(e) => Err(GameServiceErr::Other(e.into())),
-        }
+            .map_err(|e| GameServiceErr::Other(e.into()))
     }
 
     async fn add(
@@ -176,29 +170,22 @@ where
     }
 
     async fn delete(&self, id: Uuid) -> Result<(), GameServiceErr> {
-        match sqlx::query!("delete from games where id = $1", id)
+        sqlx::query!("delete from games where id = $1", id)
             .execute(self.db.get_pool())
             .await
-        {
-            Ok(_) => Ok(()),
-            Err(e) => Err(GameServiceErr::Other(e.into())),
-        }
+            .map(|_| ())
+            .map_err(|e| GameServiceErr::Other(e.into()))
     }
 
     async fn existed(&self, id: Uuid, author_id: i64) -> Result<bool, GameServiceErr> {
-        match sqlx::query!(
+        sqlx::query!(
             "select count(*) as game_count from games where id = $1 and author_id = $2",
             id,
             author_id
         )
         .fetch_one(self.db.get_pool())
         .await
-        {
-            Ok(result) => match result.game_count {
-                None => Ok(false),
-                Some(count) => Ok(count > 0),
-            },
-            Err(e) => Err(GameServiceErr::Other(e.into())),
-        }
+        .map(|result| result.game_count.map(|c| c > 0).unwrap_or(false))
+        .map_err(|e| GameServiceErr::Other(e.into()))
     }
 }
