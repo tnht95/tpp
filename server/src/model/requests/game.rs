@@ -13,16 +13,16 @@ pub struct AddGameRequest {
     #[validate(length(max = 40, message = "Too long, exceeding 40 characters."))]
     pub name: String,
 
-    #[validate(length(max = 1000, message = "Too long, exceeding 1000 characters."))]
+    #[validate(length(max = 255, message = "Too long, exceeding 255 characters."))]
     pub url: Option<String>,
 
-    #[validate(length(max = 1000, message = "Too long, exceeding 1000 characters."))]
+    #[validate(length(max = 255, message = "Too long, exceeding 255 characters."))]
     pub avatar_url: Option<String>,
 
     #[validate(length(max = 255, message = "Too long, exceeding 255 characters."))]
     pub about: Option<String>,
 
-    #[validate(length(max = 1000, message = "Too long, exceeding 1000 characters."))]
+    #[validate(length(max = 2000, message = "Too long, exceeding 2000 characters."))]
     pub info: Option<String>,
 
     #[validate(custom(function = "validate_tags"))]
