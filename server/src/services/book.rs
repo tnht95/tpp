@@ -39,17 +39,14 @@ where
     T: IDatabase + Send + Sync,
 {
     async fn get_all(&self) -> Result<Vec<Book>, BookServiceErr> {
-        match sqlx::query_as!(Book, "select * from books")
+        sqlx::query_as!(Book, "select * from books")
             .fetch_all(self.db.get_pool())
             .await
-        {
-            Ok(books) => Ok(books),
-            Err(e) => Err(BookServiceErr::Other(e.into())),
-        }
+            .map_err(|e| BookServiceErr::Other(e.into()))
     }
 
     async fn add(&self, book: AddBookRequest) -> Result<Book, BookServiceErr> {
-        match sqlx::query_as!(
+        sqlx::query_as!(
             Book,
             r#"
                 insert into books ("name", "author", "description") values($1, $2, $3)
@@ -61,9 +58,6 @@ where
         )
         .fetch_one(self.db.get_pool())
         .await
-        {
-            Ok(book) => Ok(book),
-            Err(e) => Err(BookServiceErr::Other(e.into())),
-        }
+        .map_err(|e| BookServiceErr::Other(e.into()))
     }
 }
