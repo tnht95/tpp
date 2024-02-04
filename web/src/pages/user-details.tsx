@@ -13,6 +13,12 @@ import { useAuthCtx } from '@/context';
 import { NotFound } from '@/pages';
 import { UserActivity, UserGames } from '@/parts';
 
+const spinner = (
+  <div class="flex h-svh items-center justify-center">
+    <LoadingSpinner />
+  </div>
+);
+
 export const UserDetails = () => {
   const {
     utils: { isSameUser }
@@ -21,13 +27,7 @@ export const UserDetails = () => {
   const [user] = createResource(userId, fetchUserByIdAction);
 
   return (
-    <Suspense
-      fallback={
-        <div class="flex h-svh items-center justify-center">
-          <LoadingSpinner />
-        </div>
-      }
-    >
+    <Suspense fallback={spinner}>
       <ErrorBoundary fallback={<NotFound />}>
         <div class="my-5 ml-10 p-5">
           <div class="md:-mx-2 md:flex">

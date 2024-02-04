@@ -4,7 +4,7 @@ export type Game = {
   authorId: number;
   authorName: string;
   url: string | null;
-  avatarUrl: string;
+  avatarUrl: string | null;
   about: string | null;
   info: string | null;
   stars: number;
@@ -19,7 +19,7 @@ export type GameSummary = {
   name: string;
   authorId: number;
   authorName: string;
-  avatarUrl: string;
+  avatarUrl: string | null;
   stars: number;
   tags: string[] | null;
   createdAt: string;

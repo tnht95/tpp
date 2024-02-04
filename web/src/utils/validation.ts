@@ -12,6 +12,17 @@ export const MaxStr =
     return errMsg ?? `Max ${max} characters`;
   };
 
+export const requireFile = (el: { value: unknown }): string => {
+  const input = el as HTMLInputElement;
+  if (input.files?.length !== 1) return 'Require one file';
+  if (
+    (input.files[0]?.size as number) < 1 ||
+    (input.files[0]?.size as number) > 3584
+  )
+    return 'Invalid size';
+  return '';
+};
+
 export const validateTags = ({ value }: { value: string }) => {
   if (value === '') return '';
   const tagsArr = value.split(',');

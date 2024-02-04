@@ -2,7 +2,7 @@ import { createSignal, Ref, Show } from 'solid-js';
 
 import { Markdown, PreviewButtonGroup } from '@/components';
 import { Blog, BlogRequest } from '@/models';
-import { MaxStr, MinStr, useForm, validateTags } from '@/utils';
+import { getTagValue, MaxStr, MinStr, useForm, validateTags } from '@/utils';
 
 type BlogFormProps = {
   modalRef: Ref<HTMLDivElement>;
@@ -123,9 +123,4 @@ export const BlogForm = (props: BlogFormProps) => {
       </div>
     </div>
   );
-};
-
-const getTagValue = (tags: string): string[] | undefined => {
-  if (tags === '') return undefined;
-  return tags.split(',');
 };

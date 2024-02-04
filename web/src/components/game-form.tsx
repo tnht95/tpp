@@ -2,7 +2,15 @@ import { createSignal, Ref, Show } from 'solid-js';
 
 import { Markdown, PreviewButtonGroup } from '@/components';
 import { AddGame } from '@/models';
-import { MinStr, useForm, validateTags } from '@/utils';
+import {
+  getStrVal,
+  getTagValue,
+  MaxStr,
+  MinStr,
+  requireFile,
+  useForm,
+  validateTags
+} from '@/utils';
 
 type GameFormProps = {
   ref: Ref<HTMLDivElement>;
@@ -33,10 +41,10 @@ export const GameForm = (props: GameFormProps) => {
     const formData = new FormData(formEl);
     props.onSubmitHandler(formData.get('rom') as File, {
       name: formData.get('name') as string,
-      url: formData.get('url') as string,
-      avatarUrl: formData.get('avatarUrl') as string,
-      about: formData.get('about') as string,
-      info: formData.get('info') as string,
+      url: getStrVal(formData.get('url') as string),
+      avatarUrl: getStrVal(formData.get('avatarUrl') as string),
+      about: getStrVal(formData.get('about') as string),
+      info: getStrVal(formData.get('info') as string),
       tags: getTagValue(formData.get('tags') as string)
     });
     formEl.reset();
@@ -69,7 +77,9 @@ export const GameForm = (props: GameFormProps) => {
               <input
                 placeholder="Game name"
                 class="w-full rounded-xl border p-3 placeholder:text-gray-400"
-                ref={el => [validate(el, () => [MinStr(1, 'Required')])]}
+                ref={el => [
+                  validate(el, () => [MinStr(1, 'Required'), MaxStr(40)])
+                ]}
                 name="name"
               />
               {errors['name'] && <ErrorMessage msg={errors['name']} />}
@@ -77,12 +87,18 @@ export const GameForm = (props: GameFormProps) => {
                 placeholder="Game url"
                 class="w-full rounded-xl border p-3 placeholder:text-gray-400"
                 name="url"
+                ref={el => [validate(el, () => [MaxStr(255)])]}
               />
+              {errors['url'] && <ErrorMessage msg={errors['url']} />}
               <input
                 placeholder="Game avatar url"
                 class="w-full rounded-xl border p-3 placeholder:text-gray-400"
                 name="avatarUrl"
+                ref={el => [validate(el, () => [MaxStr(255)])]}
               />
+              {errors['avatarUrl'] && (
+                <ErrorMessage msg={errors['avatarUrl']} />
+              )}
               <input
                 placeholder="Game tags: separate each tag with a comma"
                 class="w-full rounded-xl border p-3 placeholder:text-gray-400"
@@ -95,7 +111,9 @@ export const GameForm = (props: GameFormProps) => {
                 rows="4"
                 class="w-full resize-none rounded-xl border border-gray-200 py-2 transition duration-150 ease-in-out placeholder:text-gray-400 focus:border-blue-500 focus:outline-none"
                 placeholder="About this game"
+                ref={el => [validate(el, () => [MaxStr(255)])]}
               />
+              {errors['about'] && <ErrorMessage msg={errors['about']} />}
               <Show when={isEditMode()} fallback={displayMarkdown}>
                 <textarea
                   name="info"
@@ -104,21 +122,25 @@ export const GameForm = (props: GameFormProps) => {
                   placeholder="Game discription (Support some markdowns)"
                   onFocusOut={e => setContent(e.target.value)}
                   value={content()}
+                  ref={el => [validate(el, () => [MaxStr(2000)])]}
                 />
+                {errors['info'] && <ErrorMessage msg={errors['info']} />}
               </Show>
               <div class="mb-6">
-                <div class="relative flex items-center justify-between rounded-xl border bg-white px-4 py-3 transition duration-150 ease-in-out hover:border-blue-500">
-                  <input
-                    type="file"
-                    name="rom"
-                    class="absolute inset-0 size-full cursor-pointer opacity-0"
-                  />
-                  <div class="flex items-center">
-                    <i class="fa-solid fa-plus text-lg text-gray-400" />
-                    <span class="ml-2 text-gray-400">Upload your ROM file</span>
-                  </div>
-                  <span class="text-sm text-gray-300">Max file size: 4KB</span>
-                </div>
+                <input
+                  class="block w-full cursor-pointer rounded-lg border bg-gray-50 text-sm text-gray-400 focus:outline-none"
+                  type="file"
+                  name="rom"
+                  ref={el => [
+                    validate(el, () => [requireFile], { onBlur: false })
+                  ]}
+                />
+                <p class="mt-1 text-sm text-gray-400">
+                  Upload your ROM (Max file size: 4KB)
+                </p>
+                <Show when={errors['rom']}>
+                  <ErrorMessage msg={errors['rom'] as string} />
+                </Show>
               </div>
             </div>
             <PreviewButtonGroup
@@ -130,9 +152,4 @@ export const GameForm = (props: GameFormProps) => {
       </div>
     </div>
   );
-};
-
-const getTagValue = (tags: string): string[] | undefined => {
-  if (tags === '') return undefined;
-  return tags.split(',');
 };

@@ -9,7 +9,10 @@ export const VerticalGameCard = (props: VerticalGameCardProps) => (
   <div class="flex items-center">
     <img
       class="h-24 w-40 rounded-t-lg p-4"
-      src={props.game.avatarUrl}
+      src={
+        props.game.avatarUrl ||
+        'https://jacopofarina.eu/static/img/chip_8_screenshot.png'
+      }
       alt={`${props.game.name} img`}
     />
     <div>

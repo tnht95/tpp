@@ -48,13 +48,20 @@ export const useForm = ({ errClass }: { errClass: string }) => {
   const [errors, setErrors] = createStore<PlainObject>({});
   const fields = {} as Record<string, Config>;
 
-  const validate = (el: FormInputElement, accessor: () => Validators[]) => {
+  const validate = (
+    el: FormInputElement,
+    accessor: () => Validators[],
+    opts?: { onBlur: boolean }
+  ) => {
+    const options = { onBlur: true, ...opts };
     fields[el.name] = { el, validators: accessor() };
 
-    el.addEventListener(
-      'blur',
-      checkValid(fields[el.name] as Config, setErrors, errClass)
-    );
+    if (options.onBlur) {
+      el.addEventListener(
+        'blur',
+        checkValid(fields[el.name] as Config, setErrors, errClass)
+      );
+    }
 
     el.addEventListener('input', () => {
       if (!errors[el.name]) return;
