@@ -14,6 +14,7 @@ pub struct Config {
     pub github_app: GithubApp,
     pub auth: Auth,
     pub site_url: String,
+    pub rom_dir: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -52,7 +53,7 @@ pub struct Jwt {
 impl Default for Config {
     fn default() -> Self {
         Self {
-            log_format: LogFmt::Json,
+            log_format: LogFmt::Text,
             server: Server {
                 http_port: 8080,
                 pg_url: "postgres://service:password@localhost:5432/book?sslmode=disable".into(),
@@ -69,6 +70,7 @@ impl Default for Config {
                 admin_id: 40195902,
             },
             site_url: "http://localhost:3000".into(),
+            rom_dir: format!("{}/roms", env!("PWD")),
         }
     }
 }

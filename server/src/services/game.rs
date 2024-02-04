@@ -1,8 +1,9 @@
-use std::{future::Future, pin::Pin, sync::Arc};
+use std::sync::Arc;
 
 use async_trait::async_trait;
 use sqlx::{Postgres, QueryBuilder};
 use thiserror::Error;
+use tokio::fs::{create_dir, metadata, write};
 use uuid::Uuid;
 
 use crate::{
@@ -23,14 +24,12 @@ pub enum GameServiceErr {
 pub trait IGameService {
     async fn filter(&self, query: GameQuery) -> Result<Vec<GameSummary>, GameServiceErr>;
     async fn get_by_id(&self, id: Uuid) -> Result<Option<Game>, GameServiceErr>;
-    async fn add<
-        F: Send + Fn(Uuid) -> Pin<Box<dyn Future<Output = Result<String, anyhow::Error>> + Send>>,
-    >(
+    async fn add(
         &self,
         author_id: i64,
         author_name: String,
         game: AddGameRequest,
-        rom_path_cb: F,
+        rom_bytes: &[u8],
     ) -> Result<Game, GameServiceErr>;
     async fn delete(&self, id: Uuid) -> Result<(), GameServiceErr>;
     async fn existed(&self, id: Uuid, author_id: i64) -> Result<bool, GameServiceErr>;
@@ -38,14 +37,31 @@ pub trait IGameService {
 
 pub struct GameService<T: IDatabase> {
     db: Arc<T>,
+    rom_dir: String,
 }
 
 impl<T> GameService<T>
 where
     T: IDatabase,
 {
-    pub fn new(db: Arc<T>) -> Self {
-        Self { db }
+    pub async fn new(db: Arc<T>, rom_dir: String) -> Self {
+        let is_dir = metadata(&rom_dir)
+            .await
+            .map(|mdata| mdata.is_dir())
+            .unwrap_or(false);
+        if !is_dir {
+            create_dir(&rom_dir).await.expect("invalid rom_dir");
+        }
+        Self { db, rom_dir }
+    }
+
+    async fn write_rom(&self, id: Uuid, rom_bytes: &[u8]) -> Result<String, GameServiceErr> {
+        let rom_path_abs = format!("{}/{}", self.rom_dir, id);
+        write(&rom_path_abs, rom_bytes)
+            .await
+            .map_err(|e| GameServiceErr::Other(e.into()))?;
+        let seq_path = rom_path_abs.split('/').rev().take(2).collect::<Vec<_>>();
+        Ok(format!("{}/{}", seq_path[1], seq_path[0]))
     }
 }
 
@@ -107,14 +123,12 @@ where
         }
     }
 
-    async fn add<
-        F: Send + Fn(Uuid) -> Pin<Box<dyn Future<Output = Result<String, anyhow::Error>> + Send>>,
-    >(
+    async fn add(
         &self,
         author_id: i64,
         author_name: String,
         game: AddGameRequest,
-        rom_path_cb: F,
+        rom_bytes: &[u8],
     ) -> Result<Game, GameServiceErr> {
         let mut tx = self
             .db
@@ -142,7 +156,7 @@ where
         .await
         .map_err(|e| GameServiceErr::Other(e.into()))?;
 
-        let rom_path = rom_path_cb(game.id).await.map_err(GameServiceErr::Other)?;
+        let rom_path = self.write_rom(game.id, rom_bytes).await?;
 
         let game = sqlx::query_as!(
             Game,

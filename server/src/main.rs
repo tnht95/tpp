@@ -79,7 +79,8 @@ async fn main() -> Result<()> {
             let health_service = HealthService::new(Database::new_with_default_log(&config).await?);
             let book_service = BookService::new(Arc::clone(&db));
             let user_service = UserService::new(Arc::clone(&db));
-            let game_service = GameService::new(Arc::clone(&db));
+            let game_service =
+                GameService::new(Arc::clone(&db), String::from(&config.rom_dir)).await;
             let post_service = PostService::new(Arc::clone(&db));
             let blog_service = BlogService::new(Arc::clone(&db));
             let comment_service = CommentService::new(Arc::clone(&db));

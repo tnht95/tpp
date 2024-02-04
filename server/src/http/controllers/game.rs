@@ -1,5 +1,3 @@
-use std::sync::Arc;
-
 use axum::{
     extract::{Multipart, Path, State},
     response::{IntoResponse, Response},
@@ -94,8 +92,8 @@ pub async fn add<TInternalServices: IInternalServices>(
     mut multipart: Multipart,
 ) -> Response {
     // FIXME: validate rom
-    let rom = match extract_bytes_from_multipart(&mut multipart).await {
-        Ok(bytes) => Arc::new(bytes),
+    let rom_bytes = match extract_bytes_from_multipart(&mut multipart).await {
+        Ok(bytes) => bytes,
         Err(e) => return e,
     };
 
@@ -116,14 +114,7 @@ pub async fn add<TInternalServices: IInternalServices>(
     match state
         .services
         .game
-        .add(user.id, user.name, game, |id| {
-            let rom = Arc::clone(&rom);
-            Box::pin(async move {
-                let rel_rom_path = format!("/roms/{}", id);
-                tokio::fs::write(format!("{}{}", env!("PWD"), rel_rom_path), rom.as_ref()).await?;
-                Ok(rel_rom_path)
-            })
-        })
+        .add(user.id, user.name, game, &rom_bytes)
         .await
     {
         Ok(game) => Json(HttpResponse { data: game }).into_response(),
