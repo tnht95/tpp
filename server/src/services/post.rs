@@ -57,18 +57,15 @@ where
         separated.push("limit");
         separated.push_bind(pagination.limit);
 
-        match query_builder
+        query_builder
             .build_query_as::<Post>()
             .fetch_all(self.db.get_pool())
             .await
-        {
-            Ok(posts) => Ok(posts),
-            Err(e) => Err(PostServiceErr::Other(e.into())),
-        }
+            .map_err(|e| PostServiceErr::Other(e.into()))
     }
 
     async fn add(&self, author_id: i64, post: AddPostRequest) -> Result<Post, PostServiceErr> {
-        match sqlx::query_as!(
+        sqlx::query_as!(
             Post,
             "insert into posts (author_id, content) values ($1, $2) returning *",
             author_id,
@@ -76,41 +73,31 @@ where
         )
         .fetch_one(self.db.get_pool())
         .await
-        {
-            Ok(posts) => Ok(posts),
-            Err(e) => Err(PostServiceErr::Other(e.into())),
-        }
+        .map_err(|e| PostServiceErr::Other(e.into()))
     }
 
     async fn delete(&self, id: Uuid) -> Result<(), PostServiceErr> {
-        match sqlx::query!("delete from posts where id = $1", id)
+        sqlx::query!("delete from posts where id = $1", id)
             .execute(self.db.get_pool())
             .await
-        {
-            Ok(_) => Ok(()),
-            Err(e) => Err(PostServiceErr::Other(e.into())),
-        }
+            .map(|_| ())
+            .map_err(|e| PostServiceErr::Other(e.into()))
     }
 
     async fn existed(&self, id: Uuid, author_id: i64) -> Result<bool, PostServiceErr> {
-        match sqlx::query!(
+        sqlx::query!(
             "select count(*) as post_count from posts where id = $1 and author_id = $2",
             id,
             author_id
         )
         .fetch_one(self.db.get_pool())
         .await
-        {
-            Ok(result) => match result.post_count {
-                None => Ok(false),
-                Some(count) => Ok(count > 0),
-            },
-            Err(e) => Err(PostServiceErr::Other(e.into())),
-        }
+        .map(|result| result.post_count.map(|c| c > 0).unwrap_or(false))
+        .map_err(|e| PostServiceErr::Other(e.into()))
     }
 
     async fn edit(&self, id: Uuid, post: EditPostRequest) -> Result<Post, PostServiceErr> {
-        match sqlx::query_as!(
+        sqlx::query_as!(
             Post,
             "update posts set content = $1, updated_at = now() where id = $2 returning *",
             post.content,
@@ -118,9 +105,6 @@ where
         )
         .fetch_one(self.db.get_pool())
         .await
-        {
-            Ok(posts) => Ok(posts),
-            Err(e) => Err(PostServiceErr::Other(e.into())),
-        }
+        .map_err(|e| PostServiceErr::Other(e.into()))
     }
 }
