@@ -7,7 +7,7 @@ import { Markdown } from './markdown';
 
 type CommentFormProps = {
   content?: string;
-  onSubmitHandler?: (content: string) => void;
+  onSubmitHandler: (content: string) => void;
 } & ParentProps;
 
 const checkErr = (content: string): string => {
@@ -35,7 +35,7 @@ export const CommentForm = (props: CommentFormProps) => {
     e.preventDefault();
     setErrMsg(checkErr(content()));
     if (!errMsg()) {
-      props.onSubmitHandler && props.onSubmitHandler(content());
+      props.onSubmitHandler(content());
       setContent('');
     }
   };

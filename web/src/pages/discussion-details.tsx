@@ -10,7 +10,7 @@ export const DiscussionDetails = () => (
     </div>
     <div class="mt-9 flex flex-col gap-9 border-b pb-9" />
     <div class="my-9 pl-12">
-      <CommentForm>New Comment</CommentForm>
+      <CommentForm onSubmitHandler={() => {}}>New Comment</CommentForm>
     </div>
   </div>
 );
