@@ -89,7 +89,7 @@ where
         let state = Arc::new(self);
         let app = NormalizePath::trim_trailing_slash(
             Router::new()
-                .nest_service("/assets", ServeDir::new("assets"))
+                .nest_service("/roms", ServeDir::new(&state.config.rom_dir))
                 .route("/health", get(health::is_healthy))
                 .nest(
                     "/api/v1",
