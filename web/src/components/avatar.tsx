@@ -13,7 +13,7 @@ export const Avatar = (p: AvatarProps) => {
     p
   );
   return (
-    <a class="contents" href={`/users/${props.userId}`}>
+    <a target="_blank" class="contents" href={`/users/${props.userId}`}>
       <img class="size-10 rounded-full" src={props.img} alt="Rounded avatar" />
     </a>
   );
