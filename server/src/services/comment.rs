@@ -76,14 +76,11 @@ where
             separated.push_bind(limit);
         }
 
-        match query_builder
+        query_builder
             .build_query_as::<Comment>()
             .fetch_all(self.db.get_pool())
             .await
-        {
-            Ok(comments) => Ok(comments),
-            Err(e) => Err(CommentServiceErr::Other(e.into())),
-        }
+            .map_err(|e| CommentServiceErr::Other(e.into()))
     }
 
     async fn add(
@@ -92,49 +89,39 @@ where
         user_name: String,
         comment: AddCommentRequest,
     ) -> Result<Comment, CommentServiceErr> {
-        match sqlx::query_as!(
-        Comment,
-        r#"insert into comments (user_id, user_name, target_id, target_type, content) values ($1, $2, $3, $4, $5)
-        returning id, user_id, user_name, target_id, content, likes, target_type as "target_type!: TargetTypes", created_at, updated_at"#,
-        user_id,
-        user_name,
-        comment.target_id,
-        comment.target_type as TargetTypes,
-        comment.content
-    )
-            .fetch_one(self.db.get_pool())
-            .await
-        {
-            Ok(comment) => Ok(comment),
-            Err(e) => Err(CommentServiceErr::Other(e.into())),
-        }
+        sqlx::query_as!(
+            Comment,
+            r#"insert into comments (user_id, user_name, target_id, target_type, content) values ($1, $2, $3, $4, $5)
+            returning id, user_id, user_name, target_id, content, likes, target_type as "target_type!: TargetTypes", created_at, updated_at"#,
+            user_id,
+            user_name,
+            comment.target_id,
+            comment.target_type as TargetTypes,
+            comment.content
+        )
+        .fetch_one(self.db.get_pool())
+        .await
+        .map_err(|e|CommentServiceErr::Other(e.into()))
     }
 
     async fn delete(&self, id: Uuid) -> Result<(), CommentServiceErr> {
-        match sqlx::query!("delete from comments where id = $1", id)
+        sqlx::query!("delete from comments where id = $1", id)
             .execute(self.db.get_pool())
             .await
-        {
-            Ok(_) => Ok(()),
-            Err(e) => Err(CommentServiceErr::Other(e.into())),
-        }
+            .map(|_| ())
+            .map_err(|e| CommentServiceErr::Other(e.into()))
     }
 
     async fn existed(&self, id: Uuid, author_id: i64) -> Result<bool, CommentServiceErr> {
-        match sqlx::query!(
+        sqlx::query!(
             "select count(*) as comment_count from comments where id = $1 and user_id = $2",
             id,
             author_id
         )
         .fetch_one(self.db.get_pool())
         .await
-        {
-            Ok(result) => match result.comment_count {
-                None => Ok(false),
-                Some(count) => Ok(count > 0),
-            },
-            Err(e) => Err(CommentServiceErr::Other(e.into())),
-        }
+        .map(|result| result.comment_count.map(|c| c > 0).unwrap_or(false))
+        .map_err(|e| CommentServiceErr::Other(e.into()))
     }
 
     async fn edit(
@@ -142,7 +129,7 @@ where
         id: Uuid,
         comment: EditCommentRequest,
     ) -> Result<Comment, CommentServiceErr> {
-        match sqlx::query_as!(
+        sqlx::query_as!(
             Comment,
             r#"update comments set content = $1, updated_at = now() where id = $2
             returning id, user_id, user_name, target_id, content, likes, target_type as "target_type!: TargetTypes", created_at, updated_at"#,
@@ -151,9 +138,6 @@ where
         )
         .fetch_one(self.db.get_pool())
         .await
-        {
-            Ok(comment) => Ok(comment),
-            Err(e) => Err(CommentServiceErr::Other(e.into())),
-        }
+        .map_err(|e|CommentServiceErr::Other(e.into()))
     }
 }
