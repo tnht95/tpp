@@ -36,7 +36,7 @@ where
     T: IDatabase + Send + Sync,
 {
     async fn sync_user(&self, user: &User) -> Result<User, UserServiceErr> {
-        match sqlx::query_as!(
+        sqlx::query_as!(
             User,
             "insert into users (id, name, avatar, github_url, bio)
             values ($1, $2, $3, $4, $5)
@@ -51,19 +51,13 @@ where
         )
         .fetch_one(self.db.get_pool())
         .await
-        {
-            Ok(user) => Ok(user),
-            Err(e) => Err(UserServiceErr::Other(e.into())),
-        }
+        .map_err(|e| UserServiceErr::Other(e.into()))
     }
 
     async fn get_by_id(&self, id: i64) -> Result<Option<User>, UserServiceErr> {
-        match sqlx::query_as!(User, "select * from users where id = $1", id)
+        sqlx::query_as!(User, "select * from users where id = $1", id)
             .fetch_optional(self.db.get_pool())
             .await
-        {
-            Ok(user) => Ok(user),
-            Err(e) => Err(UserServiceErr::Other(e.into())),
-        }
+            .map_err(|e| UserServiceErr::Other(e.into()))
     }
 }
