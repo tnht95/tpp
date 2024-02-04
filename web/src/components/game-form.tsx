@@ -2,7 +2,7 @@ import { createSignal, Ref, Show } from 'solid-js';
 
 import { Markdown, PreviewButtonGroup } from '@/components';
 import { AddGame } from '@/models';
-import { MinStr, useForm } from '@/utils';
+import { MinStr, useForm, validateTags } from '@/utils';
 
 type GameFormProps = {
   ref: Ref<HTMLDivElement>;
@@ -130,19 +130,6 @@ export const GameForm = (props: GameFormProps) => {
       </div>
     </div>
   );
-};
-
-const validateTags = ({ value }: { value: string }) => {
-  if (value === '') return '';
-  const tagsArr = value.split(',');
-  if (tagsArr.length > 5) return 'The maximum total of tags is 5.';
-  for (const tag of tagsArr) {
-    if (tag.startsWith(' ') || tag.endsWith(' '))
-      return 'Tags can not contain spacing';
-    if (tag === '') return 'The minimun length of a tag is 1';
-    if (tag.length > 20) return 'The maximum length of a tag is 20';
-  }
-  return '';
 };
 
 const getTagValue = (tags: string): string[] | undefined => {

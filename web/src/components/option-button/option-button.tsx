@@ -4,7 +4,6 @@ import {
   createEffect,
   createSignal,
   mergeProps,
-  Setter,
   Show
 } from 'solid-js';
 
@@ -16,9 +15,21 @@ type OptionButtonProps = {
   onDelete: (postId: string, index: number) => void;
   id: string;
   isEditMode?: Accessor<boolean>;
-  setIsEditMode?: Setter<boolean>;
   index: Accessor<number>;
+  onEdit: () => void;
 };
+
+const otherContent = (
+  <li>
+    <a
+      href="#"
+      class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+    >
+      <i class="fa-solid fa-reply mr-2" />
+      Reply
+    </a>
+  </li>
+);
 
 export const OptionButton = (propInput: OptionButtonProps) => {
   const props = mergeProps({ isEditMode: () => true }, propInput);
@@ -32,18 +43,6 @@ export const OptionButton = (propInput: OptionButtonProps) => {
     new Dropdown(userDropdownRef(), userBtnRef());
     setModal(new Modal(modalRef()));
   });
-
-  const otherContent = (
-    <li>
-      <a
-        href="#"
-        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-      >
-        <i class="fa-solid fa-reply mr-2" />
-        Reply
-      </a>
-    </li>
-  );
 
   return (
     <>
@@ -62,10 +61,7 @@ export const OptionButton = (propInput: OptionButtonProps) => {
               <a
                 href="#"
                 class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                onClick={() =>
-                  props.setIsEditMode &&
-                  props.setIsEditMode(!props.isEditMode())
-                }
+                onClick={() => props.onEdit()}
               >
                 <i class="fa-solid fa-pencil mr-2" />
                 <Show when={props.isEditMode()} fallback={'Edit'}>

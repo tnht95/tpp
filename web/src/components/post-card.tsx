@@ -137,7 +137,9 @@ export const PostCard = (props: PostCardProps) => {
                   onDelete={props.onDelete}
                   id={props.post.id}
                   isEditMode={isEditMode}
-                  setIsEditMode={setIsEditMode}
+                  onEdit={() => {
+                    setIsEditMode(!isEditMode());
+                  }}
                 />
               )}
             </div>

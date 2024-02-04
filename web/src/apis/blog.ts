@@ -1,5 +1,5 @@
 import { LIMIT } from '@/constant';
-import { AddBlog, Blog, BlogSummary, Response } from '@/models';
+import { Blog, BlogRequest, BlogSummary, Response } from '@/models';
 
 import { errHandler } from '.';
 
@@ -12,7 +12,7 @@ export const fetchBlogAction = (offset: number) =>
     .then(errHandler)
     .then((r: Response<BlogSummary[]>) => r.data);
 
-export const addBlogAction = (body: AddBlog) =>
+export const addBlogAction = (body: BlogRequest) =>
   fetch(`${import.meta.env.VITE_SERVER_URL}/blogs`, {
     method: 'post',
     credentials: 'include',
@@ -33,6 +33,18 @@ export const deleteBlogAction = (id: string) =>
   fetch(`${import.meta.env.VITE_SERVER_URL}/blogs/${id}`, {
     method: 'delete',
     credentials: 'include'
+  })
+    .then(errHandler)
+    .then((r: Response<Blog>) => r.data);
+
+export const editBlogAction = (id: string, body: BlogRequest) =>
+  fetch(`${import.meta.env.VITE_SERVER_URL}/blogs/${id}`, {
+    method: 'put',
+    credentials: 'include',
+    headers: {
+      'content-type': 'application/json'
+    },
+    body: JSON.stringify(body)
   })
     .then(errHandler)
     .then((r: Response<Blog>) => r.data);

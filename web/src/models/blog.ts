@@ -16,7 +16,7 @@ export type Blog = {
   updatedAt: string;
 };
 
-export type AddBlog = {
+export type BlogRequest = {
   title: string;
   description: string;
   tags: string[] | undefined;

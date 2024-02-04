@@ -15,7 +15,10 @@ use crate::{
         },
     },
     model::{
-        requests::{blog::AddBlogRequest, Pagination},
+        requests::{
+            blog::{AddBlogRequest, EditBlogRequest},
+            Pagination,
+        },
         responses::{blog::NOT_FOUND, HttpResponse, INVALID_UUID_ERR},
     },
     services::{
@@ -81,6 +84,27 @@ pub async fn delete<TInternalServices: IInternalServices>(
     };
 
     match state.services.blog.delete(id).await {
+        Ok(blog) => Json(HttpResponse { data: blog }).into_response(),
+        Err(BlogServiceErr::Other(e)) => response_unhandled_err(e),
+    }
+}
+
+pub async fn edit<TInternalServices: IInternalServices>(
+    Path(id): Path<String>,
+    State(state): InternalState<TInternalServices>,
+    Authentication(_, is_admin, _): Authentication<TInternalServices>,
+    JsonValidator(blog): JsonValidator<EditBlogRequest>,
+) -> Response {
+    if !is_admin {
+        return response_403_err();
+    }
+
+    let id = match id.parse::<Uuid>() {
+        Ok(id) => id,
+        Err(_) => return response_400_with_const(INVALID_UUID_ERR),
+    };
+
+    match state.services.blog.edit(id, blog).await {
         Ok(blog) => Json(HttpResponse { data: blog }).into_response(),
         Err(BlogServiceErr::Other(e)) => response_unhandled_err(e),
     }

@@ -37,6 +37,7 @@ export const GameDetailsTabs = () => {
             onDelete={onDeleteHandler}
             id={game()?.id as string}
             index={() => -1}
+            onEdit={() => {}}
           />
         </div>
 

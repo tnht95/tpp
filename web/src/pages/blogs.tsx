@@ -13,7 +13,7 @@ import { addBlogAction, fetchBlogAction } from '@/apis';
 import { BlogCard, BlogForm, ShowMoreButton } from '@/components';
 import { LIMIT, OFFSET } from '@/constant';
 import { useAuthCtx, useToastCtx } from '@/context';
-import { AddBlog, BlogSummary, ResponseErr } from '@/models';
+import { BlogRequest, BlogSummary, ResponseErr } from '@/models';
 
 const nothingMoreToShow = (
   <div class="mb-8 text-center text-gray-400">--- Nothing more to show ---</div>
@@ -53,7 +53,7 @@ export const Blogs = () => {
       modal()?.hide();
     });
 
-  const onSubmitHandler = (blog: AddBlog) =>
+  const onSubmitHandler = (blog: BlogRequest) =>
     addBlogAction(blog)
       .then(batchSubmitHandler)
       .catch((error: ResponseErr) =>

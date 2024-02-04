@@ -14,9 +14,11 @@ pub struct AddBlogRequest {
     pub description: String,
 
     #[validate(length(min = 1, message = "Content an not be empty"))]
-    #[validate(length(max = 1000, message = "Content exceeding 1000 characters."))]
+    #[validate(length(max = 2000, message = "Content exceeding 2000 characters."))]
     pub content: String,
 
     #[validate(custom(function = "validate_tags"))]
     pub tags: Option<Vec<String>>,
 }
+
+pub type EditBlogRequest = AddBlogRequest;

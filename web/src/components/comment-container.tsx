@@ -41,7 +41,9 @@ export const CommentContainer = (props: CommentProps) => {
               id={props.comment.id}
               index={props.index}
               isEditMode={isEditMode}
-              setIsEditMode={setIsEditMode}
+              onEdit={() => {
+                setIsEditMode(!isEditMode());
+              }}
             />
           )}
         </div>

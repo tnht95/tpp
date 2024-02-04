@@ -1,13 +1,14 @@
 import { createSignal, Ref, Show } from 'solid-js';
 
 import { Markdown, PreviewButtonGroup } from '@/components';
-import { AddBlog } from '@/models';
-import { MaxStr, MinStr, useForm } from '@/utils';
+import { Blog, BlogRequest } from '@/models';
+import { MaxStr, MinStr, useForm, validateTags } from '@/utils';
 
 type BlogFormProps = {
   modalRef: Ref<HTMLDivElement>;
   onCloseHandler: () => void;
-  onSubmitHandler: (blog: AddBlog) => void;
+  onSubmitHandler: (blog: BlogRequest) => void;
+  blog?: Blog | undefined;
 };
 
 const ErrorMessage = (props: { msg: string }) => (
@@ -51,7 +52,9 @@ export const BlogForm = (props: BlogFormProps) => {
         <div class="relative rounded-xl bg-white shadow">
           <div class="flex items-center justify-between rounded-t p-6">
             <div class="ml-1 text-center text-2xl font-bold text-gray-800">
-              New Blog
+              <Show when={props.blog} fallback={<p>New Blog</p>}>
+                Edit Blog
+              </Show>
             </div>
             <button
               type="button"
@@ -69,6 +72,7 @@ export const BlogForm = (props: BlogFormProps) => {
                 placeholder="Title"
                 type="text"
                 name="title"
+                value={props.blog?.title || ''}
                 ref={el => [
                   validate(el, () => [MinStr(1, 'Required'), MaxStr(200)])
                 ]}
@@ -78,6 +82,7 @@ export const BlogForm = (props: BlogFormProps) => {
                 class="rounded-xl border border-gray-300 p-3 outline-none placeholder:text-gray-400"
                 placeholder="Describe shortly about this post here"
                 name="description"
+                value={props.blog?.description || ''}
                 ref={el => [
                   validate(el, () => [MinStr(1, 'Required'), MaxStr(200)])
                 ]}
@@ -89,6 +94,7 @@ export const BlogForm = (props: BlogFormProps) => {
                 placeholder="Blog tags: separate each tag with a comma"
                 class="w-full rounded-xl border p-3 placeholder:text-gray-400"
                 name="tags"
+                value={props.blog?.tags || ''}
                 ref={el => [validate(el, () => [validateTags])]}
               />
               {errors['tags'] && <ErrorMessage msg={errors['tags']} />}
@@ -98,9 +104,9 @@ export const BlogForm = (props: BlogFormProps) => {
                   placeholder="Describe everything about this post here (Support some markdowns)"
                   onFocusOut={e => setContent(e.target.value)}
                   name="content"
-                  value={content()}
+                  value={props.blog?.content || content()}
                   ref={el => [
-                    validate(el, () => [MinStr(1, 'Required'), MaxStr(1000)])
+                    validate(el, () => [MinStr(1, 'Required'), MaxStr(2000)])
                   ]}
                 />
                 {errors['content'] && <ErrorMessage msg={errors['content']} />}
@@ -117,19 +123,6 @@ export const BlogForm = (props: BlogFormProps) => {
       </div>
     </div>
   );
-};
-
-const validateTags = ({ value }: { value: string }) => {
-  if (value === '') return '';
-  const tagsArr = value.split(',');
-  if (tagsArr.length > 5) return 'The maximum total of tags is 5.';
-  for (const tag of tagsArr) {
-    if (tag.startsWith(' ') || tag.endsWith(' '))
-      return 'Tags can not contain spacing';
-    if (tag === '') return 'The minimun length of a tag is 1';
-    if (tag.length > 20) return 'The maximum length of a tag is 20';
-  }
-  return '';
 };
 
 const getTagValue = (tags: string): string[] | undefined => {

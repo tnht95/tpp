@@ -1,4 +1,5 @@
 import { useNavigate, useParams } from '@solidjs/router';
+import { Modal } from 'flowbite';
 import {
   batch,
   createEffect,
@@ -15,19 +16,22 @@ import {
   addCommentAction,
   deleteBlogAction,
   deleteCommentAction,
+  editBlogAction,
   editCommentAction,
   fetchBlogByIdAction,
   fetchCommentAction,
   QueryWIthTargetInput
 } from '@/apis';
 import {
+  BlogForm,
   CommentContainer,
   CommentForm,
   LoadingSpinner,
+  Markdown,
   OptionButton
 } from '@/components';
 import { useToastCtx } from '@/context';
-import { Comment, ResponseErr } from '@/models';
+import { BlogRequest, Comment, ResponseErr } from '@/models';
 import { NotFound } from '@/pages';
 import { TagSidebar } from '@/parts';
 import { formatTime } from '@/utils';
@@ -36,7 +40,10 @@ export const BlogDetails = () => {
   const { dispatch } = useToastCtx();
   const navigate = useNavigate();
   const blogId = useParams()['id'] as string;
-  const [blog] = createResource(blogId, fetchBlogByIdAction);
+  const [isEditMode, setIsEditMode] = createSignal(false);
+  const [modal, setModal] = createSignal<Modal>();
+  const [modalRef, setModalRef] = createSignal<HTMLDivElement>();
+  const [blog, { refetch }] = createResource(blogId, fetchBlogByIdAction);
   const [queryValue, setQueryValue] = createSignal<QueryWIthTargetInput>({
     targetId: blogId,
     offset: 0,
@@ -49,6 +56,13 @@ export const BlogDetails = () => {
   const addedCmts: Comment[] = [];
 
   createEffect(() => {
+    setModal(
+      new Modal(modalRef(), {
+        onHide: () => {
+          setIsEditMode(false);
+        }
+      })
+    );
     if (commentResource().length > 0) {
       setComments(
         produce(oldComments =>
@@ -115,6 +129,25 @@ export const BlogDetails = () => {
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
 
+  const onEditBlogHandler = (blog: BlogRequest) => {
+    setIsEditMode(false);
+    editBlogAction(blogId, blog)
+      .then(refresh)
+      .catch((error: ResponseErr) =>
+        dispatch.showToast({ msg: error.msg, type: 'Err' })
+      );
+  };
+
+  const refresh = () => {
+    modal()?.hide();
+    return refetch();
+  };
+
+  const onEditOptionBtn = () => {
+    setIsEditMode(!isEditMode());
+    modal()?.show();
+  };
+
   return (
     <Suspense
       fallback={
@@ -124,6 +157,14 @@ export const BlogDetails = () => {
       }
     >
       <ErrorBoundary fallback={<NotFound />}>
+        <BlogForm
+          modalRef={setModalRef}
+          onCloseHandler={() => {
+            modal()?.hide();
+          }}
+          onSubmitHandler={onEditBlogHandler}
+          blog={blog()}
+        />
         <div class="my-10">
           <div class="ml-20 mt-16">
             <div class="flex justify-between">
@@ -135,7 +176,9 @@ export const BlogDetails = () => {
                       isOwner={true}
                       onDelete={onDeleteBlogHandler}
                       id={''}
+                      isEditMode={isEditMode}
                       index={() => -1}
+                      onEdit={onEditOptionBtn}
                     />
                   </div>
                   <p class="text-base text-gray-400">
@@ -143,9 +186,9 @@ export const BlogDetails = () => {
                   </p>
                 </div>
                 <p class="text-xl text-gray-600">{blog()?.description}</p>
-                <p class="text-lg">{blog()?.content}</p>
+                <Markdown content={blog()?.content as string} />
               </div>
-              <div class="mr-24 w-1/5">
+              <div class="mr-36 w-1/5">
                 <TagSidebar tags={blog()?.tags as string[]} />
               </div>
             </div>

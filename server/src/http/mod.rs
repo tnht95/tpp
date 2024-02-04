@@ -112,6 +112,7 @@ where
                         .route("/blogs", post(blog::add))
                         .route("/blogs/:id", get(blog::get_by_id))
                         .route("/blogs/:id", delete(blog::delete))
+                        .route("/blogs/:id", put(blog::edit))
                         .route("/comments", get(comment::filter))
                         .route("/comments", post(comment::add))
                         .route("/comments/:id", delete(comment::delete))

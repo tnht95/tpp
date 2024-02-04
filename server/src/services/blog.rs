@@ -10,8 +10,12 @@ use crate::{
         entities::blog::{Blog, BlogSummary},
         IDatabase,
     },
-    model::requests::{blog::AddBlogRequest, PaginationInternal},
+    model::requests::{
+        blog::{AddBlogRequest, EditBlogRequest},
+        PaginationInternal,
+    },
 };
+
 #[derive(Error, Debug)]
 pub enum BlogServiceErr {
     #[error(transparent)]
@@ -27,6 +31,7 @@ pub trait IBlogService {
     async fn add(&self, blog: AddBlogRequest) -> Result<Blog, BlogServiceErr>;
     async fn get_by_id(&self, id: Uuid) -> Result<Option<Blog>, BlogServiceErr>;
     async fn delete(&self, id: Uuid) -> Result<(), BlogServiceErr>;
+    async fn edit(&self, id: Uuid, comment: EditBlogRequest) -> Result<Blog, BlogServiceErr>;
 }
 
 pub struct BlogService<T: IDatabase> {
@@ -94,5 +99,23 @@ where
             .await
             .map(|_| ())
             .map_err(|e| BlogServiceErr::Other(e.into()))
+    }
+
+    async fn edit(&self, id: Uuid, blog: EditBlogRequest) -> Result<Blog, BlogServiceErr> {
+        match sqlx::query_as!(
+            Blog,
+            "update blogs set content = $1, title = $2, description = $3, tags = $4, updated_at = now() where id = $5 returning *",
+            blog.content,
+            blog.title,
+            blog.description,
+            blog.tags.as_deref(),
+            id,
+        )
+            .fetch_one(self.db.get_pool())
+            .await
+        {
+            Ok(blog) => Ok(blog),
+            Err(e) => Err(BlogServiceErr::Other(e.into())),
+        }
     }
 }
