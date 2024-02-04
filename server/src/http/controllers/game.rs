@@ -23,7 +23,7 @@ use crate::{
     model::{
         requests::game::{AddGameRequest, GameQuery},
         responses::{
-            game::{DESERIALIZE_GAME_ERR, NOT_AUTH_DEL, NOT_FOUND},
+            game::{DESERIALIZE_GAME_ERR, INVALID_ROM, NOT_AUTH_DEL, NOT_FOUND},
             HttpResponse,
             INVALID_UUID_ERR,
         },
@@ -91,9 +91,13 @@ pub async fn add<TInternalServices: IInternalServices>(
     Authentication(user, ..): Authentication<TInternalServices>,
     mut multipart: Multipart,
 ) -> Response {
-    // FIXME: validate rom
     let rom_bytes = match extract_bytes_from_multipart(&mut multipart).await {
-        Ok(bytes) => bytes,
+        Ok(bytes) => {
+            if bytes.is_empty() || bytes.len() > 3584 {
+                return response_400_with_const(INVALID_ROM);
+            }
+            bytes
+        }
         Err(e) => return e,
     };
 

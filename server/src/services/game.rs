@@ -44,15 +44,15 @@ impl<T> GameService<T>
 where
     T: IDatabase,
 {
-    pub async fn new(db: Arc<T>, rom_dir: String) -> Self {
+    pub async fn new(db: Arc<T>, rom_dir: String) -> anyhow::Result<Self> {
         let is_dir = metadata(&rom_dir)
             .await
             .map(|mdata| mdata.is_dir())
             .unwrap_or(false);
         if !is_dir {
-            create_dir(&rom_dir).await.expect("invalid rom_dir");
+            create_dir(&rom_dir).await?;
         }
-        Self { db, rom_dir }
+        Ok(Self { db, rom_dir })
     }
 
     async fn write_rom(&self, id: Uuid, rom_bytes: &[u8]) -> Result<String, GameServiceErr> {

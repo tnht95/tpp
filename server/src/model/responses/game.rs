@@ -10,7 +10,12 @@ pub const NOT_FOUND: HttpResponseConstErr = HttpResponseConstErr {
     msg: "Game Not Found",
 };
 
-pub const DESERIALIZE_GAME_ERR: HttpResponseConstErr = HttpResponseConstErr {
+pub const INVALID_ROM: HttpResponseConstErr = HttpResponseConstErr {
     code: "GAME_003",
+    msg: "Invalid rom",
+};
+
+pub const DESERIALIZE_GAME_ERR: HttpResponseConstErr = HttpResponseConstErr {
+    code: "GAME_004",
     msg: "Failed to deserialize game from bytes",
 };
