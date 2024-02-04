@@ -1,21 +1,22 @@
 use axum::{
-    extract::{Query, State},
+    extract::{Path, Query, State},
     response::{IntoResponse, Response},
     Json,
 };
+use uuid::Uuid;
 
 use crate::{
     http::{
         controllers::InternalState,
         utils::{
             auth::Authentication,
-            err_handler::response_unhandled_err,
+            err_handler::{response_400_with_const, response_unhandled_err},
             validator::JsonValidator,
         },
     },
     model::{
         requests::{discussion::AddDiscussionRequest, QueryWithTarget},
-        responses::HttpResponse,
+        responses::{discussion::NOT_FOUND, HttpResponse, INVALID_UUID_ERR},
     },
     services::{
         discussion::{DiscussionServiceErr, IDiscussionService},
@@ -45,6 +46,24 @@ pub async fn add<TInternalServices: IInternalServices>(
         .await
     {
         Ok(discussion) => Json(HttpResponse { data: discussion }).into_response(),
+        Err(DiscussionServiceErr::Other(e)) => response_unhandled_err(e),
+    }
+}
+
+pub async fn get_by_id<TInternalServices: IInternalServices>(
+    Path(id): Path<String>,
+    State(state): InternalState<TInternalServices>,
+) -> Response {
+    let id = match id.parse::<Uuid>() {
+        Ok(id) => id,
+        Err(_) => return response_400_with_const(INVALID_UUID_ERR),
+    };
+
+    match state.services.discussion.get_by_id(id).await {
+        Ok(discussion) => match discussion {
+            Some(discussion) => Json(HttpResponse { data: discussion }).into_response(),
+            None => response_400_with_const(NOT_FOUND),
+        },
         Err(DiscussionServiceErr::Other(e)) => response_unhandled_err(e),
     }
 }

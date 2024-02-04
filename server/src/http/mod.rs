@@ -119,6 +119,7 @@ where
                         .route("/comments/:id", put(comment::edit))
                         .route("/discussions", get(discussion::filter))
                         .route("/discussions", post(discussion::add))
+                        .route("/discussions/:id", get(discussion::get_by_id))
                         .layer(middleware),
                 )
                 .layer(DefaultBodyLimit::max(5 * 1024)) // 5KB

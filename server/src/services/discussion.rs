@@ -3,10 +3,14 @@ use std::sync::Arc;
 use async_trait::async_trait;
 use sqlx::{Postgres, QueryBuilder};
 use thiserror::Error;
+use uuid::Uuid;
 
 use crate::{
     database::{entities::discussion::Discussion, IDatabase},
-    model::requests::{discussion::AddDiscussionRequest, QueryWithTarget},
+    model::{
+        requests::{discussion::AddDiscussionRequest, QueryWithTarget},
+        responses::discussion::DiscussionResponse,
+    },
 };
 
 #[derive(Error, Debug)]
@@ -19,12 +23,16 @@ pub enum DiscussionServiceErr {
 pub trait IDiscussionService {
     async fn filter(&self, query: QueryWithTarget)
         -> Result<Vec<Discussion>, DiscussionServiceErr>;
+
     async fn add(
         &self,
         user_id: i64,
         user_name: String,
         discussion: AddDiscussionRequest,
     ) -> Result<Discussion, DiscussionServiceErr>;
+
+    async fn get_by_id(&self, id: Uuid)
+        -> Result<Option<DiscussionResponse>, DiscussionServiceErr>;
 }
 
 pub struct DiscussionService<T: IDatabase> {
@@ -83,6 +91,22 @@ where
         )
             .fetch_one(self.db.get_pool())
             .await
-            .map_err(|e|DiscussionServiceErr::Other(e.into()))
+            .map_err(|e| DiscussionServiceErr::Other(e.into()))
+    }
+
+    async fn get_by_id(
+        &self,
+        id: Uuid,
+    ) -> Result<Option<DiscussionResponse>, DiscussionServiceErr> {
+        sqlx::query_as!(
+            DiscussionResponse,
+            "select discussions.*, users.avatar as user_avatar \
+            from discussions join users on discussions.user_id = users.id \
+            where discussions.id = $1;",
+            id
+        )
+        .fetch_optional(self.db.get_pool())
+        .await
+        .map_err(|e| DiscussionServiceErr::Other(e.into()))
     }
 }

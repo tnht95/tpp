@@ -14,3 +14,15 @@ export type AddDiscussion = {
   title: string;
   content: string;
 };
+
+export type DiscussionWithUser = {
+  id: string;
+  userId: number;
+  userName: string;
+  userAvatar: string;
+  gameId: string;
+  title: string;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+};
