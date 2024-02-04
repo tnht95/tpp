@@ -75,7 +75,7 @@ export const PostCard = (props: PostCardProps) => {
     });
   };
 
-  const onSubmitHandler = (content: string) => {
+  const onSubmitPostHandler = (content: string) => {
     setIsEditMode(false);
     props.onEdit(props.post.id, content);
   };
@@ -104,7 +104,7 @@ export const PostCard = (props: PostCardProps) => {
     }));
   };
 
-  const onEditHandler = (commentId: string, content: string) =>
+  const onEditCmtHandler = (commentId: string, content: string) =>
     editCommentAction(commentId, {
       content,
       targetId: props.post.id,
@@ -115,7 +115,7 @@ export const PostCard = (props: PostCardProps) => {
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
 
-  const onDeleteHandler = (commentId: string, index: number) =>
+  const onDeleteCmtHandler = (commentId: string, index: number) =>
     deleteCommentAction(commentId)
       .then(() => setComments(produce(comments => comments.splice(index, 1))))
       .catch((error: ResponseErr) =>
@@ -156,7 +156,7 @@ export const PostCard = (props: PostCardProps) => {
         >
           <CommentForm
             content={props.post.content}
-            onSubmitHandler={onSubmitHandler}
+            onSubmitHandler={onSubmitPostHandler}
           />
         </Show>
       </p>
@@ -188,8 +188,8 @@ export const PostCard = (props: PostCardProps) => {
               <CommentContainer
                 comment={comment}
                 index={index}
-                onDelete={onDeleteHandler}
-                onEdit={onEditHandler}
+                onDelete={onDeleteCmtHandler}
+                onEdit={onEditCmtHandler}
               />
             )}
           </For>
