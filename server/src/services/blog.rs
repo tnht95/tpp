@@ -60,18 +60,15 @@ where
         separated.push("limit");
         separated.push_bind(pagination.limit);
 
-        match query_builder
+        query_builder
             .build_query_as::<BlogSummary>()
             .fetch_all(self.db.get_pool())
             .await
-        {
-            Ok(blogs) => Ok(blogs),
-            Err(e) => Err(BlogServiceErr::Other(e.into())),
-        }
+            .map_err(|e| BlogServiceErr::Other(e.into()))
     }
 
     async fn add(&self, blog: AddBlogRequest) -> Result<Blog, BlogServiceErr> {
-        match sqlx::query_as!(
+        sqlx::query_as!(
             Blog,
             "insert into blogs (title, description, content, tags) values ($1, $2, $3, $4) returning *",
             blog.title,
@@ -81,29 +78,21 @@ where
         )
             .fetch_one(self.db.get_pool())
             .await
-        {
-            Ok(blog) => Ok(blog),
-            Err(e) => Err(BlogServiceErr::Other(e.into())),
-        }
+            .map_err(|e|BlogServiceErr::Other(e.into()))
     }
 
     async fn get_by_id(&self, id: Uuid) -> Result<Option<Blog>, BlogServiceErr> {
-        match sqlx::query_as!(Blog, "select * from blogs where id = $1", id)
+        sqlx::query_as!(Blog, "select * from blogs where id = $1", id)
             .fetch_optional(self.db.get_pool())
             .await
-        {
-            Ok(game) => Ok(game),
-            Err(e) => Err(BlogServiceErr::Other(e.into())),
-        }
+            .map_err(|e| BlogServiceErr::Other(e.into()))
     }
 
     async fn delete(&self, id: Uuid) -> Result<(), BlogServiceErr> {
-        match sqlx::query!("delete from blogs where id = $1", id)
+        sqlx::query!("delete from blogs where id = $1", id)
             .execute(self.db.get_pool())
             .await
-        {
-            Ok(_) => Ok(()),
-            Err(e) => Err(BlogServiceErr::Other(e.into())),
-        }
+            .map(|_| ())
+            .map_err(|e| BlogServiceErr::Other(e.into()))
     }
 }
