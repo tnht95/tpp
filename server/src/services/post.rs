@@ -23,7 +23,7 @@ pub enum PostServiceErr {
 pub trait IPostService {
     async fn filter(&self, pagination: PaginationInternal) -> Result<Vec<Post>, PostServiceErr>;
     async fn add(&self, author_id: i64, post: AddPostRequest) -> Result<Post, PostServiceErr>;
-    async fn delete(&self, id: Uuid) -> Result<Post, PostServiceErr>;
+    async fn delete(&self, id: Uuid) -> Result<(), PostServiceErr>;
     async fn existed(&self, id: Uuid, author_id: i64) -> Result<bool, PostServiceErr>;
     async fn edit(&self, id: Uuid, post: EditPostRequest) -> Result<Post, PostServiceErr>;
 }
@@ -82,12 +82,12 @@ where
         }
     }
 
-    async fn delete(&self, id: Uuid) -> Result<Post, PostServiceErr> {
-        match sqlx::query_as!(Post, "delete from posts where id = $1 returning *", id)
-            .fetch_one(self.db.get_pool())
+    async fn delete(&self, id: Uuid) -> Result<(), PostServiceErr> {
+        match sqlx::query!("delete from posts where id = $1", id)
+            .execute(self.db.get_pool())
             .await
         {
-            Ok(post) => Ok(post),
+            Ok(_) => Ok(()),
             Err(e) => Err(PostServiceErr::Other(e.into())),
         }
     }
