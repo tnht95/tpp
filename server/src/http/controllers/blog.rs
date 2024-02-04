@@ -65,3 +65,23 @@ pub async fn get_by_id<TInternalServices: IInternalServices>(
         Err(BlogServiceErr::Other(e)) => response_unhandled_err(e),
     }
 }
+
+pub async fn delete<TInternalServices: IInternalServices>(
+    Path(id): Path<String>,
+    State(state): InternalState<TInternalServices>,
+    Authentication(_, is_admin, _): Authentication<TInternalServices>,
+) -> Response {
+    if !is_admin {
+        return response_403_err();
+    }
+
+    let id = match id.parse::<Uuid>() {
+        Ok(id) => id,
+        Err(_) => return response_400_with_const(INVALID_UUID_ERR),
+    };
+
+    match state.services.blog.delete(id).await {
+        Ok(blog) => Json(HttpResponse { data: blog }).into_response(),
+        Err(BlogServiceErr::Other(e)) => response_unhandled_err(e),
+    }
+}

@@ -12,7 +12,6 @@ use crate::{
     },
     model::requests::{blog::AddBlogRequest, PaginationInternal},
 };
-
 #[derive(Error, Debug)]
 pub enum BlogServiceErr {
     #[error(transparent)]
@@ -27,6 +26,7 @@ pub trait IBlogService {
     ) -> Result<Vec<BlogSummary>, BlogServiceErr>;
     async fn add(&self, blog: AddBlogRequest) -> Result<Blog, BlogServiceErr>;
     async fn get_by_id(&self, id: Uuid) -> Result<Option<Blog>, BlogServiceErr>;
+    async fn delete(&self, id: Uuid) -> Result<(), BlogServiceErr>;
 }
 
 pub struct BlogService<T: IDatabase> {
@@ -93,6 +93,16 @@ where
             .await
         {
             Ok(game) => Ok(game),
+            Err(e) => Err(BlogServiceErr::Other(e.into())),
+        }
+    }
+
+    async fn delete(&self, id: Uuid) -> Result<(), BlogServiceErr> {
+        match sqlx::query!("delete from blogs where id = $1", id)
+            .execute(self.db.get_pool())
+            .await
+        {
+            Ok(_) => Ok(()),
             Err(e) => Err(BlogServiceErr::Other(e.into())),
         }
     }

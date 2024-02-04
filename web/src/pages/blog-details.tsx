@@ -1,15 +1,31 @@
-import { useParams } from '@solidjs/router';
+import { useNavigate, useParams } from '@solidjs/router';
 import { createResource, ErrorBoundary, Suspense } from 'solid-js';
 
-import { fetchBlogByIdAction } from '@/apis';
+import { deleteBlogAction, fetchBlogByIdAction } from '@/apis';
 import { CommentForm, LoadingSpinner, OptionButton } from '@/components';
+import { useToastCtx } from '@/context';
+import { ResponseErr } from '@/models';
 import { NotFound } from '@/pages';
 import { TagSidebar } from '@/parts';
 import { formatTime } from '@/utils';
 
 export const BlogDetails = () => {
+  const { dispatch } = useToastCtx();
+
   const blogId = useParams()['id'] as string;
   const [blog] = createResource(blogId, fetchBlogByIdAction);
+  const navigate = useNavigate();
+
+  const onDeleteHandler = () => {
+    deleteBlogAction(blog()?.id as string)
+      .then(() => {
+        navigate(`/blogs`, { replace: true });
+        return dispatch.showToast({ msg: 'Blog deleted', type: 'Ok' });
+      })
+      .catch((error: ResponseErr) => {
+        dispatch.showToast({ msg: error.msg, type: 'Err' });
+      });
+  };
 
   return (
     <Suspense
@@ -29,7 +45,7 @@ export const BlogDetails = () => {
                     <p class="text-3xl font-bold">{blog()?.title}</p>
                     <OptionButton
                       isOwner={true}
-                      onDelete={() => {}}
+                      onDelete={onDeleteHandler}
                       id={''}
                       index={() => -1}
                     />

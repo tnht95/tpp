@@ -28,3 +28,11 @@ export const fetchBlogByIdAction = (id: string) =>
   fetch(`${import.meta.env.VITE_SERVER_URL}/blogs/${id}`)
     .then(errHandler)
     .then((r: Response<Blog | undefined>) => r.data);
+
+export const deleteBlogAction = (id: string) =>
+  fetch(`${import.meta.env.VITE_SERVER_URL}/blogs/${id}`, {
+    method: 'delete',
+    credentials: 'include'
+  })
+    .then(errHandler)
+    .then((r: Response<Blog>) => r.data);
