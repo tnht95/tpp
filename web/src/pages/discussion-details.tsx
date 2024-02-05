@@ -92,7 +92,7 @@ export const DiscussionDetails = () => {
       }
     >
       <ErrorBoundary fallback={<NotFound />}>
-        <div class="ml-10 flex flex-col">
+        <div class="ml-5 flex flex-col">
           <div class="border-b pb-5">
             <div class="flex items-center">
               <p class="mr-3 text-3xl font-semibold">{discussion()?.title}</p>

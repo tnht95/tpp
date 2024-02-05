@@ -45,9 +45,14 @@ export const GameDetailsTabs = () => {
           <div class="flex gap-x-5">
             <PillButton icon="fa-solid fa-plus" title="Subcribe" number={345} />
             <PillButton
-              title="Star"
-              number={game()?.stars as number}
-              icon="fa-solid fa-star"
+              title="Upvote"
+              number={400}
+              icon="fa-solid fa-angle-up"
+            />
+            <PillButton
+              icon="fa-solid fa-angle-down"
+              title="Downvote"
+              number={200}
             />
           </div>
         </div>

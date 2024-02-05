@@ -7,7 +7,8 @@ export type Game = {
   avatarUrl: string | null;
   about: string | null;
   info: string | null;
-  stars: number;
+  upVotes: number;
+  downVotes: number;
   tags: string[] | null;
   rom: string;
   createdAt: string;
@@ -20,7 +21,8 @@ export type GameSummary = {
   authorId: number;
   authorName: string;
   avatarUrl: string | null;
-  stars: number;
+  upVotes: number;
+  downVotes: number;
   tags: string[] | null;
   createdAt: string;
 };

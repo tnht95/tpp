@@ -62,11 +62,18 @@ export const Games = () => {
           </p>
           <div class="flex flex-row flex-wrap gap-7">
             <GameCard
-              id="1"
-              name="Space Invader"
-              byUser="jack@gmail.com"
-              stars={10}
-              img="https://ajor.co.uk/images/chip8/connect4.png"
+              game={{
+                id: '123456',
+                name: 'Awesome Game',
+                authorId: 1,
+                authorName: 'John Doe',
+                avatarUrl:
+                  'https://johnearnest.github.io/chip8Archive/src/eaty/eaty.gif',
+                upVotes: 100,
+                downVotes: 20,
+                tags: ['action', 'adventure'],
+                createdAt: '2024-02-05T12:00:00Z'
+              }}
             />
           </div>
         </div>
@@ -97,17 +104,7 @@ export const Games = () => {
               </div>
             </div>
             <div class="flex flex-row flex-wrap gap-7">
-              <For each={games}>
-                {game => (
-                  <GameCard
-                    id={game.id}
-                    name={game.name}
-                    byUser={game.authorName}
-                    stars={game.stars}
-                    img={game.avatarUrl}
-                  />
-                )}
-              </For>
+              <For each={games}>{game => <GameCard game={game} />}</For>
               <Show when={gameResource().length === LIMIT}>
                 <ShowMoreButton onClick={onShowMoreHandler} />
               </Show>

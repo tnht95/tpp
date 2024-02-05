@@ -132,8 +132,8 @@ where
 
         let game = sqlx::query!(
             r#"insert into games
-            (name, author_id, author_name, url, avatar_url, about, info, stars, tags, rom) values
-            ($1, $2, $3, $4, $5, $6, $7, $8, $9, '')
+            (name, author_id, author_name, url, avatar_url, about, info, tags, rom) values
+            ($1, $2, $3, $4, $5, $6, $7, $8, '')
             returning id"#,
             game.name,
             author_id,
@@ -142,7 +142,6 @@ where
             game.avatar_url,
             game.about,
             game.info,
-            0,
             game.tags.as_deref(),
         )
         .fetch_one(&mut *tx)

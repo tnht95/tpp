@@ -15,34 +15,33 @@ export const Search = () => (
               </p>
               <div class="flex gap-5">
                 <GameCard
-                  id="1"
-                  name="Space Invader"
-                  byUser="N@gmail.com"
-                  stars={2}
-                  img="https://ajor.co.uk/images/chip8/super-alien.png"
+                  game={{
+                    id: '123456',
+                    name: 'Awesome Game',
+                    authorId: 1,
+                    authorName: 'John Doe',
+                    avatarUrl:
+                      'https://johnearnest.github.io/chip8Archive/src/eaty/eaty.gif',
+                    upVotes: 100,
+                    downVotes: 20,
+                    tags: ['action', 'adventure'],
+                    createdAt: '2024-02-05T12:00:00Z'
+                  }}
                 />
                 <GameCard
-                  id="1"
-                  name="Space Invader"
-                  byUser="N@gmail.com"
-                  stars={2}
-                  img="https://ajor.co.uk/images/chip8/super-alien.png"
+                  game={{
+                    id: '123456',
+                    name: 'Awesome Game',
+                    authorId: 1,
+                    authorName: 'John Doe',
+                    avatarUrl:
+                      'https://johnearnest.github.io/chip8Archive/src/eaty/eaty.gif',
+                    upVotes: 100,
+                    downVotes: 20,
+                    tags: ['action', 'adventure'],
+                    createdAt: '2024-02-05T12:00:00Z'
+                  }}
                 />
-                <GameCard
-                  id="1"
-                  name="Space Invader"
-                  byUser="N@gmail.com"
-                  stars={2}
-                  img="https://ajor.co.uk/images/chip8/super-alien.png"
-                />
-                <GameCard
-                  id="1"
-                  name="Space Invader"
-                  byUser="N@gmail.com"
-                  stars={2}
-                  img="https://ajor.co.uk/images/chip8/super-alien.png"
-                />
-
                 <ShowMoreButton onClick={() => {}} />
               </div>
             </div>

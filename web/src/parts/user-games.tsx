@@ -77,17 +77,7 @@ export const UserGames = (props: UserGamesProps) => {
       </div>
       <div class="flex flex-wrap items-center gap-7">
         <Show when={games.length > 0} fallback={nothingMoreToShow}>
-          <For each={games}>
-            {game => (
-              <GameCard
-                name={game.name}
-                byUser={game.authorName}
-                stars={game.stars}
-                img={game.avatarUrl}
-                id={game.id}
-              />
-            )}
-          </For>
+          <For each={games}>{game => <GameCard game={game} />}</For>
         </Show>
       </div>
     </div>
