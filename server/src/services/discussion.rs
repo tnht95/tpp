@@ -1,7 +1,6 @@
 use std::sync::Arc;
 
 use async_trait::async_trait;
-use sqlx::{Postgres, QueryBuilder};
 use thiserror::Error;
 use uuid::Uuid;
 
@@ -57,21 +56,16 @@ where
         &self,
         pagination: PaginationWithTargetInternal,
     ) -> Result<Vec<Discussion>, DiscussionServiceErr> {
-        let mut query_builder: QueryBuilder<Postgres> = QueryBuilder::new("");
-
-        let mut separated = query_builder.separated(" ");
-        separated.push("select * from discussions where game_id =");
-        separated.push_bind(pagination.target_id);
-        separated.push("offset");
-        separated.push_bind(pagination.offset);
-        separated.push("limit");
-        separated.push_bind(pagination.limit);
-
-        query_builder
-            .build_query_as::<Discussion>()
-            .fetch_all(self.db.get_pool())
-            .await
-            .map_err(|e| DiscussionServiceErr::Other(e.into()))
+        sqlx::query_as!(
+            Discussion,
+            "select * from discussions where game_id = $1 offset $2 limit $3",
+            pagination.target_id,
+            pagination.offset,
+            pagination.limit
+        )
+        .fetch_all(self.db.get_pool())
+        .await
+        .map_err(|e| DiscussionServiceErr::Other(e.into()))
     }
 
     async fn add(

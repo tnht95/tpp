@@ -1,7 +1,6 @@
 use std::sync::Arc;
 
 use async_trait::async_trait;
-use sqlx::{Postgres, QueryBuilder};
 use thiserror::Error;
 use uuid::Uuid;
 
@@ -66,19 +65,14 @@ where
         &self,
         pagination: PaginationWithTargetInternal,
     ) -> Result<Vec<Comment>, CommentServiceErr> {
-        let mut query_builder: QueryBuilder<Postgres> = QueryBuilder::new("");
-
-        let mut separated = query_builder.separated(" ");
-        separated.push("select * from comments where target_id =");
-        separated.push_bind(pagination.target_id);
-
-        separated.push("offset");
-        separated.push_bind(pagination.offset);
-        separated.push("limit");
-        separated.push_bind(pagination.limit);
-
-        query_builder
-            .build_query_as::<Comment>()
+        sqlx::query_as!(
+            Comment,
+            r#"select id, user_id, user_name, target_id, content, likes, target_type as "target_type!: TargetTypes", created_at, updated_at
+            from comments where target_id = $1 offset $2 limit $3"#,
+            pagination.target_id,
+            pagination.offset,
+            pagination.limit
+        )
             .fetch_all(self.db.get_pool())
             .await
             .map_err(|e| CommentServiceErr::Other(e.into()))

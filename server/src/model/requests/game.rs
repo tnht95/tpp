@@ -54,16 +54,16 @@ pub struct GamePagination {
     pub tag: Option<String>,
     pub order_field: Option<OrderField>,
     pub order_by: Option<OrderBy>,
-    pub offset: Option<i16>,
-    pub limit: Option<i16>,
+    pub offset: Option<i64>,
+    pub limit: Option<i64>,
 }
 pub struct GamePaginationInternal {
     pub author_id: Option<i64>,
     pub tag: Option<String>,
     pub order_field: OrderField,
     pub order_by: OrderBy,
-    pub offset: i16,
-    pub limit: i16,
+    pub offset: i64,
+    pub limit: i64,
 }
 impl From<GamePagination> for GamePaginationInternal {
     fn from(pagination: GamePagination) -> Self {

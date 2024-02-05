@@ -28,13 +28,13 @@ impl std::fmt::Display for OrderBy {
 #[serde(rename_all = "camelCase")]
 pub struct Pagination {
     pub order_by: Option<OrderBy>,
-    pub offset: Option<i16>,
-    pub limit: Option<i16>,
+    pub offset: Option<i64>,
+    pub limit: Option<i64>,
 }
 pub struct PaginationInternal {
     pub order_by: OrderBy,
-    pub offset: i16,
-    pub limit: i16,
+    pub offset: i64,
+    pub limit: i64,
 }
 impl From<Pagination> for PaginationInternal {
     fn from(pagination: Pagination) -> Self {
@@ -58,13 +58,13 @@ impl From<Pagination> for PaginationInternal {
 #[serde(rename_all = "camelCase")]
 pub struct PaginationWithTarget {
     pub target_id: Uuid,
-    pub offset: Option<i16>,
-    pub limit: Option<i16>,
+    pub offset: Option<i64>,
+    pub limit: Option<i64>,
 }
 pub struct PaginationWithTargetInternal {
     pub target_id: Uuid,
-    pub offset: i16,
-    pub limit: i16,
+    pub offset: i64,
+    pub limit: i64,
 }
 impl From<PaginationWithTarget> for PaginationWithTargetInternal {
     fn from(pagination: PaginationWithTarget) -> Self {
