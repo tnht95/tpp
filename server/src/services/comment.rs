@@ -12,7 +12,7 @@ use crate::{
     },
     model::requests::{
         comment::{AddCommentRequest, EditCommentRequest},
-        QueryWithTarget,
+        PaginationWithTargetInternal,
     },
 };
 
@@ -24,7 +24,10 @@ pub enum CommentServiceErr {
 
 #[async_trait]
 pub trait ICommentService {
-    async fn filter(&self, query: QueryWithTarget) -> Result<Vec<Comment>, CommentServiceErr>;
+    async fn filter(
+        &self,
+        pagination: PaginationWithTargetInternal,
+    ) -> Result<Vec<Comment>, CommentServiceErr>;
     async fn add(
         &self,
         user_id: i64,
@@ -59,22 +62,20 @@ impl<T> ICommentService for CommentService<T>
 where
     T: IDatabase + Send + Sync,
 {
-    async fn filter(&self, query: QueryWithTarget) -> Result<Vec<Comment>, CommentServiceErr> {
+    async fn filter(
+        &self,
+        pagination: PaginationWithTargetInternal,
+    ) -> Result<Vec<Comment>, CommentServiceErr> {
         let mut query_builder: QueryBuilder<Postgres> = QueryBuilder::new("");
 
         let mut separated = query_builder.separated(" ");
         separated.push("select * from comments where target_id =");
-        separated.push_bind(query.target_id);
+        separated.push_bind(pagination.target_id);
 
-        if let Some(offset) = query.offset {
-            separated.push("offset");
-            separated.push_bind(offset);
-        }
-
-        if let Some(limit) = query.limit {
-            separated.push("limit");
-            separated.push_bind(limit);
-        }
+        separated.push("offset");
+        separated.push_bind(pagination.offset);
+        separated.push("limit");
+        separated.push_bind(pagination.limit);
 
         query_builder
             .build_query_as::<Comment>()

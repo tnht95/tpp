@@ -17,7 +17,7 @@ use crate::{
     model::{
         requests::{
             comment::{AddCommentRequest, EditCommentRequest},
-            QueryWithTarget,
+            PaginationWithTarget,
         },
         responses::{
             comment::{NOT_AUTH_DEL, NOT_AUTH_EDIT},
@@ -33,9 +33,9 @@ use crate::{
 
 pub async fn filter<TInternalServices: IInternalServices>(
     State(state): InternalState<TInternalServices>,
-    Query(query): Query<QueryWithTarget>,
+    Query(pagination): Query<PaginationWithTarget>,
 ) -> Response {
-    match state.services.comment.filter(query).await {
+    match state.services.comment.filter(pagination.into()).await {
         Ok(comments) => Json(HttpResponse { data: comments }).into_response(),
         Err(CommentServiceErr::Other(e)) => response_unhandled_err(e),
     }

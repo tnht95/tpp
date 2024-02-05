@@ -11,7 +11,7 @@ use crate::{
         entities::game::{Game, GameSummary},
         IDatabase,
     },
-    model::requests::game::{AddGameRequest, GameQuery},
+    model::requests::game::{AddGameRequest, GamePaginationInternal},
 };
 
 #[derive(Error, Debug)]
@@ -22,7 +22,10 @@ pub enum GameServiceErr {
 
 #[async_trait]
 pub trait IGameService {
-    async fn filter(&self, query: GameQuery) -> Result<Vec<GameSummary>, GameServiceErr>;
+    async fn filter(
+        &self,
+        pagination: GamePaginationInternal,
+    ) -> Result<Vec<GameSummary>, GameServiceErr>;
     async fn get_by_id(&self, id: Uuid) -> Result<Option<Game>, GameServiceErr>;
     async fn add(
         &self,
@@ -70,38 +73,34 @@ impl<T> IGameService for GameService<T>
 where
     T: IDatabase + Send + Sync,
 {
-    async fn filter(&self, query: GameQuery) -> Result<Vec<GameSummary>, GameServiceErr> {
+    async fn filter(
+        &self,
+        pagination: GamePaginationInternal,
+    ) -> Result<Vec<GameSummary>, GameServiceErr> {
         let mut query_builder: QueryBuilder<Postgres> = QueryBuilder::new("");
 
         let mut separated = query_builder.separated(" ");
         separated.push("select * from games where 1 = 1");
 
-        if let Some(author_id) = query.author_id {
+        if let Some(author_id) = pagination.author_id {
             separated.push("and author_id =");
             separated.push_bind(author_id);
         }
 
-        if let Some(tag) = query.tag {
+        if let Some(tag) = pagination.tag {
             separated.push("and");
             separated.push_bind(tag);
             separated.push("= any(tags)");
         }
 
-        if let Some(order_by) = query.order_by {
-            if let Some(order_field) = query.order_field {
-                separated.push(format!("order by {} {}", order_field, order_by));
-            }
-        }
-
-        if let Some(offset) = query.offset {
-            separated.push("offset");
-            separated.push_bind(offset);
-        }
-
-        if let Some(limit) = query.limit {
-            separated.push("limit");
-            separated.push_bind(limit);
-        }
+        separated.push(format!(
+            "order by {} {}",
+            pagination.order_field, pagination.order_by
+        ));
+        separated.push("offset");
+        separated.push_bind(pagination.offset);
+        separated.push("limit");
+        separated.push_bind(pagination.limit);
 
         query_builder
             .build_query_as::<GameSummary>()

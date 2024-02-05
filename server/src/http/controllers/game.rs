@@ -21,7 +21,7 @@ use crate::{
         },
     },
     model::{
-        requests::game::{AddGameRequest, GameQuery},
+        requests::game::{AddGameRequest, GamePagination},
         responses::{
             game::{DESERIALIZE_GAME_ERR, INVALID_ROM, NOT_AUTH_DEL, NOT_FOUND},
             HttpResponse,
@@ -36,9 +36,9 @@ use crate::{
 
 pub async fn filter<TInternalServices: IInternalServices>(
     State(state): InternalState<TInternalServices>,
-    QueryValidator(query): QueryValidator<GameQuery>,
+    QueryValidator(pagination): QueryValidator<GamePagination>,
 ) -> Response {
-    match state.services.game.filter(query).await {
+    match state.services.game.filter(pagination.into()).await {
         Ok(games) => Json(HttpResponse { data: games }).into_response(),
         Err(GameServiceErr::Other(e)) => response_unhandled_err(e),
     }

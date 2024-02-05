@@ -8,7 +8,7 @@ use uuid::Uuid;
 use crate::{
     database::{entities::discussion::Discussion, IDatabase},
     model::{
-        requests::{discussion::AddDiscussionRequest, QueryWithTarget},
+        requests::{discussion::AddDiscussionRequest, PaginationWithTargetInternal},
         responses::discussion::DiscussionResponse,
     },
 };
@@ -21,16 +21,16 @@ pub enum DiscussionServiceErr {
 
 #[async_trait]
 pub trait IDiscussionService {
-    async fn filter(&self, query: QueryWithTarget)
-        -> Result<Vec<Discussion>, DiscussionServiceErr>;
-
+    async fn filter(
+        &self,
+        pagination: PaginationWithTargetInternal,
+    ) -> Result<Vec<Discussion>, DiscussionServiceErr>;
     async fn add(
         &self,
         user_id: i64,
         user_name: String,
         discussion: AddDiscussionRequest,
     ) -> Result<Discussion, DiscussionServiceErr>;
-
     async fn get_by_id(&self, id: Uuid)
         -> Result<Option<DiscussionResponse>, DiscussionServiceErr>;
 }
@@ -55,17 +55,17 @@ where
 {
     async fn filter(
         &self,
-        query: QueryWithTarget,
+        pagination: PaginationWithTargetInternal,
     ) -> Result<Vec<Discussion>, DiscussionServiceErr> {
         let mut query_builder: QueryBuilder<Postgres> = QueryBuilder::new("");
 
         let mut separated = query_builder.separated(" ");
         separated.push("select * from discussions where game_id =");
-        separated.push_bind(query.target_id);
+        separated.push_bind(pagination.target_id);
         separated.push("offset");
-        separated.push_bind(query.offset);
+        separated.push_bind(pagination.offset);
         separated.push("limit");
-        separated.push_bind(query.limit);
+        separated.push_bind(pagination.limit);
 
         query_builder
             .build_query_as::<Discussion>()

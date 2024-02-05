@@ -36,28 +36,6 @@ pub enum OrderField {
     Name,
     Stars,
 }
-
-#[derive(Deserialize, Validate)]
-#[serde(rename_all = "camelCase")]
-#[validate(schema(function = "validate_order", message = "Invalid order"))]
-pub struct GameQuery {
-    pub order_field: Option<OrderField>,
-    pub order_by: Option<OrderBy>,
-    pub limit: Option<i16>,
-    pub author_id: Option<i64>,
-    pub tag: Option<String>,
-    pub offset: Option<i16>,
-}
-
-fn validate_order(q: &GameQuery) -> Result<(), ValidationError> {
-    if (q.order_field.is_some() && q.order_by.is_none())
-        || (q.order_field.is_none() && q.order_by.is_some())
-    {
-        return Err(ValidationError::new("invalid_order"));
-    }
-    Ok(())
-}
-
 impl fmt::Display for OrderField {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
@@ -66,4 +44,52 @@ impl fmt::Display for OrderField {
             OrderField::Name => write!(f, "name"),
         }
     }
+}
+
+#[derive(Deserialize, Validate)]
+#[serde(rename_all = "camelCase")]
+#[validate(schema(function = "validate_order", message = "Invalid order"))]
+pub struct GamePagination {
+    pub author_id: Option<i64>,
+    pub tag: Option<String>,
+    pub order_field: Option<OrderField>,
+    pub order_by: Option<OrderBy>,
+    pub offset: Option<i16>,
+    pub limit: Option<i16>,
+}
+pub struct GamePaginationInternal {
+    pub author_id: Option<i64>,
+    pub tag: Option<String>,
+    pub order_field: OrderField,
+    pub order_by: OrderBy,
+    pub offset: i16,
+    pub limit: i16,
+}
+impl From<GamePagination> for GamePaginationInternal {
+    fn from(pagination: GamePagination) -> Self {
+        Self {
+            author_id: pagination.author_id,
+            tag: pagination.tag,
+            order_field: pagination.order_field.unwrap_or(OrderField::CreatedAt),
+            order_by: pagination.order_by.unwrap_or(OrderBy::Asc),
+            offset: match pagination.offset.unwrap_or(0) {
+                offset if offset < 0 => 0,
+                offset if offset > 20 => 20,
+                offset => offset,
+            },
+            limit: match pagination.limit.unwrap_or(20) {
+                limit if limit < 1 => 1,
+                limit if limit > 20 => 20,
+                offset => offset,
+            },
+        }
+    }
+}
+fn validate_order(q: &GamePagination) -> Result<(), ValidationError> {
+    if (q.order_field.is_some() && q.order_by.is_none())
+        || (q.order_field.is_none() && q.order_by.is_some())
+    {
+        return Err(ValidationError::new("invalid_order"));
+    }
+    Ok(())
 }

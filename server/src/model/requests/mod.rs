@@ -11,34 +11,31 @@ pub mod post;
 
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
+pub enum OrderBy {
+    Asc,
+    Desc,
+}
+impl std::fmt::Display for OrderBy {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            OrderBy::Asc => write!(f, "asc"),
+            OrderBy::Desc => write!(f, "desc"),
+        }
+    }
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Pagination {
     pub order_by: Option<OrderBy>,
     pub offset: Option<i16>,
     pub limit: Option<i16>,
 }
-
-#[derive(Deserialize)]
 pub struct PaginationInternal {
     pub order_by: OrderBy,
     pub offset: i16,
     pub limit: i16,
 }
-
-#[derive(Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct QueryWithTarget {
-    pub target_id: Uuid,
-    pub offset: Option<i16>,
-    pub limit: Option<i16>,
-}
-
-#[derive(Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub enum OrderBy {
-    Asc,
-    Desc,
-}
-
 impl From<Pagination> for PaginationInternal {
     fn from(pagination: Pagination) -> Self {
         Self {
@@ -57,11 +54,32 @@ impl From<Pagination> for PaginationInternal {
     }
 }
 
-impl std::fmt::Display for OrderBy {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            OrderBy::Asc => write!(f, "asc"),
-            OrderBy::Desc => write!(f, "desc"),
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PaginationWithTarget {
+    pub target_id: Uuid,
+    pub offset: Option<i16>,
+    pub limit: Option<i16>,
+}
+pub struct PaginationWithTargetInternal {
+    pub target_id: Uuid,
+    pub offset: i16,
+    pub limit: i16,
+}
+impl From<PaginationWithTarget> for PaginationWithTargetInternal {
+    fn from(pagination: PaginationWithTarget) -> Self {
+        Self {
+            target_id: pagination.target_id,
+            offset: match pagination.offset.unwrap_or(0) {
+                offset if offset < 0 => 0,
+                offset if offset > 20 => 20,
+                offset => offset,
+            },
+            limit: match pagination.limit.unwrap_or(20) {
+                limit if limit < 1 => 1,
+                limit if limit > 20 => 20,
+                offset => offset,
+            },
         }
     }
 }

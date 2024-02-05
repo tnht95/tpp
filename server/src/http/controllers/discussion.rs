@@ -15,7 +15,7 @@ use crate::{
         },
     },
     model::{
-        requests::{discussion::AddDiscussionRequest, QueryWithTarget},
+        requests::{discussion::AddDiscussionRequest, PaginationWithTarget},
         responses::{discussion::NOT_FOUND, HttpResponse, INVALID_UUID_ERR},
     },
     services::{
@@ -25,10 +25,10 @@ use crate::{
 };
 
 pub async fn filter<TInternalServices: IInternalServices>(
-    Query(query): Query<QueryWithTarget>,
+    Query(pagination): Query<PaginationWithTarget>,
     State(state): InternalState<TInternalServices>,
 ) -> Response {
-    match state.services.discussion.filter(query).await {
+    match state.services.discussion.filter(pagination.into()).await {
         Ok(discussions) => Json(HttpResponse { data: discussions }).into_response(),
         Err(DiscussionServiceErr::Other(e)) => response_unhandled_err(e),
     }
