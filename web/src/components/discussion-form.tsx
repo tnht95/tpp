@@ -16,7 +16,9 @@ const ErrorMessage = (props: { msg: string }) => (
 );
 
 export const DiscussionForm = (props: DiscussionFormProps) => {
-  const { game } = useGameCtx();
+  const {
+    game: { data }
+  } = useGameCtx();
   const [isEditMode, setIsEditMode] = createSignal(true);
   const [content, setContent] = createSignal('');
   const { validate, submit, errors } = useForm({ errClass: 'border-red-600' });
@@ -34,7 +36,7 @@ export const DiscussionForm = (props: DiscussionFormProps) => {
   const onSubmitHandler = (formEl: HTMLFormElement) => {
     const formData = new FormData(formEl);
     props.onSubmitHandler({
-      gameId: game()?.id as string,
+      gameId: data()?.id as string,
       title: formData.get('title') as string,
       content: formData.get('content') as string
     });

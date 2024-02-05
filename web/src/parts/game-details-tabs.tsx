@@ -6,7 +6,9 @@ import { useAuthCtx, useGameCtx, useToastCtx } from '@/context';
 import { ResponseErr } from '@/models';
 
 export const GameDetailsTabs = () => {
-  const { game } = useGameCtx();
+  const {
+    game: { data }
+  } = useGameCtx();
   const { dispatch } = useToastCtx();
   const navigate = useNavigate();
   const {
@@ -14,7 +16,7 @@ export const GameDetailsTabs = () => {
   } = useAuthCtx();
 
   const onDeleteHandler = () => {
-    deleteGameAction(game()?.id as string)
+    deleteGameAction(data()?.id as string)
       .then(() => {
         navigate(`/users/${user()?.id}`, { replace: true });
         return dispatch.showToast({ msg: 'Game deleted', type: 'Ok' });
@@ -30,12 +32,12 @@ export const GameDetailsTabs = () => {
         <div class="flex w-7/10 items-center">
           <i class="fa-solid fa-puzzle-piece mr-2 text-xl text-indigo-900" />
           <div class="mr-3 cursor-pointer text-2xl font-medium text-indigo-900 hover:underline">
-            {game()?.name}
+            {data()?.name}
           </div>
           <OptionButton
-            isOwner={user()?.id === game()?.authorId}
+            isOwner={user()?.id === data()?.authorId}
             onDelete={onDeleteHandler}
-            id={game()?.id as string}
+            id={data()?.id as string}
             index={() => -1}
             onEdit={() => {}}
           />
@@ -62,17 +64,17 @@ export const GameDetailsTabs = () => {
         <div class="flex">
           <GameTab
             title="Info"
-            url={`/games/${game()?.id}/info`}
+            url={`/games/${data()?.id}/info`}
             icon="fa-regular fa-lightbulb"
           />
           <GameTab
             title="Discussion"
-            url={`/games/${game()?.id}/discussion`}
+            url={`/games/${data()?.id}/discussion`}
             icon="fa-regular fa-comment-dots"
           />
           <GameTab
             title="Activity"
-            url={`/games/${game()?.id}/activity`}
+            url={`/games/${data()?.id}/activity`}
             icon="fa-regular fa-rectangle-list"
           />
         </div>
