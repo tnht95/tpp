@@ -1,6 +1,5 @@
 import { Modal } from 'flowbite';
 import { batch, createEffect, createSignal, For, Show } from 'solid-js';
-import { produce } from 'solid-js/store';
 
 import { addDiscussionAction } from '@/apis';
 import { Button, DiscussionForm, ShowMoreButton, TableRow } from '@/components';
@@ -23,11 +22,6 @@ export const GameDiscussion = () => {
 
   createEffect(() => {
     setModal(new Modal(modalRef()));
-    if (currentDataBatch().length > 0) {
-      setDiscussions(
-        produce(oldValues => oldValues.push(...currentDataBatch()))
-      );
-    }
   });
 
   const batchSubmitHandler = () =>

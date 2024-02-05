@@ -1,18 +1,17 @@
 use std::sync::Arc;
 
 use async_trait::async_trait;
-use sqlx::{Postgres, QueryBuilder};
 use thiserror::Error;
 use uuid::Uuid;
 
 use crate::{
-    database::{
-        entities::blog::{Blog, BlogSummary},
-        IDatabase,
-    },
-    model::requests::{
-        blog::{AddBlogRequest, EditBlogRequest},
-        PaginationInternal,
+    database::{entities::blog::Blog, IDatabase},
+    model::{
+        requests::{
+            blog::{AddBlogRequest, EditBlogRequest},
+            PaginationInternal,
+        },
+        responses::blog::BlogSummary,
     },
 };
 
@@ -56,20 +55,15 @@ where
         &self,
         pagination: PaginationInternal,
     ) -> Result<Vec<BlogSummary>, BlogServiceErr> {
-        let mut query_builder: QueryBuilder<Postgres> = QueryBuilder::new("");
-        let mut separated = query_builder.separated(" ");
-        separated.push("select * from blogs");
-        separated.push(format!("order by created_at {}", pagination.order_by));
-        separated.push("offset");
-        separated.push_bind(pagination.offset);
-        separated.push("limit");
-        separated.push_bind(pagination.limit);
-
-        query_builder
-            .build_query_as::<BlogSummary>()
-            .fetch_all(self.db.get_pool())
-            .await
-            .map_err(|e| BlogServiceErr::Other(e.into()))
+        sqlx::query_as!(
+            BlogSummary,
+            "select id, title, description, tags, created_at from blogs order by created_at desc offset $1 limit $2",
+            pagination.offset,
+            pagination.limit
+        )
+        .fetch_all(self.db.get_pool())
+        .await
+        .map_err(|e| BlogServiceErr::Other(e.into()))
     }
 
     async fn add(&self, blog: AddBlogRequest) -> Result<Blog, BlogServiceErr> {

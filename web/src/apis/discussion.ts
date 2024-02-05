@@ -2,6 +2,7 @@ import { errHandler, QueryWIthTargetInput } from '@/apis';
 import {
   AddDiscussion,
   Discussion,
+  DiscussionSummary,
   DiscussionWithUser,
   Response
 } from '@/models';
@@ -16,7 +17,7 @@ export const fetchDiscussionAction = (queryInput: QueryWIthTargetInput) => {
 
   return fetch(`${baseUrl}/discussions?${query.join('&')}`)
     .then(errHandler)
-    .then((r: Response<Discussion[]>) => r.data);
+    .then((r: Response<DiscussionSummary[]>) => r.data);
 };
 
 export const addDiscussionAction = (body: AddDiscussion) =>

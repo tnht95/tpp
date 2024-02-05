@@ -1,6 +1,7 @@
 import { useParams } from '@solidjs/router';
 import {
   createContext,
+  createEffect,
   createResource,
   createSignal,
   InitializedResource,
@@ -9,7 +10,7 @@ import {
   Setter,
   useContext
 } from 'solid-js';
-import { createStore, SetStoreFunction } from 'solid-js/store';
+import { createStore, produce, SetStoreFunction } from 'solid-js/store';
 
 import {
   fetchDiscussionAction,
@@ -17,17 +18,17 @@ import {
   QueryWIthTargetInput
 } from '@/apis';
 import { LIMIT } from '@/constant';
-import { Discussion, Game } from '@/models';
+import { DiscussionSummary, Game } from '@/models';
 
 type GameContext = {
   game: {
     data: Resource<Game | undefined>;
   };
   discussion: {
-    data: Discussion[];
-    setDiscussions: SetStoreFunction<Discussion[]>;
+    data: DiscussionSummary[];
+    setDiscussions: SetStoreFunction<DiscussionSummary[]>;
     setQueryValue: Setter<QueryWIthTargetInput>;
-    currentDataBatch: InitializedResource<Discussion[]>;
+    currentDataBatch: InitializedResource<DiscussionSummary[]>;
   };
   utils: {
     getGameId: () => string;
@@ -53,7 +54,15 @@ export const GameProvider = (props: ParentProps) => {
     }
   );
 
-  const [discussions, setDiscussions] = createStore<Discussion[]>([]);
+  const [discussions, setDiscussions] = createStore<DiscussionSummary[]>([]);
+
+  createEffect(() => {
+    if (discussionResource().length > 0) {
+      setDiscussions(
+        produce(oldValues => oldValues.push(...discussionResource()))
+      );
+    }
+  });
 
   const state: GameContext = {
     game: { data: game },

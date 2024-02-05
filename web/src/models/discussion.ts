@@ -9,6 +9,13 @@ export type Discussion = {
   updatedAt: string;
 };
 
+export type DiscussionSummary = {
+  id: string;
+  userName: string;
+  title: string;
+  createdAt: string;
+};
+
 export type AddDiscussion = {
   gameId: string;
   title: string;

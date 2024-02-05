@@ -8,7 +8,7 @@ use crate::{
     database::{entities::discussion::Discussion, IDatabase},
     model::{
         requests::{discussion::AddDiscussionRequest, PaginationWithTargetInternal},
-        responses::discussion::DiscussionResponse,
+        responses::discussion::{DiscussionResponse, DiscussionSummary},
     },
 };
 
@@ -23,7 +23,7 @@ pub trait IDiscussionService {
     async fn filter(
         &self,
         pagination: PaginationWithTargetInternal,
-    ) -> Result<Vec<Discussion>, DiscussionServiceErr>;
+    ) -> Result<Vec<DiscussionSummary>, DiscussionServiceErr>;
     async fn add(
         &self,
         user_id: i64,
@@ -55,10 +55,10 @@ where
     async fn filter(
         &self,
         pagination: PaginationWithTargetInternal,
-    ) -> Result<Vec<Discussion>, DiscussionServiceErr> {
+    ) -> Result<Vec<DiscussionSummary>, DiscussionServiceErr> {
         sqlx::query_as!(
-            Discussion,
-            "select * from discussions where game_id = $1 offset $2 limit $3",
+            DiscussionSummary,
+            "select id, title, created_at, user_name from discussions where game_id = $1 order by created_at desc offset $2 limit $3",
             pagination.target_id,
             pagination.offset,
             pagination.limit
