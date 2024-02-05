@@ -89,9 +89,9 @@ where
             discussion.title,
             discussion.content
         )
-            .fetch_one(self.db.get_pool())
-            .await
-            .map_err(|e| DiscussionServiceErr::Other(e.into()))
+        .fetch_one(self.db.get_pool())
+        .await
+        .map_err(|e| DiscussionServiceErr::Other(e.into()))
     }
 
     async fn get_by_id(

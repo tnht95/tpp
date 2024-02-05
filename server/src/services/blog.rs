@@ -102,7 +102,7 @@ where
     }
 
     async fn edit(&self, id: Uuid, blog: EditBlogRequest) -> Result<Blog, BlogServiceErr> {
-        match sqlx::query_as!(
+        sqlx::query_as!(
             Blog,
             "update blogs set content = $1, title = $2, description = $3, tags = $4, updated_at = now() where id = $5 returning *",
             blog.content,
@@ -111,11 +111,8 @@ where
             blog.tags.as_deref(),
             id,
         )
-            .fetch_one(self.db.get_pool())
-            .await
-        {
-            Ok(blog) => Ok(blog),
-            Err(e) => Err(BlogServiceErr::Other(e.into())),
-        }
+        .fetch_one(self.db.get_pool())
+        .await
+        .map_err(|e| BlogServiceErr::Other(e.into()))
     }
 }
