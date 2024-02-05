@@ -10,6 +10,7 @@ use crate::{
         game::{GameService, IGameService},
         health::{HealthService, IHealthService},
         post::{IPostService, PostService},
+        search::{ISearchService, SearchService},
         user::{IUserService, UserService},
     },
 };
@@ -21,6 +22,7 @@ pub mod discussion;
 pub mod game;
 pub mod health;
 pub mod post;
+pub mod search;
 pub mod user;
 
 pub trait IInternalServices {
@@ -32,6 +34,7 @@ pub trait IInternalServices {
     type TBlogService: IBlogService + Send + Sync;
     type TCommentService: ICommentService + Send + Sync;
     type TDiscussionService: IDiscussionService + Send + Sync;
+    type TSearchService: ISearchService + Send + Sync;
 }
 
 pub struct InternalServices;
@@ -44,6 +47,7 @@ impl IInternalServices for InternalServices {
     type TBlogService = BlogService<Database>;
     type TCommentService = CommentService<Database>;
     type TDiscussionService = DiscussionService<Database>;
+    type TSearchService = SearchService<Database>;
 }
 
 pub struct Services<TInternalServices: IInternalServices> {
@@ -55,6 +59,7 @@ pub struct Services<TInternalServices: IInternalServices> {
     pub blog: TInternalServices::TBlogService,
     pub comment: TInternalServices::TCommentService,
     pub discussion: TInternalServices::TDiscussionService,
+    pub search: TInternalServices::TSearchService,
 }
 
 pub struct ServicesBuilder<TInternalServices: IInternalServices> {
@@ -66,6 +71,7 @@ pub struct ServicesBuilder<TInternalServices: IInternalServices> {
     blog: Option<TInternalServices::TBlogService>,
     comment: Option<TInternalServices::TCommentService>,
     discussion: Option<TInternalServices::TDiscussionService>,
+    search: Option<TInternalServices::TSearchService>,
 }
 
 impl<TInternalServices: IInternalServices> ServicesBuilder<TInternalServices> {
@@ -79,6 +85,7 @@ impl<TInternalServices: IInternalServices> ServicesBuilder<TInternalServices> {
             blog: None,
             comment: None,
             discussion: None,
+            search: None,
         }
     }
 
@@ -122,6 +129,11 @@ impl<TInternalServices: IInternalServices> ServicesBuilder<TInternalServices> {
         self
     }
 
+    pub fn search(mut self, search: TInternalServices::TSearchService) -> Self {
+        self.search = Some(search);
+        self
+    }
+
     pub fn build(self) -> Services<TInternalServices> {
         Services {
             health: self.health.expect("missing initialization"),
@@ -132,6 +144,7 @@ impl<TInternalServices: IInternalServices> ServicesBuilder<TInternalServices> {
             blog: self.blog.expect("missing initialization"),
             comment: self.comment.expect("missing initialization"),
             discussion: self.discussion.expect("missing initialization"),
+            search: self.search.expect("missing initialization"),
         }
     }
 }

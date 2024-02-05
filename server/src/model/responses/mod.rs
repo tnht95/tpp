@@ -5,6 +5,7 @@ pub mod comment;
 pub mod discussion;
 pub mod game;
 pub mod post;
+pub mod search;
 pub mod user;
 
 use serde::Serialize;

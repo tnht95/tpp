@@ -7,11 +7,11 @@ use tokio::fs::{create_dir, metadata, write};
 use uuid::Uuid;
 
 use crate::{
-    database::{
-        entities::game::{Game, GameSummary},
-        IDatabase,
+    database::{entities::game::Game, IDatabase},
+    model::{
+        requests::game::{AddGameRequest, GamePaginationInternal},
+        responses::game::GameSummary,
     },
-    model::requests::game::{AddGameRequest, GamePaginationInternal},
 };
 
 #[derive(Error, Debug)]
@@ -78,9 +78,8 @@ where
         pagination: GamePaginationInternal,
     ) -> Result<Vec<GameSummary>, GameServiceErr> {
         let mut query_builder: QueryBuilder<Postgres> = QueryBuilder::new("");
-
         let mut separated = query_builder.separated(" ");
-        separated.push("select * from games where 1 = 1");
+        separated.push("select id, name, author_id, author_name, avatar_url, up_votes, down_votes from games where 1 = 1");
 
         if let Some(author_id) = pagination.author_id {
             separated.push("and author_id =");
@@ -97,6 +96,7 @@ where
             "order by {} {}",
             pagination.order_field, pagination.order_by
         ));
+
         separated.push("offset");
         separated.push_bind(pagination.offset);
         separated.push("limit");
@@ -131,10 +131,10 @@ where
             .map_err(|e| GameServiceErr::Other(e.into()))?;
 
         let game = sqlx::query!(
-            r#"insert into games
+            "insert into games
             (name, author_id, author_name, url, avatar_url, about, info, tags, rom) values
             ($1, $2, $3, $4, $5, $6, $7, $8, '')
-            returning id"#,
+            returning id",
             game.name,
             author_id,
             author_name,

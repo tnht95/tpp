@@ -94,9 +94,9 @@ where
     ) -> Result<Option<DiscussionResponse>, DiscussionServiceErr> {
         sqlx::query_as!(
             DiscussionResponse,
-            "select discussions.*, users.avatar as user_avatar \
-            from discussions join users on discussions.user_id = users.id \
-            where discussions.id = $1;",
+            "select discussions.*, users.avatar as user_avatar
+            from discussions join users on discussions.user_id = users.id
+            where discussions.id = $1",
             id
         )
         .fetch_optional(self.db.get_pool())

@@ -69,6 +69,6 @@ impl IDatabase for Database {
     }
 
     async fn is_healthy(&self) -> bool {
-        sqlx::query("SELECT 1").fetch_one(&self.pool).await.is_ok()
+        sqlx::query("select 1").fetch_one(&self.pool).await.is_ok()
     }
 }

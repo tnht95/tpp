@@ -30,7 +30,7 @@ use tracing::{info, Level};
 use crate::{
     config::Config,
     http::{
-        controllers::{auth, blog, book, comment, discussion, game, health, post, user},
+        controllers::{auth, blog, book, comment, discussion, game, health, post, search, user},
         handlers::{panic, shutdown},
         utils::err_handler::response_404_err,
     },
@@ -120,6 +120,7 @@ where
                         .route("/discussions", get(discussion::filter))
                         .route("/discussions", post(discussion::add))
                         .route("/discussions/:id", get(discussion::get_by_id))
+                        .route("/search/:keyword", get(search::search))
                         .layer(middleware),
                 )
                 .layer(DefaultBodyLimit::max(5 * 1024)) // 5KB
