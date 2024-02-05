@@ -33,7 +33,6 @@ pub trait ICommentService {
         user_name: String,
         comment: AddCommentRequest,
     ) -> Result<Comment, CommentServiceErr>;
-
     async fn delete(&self, id: Uuid) -> Result<(), CommentServiceErr>;
     async fn existed(&self, id: Uuid, author_id: i64) -> Result<bool, CommentServiceErr>;
     async fn edit(

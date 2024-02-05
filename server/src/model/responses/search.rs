@@ -1,9 +1,13 @@
 use serde::Serialize;
 
-use super::game::GameSummary;
+use super::{blog::BlogSummary, game::GameSummary, user::UserSummary};
+use crate::database::entities::post::Post;
 
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SearchResult {
-    pub game: Vec<GameSummary>,
+    pub games: Vec<GameSummary>,
+    pub users: Vec<UserSummary>,
+    pub posts: Vec<Post>,
+    pub blogs: Vec<BlogSummary>,
 }

@@ -4,10 +4,15 @@ use async_trait::async_trait;
 use thiserror::Error;
 
 use crate::{
-    database::IDatabase,
+    database::{entities::post::Post, IDatabase},
     model::{
-        requests::search::SearchPaginationInternal,
-        responses::{game::GameSummary, search::SearchResult},
+        requests::search::{Category, SearchPaginationInternal},
+        responses::{
+            blog::BlogSummary,
+            game::GameSummary,
+            search::SearchResult,
+            user::UserSummary,
+        },
     },
 };
 
@@ -37,13 +42,93 @@ where
         Self { db }
     }
 
-    async fn search_game(
+    async fn search_games(
         &self,
         pagination: &SearchPaginationInternal,
     ) -> Result<Vec<GameSummary>, SearchServiceErr> {
+        if !pagination
+            .category
+            .as_ref()
+            .map(|c| matches!(c, Category::Game))
+            .unwrap_or(true)
+        {
+            return Ok(vec![]);
+        }
         sqlx::query_as!(
             GameSummary,
             "select id, name, author_id, author_name, avatar_url, up_votes, down_votes from games where name like $1 order by created_at desc offset $2 limit $3",
+            pagination.keyword,
+            pagination.offset,
+            pagination.limit,
+        )
+        .fetch_all(self.db.get_pool())
+        .await
+        .map_err(|e|SearchServiceErr::Other(e.into()))
+    }
+
+    async fn search_users(
+        &self,
+        pagination: &SearchPaginationInternal,
+    ) -> Result<Vec<UserSummary>, SearchServiceErr> {
+        if !pagination
+            .category
+            .as_ref()
+            .map(|c| matches!(c, Category::User))
+            .unwrap_or(true)
+        {
+            return Ok(vec![]);
+        }
+        sqlx::query_as!(
+            UserSummary,
+            "select id, name, avatar from users where name like $1 order by created_at desc offset $2 limit $3",
+            pagination.keyword,
+            pagination.offset,
+            pagination.limit,
+        )
+        .fetch_all(self.db.get_pool())
+        .await
+        .map_err(|e|SearchServiceErr::Other(e.into()))
+    }
+
+    async fn search_posts(
+        &self,
+        pagination: &SearchPaginationInternal,
+    ) -> Result<Vec<Post>, SearchServiceErr> {
+        if !pagination
+            .category
+            .as_ref()
+            .map(|c| matches!(c, Category::Post))
+            .unwrap_or(true)
+        {
+            return Ok(vec![]);
+        }
+        sqlx::query_as!(
+            Post,
+            "select * from posts where content like $1 order by created_at desc offset $2 limit $3",
+            pagination.keyword,
+            pagination.offset,
+            pagination.limit,
+        )
+        .fetch_all(self.db.get_pool())
+        .await
+        .map_err(|e| SearchServiceErr::Other(e.into()))
+    }
+
+    async fn search_blogs(
+        &self,
+        pagination: &SearchPaginationInternal,
+    ) -> Result<Vec<BlogSummary>, SearchServiceErr> {
+        if !pagination
+            .category
+            .as_ref()
+            .map(|c| matches!(c, Category::Blog))
+            .unwrap_or(true)
+        {
+            return Ok(vec![]);
+        }
+        sqlx::query_as!(
+            BlogSummary,
+            "select id, title, description, tags, created_at from blogs where title like $1 or description like $1 or content like $1 order by created_at desc offset $2 limit $3",
             pagination.keyword,
             pagination.offset,
             pagination.limit,
@@ -64,7 +149,10 @@ where
         pagination: SearchPaginationInternal,
     ) -> Result<SearchResult, SearchServiceErr> {
         Ok(SearchResult {
-            game: self.search_game(&pagination).await?,
+            games: self.search_games(&pagination).await?,
+            users: self.search_users(&pagination).await?,
+            posts: self.search_posts(&pagination).await?,
+            blogs: self.search_blogs(&pagination).await?,
         })
     }
 }
