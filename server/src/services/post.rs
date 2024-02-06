@@ -133,14 +133,14 @@ where
     }
 
     async fn edit(&self, id: Uuid, post: EditPostRequest) -> Result<PostDetails, PostServiceErr> {
-        let post = sqlx::query!(
-            "update posts set content = $1, updated_at = now() where id = $2 returning id",
+        sqlx::query!(
+            "update posts set content = $1, updated_at = now() where id = $2",
             post.content,
             id,
         )
-        .fetch_one(self.db.get_pool())
+        .execute(self.db.get_pool())
         .await
         .map_err(|e| PostServiceErr::Other(e.into()))?;
-        self.get_by_id(post.id).await.map(|p| p.unwrap_or_default())
+        self.get_by_id(id).await.map(|p| p.unwrap_or_default())
     }
 }

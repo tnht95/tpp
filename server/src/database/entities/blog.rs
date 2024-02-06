@@ -2,7 +2,7 @@ use chrono::{DateTime, Utc};
 use serde::Serialize;
 use uuid::Uuid;
 
-#[derive(Serialize, sqlx::FromRow)]
+#[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Blog {
     pub id: Uuid,
