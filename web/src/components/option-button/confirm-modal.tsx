@@ -1,11 +1,10 @@
-import { Accessor, Ref } from 'solid-js';
+import { Ref } from 'solid-js';
 
 type ConfirmModalProps = {
   setModalRef: Ref<HTMLDivElement>;
   onCloseHandler: () => void;
-  onDelete: (postId: string, index: number) => void;
+  onDelete: (postId: string) => void;
   id: string;
-  index: Accessor<number>;
 };
 
 export const ConfirmModal = (props: ConfirmModalProps) => (
@@ -35,7 +34,7 @@ export const ConfirmModal = (props: ConfirmModalProps) => (
               class="me-2 inline-flex items-center rounded-lg border border-red-600 bg-red-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-white hover:text-red-600 focus:outline-none"
               onClick={() => {
                 props.onCloseHandler();
-                props.onDelete(props.id, props.index());
+                props.onDelete(props.id);
               }}
             >
               Yes, I'm sure

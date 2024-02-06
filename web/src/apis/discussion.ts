@@ -8,7 +8,10 @@ import {
   Response
 } from '@/models';
 
-export const fetchDiscussionAction = ([offset, gameId]: [number, string]) => {
+export const fetchDiscussionAction = async ([offset, gameId]: [
+  number,
+  string
+]) => {
   const baseUrl = import.meta.env.VITE_SERVER_URL;
 
   return fetch(

@@ -2,16 +2,16 @@ export type BlogSummary = {
   id: string;
   title: string;
   description: string;
-  tags: string[] | null;
+  tags: string[] | undefined;
   createdAt: string;
 };
 
 export type Blog = {
   id: string;
   title: string;
-  description: string | null;
+  description: string | undefined;
   content: string;
-  tags: string[] | null;
+  tags: string[] | undefined;
   createdAt: string;
   updatedAt: string;
 };

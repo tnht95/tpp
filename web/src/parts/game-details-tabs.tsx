@@ -38,7 +38,6 @@ export const GameDetailsTabs = () => {
             isOwner={user()?.id === data()?.authorId}
             onDelete={onDeleteHandler}
             id={data()?.id as string}
-            index={() => -1}
             onEdit={() => {}}
           />
         </div>

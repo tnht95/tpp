@@ -31,7 +31,7 @@ import {
   OptionButton
 } from '@/components';
 import { useAuthCtx, useToastCtx } from '@/context';
-import { BlogRequest, Comment, ResponseErr } from '@/models';
+import { BlogRequest, CommentDetails, ResponseErr } from '@/models';
 import { NotFound } from '@/pages';
 import { TagSidebar } from '@/parts';
 import { formatTime } from '@/utils';
@@ -50,13 +50,13 @@ export const BlogDetails = () => {
   const [queryValue, setQueryValue] = createSignal<QueryWIthTargetInput>({
     targetId: blogId,
     offset: 0,
-    limit: 2
+    limit: 5
   });
   const [commentResource] = createResource(queryValue, fetchCommentAction, {
     initialValue: []
   });
-  const [comments, setComments] = createStore<Comment[]>([]);
-  const addedCmts: Comment[] = [];
+  const [comments, setComments] = createStore<CommentDetails[]>([]);
+  const addedCmts: CommentDetails[] = [];
 
   createEffect(() => {
     setModal(
@@ -99,7 +99,7 @@ export const BlogDetails = () => {
   const onLoadMoreCmtHandler = () => {
     setQueryValue(oldValue => ({
       ...oldValue,
-      offset: (oldValue.offset as number) + 2
+      offset: (oldValue.offset as number) + 5
     }));
   };
 
@@ -125,9 +125,20 @@ export const BlogDetails = () => {
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
 
-  const onDeleteCmtHandler = (commentId: string, index: number) =>
+  const resetCmts = () =>
+    batch(() => {
+      addedCmts.length = 0;
+      setComments([]);
+      setQueryValue({
+        targetId: blogId,
+        offset: 0,
+        limit: 5
+      });
+    });
+
+  const onDeleteCmtHandler = (commentId: string) =>
     deleteCommentAction(commentId)
-      .then(() => setComments(produce(comments => comments.splice(index, 1))))
+      .then(resetCmts)
       .catch((error: ResponseErr) =>
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
@@ -180,7 +191,6 @@ export const BlogDetails = () => {
                       onDelete={onDeleteBlogHandler}
                       id={''}
                       isEditMode={isEditMode}
-                      index={() => -1}
                       onEdit={onEditOptionBtn}
                     />
                   </div>
@@ -197,16 +207,15 @@ export const BlogDetails = () => {
             </div>
             <div class="flex w-3/5 flex-col gap-5">
               <For each={comments}>
-                {(comment, i) => (
+                {comment => (
                   <CommentContainer
                     comment={comment}
-                    index={i}
                     onDelete={onDeleteCmtHandler}
                     onEdit={onEditCmtHandler}
                   />
                 )}
               </For>
-              <Show when={commentResource().length == 2}>
+              <Show when={commentResource().length == 5}>
                 <p
                   onClick={onLoadMoreCmtHandler}
                   class="-my-1 cursor-pointer text-gray-400 hover:text-gray-600"

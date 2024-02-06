@@ -109,9 +109,8 @@ export const Dashboard = () => {
             </div>
             <div class="flex flex-col gap-10 ">
               <For each={posts}>
-                {(post, i) => (
+                {post => (
                   <PostCard
-                    index={i}
                     post={post}
                     onDelete={onDeleteHandler}
                     onEdit={onEditHandler}

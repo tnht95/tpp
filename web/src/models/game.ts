@@ -3,13 +3,13 @@ export type Game = {
   name: string;
   authorId: number;
   authorName: string;
-  url: string | null;
-  avatarUrl: string | null;
-  about: string | null;
-  info: string | null;
+  url: string | undefined;
+  avatarUrl: string | undefined;
+  about: string | undefined;
+  info: string | undefined;
   upVotes: number;
   downVotes: number;
-  tags: string[] | null;
+  tags: string[] | undefined;
   rom: string;
   createdAt: string;
   updatedAt: string;
@@ -20,10 +20,10 @@ export type GameSummary = {
   name: string;
   authorId: number;
   authorName: string;
-  avatarUrl: string | null;
+  avatarUrl: string | undefined;
   upVotes: number;
   downVotes: number;
-  tags: string[] | null;
+  tags: string[] | undefined;
   createdAt: string;
 };
 

@@ -31,7 +31,7 @@ import {
   OptionButton
 } from '@/components';
 import { useAuthCtx, useGameCtx, useToastCtx } from '@/context';
-import { Comment, DiscussionRequest, ResponseErr } from '@/models';
+import { CommentDetails, DiscussionRequest, ResponseErr } from '@/models';
 import { NotFound } from '@/pages';
 import { formatTime } from '@/utils';
 
@@ -56,14 +56,14 @@ export const DiscussionDetails = () => {
   const [queryValue, setQueryValue] = createSignal<QueryWIthTargetInput>({
     targetId: discussionId,
     offset: 0,
-    limit: 2
+    limit: 5
   });
 
   const [commentResource] = createResource(queryValue, fetchCommentAction, {
     initialValue: []
   });
-  const [comments, setComments] = createStore<Comment[]>([]);
-  const addedCmts: Comment[] = [];
+  const [comments, setComments] = createStore<CommentDetails[]>([]);
+  const addedCmts: CommentDetails[] = [];
 
   createEffect(() => {
     setModal(
@@ -114,9 +114,20 @@ export const DiscussionDetails = () => {
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
 
-  const onDeleteCmtHandler = (commentId: string, index: number) =>
+  const resetCmts = () =>
+    batch(() => {
+      addedCmts.length = 0;
+      setComments([]);
+      setQueryValue({
+        targetId: discussionId,
+        offset: 0,
+        limit: 5
+      });
+    });
+
+  const onDeleteCmtHandler = (commentId: string) =>
     deleteCommentAction(commentId)
-      .then(() => setComments(produce(comments => comments.splice(index, 1))))
+      .then(resetCmts)
       .catch((error: ResponseErr) =>
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
@@ -124,7 +135,7 @@ export const DiscussionDetails = () => {
   const onLoadMoreCmtHandler = () => {
     setQueryValue(oldValue => ({
       ...oldValue,
-      offset: (oldValue.offset as number) + 2
+      offset: (oldValue.offset as number) + 5
     }));
   };
 
@@ -185,7 +196,6 @@ export const DiscussionDetails = () => {
                 onDelete={onDeleteDiscussionHandler}
                 id={''}
                 isEditMode={isEditMode}
-                index={() => -1}
                 onEdit={onEditOptionBtn}
               />
             </div>
@@ -211,16 +221,15 @@ export const DiscussionDetails = () => {
           </div>
           <div class="my-9 flex flex-col gap-7">
             <For each={comments}>
-              {(comment, i) => (
+              {comment => (
                 <CommentContainer
                   comment={comment}
-                  index={i}
                   onDelete={onDeleteCmtHandler}
                   onEdit={onEditCmtHandler}
                 />
               )}
             </For>
-            <Show when={commentResource().length == 2}>
+            <Show when={commentResource().length == 5}>
               <p
                 onClick={onLoadMoreCmtHandler}
                 class="-my-1 cursor-pointer text-gray-400 hover:text-gray-600"

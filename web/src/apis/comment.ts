@@ -1,8 +1,8 @@
-import { AddComment, Comment, EditComment, Response } from '@/models';
+import { AddComment, CommentDetails, EditComment, Response } from '@/models';
 
 import { errHandler, QueryWIthTargetInput } from '.';
 
-export const fetchCommentAction = (queryInput: QueryWIthTargetInput) => {
+export const fetchCommentAction = async (queryInput: QueryWIthTargetInput) => {
   const baseUrl = import.meta.env.VITE_SERVER_URL;
   const query: string[] = [] as const;
 
@@ -12,7 +12,7 @@ export const fetchCommentAction = (queryInput: QueryWIthTargetInput) => {
 
   return fetch(`${baseUrl}/comments?${query.join('&')}`)
     .then(errHandler)
-    .then((r: Response<Comment[]>) => r.data);
+    .then((r: Response<CommentDetails[]>) => r.data);
 };
 
 export const addCommentAction = (body: AddComment) =>
@@ -25,7 +25,7 @@ export const addCommentAction = (body: AddComment) =>
     body: JSON.stringify(body)
   })
     .then(errHandler)
-    .then((r: Response<Comment>) => r.data);
+    .then((r: Response<CommentDetails>) => r.data);
 
 export const deleteCommentAction = (id: string) =>
   fetch(`${import.meta.env.VITE_SERVER_URL}/comments/${id}`, {
@@ -33,7 +33,7 @@ export const deleteCommentAction = (id: string) =>
     credentials: 'include'
   })
     .then(errHandler)
-    .then((r: Response<Comment>) => r.data);
+    .then((r: Response<undefined>) => r.data);
 
 export const editCommentAction = (id: string, body: EditComment) =>
   fetch(`${import.meta.env.VITE_SERVER_URL}/comments/${id}`, {
@@ -45,4 +45,4 @@ export const editCommentAction = (id: string, body: EditComment) =>
     body: JSON.stringify(body)
   })
     .then(errHandler)
-    .then((r: Response<Comment>) => r.data);
+    .then((r: Response<CommentDetails>) => r.data);

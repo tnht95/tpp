@@ -20,7 +20,7 @@ export const addPostAction = (body: AddPost) =>
     body: JSON.stringify(body)
   })
     .then(errHandler)
-    .then((r: Response<null>) => r.data);
+    .then((r: Response<undefined>) => r.data);
 
 export const deletePostAction = (id: string) =>
   fetch(`${import.meta.env.VITE_SERVER_URL}/posts/${id}`, {
@@ -28,7 +28,7 @@ export const deletePostAction = (id: string) =>
     credentials: 'include'
   })
     .then(errHandler)
-    .then((r: Response<null>) => r.data);
+    .then((r: Response<undefined>) => r.data);
 
 export const editPostAction = (id: string, body: EditPost) =>
   fetch(`${import.meta.env.VITE_SERVER_URL}/posts/${id}`, {

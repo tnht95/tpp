@@ -1,14 +1,13 @@
-import { Accessor, createSignal, Show } from 'solid-js';
+import { createSignal, Show } from 'solid-js';
 
 import { Avatar, CommentForm, Markdown, OptionButton } from '@/components';
 import { useAuthCtx } from '@/context';
-import { Comment } from '@/models';
+import { CommentDetails } from '@/models';
 import { formatTime } from '@/utils';
 
 type CommentProps = {
-  comment: Comment;
-  index: Accessor<number>;
-  onDelete: (commentId: string, index: number) => void;
+  comment: CommentDetails;
+  onDelete: (commentId: string) => void;
   onEdit: (commentId: string, content: string) => void;
 };
 
@@ -26,7 +25,7 @@ export const CommentContainer = (props: CommentProps) => {
 
   return (
     <div class="flex">
-      <Avatar />
+      <Avatar userId={props.comment.userId} img={props.comment.userAvatar} />
       <div class="ml-2 w-full">
         <div class="flex items-center justify-between rounded-t border border-gray-200 bg-gray-200 p-2 px-5">
           <div>
@@ -39,7 +38,6 @@ export const CommentContainer = (props: CommentProps) => {
               isOwner={isSameUser(props.comment.userId)}
               onDelete={props.onDelete}
               id={props.comment.id}
-              index={props.index}
               isEditMode={isEditMode}
               onEdit={() => {
                 setIsEditMode(!isEditMode());

@@ -1,5 +1,4 @@
 import {
-  Accessor,
   batch,
   createEffect,
   createResource,
@@ -24,13 +23,12 @@ import {
   OptionButton
 } from '@/components';
 import { useAuthCtx, useToastCtx } from '@/context';
-import { Comment, PostDetails, ResponseErr } from '@/models';
+import { CommentDetails, PostDetails, ResponseErr } from '@/models';
 import { formatTime } from '@/utils';
 
 type PostCardProps = {
-  index: Accessor<number>;
   post: PostDetails;
-  onDelete: (postId: string, index: number) => void;
+  onDelete: (postId: string) => void;
   onEdit: (postId: string, content: string) => void;
 };
 
@@ -44,9 +42,9 @@ export const PostCard = (props: PostCardProps) => {
   const [commentResource] = createResource(queryValue, fetchCommentAction, {
     initialValue: []
   });
-  const [comments, setComments] = createStore<Comment[]>([]);
+  const [comments, setComments] = createStore<CommentDetails[]>([]);
 
-  const addedCmts: Comment[] = [];
+  const addedCmts: CommentDetails[] = [];
 
   createEffect(() => {
     if (commentResource().length > 0) {
@@ -115,9 +113,20 @@ export const PostCard = (props: PostCardProps) => {
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
 
-  const onDeleteCmtHandler = (commentId: string, index: number) =>
+  const resetCmts = () =>
+    batch(() => {
+      addedCmts.length = 0;
+      setComments([]);
+      setQueryValue({
+        targetId: props.post.id,
+        offset: 0,
+        limit: 5
+      });
+    });
+
+  const onDeleteCmtHandler = (commentId: string) =>
     deleteCommentAction(commentId)
-      .then(() => setComments(produce(comments => comments.splice(index, 1))))
+      .then(resetCmts)
       .catch((error: ResponseErr) =>
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
@@ -134,7 +143,6 @@ export const PostCard = (props: PostCardProps) => {
               </p>
               {utils.isAuth() && (
                 <OptionButton
-                  index={props.index}
                   isOwner={utils.isSameUser(props.post.authorId)}
                   onDelete={props.onDelete}
                   id={props.post.id}
@@ -186,10 +194,9 @@ export const PostCard = (props: PostCardProps) => {
       >
         <Show when={comments}>
           <For each={comments}>
-            {(comment, index) => (
+            {comment => (
               <CommentContainer
                 comment={comment}
-                index={index}
                 onDelete={onDeleteCmtHandler}
                 onEdit={onEditCmtHandler}
               />

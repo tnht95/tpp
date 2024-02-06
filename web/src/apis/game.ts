@@ -14,7 +14,7 @@ export type GameQueryInput = {
   tag?: string;
 };
 
-export const fetchGameAction = (queryInput: GameQueryInput) => {
+export const fetchGameAction = async (queryInput: GameQueryInput) => {
   const baseUrl = import.meta.env.VITE_SERVER_URL;
   const query: string[] = [] as const;
 
@@ -40,7 +40,7 @@ export const deleteGameAction = (id: string) =>
     .then(errHandler)
     .then((r: Response<Game>) => r.data);
 
-export const addGameAction = (rom: File, game: AddGame) => {
+export const addGameAction = async (rom: File, game: AddGame) => {
   const formData = new FormData();
   formData.append('rom', rom);
   formData.append('game', JSON.stringify(game));

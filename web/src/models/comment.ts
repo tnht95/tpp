@@ -1,13 +1,11 @@
-export type Comment = {
+export type CommentDetails = {
   id: string;
   userId: number;
   userName: string;
-  targetId: string;
+  userAvatar: string;
   content: string;
   likes: number;
-  targetType: 'Blog' | 'Post' | 'Discussion';
   createdAt: string;
-  updatedAt: string;
 };
 
 export type AddComment = {
