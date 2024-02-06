@@ -8,7 +8,7 @@ use crate::{
     database::{entities::discussion::Discussion, IDatabase},
     model::{
         requests::{discussion::AddDiscussionRequest, PaginationWithTargetInternal},
-        responses::discussion::{DiscussionResponse, DiscussionSummary},
+        responses::discussion::{DiscussionDetail, DiscussionFiltered},
     },
 };
 
@@ -23,15 +23,14 @@ pub trait IDiscussionService {
     async fn filter(
         &self,
         pagination: PaginationWithTargetInternal,
-    ) -> Result<Vec<DiscussionSummary>, DiscussionServiceErr>;
+    ) -> Result<Vec<DiscussionFiltered>, DiscussionServiceErr>;
     async fn add(
         &self,
         user_id: i64,
         user_name: String,
         discussion: AddDiscussionRequest,
     ) -> Result<Discussion, DiscussionServiceErr>;
-    async fn get_by_id(&self, id: Uuid)
-        -> Result<Option<DiscussionResponse>, DiscussionServiceErr>;
+    async fn get_by_id(&self, id: Uuid) -> Result<Option<DiscussionDetail>, DiscussionServiceErr>;
 }
 
 pub struct DiscussionService<T: IDatabase> {
@@ -55,9 +54,9 @@ where
     async fn filter(
         &self,
         pagination: PaginationWithTargetInternal,
-    ) -> Result<Vec<DiscussionSummary>, DiscussionServiceErr> {
+    ) -> Result<Vec<DiscussionFiltered>, DiscussionServiceErr> {
         sqlx::query_as!(
-            DiscussionSummary,
+            DiscussionFiltered,
             "select id, title, created_at, user_name from discussions where game_id = $1 order by created_at desc offset $2 limit $3",
             pagination.target_id,
             pagination.offset,
@@ -88,12 +87,9 @@ where
         .map_err(|e| DiscussionServiceErr::Other(e.into()))
     }
 
-    async fn get_by_id(
-        &self,
-        id: Uuid,
-    ) -> Result<Option<DiscussionResponse>, DiscussionServiceErr> {
+    async fn get_by_id(&self, id: Uuid) -> Result<Option<DiscussionDetail>, DiscussionServiceErr> {
         sqlx::query_as!(
-            DiscussionResponse,
+            DiscussionDetail,
             "select discussions.*, users.avatar as user_avatar
             from discussions join users on discussions.user_id = users.id
             where discussions.id = $1",

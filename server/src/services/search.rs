@@ -8,8 +8,8 @@ use crate::{
     model::{
         requests::search::{Category, SearchPaginationInternal},
         responses::{
-            blog::BlogSummary,
-            game::GameSummary,
+            blog::BlogFiltered,
+            game::GameFiltered,
             search::SearchResult,
             user::UserSummary,
         },
@@ -45,7 +45,7 @@ where
     async fn search_games(
         &self,
         pagination: &SearchPaginationInternal,
-    ) -> Result<Vec<GameSummary>, SearchServiceErr> {
+    ) -> Result<Vec<GameFiltered>, SearchServiceErr> {
         if !pagination
             .category
             .as_ref()
@@ -55,7 +55,7 @@ where
             return Ok(vec![]);
         }
         sqlx::query_as!(
-            GameSummary,
+            GameFiltered,
             "select id, name, author_id, author_name, avatar_url, up_votes, down_votes from games where name like $1 order by created_at desc offset $2 limit $3",
             pagination.keyword,
             pagination.offset,
@@ -63,7 +63,7 @@ where
         )
         .fetch_all(self.db.get_pool())
         .await
-        .map_err(|e|SearchServiceErr::Other(e.into()))
+        .map_err(|e| SearchServiceErr::Other(e.into()))
     }
 
     async fn search_users(
@@ -87,7 +87,7 @@ where
         )
         .fetch_all(self.db.get_pool())
         .await
-        .map_err(|e|SearchServiceErr::Other(e.into()))
+        .map_err(|e| SearchServiceErr::Other(e.into()))
     }
 
     async fn search_posts(
@@ -117,7 +117,7 @@ where
     async fn search_blogs(
         &self,
         pagination: &SearchPaginationInternal,
-    ) -> Result<Vec<BlogSummary>, SearchServiceErr> {
+    ) -> Result<Vec<BlogFiltered>, SearchServiceErr> {
         if !pagination
             .category
             .as_ref()
@@ -127,7 +127,7 @@ where
             return Ok(vec![]);
         }
         sqlx::query_as!(
-            BlogSummary,
+            BlogFiltered,
             "select id, title, description, tags, created_at from blogs where title like $1 or description like $1 or content like $1 order by created_at desc offset $2 limit $3",
             pagination.keyword,
             pagination.offset,
@@ -135,7 +135,7 @@ where
         )
         .fetch_all(self.db.get_pool())
         .await
-        .map_err(|e|SearchServiceErr::Other(e.into()))
+        .map_err(|e| SearchServiceErr::Other(e.into()))
     }
 }
 

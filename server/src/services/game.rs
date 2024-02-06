@@ -10,7 +10,7 @@ use crate::{
     database::{entities::game::Game, IDatabase},
     model::{
         requests::game::{AddGameRequest, GamePaginationInternal},
-        responses::game::GameSummary,
+        responses::game::GameFiltered,
     },
 };
 
@@ -25,7 +25,7 @@ pub trait IGameService {
     async fn filter(
         &self,
         pagination: GamePaginationInternal,
-    ) -> Result<Vec<GameSummary>, GameServiceErr>;
+    ) -> Result<Vec<GameFiltered>, GameServiceErr>;
     async fn get_by_id(&self, id: Uuid) -> Result<Option<Game>, GameServiceErr>;
     async fn add(
         &self,
@@ -76,7 +76,7 @@ where
     async fn filter(
         &self,
         pagination: GamePaginationInternal,
-    ) -> Result<Vec<GameSummary>, GameServiceErr> {
+    ) -> Result<Vec<GameFiltered>, GameServiceErr> {
         let mut query_builder: QueryBuilder<Postgres> = QueryBuilder::new("");
         let mut separated = query_builder.separated(" ");
         separated.push("select id, name, author_id, author_name, avatar_url, up_votes, down_votes from games where 1 = 1");
@@ -103,7 +103,7 @@ where
         separated.push_bind(pagination.limit);
 
         query_builder
-            .build_query_as::<GameSummary>()
+            .build_query_as::<GameFiltered>()
             .fetch_all(self.db.get_pool())
             .await
             .map_err(|e| GameServiceErr::Other(e.into()))

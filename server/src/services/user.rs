@@ -42,7 +42,7 @@ where
             values ($1, $2, $3, $4, $5)
             on conflict (id) do update
             set name = $2, avatar = $3, github_url = $4, bio = $5, updated_at = now()
-            returning *;",
+            returning *",
             user.id,
             user.name,
             user.avatar,

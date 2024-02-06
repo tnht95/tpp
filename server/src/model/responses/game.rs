@@ -5,7 +5,7 @@ use crate::model::responses::HttpResponseConstErr;
 
 #[derive(Serialize, sqlx::FromRow)]
 #[serde(rename_all = "camelCase")]
-pub struct GameSummary {
+pub struct GameFiltered {
     pub id: Uuid,
     pub name: String,
     pub author_id: i64,

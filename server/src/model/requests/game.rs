@@ -4,7 +4,6 @@ use serde::Deserialize;
 use validator::{Validate, ValidationError};
 
 use super::validate_tags;
-use crate::model::requests::OrderBy;
 
 #[derive(Deserialize, Validate)]
 #[serde(rename_all = "camelCase")]
@@ -29,6 +28,20 @@ pub struct AddGameRequest {
     pub tags: Option<Vec<String>>,
 }
 
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub enum OrderBy {
+    Asc,
+    Desc,
+}
+impl std::fmt::Display for OrderBy {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            OrderBy::Asc => write!(f, "asc"),
+            OrderBy::Desc => write!(f, "desc"),
+        }
+    }
+}
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub enum OrderField {

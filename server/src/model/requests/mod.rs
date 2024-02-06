@@ -12,35 +12,17 @@ pub mod search;
 
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub enum OrderBy {
-    Asc,
-    Desc,
-}
-impl std::fmt::Display for OrderBy {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            OrderBy::Asc => write!(f, "asc"),
-            OrderBy::Desc => write!(f, "desc"),
-        }
-    }
-}
-
-#[derive(Deserialize)]
-#[serde(rename_all = "camelCase")]
 pub struct Pagination {
-    pub order_by: Option<OrderBy>,
     pub offset: Option<i64>,
     pub limit: Option<i64>,
 }
 pub struct PaginationInternal {
-    pub order_by: OrderBy,
     pub offset: i64,
     pub limit: i64,
 }
 impl From<Pagination> for PaginationInternal {
     fn from(pagination: Pagination) -> Self {
         Self {
-            order_by: pagination.order_by.unwrap_or(OrderBy::Asc),
             offset: match pagination.offset.unwrap_or(0) {
                 offset if offset < 0 => 0,
                 offset if offset > 20 => 20,

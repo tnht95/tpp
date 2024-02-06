@@ -11,7 +11,7 @@ use crate::{
             blog::{AddBlogRequest, EditBlogRequest},
             PaginationInternal,
         },
-        responses::blog::BlogSummary,
+        responses::blog::BlogFiltered,
     },
 };
 
@@ -26,7 +26,7 @@ pub trait IBlogService {
     async fn filter(
         &self,
         pagination: PaginationInternal,
-    ) -> Result<Vec<BlogSummary>, BlogServiceErr>;
+    ) -> Result<Vec<BlogFiltered>, BlogServiceErr>;
     async fn add(&self, blog: AddBlogRequest) -> Result<Blog, BlogServiceErr>;
     async fn get_by_id(&self, id: Uuid) -> Result<Option<Blog>, BlogServiceErr>;
     async fn delete(&self, id: Uuid) -> Result<(), BlogServiceErr>;
@@ -54,9 +54,9 @@ where
     async fn filter(
         &self,
         pagination: PaginationInternal,
-    ) -> Result<Vec<BlogSummary>, BlogServiceErr> {
+    ) -> Result<Vec<BlogFiltered>, BlogServiceErr> {
         sqlx::query_as!(
-            BlogSummary,
+            BlogFiltered,
             "select id, title, description, tags, created_at from blogs order by created_at desc offset $1 limit $2",
             pagination.offset,
             pagination.limit
