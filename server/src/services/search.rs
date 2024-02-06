@@ -4,12 +4,13 @@ use async_trait::async_trait;
 use thiserror::Error;
 
 use crate::{
-    database::{entities::post::Post, IDatabase},
+    database::IDatabase,
     model::{
         requests::search::{Category, SearchPaginationInternal},
         responses::{
             blog::BlogFiltered,
             game::GameFiltered,
+            post::PostDetails,
             search::SearchResult,
             user::UserSummary,
         },
@@ -93,7 +94,7 @@ where
     async fn search_posts(
         &self,
         pagination: &SearchPaginationInternal,
-    ) -> Result<Vec<Post>, SearchServiceErr> {
+    ) -> Result<Vec<PostDetails>, SearchServiceErr> {
         if !pagination
             .category
             .as_ref()
@@ -103,11 +104,23 @@ where
             return Ok(vec![]);
         }
         sqlx::query_as!(
-            Post,
-            "select * from posts where content like $1 order by created_at desc offset $2 limit $3",
+            PostDetails,
+            "select
+                posts.id,
+                posts.author_id,
+                users.name as author_name,
+                users.avatar as author_avatar,
+                posts.content,
+                posts.likes,
+                posts.comments,
+                posts.created_at
+            from posts
+            left join users on users.id = posts.author_id
+            where content like $1
+            order by posts.created_at desc offset $2 limit $3",
             pagination.keyword,
             pagination.offset,
-            pagination.limit,
+            pagination.limit
         )
         .fetch_all(self.db.get_pool())
         .await

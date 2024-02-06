@@ -5,13 +5,13 @@ use thiserror::Error;
 use uuid::Uuid;
 
 use crate::{
-    database::{entities::post::Post, IDatabase},
+    database::IDatabase,
     model::{
         requests::{
             post::{AddPostRequest, EditPostRequest},
             PaginationInternal,
         },
-        responses::post::PostFiltered,
+        responses::post::{PostContent, PostDetails},
     },
 };
 
@@ -26,11 +26,12 @@ pub trait IPostService {
     async fn filter(
         &self,
         pagination: PaginationInternal,
-    ) -> Result<Vec<PostFiltered>, PostServiceErr>;
-    async fn add(&self, author_id: i64, post: AddPostRequest) -> Result<Post, PostServiceErr>;
+    ) -> Result<Vec<PostDetails>, PostServiceErr>;
+    async fn get_by_id(&self, id: Uuid) -> Result<Option<PostDetails>, PostServiceErr>;
+    async fn add(&self, author_id: i64, post: AddPostRequest) -> Result<(), PostServiceErr>;
     async fn delete(&self, id: Uuid) -> Result<(), PostServiceErr>;
     async fn existed(&self, id: Uuid, author_id: i64) -> Result<bool, PostServiceErr>;
-    async fn edit(&self, id: Uuid, post: EditPostRequest) -> Result<Post, PostServiceErr>;
+    async fn edit(&self, id: Uuid, post: EditPostRequest) -> Result<PostContent, PostServiceErr>;
 }
 
 pub struct PostService<T: IDatabase> {
@@ -54,9 +55,9 @@ where
     async fn filter(
         &self,
         pagination: PaginationInternal,
-    ) -> Result<Vec<PostFiltered>, PostServiceErr> {
+    ) -> Result<Vec<PostDetails>, PostServiceErr> {
         sqlx::query_as!(
-            PostFiltered,
+            PostDetails,
             "select
                 posts.id,
                 posts.author_id,
@@ -77,15 +78,37 @@ where
         .map_err(|e| PostServiceErr::Other(e.into()))
     }
 
-    async fn add(&self, author_id: i64, post: AddPostRequest) -> Result<Post, PostServiceErr> {
+    async fn get_by_id(&self, id: Uuid) -> Result<Option<PostDetails>, PostServiceErr> {
         sqlx::query_as!(
-            Post,
-            "insert into posts (author_id, content) values ($1, $2) returning *",
+            PostDetails,
+            "select
+                posts.id,
+                posts.author_id,
+                users.name as author_name,
+                users.avatar as author_avatar,
+                posts.content,
+                posts.likes,
+                posts.comments,
+                posts.created_at
+            from posts
+            left join users on users.id = posts.author_id
+            where posts.id = $1",
+            id
+        )
+        .fetch_optional(self.db.get_pool())
+        .await
+        .map_err(|e| PostServiceErr::Other(e.into()))
+    }
+
+    async fn add(&self, author_id: i64, post: AddPostRequest) -> Result<(), PostServiceErr> {
+        sqlx::query!(
+            "insert into posts (author_id, content) values ($1, $2)",
             author_id,
             post.content
         )
-        .fetch_one(self.db.get_pool())
+        .execute(self.db.get_pool())
         .await
+        .map(|_| ())
         .map_err(|e| PostServiceErr::Other(e.into()))
     }
 
@@ -109,10 +132,10 @@ where
         .map_err(|e| PostServiceErr::Other(e.into()))
     }
 
-    async fn edit(&self, id: Uuid, post: EditPostRequest) -> Result<Post, PostServiceErr> {
+    async fn edit(&self, id: Uuid, post: EditPostRequest) -> Result<PostContent, PostServiceErr> {
         sqlx::query_as!(
-            Post,
-            "update posts set content = $1, updated_at = now() where id = $2 returning *",
+            PostContent,
+            "update posts set content = $1, updated_at = now() where id = $2 returning id, content",
             post.content,
             id,
         )
