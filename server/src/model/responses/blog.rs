@@ -6,7 +6,7 @@ use crate::model::responses::HttpResponseConstErr;
 
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
-pub struct BlogFiltered {
+pub struct BlogSummary {
     pub id: Uuid,
     pub title: String,
     pub description: String,

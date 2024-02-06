@@ -39,13 +39,11 @@ export const Blogs = () => {
   createEffect(() => {
     setModal(new Modal(modalRef()));
     if (blogResource().length > 0) {
-      batch(() => {
-        setBlogs(produce(oldBlogs => oldBlogs.push(...blogResource())));
-      });
+      setBlogs(produce(oldBlogs => oldBlogs.push(...blogResource())));
     }
   });
 
-  const batchSubmitHandler = () =>
+  const resetBlogs = () =>
     batch(() => {
       setBlogs([]);
       if (currentOffset() === 0) refetch() as unknown;
@@ -55,15 +53,13 @@ export const Blogs = () => {
 
   const onSubmitHandler = (blog: BlogRequest) =>
     addBlogAction(blog)
-      .then(batchSubmitHandler)
+      .then(resetBlogs)
       .catch((error: ResponseErr) =>
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
 
   const handleGetMore = () => {
-    batch(() => {
-      setCurrentOffset(offset => offset + OFFSET);
-    });
+    setCurrentOffset(offset => offset + OFFSET);
   };
 
   return (

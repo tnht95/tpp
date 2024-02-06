@@ -11,7 +11,7 @@ use crate::{
             blog::{AddBlogRequest, EditBlogRequest},
             PaginationInternal,
         },
-        responses::blog::BlogFiltered,
+        responses::blog::BlogSummary,
     },
 };
 
@@ -26,11 +26,11 @@ pub trait IBlogService {
     async fn filter(
         &self,
         pagination: PaginationInternal,
-    ) -> Result<Vec<BlogFiltered>, BlogServiceErr>;
-    async fn add(&self, blog: AddBlogRequest) -> Result<Blog, BlogServiceErr>;
+    ) -> Result<Vec<BlogSummary>, BlogServiceErr>;
+    async fn add(&self, blog: AddBlogRequest) -> Result<(), BlogServiceErr>;
     async fn get_by_id(&self, id: Uuid) -> Result<Option<Blog>, BlogServiceErr>;
     async fn delete(&self, id: Uuid) -> Result<(), BlogServiceErr>;
-    async fn edit(&self, id: Uuid, comment: EditBlogRequest) -> Result<Blog, BlogServiceErr>;
+    async fn edit(&self, id: Uuid, comment: EditBlogRequest) -> Result<(), BlogServiceErr>;
 }
 
 pub struct BlogService<T: IDatabase> {
@@ -54,9 +54,9 @@ where
     async fn filter(
         &self,
         pagination: PaginationInternal,
-    ) -> Result<Vec<BlogFiltered>, BlogServiceErr> {
+    ) -> Result<Vec<BlogSummary>, BlogServiceErr> {
         sqlx::query_as!(
-            BlogFiltered,
+            BlogSummary,
             "select id, title, description, tags, created_at from blogs order by created_at desc offset $1 limit $2",
             pagination.offset,
             pagination.limit
@@ -66,18 +66,19 @@ where
         .map_err(|e| BlogServiceErr::Other(e.into()))
     }
 
-    async fn add(&self, blog: AddBlogRequest) -> Result<Blog, BlogServiceErr> {
+    async fn add(&self, blog: AddBlogRequest) -> Result<(), BlogServiceErr> {
         sqlx::query_as!(
             Blog,
-            "insert into blogs (title, description, content, tags) values ($1, $2, $3, $4) returning *",
+            "insert into blogs (title, description, content, tags) values ($1, $2, $3, $4)",
             blog.title,
             blog.description,
             blog.content,
             blog.tags.as_deref()
         )
-            .fetch_one(self.db.get_pool())
-            .await
-            .map_err(|e|BlogServiceErr::Other(e.into()))
+        .execute(self.db.get_pool())
+        .await
+        .map(|_| ())
+        .map_err(|e| BlogServiceErr::Other(e.into()))
     }
 
     async fn get_by_id(&self, id: Uuid) -> Result<Option<Blog>, BlogServiceErr> {
@@ -95,18 +96,19 @@ where
             .map_err(|e| BlogServiceErr::Other(e.into()))
     }
 
-    async fn edit(&self, id: Uuid, blog: EditBlogRequest) -> Result<Blog, BlogServiceErr> {
+    async fn edit(&self, id: Uuid, blog: EditBlogRequest) -> Result<(), BlogServiceErr> {
         sqlx::query_as!(
             Blog,
-            "update blogs set content = $1, title = $2, description = $3, tags = $4, updated_at = now() where id = $5 returning *",
+            "update blogs set content = $1, title = $2, description = $3, tags = $4, updated_at = now() where id = $5",
             blog.content,
             blog.title,
             blog.description,
             blog.tags.as_deref(),
             id,
         )
-        .fetch_one(self.db.get_pool())
+        .execute(self.db.get_pool())
         .await
+        .map(|_| ())
         .map_err(|e| BlogServiceErr::Other(e.into()))
     }
 }

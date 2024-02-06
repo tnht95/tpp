@@ -8,7 +8,7 @@ use crate::{
     model::{
         requests::search::{Category, SearchPaginationInternal},
         responses::{
-            blog::BlogFiltered,
+            blog::BlogSummary,
             game::GameFiltered,
             post::PostDetails,
             search::SearchResult,
@@ -130,7 +130,7 @@ where
     async fn search_blogs(
         &self,
         pagination: &SearchPaginationInternal,
-    ) -> Result<Vec<BlogFiltered>, SearchServiceErr> {
+    ) -> Result<Vec<BlogSummary>, SearchServiceErr> {
         if !pagination
             .category
             .as_ref()
@@ -140,7 +140,7 @@ where
             return Ok(vec![]);
         }
         sqlx::query_as!(
-            BlogFiltered,
+            BlogSummary,
             "select id, title, description, tags, created_at from blogs where title like $1 or description like $1 or content like $1 order by created_at desc offset $2 limit $3",
             pagination.keyword,
             pagination.offset,

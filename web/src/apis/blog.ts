@@ -5,9 +5,7 @@ import { errHandler } from '.';
 
 export const fetchBlogAction = (offset: number) =>
   fetch(
-    `${
-      import.meta.env.VITE_SERVER_URL
-    }/blogs?orderBy=desc&offset=${offset}&limit=${LIMIT}`
+    `${import.meta.env.VITE_SERVER_URL}/blogs?offset=${offset}&limit=${LIMIT}`
   )
     .then(errHandler)
     .then((r: Response<BlogSummary[]>) => r.data);
@@ -22,7 +20,7 @@ export const addBlogAction = (body: BlogRequest) =>
     body: JSON.stringify(body)
   })
     .then(errHandler)
-    .then((r: Response<Blog>) => r.data);
+    .then((r: Response<undefined>) => r.data);
 
 export const fetchBlogByIdAction = (id: string) =>
   fetch(`${import.meta.env.VITE_SERVER_URL}/blogs/${id}`)
@@ -35,7 +33,7 @@ export const deleteBlogAction = (id: string) =>
     credentials: 'include'
   })
     .then(errHandler)
-    .then((r: Response<Blog>) => r.data);
+    .then((r: Response<undefined>) => r.data);
 
 export const editBlogAction = (id: string, body: BlogRequest) =>
   fetch(`${import.meta.env.VITE_SERVER_URL}/blogs/${id}`, {
@@ -47,4 +45,4 @@ export const editBlogAction = (id: string, body: BlogRequest) =>
     body: JSON.stringify(body)
   })
     .then(errHandler)
-    .then((r: Response<Blog>) => r.data);
+    .then((r: Response<undefined>) => r.data);
