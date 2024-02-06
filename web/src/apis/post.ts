@@ -1,13 +1,19 @@
 import { LIMIT } from '@/constant';
-import { AddPost, EditPost, Post, Response } from '@/models';
+import {
+  AddPost,
+  EditPost,
+  PostContent,
+  PostDetails,
+  Response
+} from '@/models';
 
 import { errHandler } from '.';
 
-export const fetchPostAction = (offset: number) => {
+export const fetchPostAction = async (offset: number) => {
   const baseUrl = import.meta.env.VITE_SERVER_URL;
-  return fetch(`${baseUrl}/posts?orderBy=desc&offset=${offset}&limit=${LIMIT}`)
+  return fetch(`${baseUrl}/posts?offset=${offset}&limit=${LIMIT}`)
     .then(errHandler)
-    .then((r: Response<Post[]>) => r.data);
+    .then((r: Response<PostDetails[]>) => r.data);
 };
 
 export const addPostAction = (body: AddPost) =>
@@ -20,7 +26,7 @@ export const addPostAction = (body: AddPost) =>
     body: JSON.stringify(body)
   })
     .then(errHandler)
-    .then((r: Response<Post>) => r.data);
+    .then((r: Response<null>) => r.data);
 
 export const deletePostAction = (id: string) =>
   fetch(`${import.meta.env.VITE_SERVER_URL}/posts/${id}`, {
@@ -28,7 +34,7 @@ export const deletePostAction = (id: string) =>
     credentials: 'include'
   })
     .then(errHandler)
-    .then((r: Response<Post>) => r.data);
+    .then((r: Response<null>) => r.data);
 
 export const editPostAction = (id: string, body: EditPost) =>
   fetch(`${import.meta.env.VITE_SERVER_URL}/posts/${id}`, {
@@ -40,4 +46,4 @@ export const editPostAction = (id: string, body: EditPost) =>
     body: JSON.stringify(body)
   })
     .then(errHandler)
-    .then((r: Response<Post>) => r.data);
+    .then((r: Response<PostContent>) => r.data);

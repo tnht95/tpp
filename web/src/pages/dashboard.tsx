@@ -19,7 +19,7 @@ import {
 import { CommentForm, PostCard, VerticalGameCard } from '@/components';
 import { OFFSET } from '@/constant';
 import { useAuthCtx, useToastCtx } from '@/context';
-import { Post, ResponseErr } from '@/models';
+import { PostDetails, ResponseErr } from '@/models';
 
 export const Dashboard = () => {
   const { utils } = useAuthCtx();
@@ -36,13 +36,13 @@ export const Dashboard = () => {
       initialValue: []
     }
   );
-  const [post, setPost] = createStore<Post[]>([]);
+  const [posts, setPosts] = createStore<PostDetails[]>([]);
   const [hasReachedBottom, setHasReachedBottom] = createSignal(false);
 
   createEffect(() => {
     if (postResource().length > 0) {
       batch(() => {
-        setPost(produce(oldPost => oldPost.push(...postResource())));
+        setPosts(produce(oldPost => oldPost.push(...postResource())));
         setHasReachedBottom(false);
       });
     }
@@ -66,30 +66,30 @@ export const Dashboard = () => {
     window.removeEventListener('scroll', handleScroll);
   });
 
-  const batchSubmitHandler = () =>
+  const resetPosts = () =>
     batch(() => {
-      setPost([]);
+      setPosts([]);
       if (currentOffset() === 0) refetch() as unknown;
       else setCurrentOffset(0);
     });
 
   const onSubmitHandler = (content: string) =>
     addPostAction({ content })
-      .then(batchSubmitHandler)
+      .then(resetPosts)
       .catch((error: ResponseErr) =>
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
 
-  const onDeleteHandler = (postId: string, index: number) =>
+  const onDeleteHandler = (postId: string) =>
     deletePostAction(postId)
-      .then(() => setPost(produce(post => post.splice(index, 1))))
+      .then(resetPosts)
       .catch((error: ResponseErr) =>
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
 
   const onEditHandler = (postId: string, content: string) =>
     editPostAction(postId, { content })
-      .then(post => setPost(p => p.id === post.id, post))
+      .then(post => setPosts(p => p.id === post.id, post))
       .catch((error: ResponseErr) =>
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
@@ -108,7 +108,7 @@ export const Dashboard = () => {
               )}
             </div>
             <div class="flex flex-col gap-10 ">
-              <For each={post}>
+              <For each={posts}>
                 {(post, i) => (
                   <PostCard
                     index={i}

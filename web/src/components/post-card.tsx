@@ -24,12 +24,12 @@ import {
   OptionButton
 } from '@/components';
 import { useAuthCtx, useToastCtx } from '@/context';
-import { Comment, Post, ResponseErr } from '@/models';
+import { Comment, PostDetails, ResponseErr } from '@/models';
 import { formatTime } from '@/utils';
 
 type PostCardProps = {
   index: Accessor<number>;
-  post: Post;
+  post: PostDetails;
   onDelete: (postId: string, index: number) => void;
   onEdit: (postId: string, content: string) => void;
 };
@@ -126,10 +126,12 @@ export const PostCard = (props: PostCardProps) => {
     <div class="max-w-full break-all rounded-xl border bg-white p-10 pb-2">
       <div class="flex justify-between">
         <div class="flex w-full items-center">
-          <Avatar />
+          <Avatar img={props.post.authorAvatar} userId={props.post.authorId} />
           <div class="ml-2 w-full leading-tight">
             <div class="flex items-center justify-between">
-              <p class="text-base font-bold text-black">Visualize Value</p>
+              <p class="text-base font-bold text-black">
+                {props.post.authorName}
+              </p>
               {utils.isAuth() && (
                 <OptionButton
                   index={props.index}
