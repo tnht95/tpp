@@ -3,11 +3,11 @@ import { createSignal, Ref, Show } from 'solid-js';
 import { Markdown, PreviewButtonGroup } from '@/components';
 import { AddGame } from '@/models';
 import {
+  fileRequired,
   getStrVal,
   getTagValue,
   MaxStr,
   MinStr,
-  requireFile,
   useForm,
   validateTags
 } from '@/utils';
@@ -132,7 +132,7 @@ export const GameForm = (props: GameFormProps) => {
                   type="file"
                   name="rom"
                   ref={el => [
-                    validate(el, () => [requireFile], { onBlur: false })
+                    validate(el, () => [fileRequired], { onBlur: false })
                   ]}
                 />
                 <p class="mt-1 text-sm text-gray-400">

@@ -7,8 +7,8 @@ export const UserActivity = () => (
         <i class="fa-regular fa-newspaper text-lg text-green-400" />
         <span class="tracking-wide">Activity</span>
       </div>
-      <ol class="relative border-s border-gray-200 dark:border-gray-700">
-        <Activity title="Bob upload this game" date="09 Jun 2023" latest />
+      <ol class="relative border-s border-gray-200">
+        <Activity title="Bob upload this game" date="09 Jun 2023" />
         <Activity title="Bob upload this game" date="09 Jun 2023" />
         <Activity title="Bob upload this game" date="09 Jun 2023" />
         <Activity title="Bob upload this game" date="09 Jun 2023" />

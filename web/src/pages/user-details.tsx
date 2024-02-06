@@ -29,7 +29,7 @@ export const UserDetails = () => {
   return (
     <Suspense fallback={spinner}>
       <ErrorBoundary fallback={<NotFound />}>
-        <div class="my-5 ml-10 p-5">
+        <div class="mx-10 my-5 p-5">
           <div class="md:-mx-2 md:flex">
             <div class="w-full md:mx-2 md:w-3/12">
               <div class="group my-6 w-full min-w-0 max-w-md break-words rounded-xl border bg-white">
@@ -75,7 +75,7 @@ export const UserDetails = () => {
               </div>
               <div />
             </div>
-            <div class="ml-10 mt-6 flex w-4/6 flex-col gap-10">
+            <div class="ml-14 mt-6 flex w-3/4 flex-col gap-10">
               <Show when={user()}>
                 <UserGames userId={user()?.id as number} />
                 <UserActivity />

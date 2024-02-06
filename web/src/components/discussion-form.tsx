@@ -1,13 +1,14 @@
 import { createSignal, Ref, Show } from 'solid-js';
 
 import { Markdown, PreviewButtonGroup } from '@/components';
-import { DiscussionRequest } from '@/models';
+import { Discussion, DiscussionRequest } from '@/models';
 import { MaxStr, MinStr, useForm } from '@/utils';
 
 type DiscussionFormProps = {
   ref: Ref<HTMLDivElement>;
   onCloseHandler: () => void;
   onSubmitHandler: (discussion: DiscussionRequest) => void;
+  discussion?: Discussion | undefined;
 };
 
 const ErrorMessage = (props: { msg: string }) => (
@@ -49,7 +50,7 @@ export const DiscussionForm = (props: DiscussionFormProps) => {
         <div class="relative rounded-xl bg-white shadow">
           <div class="flex items-center justify-between rounded-t p-6">
             <div class="ml-1 text-center text-2xl font-bold text-gray-800">
-              New Discussion
+              {props.discussion ? 'Edit Discussion' : 'New Discussion'}
             </div>
 
             <button
@@ -68,6 +69,7 @@ export const DiscussionForm = (props: DiscussionFormProps) => {
                 placeholder="Discussion title"
                 type="text"
                 name="title"
+                value={props.discussion?.title || ''}
                 ref={el => [
                   validate(el, () => [MinStr(1, 'Required'), MaxStr(100)])
                 ]}
@@ -78,7 +80,7 @@ export const DiscussionForm = (props: DiscussionFormProps) => {
                   class="h-60 rounded-xl border border-gray-300 p-3 outline-none placeholder:text-gray-400"
                   placeholder="What do you want to discuss about? (Support some markdowns)"
                   onFocusOut={e => setContent(e.target.value)}
-                  value={content()}
+                  value={props.discussion?.content || content()}
                   name="content"
                   ref={el => [
                     validate(el, () => [MinStr(1, 'Required'), MaxStr(1000)])

@@ -174,6 +174,7 @@ export const DiscussionDetails = () => {
             modal()?.hide();
           }}
           onSubmitHandler={onEditDiscussionHandler}
+          discussion={discussion()}
         />
         <div class="ml-5 flex flex-col">
           <div class="border-b pb-5">

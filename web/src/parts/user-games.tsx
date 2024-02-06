@@ -53,7 +53,7 @@ export const UserGames = (props: UserGamesProps) => {
   });
 
   return (
-    <div class="rounded-xl border bg-white px-8 pb-7 pt-3">
+    <div class="rounded-xl border bg-white px-8 pb-10 pt-3">
       <div class="mb-5 flex justify-between">
         <div class="flex items-center space-x-2 font-semibold leading-8 text-gray-900">
           <i class="fa-regular fa-paper-plane text-lg text-green-400" />
