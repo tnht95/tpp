@@ -1,14 +1,3 @@
-export type Discussion = {
-  id: string;
-  userId: number;
-  userName: string;
-  gameId: string;
-  title: string;
-  content: string;
-  createdAt: string;
-  updatedAt: string;
-};
-
 export type DiscussionSummary = {
   id: string;
   userName: string;
@@ -21,7 +10,7 @@ export type DiscussionRequest = {
   content: string;
 };
 
-export type DiscussionWithUser = {
+export type DiscussionDetails = {
   id: string;
   userId: number;
   userName: string;
@@ -30,5 +19,4 @@ export type DiscussionWithUser = {
   title: string;
   content: string;
   createdAt: string;
-  updatedAt: string;
 };

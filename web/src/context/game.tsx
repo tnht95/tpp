@@ -35,7 +35,7 @@ const gameCtx = createContext<GameContext>();
 
 export const GameProvider = (props: ParentProps) => {
   const gameId = useParams()['id'] as string;
-  const [game] = createResource(gameId, fetchGameByIdAction);
+  const [gameData] = createResource(gameId, fetchGameByIdAction);
   const [param, setParam] = createSignal<[number, string]>([0, gameId]);
 
   const [discussionResource] = createResource(
@@ -46,7 +46,7 @@ export const GameProvider = (props: ParentProps) => {
     }
   );
 
-  const [discussions, setDiscussions] = createStore<DiscussionSummary[]>([]);
+  const [discussionData, setDiscussions] = createStore<DiscussionSummary[]>([]);
 
   createEffect(() => {
     if (discussionResource().length > 0) {
@@ -62,9 +62,9 @@ export const GameProvider = (props: ParentProps) => {
   };
 
   const state: GameContext = {
-    game: { data: game },
+    game: { data: gameData },
     discussion: {
-      data: discussions,
+      data: discussionData,
       setDiscussions: setDiscussions,
       setParam: setParam,
       currentDataBatch: discussionResource,

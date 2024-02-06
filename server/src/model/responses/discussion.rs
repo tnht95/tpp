@@ -6,7 +6,7 @@ use crate::model::responses::HttpResponseConstErr;
 
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
-pub struct DiscussionDetail {
+pub struct DiscussionDetails {
     pub id: Uuid,
     pub user_id: i64,
     pub user_name: String,
@@ -15,12 +15,11 @@ pub struct DiscussionDetail {
     pub title: String,
     pub content: String,
     pub created_at: DateTime<Utc>,
-    pub updated_at: DateTime<Utc>,
 }
 
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
-pub struct DiscussionFiltered {
+pub struct DiscussionSummary {
     pub id: Uuid,
     pub user_name: String,
     pub title: String,

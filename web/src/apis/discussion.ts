@@ -1,10 +1,9 @@
 import { errHandler } from '@/apis';
 import { LIMIT } from '@/constant';
 import {
-  Discussion,
+  DiscussionDetails,
   DiscussionRequest,
   DiscussionSummary,
-  DiscussionWithUser,
   Response
 } from '@/models';
 
@@ -31,12 +30,12 @@ export const addDiscussionAction = (body: DiscussionRequest, gameId: string) =>
     body: JSON.stringify(body)
   })
     .then(errHandler)
-    .then((r: Response<Discussion>) => r.data);
+    .then((r: Response<undefined>) => r.data);
 
 export const fetchDiscussionByIdAction = (id: string) =>
   fetch(`${import.meta.env.VITE_SERVER_URL}/discussions/${id}`)
     .then(errHandler)
-    .then((r: Response<DiscussionWithUser | undefined>) => r.data);
+    .then((r: Response<DiscussionDetails | undefined>) => r.data);
 
 export const editDiscussionAction = (id: string, body: DiscussionRequest) =>
   fetch(`${import.meta.env.VITE_SERVER_URL}/discussions/${id}`, {
@@ -48,7 +47,7 @@ export const editDiscussionAction = (id: string, body: DiscussionRequest) =>
     body: JSON.stringify(body)
   })
     .then(errHandler)
-    .then((r: Response<Discussion>) => r.data);
+    .then((r: Response<undefined>) => r.data);
 
 export const deleteDiscussionAction = (id: string) =>
   fetch(`${import.meta.env.VITE_SERVER_URL}/discussions/${id}`, {
@@ -56,4 +55,4 @@ export const deleteDiscussionAction = (id: string) =>
     credentials: 'include'
   })
     .then(errHandler)
-    .then((r: Response<Discussion>) => r.data);
+    .then((r: Response<undefined>) => r.data);

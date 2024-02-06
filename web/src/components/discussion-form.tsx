@@ -1,14 +1,14 @@
 import { createSignal, Ref, Show } from 'solid-js';
 
 import { Markdown, PreviewButtonGroup } from '@/components';
-import { Discussion, DiscussionRequest } from '@/models';
+import { DiscussionDetails, DiscussionRequest } from '@/models';
 import { MaxStr, MinStr, useForm } from '@/utils';
 
 type DiscussionFormProps = {
   ref: Ref<HTMLDivElement>;
   onCloseHandler: () => void;
   onSubmitHandler: (discussion: DiscussionRequest) => void;
-  discussion?: Discussion | undefined;
+  discussion?: DiscussionDetails | undefined;
 };
 
 const ErrorMessage = (props: { msg: string }) => (

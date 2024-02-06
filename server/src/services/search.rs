@@ -9,7 +9,7 @@ use crate::{
         requests::search::{Category, SearchPaginationInternal},
         responses::{
             blog::BlogSummary,
-            game::GameFiltered,
+            game::GameSummary,
             post::PostDetails,
             search::SearchResult,
             user::UserSummary,
@@ -46,7 +46,7 @@ where
     async fn search_games(
         &self,
         pagination: &SearchPaginationInternal,
-    ) -> Result<Vec<GameFiltered>, SearchServiceErr> {
+    ) -> Result<Vec<GameSummary>, SearchServiceErr> {
         if !pagination
             .category
             .as_ref()
@@ -56,7 +56,7 @@ where
             return Ok(vec![]);
         }
         sqlx::query_as!(
-            GameFiltered,
+            GameSummary,
             "select id, name, author_id, author_name, avatar_url, up_votes, down_votes from games where name like $1 order by created_at desc offset $2 limit $3",
             pagination.keyword,
             pagination.offset,
