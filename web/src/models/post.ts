@@ -9,11 +9,6 @@ export type PostDetails = {
   createdAt: string;
 };
 
-export type PostContent = {
-  id: string;
-  content: string;
-};
-
 export type AddPost = {
   content: string;
 };

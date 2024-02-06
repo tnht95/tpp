@@ -11,7 +11,7 @@ use crate::{
             post::{AddPostRequest, EditPostRequest},
             PaginationInternal,
         },
-        responses::post::{PostContent, PostDetails},
+        responses::post::PostDetails,
     },
 };
 
@@ -31,7 +31,7 @@ pub trait IPostService {
     async fn add(&self, author_id: i64, post: AddPostRequest) -> Result<(), PostServiceErr>;
     async fn delete(&self, id: Uuid) -> Result<(), PostServiceErr>;
     async fn existed(&self, id: Uuid, author_id: i64) -> Result<bool, PostServiceErr>;
-    async fn edit(&self, id: Uuid, post: EditPostRequest) -> Result<PostContent, PostServiceErr>;
+    async fn edit(&self, id: Uuid, post: EditPostRequest) -> Result<PostDetails, PostServiceErr>;
 }
 
 pub struct PostService<T: IDatabase> {
@@ -132,15 +132,15 @@ where
         .map_err(|e| PostServiceErr::Other(e.into()))
     }
 
-    async fn edit(&self, id: Uuid, post: EditPostRequest) -> Result<PostContent, PostServiceErr> {
-        sqlx::query_as!(
-            PostContent,
-            "update posts set content = $1, updated_at = now() where id = $2 returning id, content",
+    async fn edit(&self, id: Uuid, post: EditPostRequest) -> Result<PostDetails, PostServiceErr> {
+        let post = sqlx::query!(
+            "update posts set content = $1, updated_at = now() where id = $2 returning id",
             post.content,
             id,
         )
         .fetch_one(self.db.get_pool())
         .await
-        .map_err(|e| PostServiceErr::Other(e.into()))
+        .map_err(|e| PostServiceErr::Other(e.into()))?;
+        self.get_by_id(post.id).await.map(|p| p.unwrap_or_default())
     }
 }

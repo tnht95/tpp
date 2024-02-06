@@ -1,11 +1,5 @@
 import { LIMIT } from '@/constant';
-import {
-  AddPost,
-  EditPost,
-  PostContent,
-  PostDetails,
-  Response
-} from '@/models';
+import { AddPost, EditPost, PostDetails, Response } from '@/models';
 
 import { errHandler } from '.';
 
@@ -46,4 +40,4 @@ export const editPostAction = (id: string, body: EditPost) =>
     body: JSON.stringify(body)
   })
     .then(errHandler)
-    .then((r: Response<PostContent>) => r.data);
+    .then((r: Response<PostDetails>) => r.data);

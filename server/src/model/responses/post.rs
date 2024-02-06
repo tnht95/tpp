@@ -4,7 +4,7 @@ use uuid::Uuid;
 
 use crate::model::responses::HttpResponseConstErr;
 
-#[derive(Serialize)]
+#[derive(Serialize, Default)]
 #[serde(rename_all = "camelCase")]
 pub struct PostDetails {
     pub id: Uuid,
@@ -15,13 +15,6 @@ pub struct PostDetails {
     pub likes: i16,
     pub comments: i16,
     pub created_at: DateTime<Utc>,
-}
-
-#[derive(Serialize)]
-#[serde(rename_all = "camelCase")]
-pub struct PostContent {
-    pub id: Uuid,
-    pub content: String,
 }
 
 pub const NOT_AUTH_DEL: HttpResponseConstErr = HttpResponseConstErr {
