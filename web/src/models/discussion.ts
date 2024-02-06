@@ -16,8 +16,7 @@ export type DiscussionSummary = {
   createdAt: string;
 };
 
-export type AddDiscussion = {
-  gameId: string;
+export type DiscussionRequest = {
   title: string;
   content: string;
 };

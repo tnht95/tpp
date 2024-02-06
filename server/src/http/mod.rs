@@ -117,9 +117,11 @@ where
                         .route("/comments", post(comment::add))
                         .route("/comments/:id", delete(comment::delete))
                         .route("/comments/:id", put(comment::edit))
-                        .route("/discussions", get(discussion::filter))
-                        .route("/discussions", post(discussion::add))
+                        .route("/games/:gid/discussions", get(discussion::filter))
+                        .route("/games/:gid/discussions", post(discussion::add))
                         .route("/discussions/:id", get(discussion::get_by_id))
+                        .route("/discussions/:id", put(discussion::edit))
+                        .route("/discussions/:id", delete(discussion::delete))
                         .route("/search/:keyword", get(search::search))
                         .layer(middleware),
                 )

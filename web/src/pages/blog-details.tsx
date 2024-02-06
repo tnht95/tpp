@@ -30,13 +30,16 @@ import {
   Markdown,
   OptionButton
 } from '@/components';
-import { useToastCtx } from '@/context';
+import { useAuthCtx, useToastCtx } from '@/context';
 import { BlogRequest, Comment, ResponseErr } from '@/models';
 import { NotFound } from '@/pages';
 import { TagSidebar } from '@/parts';
 import { formatTime } from '@/utils';
 
 export const BlogDetails = () => {
+  const {
+    utils: { isAdmin }
+  } = useAuthCtx();
   const { dispatch } = useToastCtx();
   const navigate = useNavigate();
   const blogId = useParams()['id'] as string;
@@ -173,7 +176,7 @@ export const BlogDetails = () => {
                   <div class="flex items-center justify-between">
                     <p class="text-3xl font-bold">{blog()?.title}</p>
                     <OptionButton
-                      isOwner={true}
+                      isOwner={isAdmin()}
                       onDelete={onDeleteBlogHandler}
                       id={''}
                       isEditMode={isEditMode}

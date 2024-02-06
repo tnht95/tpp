@@ -12,12 +12,7 @@ import {
 } from 'solid-js';
 import { createStore, produce, SetStoreFunction } from 'solid-js/store';
 
-import {
-  fetchDiscussionAction,
-  fetchGameByIdAction,
-  QueryWIthTargetInput
-} from '@/apis';
-import { LIMIT } from '@/constant';
+import { fetchDiscussionAction, fetchGameByIdAction } from '@/apis';
 import { DiscussionSummary, Game } from '@/models';
 
 type GameContext = {
@@ -27,8 +22,9 @@ type GameContext = {
   discussion: {
     data: DiscussionSummary[];
     setDiscussions: SetStoreFunction<DiscussionSummary[]>;
-    setQueryValue: Setter<QueryWIthTargetInput>;
+    setParam: Setter<[number, string]>;
     currentDataBatch: InitializedResource<DiscussionSummary[]>;
+    reset: () => void;
   };
   utils: {
     getGameId: () => string;
@@ -40,14 +36,10 @@ const gameCtx = createContext<GameContext>();
 export const GameProvider = (props: ParentProps) => {
   const gameId = useParams()['id'] as string;
   const [game] = createResource(gameId, fetchGameByIdAction);
-  const [queryValue, setQueryValue] = createSignal<QueryWIthTargetInput>({
-    targetId: gameId,
-    offset: 0,
-    limit: LIMIT
-  });
+  const [param, setParam] = createSignal<[number, string]>([0, gameId]);
 
   const [discussionResource] = createResource(
-    queryValue,
+    () => param(),
     fetchDiscussionAction,
     {
       initialValue: []
@@ -64,13 +56,19 @@ export const GameProvider = (props: ParentProps) => {
     }
   });
 
+  const resetDiscussion = () => {
+    setDiscussions([]);
+    setParam([0, gameId]);
+  };
+
   const state: GameContext = {
     game: { data: game },
     discussion: {
       data: discussions,
       setDiscussions: setDiscussions,
-      setQueryValue: setQueryValue,
-      currentDataBatch: discussionResource
+      setParam: setParam,
+      currentDataBatch: discussionResource,
+      reset: resetDiscussion
     },
     utils: {
       getGameId: () => gameId

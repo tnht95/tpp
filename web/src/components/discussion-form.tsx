@@ -1,14 +1,13 @@
 import { createSignal, Ref, Show } from 'solid-js';
 
 import { Markdown, PreviewButtonGroup } from '@/components';
-import { useGameCtx } from '@/context';
-import { AddDiscussion } from '@/models';
+import { DiscussionRequest } from '@/models';
 import { MaxStr, MinStr, useForm } from '@/utils';
 
 type DiscussionFormProps = {
   ref: Ref<HTMLDivElement>;
   onCloseHandler: () => void;
-  onSubmitHandler: (discussion: AddDiscussion) => void;
+  onSubmitHandler: (discussion: DiscussionRequest) => void;
 };
 
 const ErrorMessage = (props: { msg: string }) => (
@@ -16,9 +15,6 @@ const ErrorMessage = (props: { msg: string }) => (
 );
 
 export const DiscussionForm = (props: DiscussionFormProps) => {
-  const {
-    game: { data }
-  } = useGameCtx();
   const [isEditMode, setIsEditMode] = createSignal(true);
   const [content, setContent] = createSignal('');
   const { validate, submit, errors } = useForm({ errClass: 'border-red-600' });
@@ -36,7 +32,6 @@ export const DiscussionForm = (props: DiscussionFormProps) => {
   const onSubmitHandler = (formEl: HTMLFormElement) => {
     const formData = new FormData(formEl);
     props.onSubmitHandler({
-      gameId: data()?.id as string,
       title: formData.get('title') as string,
       content: formData.get('content') as string
     });

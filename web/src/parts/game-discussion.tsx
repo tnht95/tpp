@@ -5,7 +5,7 @@ import { addDiscussionAction } from '@/apis';
 import { Button, DiscussionForm, ShowMoreButton, TableRow } from '@/components';
 import { LIMIT, OFFSET } from '@/constant';
 import { useAuthCtx, useGameCtx, useToastCtx } from '@/context';
-import { AddDiscussion, ResponseErr } from '@/models';
+import { DiscussionRequest, ResponseErr } from '@/models';
 import { formatTime } from '@/utils';
 
 export const GameDiscussion = () => {
@@ -14,7 +14,7 @@ export const GameDiscussion = () => {
   } = useAuthCtx();
   const {
     utils: { getGameId },
-    discussion: { setDiscussions, currentDataBatch, setQueryValue, data }
+    discussion: { reset, currentDataBatch, setParam, data }
   } = useGameCtx();
   const { dispatch } = useToastCtx();
   const [modalRef, setModalRef] = createSignal<HTMLDivElement>();
@@ -26,26 +26,19 @@ export const GameDiscussion = () => {
 
   const batchSubmitHandler = () =>
     batch(() => {
-      setDiscussions([]);
-      setQueryValue(oldValues => ({
-        ...oldValues,
-        offset: 0
-      }));
+      reset();
       modal()?.hide();
     });
 
-  const onSubmitHandler = (discussion: AddDiscussion) =>
-    addDiscussionAction(discussion)
+  const onSubmitHandler = (discussion: DiscussionRequest) =>
+    addDiscussionAction(discussion, getGameId())
       .then(batchSubmitHandler)
       .catch((error: ResponseErr) =>
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
 
   const onShowMoreHandler = () => {
-    setQueryValue(oldValue => ({
-      ...oldValue,
-      offset: (oldValue.offset as number) + OFFSET
-    }));
+    setParam(oldValue => [oldValue[0] + OFFSET, getGameId()]);
   };
 
   return (

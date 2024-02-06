@@ -1,4 +1,5 @@
-import { useParams } from '@solidjs/router';
+import { useNavigate, useParams } from '@solidjs/router';
+import { Modal } from 'flowbite';
 import {
   batch,
   createEffect,
@@ -13,6 +14,10 @@ import { createStore, produce } from 'solid-js/store';
 
 import {
   addCommentAction,
+  deleteCommentAction,
+  deleteDiscussionAction,
+  editCommentAction,
+  editDiscussionAction,
   fetchCommentAction,
   fetchDiscussionByIdAction,
   QueryWIthTargetInput
@@ -21,24 +26,39 @@ import {
   Avatar,
   CommentContainer,
   CommentForm,
+  DiscussionForm,
   LoadingSpinner,
   OptionButton
 } from '@/components';
-import { useToastCtx } from '@/context';
-import { Comment, ResponseErr } from '@/models';
+import { useAuthCtx, useGameCtx, useToastCtx } from '@/context';
+import { Comment, DiscussionRequest, ResponseErr } from '@/models';
 import { NotFound } from '@/pages';
 import { formatTime } from '@/utils';
 
 export const DiscussionDetails = () => {
-  const discussionId = useParams()['discussionId'] as string;
+  const {
+    utils: { isSameUser }
+  } = useAuthCtx();
   const { dispatch } = useToastCtx();
-
-  const [discussion] = createResource(discussionId, fetchDiscussionByIdAction);
+  const {
+    utils: { getGameId },
+    discussion: { reset }
+  } = useGameCtx();
+  const navigate = useNavigate();
+  const discussionId = useParams()['discussionId'] as string;
+  const [modal, setModal] = createSignal<Modal>();
+  const [modalRef, setModalRef] = createSignal<HTMLDivElement>();
+  const [isEditMode, setIsEditMode] = createSignal(false);
+  const [discussion, { refetch }] = createResource(
+    discussionId,
+    fetchDiscussionByIdAction
+  );
   const [queryValue, setQueryValue] = createSignal<QueryWIthTargetInput>({
     targetId: discussionId,
     offset: 0,
     limit: 2
   });
+
   const [commentResource] = createResource(queryValue, fetchCommentAction, {
     initialValue: []
   });
@@ -46,6 +66,13 @@ export const DiscussionDetails = () => {
   const addedCmts: Comment[] = [];
 
   createEffect(() => {
+    setModal(
+      new Modal(modalRef(), {
+        onHide: () => {
+          setIsEditMode(false);
+        }
+      })
+    );
     if (commentResource().length > 0) {
       setComments(
         produce(oldComments =>
@@ -76,11 +103,60 @@ export const DiscussionDetails = () => {
       );
   };
 
+  const onEditCmtHandler = (commentId: string, content: string) =>
+    editCommentAction(commentId, {
+      content,
+      targetId: discussionId,
+      targetType: 'Discussion'
+    })
+      .then(comment => setComments(c => c.id === comment.id, comment))
+      .catch((error: ResponseErr) =>
+        dispatch.showToast({ msg: error.msg, type: 'Err' })
+      ) as unknown;
+
+  const onDeleteCmtHandler = (commentId: string, index: number) =>
+    deleteCommentAction(commentId)
+      .then(() => setComments(produce(comments => comments.splice(index, 1))))
+      .catch((error: ResponseErr) =>
+        dispatch.showToast({ msg: error.msg, type: 'Err' })
+      ) as unknown;
+
   const onLoadMoreCmtHandler = () => {
     setQueryValue(oldValue => ({
       ...oldValue,
       offset: (oldValue.offset as number) + 2
     }));
+  };
+
+  const refresh = () => {
+    modal()?.hide();
+    return refetch();
+  };
+
+  const onEditDiscussionHandler = (discussion: DiscussionRequest) => {
+    setIsEditMode(false);
+    editDiscussionAction(discussionId, discussion)
+      .then(refresh)
+      .catch((error: ResponseErr) =>
+        dispatch.showToast({ msg: error.msg, type: 'Err' })
+      );
+  };
+
+  const onEditOptionBtn = () => {
+    setIsEditMode(!isEditMode());
+    modal()?.show();
+  };
+
+  const onDeleteDiscussionHandler = () => {
+    deleteDiscussionAction(discussionId)
+      .then(() => {
+        reset();
+        navigate(`/games/${getGameId()}/discussion`, { replace: true });
+        return dispatch.showToast({ msg: 'Discussion deleted', type: 'Ok' });
+      })
+      .catch((error: ResponseErr) => {
+        dispatch.showToast({ msg: error.msg, type: 'Err' });
+      });
   };
 
   return (
@@ -92,16 +168,24 @@ export const DiscussionDetails = () => {
       }
     >
       <ErrorBoundary fallback={<NotFound />}>
+        <DiscussionForm
+          ref={setModalRef}
+          onCloseHandler={() => {
+            modal()?.hide();
+          }}
+          onSubmitHandler={onEditDiscussionHandler}
+        />
         <div class="ml-5 flex flex-col">
           <div class="border-b pb-5">
             <div class="flex items-center">
               <p class="mr-3 text-3xl font-semibold">{discussion()?.title}</p>
               <OptionButton
-                isOwner={true}
-                onDelete={() => {}}
+                isOwner={isSameUser(discussion()?.userId as number)}
+                onDelete={onDeleteDiscussionHandler}
                 id={''}
+                isEditMode={isEditMode}
                 index={() => -1}
-                onEdit={() => {}}
+                onEdit={onEditOptionBtn}
               />
             </div>
             <p class="mt-1 text-base text-gray-400">
@@ -130,8 +214,8 @@ export const DiscussionDetails = () => {
                 <CommentContainer
                   comment={comment}
                   index={i}
-                  onDelete={() => {}}
-                  onEdit={() => {}}
+                  onDelete={onDeleteCmtHandler}
+                  onEdit={onEditCmtHandler}
                 />
               )}
             </For>
