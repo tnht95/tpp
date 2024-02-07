@@ -1,39 +1,71 @@
+import { useNavigate } from '@solidjs/router';
 import { Dropdown } from 'flowbite';
 import { createEffect, createSignal } from 'solid-js';
 
 export const Searchbar = () => {
   const [btnRef, setBtnRef] = createSignal<HTMLButtonElement>();
-  const [dropdownRef, setdropdownRef] = createSignal<HTMLDivElement>();
+  const [dropdownRef, setDropdownRef] = createSignal<HTMLDivElement>();
+  const [dropdown, setDropdown] = createSignal<Dropdown>();
+  const [searchContent, setSearchContent] = createSignal('');
+  const [searchCategory, setSearchCategory] = createSignal('');
+  const navigate = useNavigate();
 
   createEffect(() => {
-    new Dropdown(dropdownRef(), btnRef());
+    setDropdown(new Dropdown(dropdownRef(), btnRef()));
   });
 
+  const onSubmitHandler = (e: Event) => {
+    e.preventDefault();
+    if (searchContent()) {
+      navigate(
+        `/search?keyword=${searchContent()}&category=${searchCategory()}`
+      );
+      (e.target as HTMLFormElement).reset();
+    }
+  };
+
   return (
-    <form class="w-3/5">
+    <form onSubmit={onSubmitHandler} class="w-3/5">
       <div class="flex">
         <label
           for="search-dropdown"
-          class="sr-only mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          class="sr-only mb-2 text-sm font-medium text-gray-900"
         >
           Your Email
         </label>
         <button
-          class="z-10 inline-flex shrink-0 items-center rounded-s-lg border border-white bg-indigo-900 px-4 py-2.5 text-center text-sm font-medium text-white hover:border-r-indigo-900 hover:bg-white hover:text-indigo-900 focus:outline-none"
+          class="z-10 inline-flex w-1/4 shrink-0 items-center justify-between rounded-s-lg border border-white bg-indigo-900 px-4 py-2.5 text-center text-sm font-medium capitalize text-white hover:border-r-indigo-900 hover:bg-white hover:text-indigo-900 focus:outline-none"
           type="button"
           ref={setBtnRef}
         >
-          All categories <i class="fa-solid fa-angle-down ml-2" />
+          {searchCategory() || 'All categories'}
+          <i class="fa-solid fa-angle-down ml-2" />
         </button>
         <div
           class="!top-0.5 z-10 hidden w-36 divide-y divide-gray-100 rounded-lg bg-white shadow"
-          ref={setdropdownRef}
+          ref={setDropdownRef}
         >
           <ul class="text-sm text-indigo-900" aria-labelledby="dropdown-button">
             <li>
               <button
                 type="button"
                 class="inline-flex w-full rounded-t-lg px-4 py-2 hover:bg-indigo-900 hover:text-white"
+                onClick={() => {
+                  setSearchCategory('');
+                  dropdown()?.hide();
+                }}
+              >
+                All categories
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                class="inline-flex w-full rounded-t-lg px-4 py-2 hover:bg-indigo-900 hover:text-white"
+                onClick={() => {
+                  setSearchCategory('game');
+                  dropdown()?.hide();
+                }}
               >
                 Games
               </button>
@@ -42,6 +74,10 @@ export const Searchbar = () => {
               <button
                 type="button"
                 class="inline-flex w-full px-4 py-2 hover:bg-indigo-900 hover:text-white"
+                onClick={() => {
+                  setSearchCategory('blog');
+                  dropdown()?.hide();
+                }}
               >
                 Blogs
               </button>
@@ -50,6 +86,10 @@ export const Searchbar = () => {
               <button
                 type="button"
                 class="inline-flex w-full px-4 py-2 hover:bg-indigo-900 hover:text-white"
+                onClick={() => {
+                  setSearchCategory('user');
+                  dropdown()?.hide();
+                }}
               >
                 Users
               </button>
@@ -58,6 +98,10 @@ export const Searchbar = () => {
               <button
                 type="button"
                 class="inline-flex w-full rounded-b-lg px-4 py-2 hover:bg-indigo-900 hover:text-white"
+                onClick={() => {
+                  setSearchCategory('post');
+                  dropdown()?.hide();
+                }}
               >
                 Posts
               </button>
@@ -68,7 +112,9 @@ export const Searchbar = () => {
           <input
             class="z-20 block w-full rounded-e-lg border border-s-2 border-gray-300 border-s-gray-50 bg-gray-50 p-2.5 text-sm text-gray-900"
             placeholder="Search Games, Blogs, Posts, Users..."
-            required
+            onInput={e => setSearchContent(e.target.value)}
+            value={searchContent()}
+            name="searchContent"
           />
         </div>
       </div>

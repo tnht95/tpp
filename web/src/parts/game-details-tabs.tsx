@@ -48,7 +48,7 @@ export const GameDetailsTabs = () => {
   const onDeleteHandler = () => {
     deleteGameAction(data()?.id as string)
       .then(() => {
-        navigate(`/users/${user()?.id}`, { replace: true });
+        navigate(`/users/${user()?.id}`);
         return dispatch.showToast({ msg: 'Game deleted', type: 'Ok' });
       })
       .catch((error: ResponseErr) => {

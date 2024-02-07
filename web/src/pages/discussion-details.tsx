@@ -163,7 +163,7 @@ export const DiscussionDetails = () => {
     deleteDiscussionAction(discussionId)
       .then(() => {
         reset();
-        navigate(`/games/${getGameId()}/discussion`, { replace: true });
+        navigate(`/games/${getGameId()}/discussion`);
         return dispatch.showToast({ msg: 'Discussion deleted', type: 'Ok' });
       })
       .catch((error: ResponseErr) => {

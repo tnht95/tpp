@@ -1,87 +1,95 @@
-import { GameCard, ShowMoreButton, UserCard } from '@/components';
+import { useSearchParams } from '@solidjs/router';
 
-export const Search = () => (
-  <div class="flex">
-    <div class="flex flex-1 flex-col">
-      <div class="flex h-full">
-        <nav class="flex h-full w-2/6 border-r border-dashed" />
-        <main class="mt-10 flex size-full flex-col gap-7 bg-white px-32">
-          <p class="text-2xl font-bold text-indigo-900">Result for"Game":</p>
-          <div class="flex flex-col">
+import { GameCard, ShowMoreButton, UserCard } from '@/components';
+// import { createResource } from 'solid-js';
+
+export const Search = () => {
+  const [searchParams] = useSearchParams();
+  // const [result] = createResource();
+  searchParams;
+  return (
+    <div class="flex">
+      <div class="flex flex-1 flex-col">
+        <div class="flex h-full">
+          <nav class="flex h-full w-2/6 border-r border-dashed" />
+          <main class="mt-10 flex size-full flex-col gap-7 bg-white px-32">
+            <p class="text-2xl font-bold text-indigo-900">Result for"Game":</p>
+            <div class="flex flex-col">
+              <div>
+                <p class="mb-5 text-xl font-bold text-indigo-900">
+                  <i class="fa-solid fa-gamepad mr-2" />
+                  Games:
+                </p>
+                <div class="flex gap-5">
+                  <GameCard
+                    game={{
+                      id: '123456',
+                      name: 'Awesome Game',
+                      authorId: 1,
+                      authorName: 'John Doe',
+                      avatarUrl:
+                        'https://johnearnest.github.io/chip8Archive/src/eaty/eaty.gif',
+                      upVotes: 100,
+                      downVotes: 20,
+                      tags: ['action', 'adventure'],
+                      createdAt: '2024-02-05T12:00:00Z'
+                    }}
+                  />
+                  <GameCard
+                    game={{
+                      id: '123456',
+                      name: 'Awesome Game',
+                      authorId: 1,
+                      authorName: 'John Doe',
+                      avatarUrl:
+                        'https://johnearnest.github.io/chip8Archive/src/eaty/eaty.gif',
+                      upVotes: 100,
+                      downVotes: 20,
+                      tags: ['action', 'adventure'],
+                      createdAt: '2024-02-05T12:00:00Z'
+                    }}
+                  />
+                  <ShowMoreButton onClick={() => {}} />
+                </div>
+              </div>
+            </div>
             <div>
               <p class="mb-5 text-xl font-bold text-indigo-900">
-                <i class="fa-solid fa-gamepad mr-2" />
-                Games:
+                <i class="fa-solid fa-users mr-2" />
+                Users:
               </p>
               <div class="flex gap-5">
-                <GameCard
-                  game={{
-                    id: '123456',
-                    name: 'Awesome Game',
-                    authorId: 1,
-                    authorName: 'John Doe',
-                    avatarUrl:
-                      'https://johnearnest.github.io/chip8Archive/src/eaty/eaty.gif',
-                    upVotes: 100,
-                    downVotes: 20,
-                    tags: ['action', 'adventure'],
-                    createdAt: '2024-02-05T12:00:00Z'
-                  }}
-                />
-                <GameCard
-                  game={{
-                    id: '123456',
-                    name: 'Awesome Game',
-                    authorId: 1,
-                    authorName: 'John Doe',
-                    avatarUrl:
-                      'https://johnearnest.github.io/chip8Archive/src/eaty/eaty.gif',
-                    upVotes: 100,
-                    downVotes: 20,
-                    tags: ['action', 'adventure'],
-                    createdAt: '2024-02-05T12:00:00Z'
-                  }}
-                />
+                <UserCard />
+                <UserCard />
+                <UserCard />
                 <ShowMoreButton onClick={() => {}} />
               </div>
             </div>
-          </div>
-          <div>
-            <p class="mb-5 text-xl font-bold text-indigo-900">
-              <i class="fa-solid fa-users mr-2" />
-              Users:
-            </p>
-            <div class="flex gap-5">
-              <UserCard />
-              <UserCard />
-              <UserCard />
-              <ShowMoreButton onClick={() => {}} />
-            </div>
-          </div>
-          <div>
-            <p class="mb-5 text-xl font-bold text-indigo-900">
-              <i class="fa-solid fa-highlighter mr-2" />
-              Posts:
-            </p>
-            <div class="flex flex-col gap-7">
-              <p class="text-center text-lg text-gray-400">
-                {' '}
-                -- Nothing to show --
+            <div>
+              <p class="mb-5 text-xl font-bold text-indigo-900">
+                <i class="fa-solid fa-highlighter mr-2" />
+                Posts:
               </p>
+              <div class="flex flex-col gap-7">
+                <p class="text-center text-lg text-gray-400">
+                  {' '}
+                  -- Nothing to show --
+                </p>
+              </div>
             </div>
-          </div>
-          <div>
-            <p class="mb-5 text-xl font-bold text-indigo-900">
-              <i class="fa-solid fa-cube mr-2" />
-              Blogs:
-            </p>
-            <div class="flex flex-col gap-5">
-              <ShowMoreButton vertical onClick={() => {}} />
+            <div>
+              <p class="mb-5 text-xl font-bold text-indigo-900">
+                <i class="fa-solid fa-cube mr-2" />
+                Blogs:
+              </p>
+              <div class="flex flex-col gap-5">
+                <ShowMoreButton vertical onClick={() => {}} />
+              </div>
             </div>
-          </div>
-        </main>
-        <nav class="relative -z-10 flex h-full w-1/2 border-l border-dashed" />
+          </main>
+          <nav class="relative -z-10 flex h-full w-1/2 border-l border-dashed" />
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};

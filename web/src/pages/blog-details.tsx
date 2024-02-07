@@ -106,7 +106,7 @@ export const BlogDetails = () => {
   const onDeleteBlogHandler = () => {
     deleteBlogAction(blog()?.id as string)
       .then(() => {
-        navigate(`/blogs`, { replace: true });
+        navigate(`/blogs`);
         return dispatch.showToast({ msg: 'Blog deleted', type: 'Ok' });
       })
       .catch((error: ResponseErr) => {
