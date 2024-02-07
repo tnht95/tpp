@@ -6,7 +6,7 @@ export type UserCardProps = {
 };
 
 export const UserCard = (props: UserCardProps) => (
-  <div class="flex min-w-36 flex-col items-center justify-center rounded-lg border border-indigo-900 px-4 py-10">
+  <div class="flex h-[212px] w-48 flex-col items-center justify-center rounded-lg border border-indigo-900 px-4 py-10">
     <Avatar img={props.user.avatar} userId={props.user.id} />
     <EllipsisText maxWidth="max-w-36" customStyle="font-bold mt-2">
       {props.user.name}

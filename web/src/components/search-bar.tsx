@@ -65,7 +65,7 @@ export const Searchbar = () => {
                 type="button"
                 class="inline-flex w-full rounded-t-lg px-4 py-2 hover:bg-indigo-900 hover:text-white"
                 onClick={() => {
-                  setSearchCategory('game');
+                  setSearchCategory('games');
                   dropdown()?.hide();
                 }}
               >
@@ -77,7 +77,7 @@ export const Searchbar = () => {
                 type="button"
                 class="inline-flex w-full px-4 py-2 hover:bg-indigo-900 hover:text-white"
                 onClick={() => {
-                  setSearchCategory('blog');
+                  setSearchCategory('blogs');
                   dropdown()?.hide();
                 }}
               >
@@ -89,7 +89,7 @@ export const Searchbar = () => {
                 type="button"
                 class="inline-flex w-full px-4 py-2 hover:bg-indigo-900 hover:text-white"
                 onClick={() => {
-                  setSearchCategory('user');
+                  setSearchCategory('users');
                   dropdown()?.hide();
                 }}
               >
@@ -101,7 +101,7 @@ export const Searchbar = () => {
                 type="button"
                 class="inline-flex w-full rounded-b-lg px-4 py-2 hover:bg-indigo-900 hover:text-white"
                 onClick={() => {
-                  setSearchCategory('post');
+                  setSearchCategory('posts');
                   dropdown()?.hide();
                 }}
               >

@@ -1,13 +1,14 @@
 import { useSearchParams } from '@solidjs/router';
 import {
+  Accessor,
+  batch,
   createEffect,
   createResource,
   createSignal,
-  ErrorBoundary,
   For,
-  InitializedResource,
   Show
 } from 'solid-js';
+import { createStore, produce } from 'solid-js/store';
 
 import { searchAction, SearchQueryInput } from '@/apis';
 import {
@@ -19,7 +20,15 @@ import {
   UserCard
 } from '@/components';
 import { useToastCtx } from '@/context';
-import { SearchResult } from '@/models';
+import {
+  BlogSummary,
+  GameSummary,
+  PostDetails,
+  SearchResult,
+  UserSummary
+} from '@/models';
+
+const PAGINATION = 5;
 
 const nothingToShow = () => (
   <div class="flex flex-col gap-7">
@@ -27,12 +36,31 @@ const nothingToShow = () => (
   </div>
 );
 
+type FetchMoreOpts = {
+  games: { offset: number; showMore: boolean };
+  users: { offset: number; showMore: boolean };
+  posts: { offset: number; showMore: boolean };
+  blogs: { offset: number; showMore: boolean };
+};
+
 export const Search = () => {
   const { dispatch } = useToastCtx();
   const [searchParams] = useSearchParams();
+
   const [queryInput, setQueryInput] = createSignal<SearchQueryInput>();
-  const [searchResult] = createResource(queryInput, searchAction, {
-    initialValue: { games: [], users: [], posts: [], blogs: [] }
+  const [initSearchData] = createResource(queryInput, searchAction);
+
+  const [fetchMoreOpts, setFetchMoreOpts] = createSignal<FetchMoreOpts>({
+    games: { offset: 0, showMore: true },
+    users: { offset: 0, showMore: true },
+    posts: { offset: 0, showMore: true },
+    blogs: { offset: 0, showMore: true }
+  });
+  const [searchData, setSearchData] = createStore<SearchResult>({
+    games: [],
+    users: [],
+    posts: [],
+    blogs: []
   });
 
   createEffect(() => {
@@ -40,9 +68,68 @@ export const Search = () => {
       keyword: searchParams['keyword'] as string,
       category: searchParams['category'],
       offset: 0,
-      limit: 5
+      limit: PAGINATION
     });
   });
+
+  createEffect(() => {
+    if (initSearchData.state === 'ready') {
+      batch(() => {
+        setSearchData(initSearchData());
+        setFetchMoreOpts(opts => ({
+          games: {
+            ...opts.games,
+            showMore: initSearchData().games.length === PAGINATION
+          },
+          users: {
+            ...opts.users,
+            showMore: initSearchData().users.length === PAGINATION
+          },
+          posts: {
+            ...opts.posts,
+            showMore: initSearchData().posts.length === PAGINATION
+          },
+          blogs: {
+            ...opts.blogs,
+            showMore: initSearchData().blogs.length === PAGINATION
+          }
+        }));
+      });
+    }
+    if (initSearchData.error) {
+      dispatch.showToast({
+        msg: (initSearchData.error as Error).message,
+        type: 'Err'
+      });
+    }
+  });
+
+  const handleShowMore = (category: keyof SearchResult) => {
+    searchAction({
+      keyword: searchParams['keyword'] as string,
+      category,
+      offset: fetchMoreOpts()[category].offset + PAGINATION,
+      limit: PAGINATION
+    }).then(result => {
+      setFetchMoreOpts(opts => ({
+        ...opts,
+        [category]: {
+          offset: opts[category].offset + PAGINATION,
+          showMore: result[category].length === PAGINATION
+        }
+      }));
+      return setSearchData(
+        produce(data =>
+          data[category].push(
+            ...(result[category] as GameSummary[] &
+              BlogSummary[] &
+              PostDetails[] &
+              UserSummary[])
+          )
+        )
+      );
+    }) as unknown;
+  };
 
   return (
     <div class="flex">
@@ -53,17 +140,30 @@ export const Search = () => {
             <p class="text-2xl font-bold text-indigo-900">
               Result for "{searchParams['keyword']}":
             </p>
-            <ErrorBoundary
-              fallback={(e: Error) => {
-                dispatch.showToast({ type: 'Err', msg: e.message });
-                return <></>;
-              }}
-            >
-              {renderGames(searchResult)}
-              {renderUsers(searchResult)}
-              {renderPosts(searchResult)}
-              {renderBlogs(searchResult)}
-            </ErrorBoundary>
+            <GameResult
+              loading={initSearchData.loading}
+              searchResult={searchData}
+              fetchMoreOpts={fetchMoreOpts}
+              handleShowMore={handleShowMore}
+            />
+            <UserResult
+              loading={initSearchData.loading}
+              searchResult={searchData}
+              fetchMoreOpts={fetchMoreOpts}
+              handleShowMore={handleShowMore}
+            />
+            <PostResult
+              loading={initSearchData.loading}
+              searchResult={searchData}
+              fetchMoreOpts={fetchMoreOpts}
+              handleShowMore={handleShowMore}
+            />
+            <BlogResult
+              loading={initSearchData.loading}
+              searchResult={searchData}
+              fetchMoreOpts={fetchMoreOpts}
+              handleShowMore={handleShowMore}
+            />
           </main>
           <nav class="relative -z-10 flex h-full w-1/2 border-l border-dashed" />
         </div>
@@ -72,20 +172,30 @@ export const Search = () => {
   );
 };
 
-const renderGames = (searchResult: InitializedResource<SearchResult>) => (
+type SearchResultProps = {
+  loading: boolean;
+  searchResult: SearchResult;
+  fetchMoreOpts: Accessor<FetchMoreOpts>;
+  handleShowMore: (category: keyof SearchResult) => void;
+};
+
+const GameResult = (props: SearchResultProps) => (
   <>
     <p class="mb-5 text-xl font-bold text-indigo-900">
       <i class="fa-solid fa-gamepad mr-2" />
       Games:
     </p>
-    <Show when={!searchResult.loading} fallback={<LoadingSpinner />}>
-      <Show when={searchResult().games.length > 0} fallback={nothingToShow()}>
+    <Show when={!props.loading} fallback={<LoadingSpinner />}>
+      <Show
+        when={props.searchResult.games.length > 0}
+        fallback={nothingToShow()}
+      >
         <div class="flex flex-wrap gap-5">
-          <For each={searchResult().games}>
+          <For each={props.searchResult.games}>
             {game => <GameCard game={game} />}
           </For>
-          <Show when={searchResult().games.length === 5}>
-            <ShowMoreButton onClick={() => {}} />
+          <Show when={props.fetchMoreOpts().games.showMore}>
+            <ShowMoreButton onClick={() => props.handleShowMore('games')} />
           </Show>
         </div>
       </Show>
@@ -94,20 +204,23 @@ const renderGames = (searchResult: InitializedResource<SearchResult>) => (
   </>
 );
 
-const renderUsers = (searchResult: InitializedResource<SearchResult>) => (
+const UserResult = (props: SearchResultProps) => (
   <>
     <p class="mb-5 text-xl font-bold text-indigo-900">
       <i class="fa-solid fa-users mr-2" />
       Users:
     </p>
-    <Show when={!searchResult.loading} fallback={<LoadingSpinner />}>
-      <Show when={searchResult().users.length > 0} fallback={nothingToShow()}>
+    <Show when={!props.loading} fallback={<LoadingSpinner />}>
+      <Show
+        when={props.searchResult.users.length > 0}
+        fallback={nothingToShow()}
+      >
         <div class="flex flex-wrap gap-5">
-          <For each={searchResult().users}>
+          <For each={props.searchResult.users}>
             {user => <UserCard user={user} />}
           </For>
-          <Show when={searchResult().users.length === 5}>
-            <ShowMoreButton onClick={() => {}} />
+          <Show when={props.fetchMoreOpts().users.showMore}>
+            <ShowMoreButton onClick={() => props.handleShowMore('users')} />
           </Show>
         </div>
       </Show>
@@ -116,22 +229,28 @@ const renderUsers = (searchResult: InitializedResource<SearchResult>) => (
   </>
 );
 
-const renderPosts = (searchResult: InitializedResource<SearchResult>) => (
+const PostResult = (props: SearchResultProps) => (
   <>
     <p class="mb-5 text-xl font-bold text-indigo-900">
       <i class="fa-solid fa-highlighter mr-2" />
       Posts:
     </p>
-    <Show when={!searchResult.loading} fallback={<LoadingSpinner />}>
-      <Show when={searchResult().posts.length > 0} fallback={nothingToShow()}>
+    <Show when={!props.loading} fallback={<LoadingSpinner />}>
+      <Show
+        when={props.searchResult.posts.length > 0}
+        fallback={nothingToShow()}
+      >
         <div class="flex flex-col gap-5">
-          <For each={searchResult().posts}>
+          <For each={props.searchResult.posts}>
             {post => (
               <PostCard post={post} onEdit={() => {}} onDelete={() => {}} />
             )}
           </For>
-          <Show when={searchResult().posts.length === 5}>
-            <ShowMoreButton vertical onClick={() => {}} />
+          <Show when={props.fetchMoreOpts().posts.showMore}>
+            <ShowMoreButton
+              vertical
+              onClick={() => props.handleShowMore('posts')}
+            />
           </Show>
         </div>
       </Show>
@@ -140,20 +259,26 @@ const renderPosts = (searchResult: InitializedResource<SearchResult>) => (
   </>
 );
 
-const renderBlogs = (searchResult: InitializedResource<SearchResult>) => (
+const BlogResult = (props: SearchResultProps) => (
   <>
     <p class="mb-5 text-xl font-bold text-indigo-900">
       <i class="fa-solid fa-cube mr-2" />
       Blogs:
     </p>
-    <Show when={!searchResult.loading} fallback={<LoadingSpinner />}>
-      <Show when={searchResult().blogs.length > 0} fallback={nothingToShow()}>
+    <Show when={!props.loading} fallback={<LoadingSpinner />}>
+      <Show
+        when={props.searchResult.blogs.length > 0}
+        fallback={nothingToShow()}
+      >
         <div class="flex flex-col gap-5">
-          <For each={searchResult().blogs}>
+          <For each={props.searchResult.blogs}>
             {blog => <BlogCard blog={blog} />}
           </For>
-          <Show when={searchResult().blogs.length === 5}>
-            <ShowMoreButton vertical onClick={() => {}} />
+          <Show when={props.fetchMoreOpts().blogs.showMore}>
+            <ShowMoreButton
+              vertical
+              onClick={() => props.handleShowMore('blogs')}
+            />
           </Show>
         </div>
       </Show>
