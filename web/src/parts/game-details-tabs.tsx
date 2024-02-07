@@ -42,6 +42,7 @@ export const GameDetailsTabs = () => {
 
   const refresh = () => {
     modal()?.hide();
+    dispatch.showToast({ msg: 'Game Edited', type: 'Ok' });
     return refetch();
   };
 
@@ -49,7 +50,7 @@ export const GameDetailsTabs = () => {
     deleteGameAction(data()?.id as string)
       .then(() => {
         navigate(`/users/${user()?.id}`);
-        return dispatch.showToast({ msg: 'Game deleted', type: 'Ok' });
+        return dispatch.showToast({ msg: 'Game Deleted', type: 'Ok' });
       })
       .catch((error: ResponseErr) => {
         dispatch.showToast({ msg: error.msg, type: 'Err' });

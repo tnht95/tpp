@@ -88,6 +88,7 @@ export const BlogDetails = () => {
       .then(newCmt =>
         batch(() => {
           setComments(produce(c => c.unshift(newCmt)));
+          dispatch.showToast({ msg: 'Comment Added', type: 'Ok' });
           addedCmts.push(newCmt);
         })
       )
@@ -107,7 +108,7 @@ export const BlogDetails = () => {
     deleteBlogAction(blog()?.id as string)
       .then(() => {
         navigate(`/blogs`);
-        return dispatch.showToast({ msg: 'Blog deleted', type: 'Ok' });
+        return dispatch.showToast({ msg: 'Blog Deleted', type: 'Ok' });
       })
       .catch((error: ResponseErr) => {
         dispatch.showToast({ msg: error.msg, type: 'Err' });
@@ -120,7 +121,10 @@ export const BlogDetails = () => {
       targetId: blogId,
       targetType: 'Blog'
     })
-      .then(comment => setComments(c => c.id === comment.id, comment))
+      .then(comment => {
+        setComments(c => c.id === comment.id, comment);
+        return dispatch.showToast({ msg: 'Comment Edited', type: 'Ok' });
+      })
       .catch((error: ResponseErr) =>
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
@@ -134,6 +138,7 @@ export const BlogDetails = () => {
         offset: 0,
         limit: 5
       });
+      dispatch.showToast({ msg: 'Comment Deleted', type: 'Ok' });
     });
 
   const onDeleteCmtHandler = (commentId: string) =>
@@ -154,6 +159,7 @@ export const BlogDetails = () => {
 
   const refresh = () => {
     modal()?.hide();
+    dispatch.showToast({ msg: 'Blog Edited', type: 'Ok' });
     return refetch();
   };
 
