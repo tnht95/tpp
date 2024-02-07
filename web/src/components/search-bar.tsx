@@ -34,7 +34,7 @@ export const Searchbar = () => {
           Your Email
         </label>
         <button
-          class="z-10 inline-flex w-1/4 shrink-0 items-center justify-between rounded-s-lg border border-white bg-indigo-900 px-4 py-2.5 text-center text-sm font-medium capitalize text-white hover:border-r-indigo-900 hover:bg-white hover:text-indigo-900 focus:outline-none"
+          class="z-10 inline-flex w-40 shrink-0 items-center justify-between rounded-s-lg border border-white bg-indigo-900 px-4 py-2.5 text-center text-sm font-medium capitalize text-white hover:border-r-indigo-900 hover:bg-white hover:text-indigo-900 focus:outline-none"
           type="button"
           ref={setBtnRef}
         >
