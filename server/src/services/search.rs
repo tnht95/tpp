@@ -67,7 +67,7 @@ where
                     from games
                     where name like $1
                     order by created_at desc offset $2 limit $3",
-                    pagination.keyword,
+                    format!("%{}%", pagination.keyword),
                     pagination.offset,
                     pagination.limit,
                 )
@@ -101,7 +101,7 @@ where
                     from users
                     where name like $1
                     order by created_at desc offset $2 limit $3",
-                    pagination.keyword,
+                    format!("%{}%", pagination.keyword),
                     pagination.offset,
                     pagination.limit,
                 )
@@ -144,7 +144,7 @@ where
                     left join users on users.id = posts.author_id
                     where content like $1
                     order by posts.created_at desc offset $2 limit $3",
-                    pagination.keyword,
+                    format!("%{}%", pagination.keyword),
                     pagination.offset,
                     pagination.limit
                 )
@@ -182,7 +182,7 @@ where
                         description like $1 or
                         content like $1
                     order by created_at desc offset $2 limit $3",
-                    pagination.keyword,
+                    format!("%{}%", pagination.keyword),
                     pagination.offset,
                     pagination.limit,
                 )
