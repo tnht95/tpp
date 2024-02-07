@@ -4,10 +4,10 @@ use validator::Validate;
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub enum Category {
-    Game,
-    Blog,
-    User,
-    Post,
+    Games,
+    Blogs,
+    Users,
+    Posts,
 }
 
 #[derive(Deserialize, Validate)]

@@ -52,7 +52,7 @@ where
         if !pagination
             .category
             .as_ref()
-            .map(|c| matches!(c, Category::Game))
+            .map(|c| matches!(c, Category::Games))
             .unwrap_or(true)
         {
             let _ = tx.send(Ok(vec![]));
@@ -86,7 +86,7 @@ where
         if !pagination
             .category
             .as_ref()
-            .map(|c| matches!(c, Category::User))
+            .map(|c| matches!(c, Category::Users))
             .unwrap_or(true)
         {
             let _ = tx.send(Ok(vec![]));
@@ -120,7 +120,7 @@ where
         if !pagination
             .category
             .as_ref()
-            .map(|c| matches!(c, Category::Post))
+            .map(|c| matches!(c, Category::Posts))
             .unwrap_or(true)
         {
             let _ = tx.send(Ok(vec![]));
@@ -163,7 +163,7 @@ where
         if !pagination
             .category
             .as_ref()
-            .map(|c| matches!(c, Category::Blog))
+            .map(|c| matches!(c, Category::Blogs))
             .unwrap_or(true)
         {
             let _ = tx.send(Ok(vec![]));
