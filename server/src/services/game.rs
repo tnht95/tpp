@@ -9,7 +9,7 @@ use uuid::Uuid;
 use crate::{
     database::{entities::game::Game, IDatabase},
     model::{
-        requests::game::{AddGameRequest, GamePaginationInternal},
+        requests::game::{AddGameRequest, EditGameRequest, GamePaginationInternal},
         responses::game::GameSummary,
     },
 };
@@ -33,9 +33,15 @@ pub trait IGameService {
         author_name: String,
         game: AddGameRequest,
         rom_bytes: &[u8],
-    ) -> Result<Game, GameServiceErr>;
+    ) -> Result<(), GameServiceErr>;
     async fn delete(&self, id: Uuid) -> Result<(), GameServiceErr>;
     async fn existed(&self, id: Uuid, author_id: i64) -> Result<bool, GameServiceErr>;
+    async fn edit(
+        &self,
+        game: EditGameRequest,
+        rom_bytes: Option<&[u8]>,
+        game_id: Uuid,
+    ) -> Result<(), GameServiceErr>;
 }
 
 pub struct GameService<T: IDatabase> {
@@ -122,7 +128,7 @@ where
         author_name: String,
         game: AddGameRequest,
         rom_bytes: &[u8],
-    ) -> Result<Game, GameServiceErr> {
+    ) -> Result<(), GameServiceErr> {
         let mut tx = self
             .db
             .get_pool()
@@ -150,21 +156,16 @@ where
 
         let rom_path = self.write_rom(game.id, rom_bytes).await?;
 
-        let game = sqlx::query_as!(
-            Game,
-            "update games set rom = $1 where id = $2 returning *",
-            rom_path,
-            game.id
-        )
-        .fetch_one(&mut *tx)
-        .await
-        .map_err(|e| GameServiceErr::Other(e.into()))?;
+        sqlx::query!("update games set rom = $1 where id = $2", rom_path, game.id)
+            .execute(&mut *tx)
+            .await
+            .map_err(|e| GameServiceErr::Other(e.into()))?;
 
         tx.commit()
             .await
             .map_err(|e| GameServiceErr::Other(e.into()))?;
 
-        Ok(game)
+        Ok(())
     }
 
     async fn delete(&self, id: Uuid) -> Result<(), GameServiceErr> {
@@ -185,5 +186,49 @@ where
         .await
         .map(|result| result.game_count.map(|c| c > 0).unwrap_or(false))
         .map_err(|e| GameServiceErr::Other(e.into()))
+    }
+
+    async fn edit(
+        &self,
+        game: EditGameRequest,
+        rom_bytes: Option<&[u8]>,
+        game_id: Uuid,
+    ) -> Result<(), GameServiceErr> {
+        let mut tx = self
+            .db
+            .get_pool()
+            .begin()
+            .await
+            .map_err(|e| GameServiceErr::Other(e.into()))?;
+
+        sqlx::query!(
+            "update games set
+            name = $1, url = $2, avatar_url = $3, about = $4, info = $5, tags = $6 where id = $7",
+            game.name,
+            game.url,
+            game.avatar_url,
+            game.about,
+            game.info,
+            game.tags.as_deref(),
+            game_id
+        )
+        .execute(&mut *tx)
+        .await
+        .map_err(|e| GameServiceErr::Other(e.into()))?;
+
+        if let Some(bytes) = rom_bytes {
+            let rom_path = self.write_rom(game_id, bytes).await?;
+
+            sqlx::query!("update games set rom = $1 where id = $2", rom_path, game_id)
+                .execute(&mut *tx)
+                .await
+                .map_err(|e| GameServiceErr::Other(e.into()))?;
+        }
+
+        tx.commit()
+            .await
+            .map_err(|e| GameServiceErr::Other(e.into()))?;
+
+        Ok(())
     }
 }

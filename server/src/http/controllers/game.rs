@@ -1,3 +1,5 @@
+use std::ops::Not;
+
 use axum::{
     extract::{Multipart, Path, State},
     response::{IntoResponse, Response},
@@ -21,7 +23,7 @@ use crate::{
         },
     },
     model::{
-        requests::game::{AddGameRequest, GamePagination},
+        requests::game::{AddGameRequest, EditGameRequest, GamePagination},
         responses::{
             game::{DESERIALIZE_GAME_ERR, INVALID_ROM, NOT_AUTH_DEL, NOT_FOUND},
             HttpResponse,
@@ -118,6 +120,50 @@ pub async fn add<TInternalServices: IInternalServices>(
         .services
         .game
         .add(user.id, user.name, game, &rom_bytes)
+        .await
+    {
+        Ok(game) => Json(HttpResponse { data: game }).into_response(),
+        Err(GameServiceErr::Other(e)) => response_unhandled_err(e),
+    }
+}
+
+pub async fn edit<TInternalServices: IInternalServices>(
+    Path(id): Path<String>,
+    State(state): InternalState<TInternalServices>,
+    mut multipart: Multipart,
+) -> Response {
+    let id = match id.parse::<Uuid>() {
+        Ok(id) => id,
+        Err(_) => return response_400_with_const(INVALID_UUID_ERR),
+    };
+
+    let rom_bytes = match extract_bytes_from_multipart(&mut multipart).await {
+        Ok(bytes) => {
+            if bytes.len() > 3584 {
+                return response_400_with_const(INVALID_ROM);
+            }
+            bytes.is_empty().not().then_some(bytes)
+        }
+        Err(e) => return e,
+    };
+
+    let game = match extract_bytes_from_multipart(&mut multipart).await {
+        Ok(bytes) => match serde_json::from_slice::<EditGameRequest>(&bytes) {
+            Ok(game) => game,
+            Err(_) => return response_400_with_const(DESERIALIZE_GAME_ERR),
+        },
+        Err(e) => return e,
+    };
+
+    match game.validate() {
+        Ok(_) => (),
+        Err(e) => return response_validation_err(e).into_response(),
+    };
+
+    match state
+        .services
+        .game
+        .edit(game, rom_bytes.as_ref().map(|r| r.as_ref()), id)
         .await
     {
         Ok(game) => Json(HttpResponse { data: game }).into_response(),

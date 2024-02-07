@@ -12,7 +12,7 @@ import { createStore, produce } from 'solid-js/store';
 import { addGameAction, fetchGameAction } from '@/apis';
 import { Button, GameCard, GameForm } from '@/components';
 import { useAuthCtx, useToastCtx } from '@/context';
-import { AddGame, GameSummary, ResponseErr } from '@/models';
+import { GameRequest, GameSummary, ResponseErr } from '@/models';
 
 type UserGamesProps = {
   userId: number;
@@ -24,7 +24,7 @@ export const UserGames = (props: UserGamesProps) => {
   } = useAuthCtx();
   const { dispatch } = useToastCtx();
   const [userId] = createSignal({ authorId: props.userId });
-  const [gameResource] = createResource(userId, fetchGameAction, {
+  const [gameResource, { refetch }] = createResource(userId, fetchGameAction, {
     initialValue: []
   });
   const [games, setGames] = createStore<GameSummary[]>([]);
@@ -32,13 +32,14 @@ export const UserGames = (props: UserGamesProps) => {
   const [modalRef, setModalRef] = createSignal<HTMLDivElement>();
   const [modal, setModal] = createSignal<Modal>();
 
-  const batchSubmitHandler = (game: GameSummary) =>
+  const batchSubmitHandler = () =>
     batch(() => {
-      setGames(produce(oldGames => oldGames.push(game)));
+      setGames([]);
       modal()?.hide();
+      return refetch();
     });
 
-  const onSubmitHandler = (file: File, game: AddGame) =>
+  const onSubmitHandler = (file: File, game: GameRequest) =>
     addGameAction(file, game)
       .then(batchSubmitHandler)
       .catch((error: ResponseErr) =>

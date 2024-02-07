@@ -27,7 +27,7 @@ export type GameSummary = {
   createdAt: string;
 };
 
-export type AddGame = {
+export type GameRequest = {
   name: string;
   url: string | undefined;
   avatarUrl: string | undefined;

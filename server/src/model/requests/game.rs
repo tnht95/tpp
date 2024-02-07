@@ -28,6 +28,8 @@ pub struct AddGameRequest {
     pub tags: Option<Vec<String>>,
 }
 
+pub type EditGameRequest = AddGameRequest;
+
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub enum OrderBy {

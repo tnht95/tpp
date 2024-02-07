@@ -1,7 +1,7 @@
 import { createSignal, Ref, Show } from 'solid-js';
 
 import { Markdown, PreviewButtonGroup } from '@/components';
-import { AddGame } from '@/models';
+import { Game, GameRequest } from '@/models';
 import {
   fileRequired,
   getStrVal,
@@ -15,7 +15,8 @@ import {
 type GameFormProps = {
   ref: Ref<HTMLDivElement>;
   onCloseHandler: () => void;
-  onSubmitHandler: (file: File, game: AddGame) => void;
+  onSubmitHandler: (file: File, game: GameRequest) => void;
+  game?: Game | undefined;
 };
 
 const ErrorMessage = (props: { msg: string }) => (
@@ -24,7 +25,9 @@ const ErrorMessage = (props: { msg: string }) => (
 
 export const GameForm = (props: GameFormProps) => {
   const [isEditMode, setIsEditMode] = createSignal(true);
-  const [content, setContent] = createSignal('');
+  const [isFileUploaderVisible, setIsFileUploaderVisible] = createSignal(false);
+  // eslint-disable-next-line solid/reactivity
+  const [content, setContent] = createSignal(props.game?.info || '');
   const { validate, submit, errors } = useForm({ errClass: 'border-red-600' });
 
   const displayMarkdown = (
@@ -61,7 +64,7 @@ export const GameForm = (props: GameFormProps) => {
         <div class="relative rounded-xl bg-white p-4 pb-10 shadow">
           <div class="flex items-center justify-between rounded-t p-6">
             <div class="ml-1 text-center text-2xl font-bold text-gray-700">
-              Upload your game
+              {props.game ? 'Edit Game' : 'New Game'}
             </div>
             <button
               type="button"
@@ -77,6 +80,7 @@ export const GameForm = (props: GameFormProps) => {
               <input
                 placeholder="Game name"
                 class="w-full rounded-xl border p-3 placeholder:text-gray-400"
+                value={props.game?.name || ''}
                 ref={el => [
                   validate(el, () => [MinStr(1, 'Required'), MaxStr(40)])
                 ]}
@@ -87,6 +91,7 @@ export const GameForm = (props: GameFormProps) => {
                 placeholder="Game url"
                 class="w-full rounded-xl border p-3 placeholder:text-gray-400"
                 name="url"
+                value={props.game?.url || ''}
                 ref={el => [validate(el, () => [MaxStr(255)])]}
               />
               {errors['url'] && <ErrorMessage msg={errors['url']} />}
@@ -94,6 +99,7 @@ export const GameForm = (props: GameFormProps) => {
                 placeholder="Game avatar url"
                 class="w-full rounded-xl border p-3 placeholder:text-gray-400"
                 name="avatarUrl"
+                value={props.game?.avatarUrl || ''}
                 ref={el => [validate(el, () => [MaxStr(255)])]}
               />
               {errors['avatarUrl'] && (
@@ -103,6 +109,7 @@ export const GameForm = (props: GameFormProps) => {
                 placeholder="Game tags: separate each tag with a comma"
                 class="w-full rounded-xl border p-3 placeholder:text-gray-400"
                 name="tags"
+                value={props.game?.tags || ''}
                 ref={el => [validate(el, () => [validateTags])]}
               />
               {errors['tags'] && <ErrorMessage msg={errors['tags']} />}
@@ -111,6 +118,7 @@ export const GameForm = (props: GameFormProps) => {
                 rows="4"
                 class="w-full resize-none rounded-xl border border-gray-200 py-2 transition duration-150 ease-in-out placeholder:text-gray-400 focus:border-blue-500 focus:outline-none"
                 placeholder="About this game"
+                value={props.game?.about || ''}
                 ref={el => [validate(el, () => [MaxStr(255)])]}
               />
               {errors['about'] && <ErrorMessage msg={errors['about']} />}
@@ -126,22 +134,46 @@ export const GameForm = (props: GameFormProps) => {
                 />
                 {errors['info'] && <ErrorMessage msg={errors['info']} />}
               </Show>
-              <div class="mb-6">
-                <input
-                  class="block w-full cursor-pointer rounded-lg border bg-gray-50 text-sm text-gray-400 focus:outline-none"
-                  type="file"
-                  name="rom"
-                  ref={el => [
-                    validate(el, () => [fileRequired], { onBlur: false })
-                  ]}
-                />
-                <p class="mt-1 text-sm text-gray-400">
-                  Upload your ROM (Max file size: 4KB)
-                </p>
-                <Show when={errors['rom']}>
-                  <ErrorMessage msg={errors['rom'] as string} />
-                </Show>
-              </div>
+              <Show when={props.game}>
+                <div class="flex items-center gap-1">
+                  <i class="fa-regular fa-file-lines" />
+                  <p
+                    class="cursor-pointer font-semibold text-blue-500 underline"
+                    onClick={() =>
+                      setIsFileUploaderVisible(!isFileUploaderVisible())
+                    }
+                  >
+                    {isFileUploaderVisible()
+                      ? 'Upload new ROM file'
+                      : 'Use old ROM file'}{' '}
+                    (click to change)
+                  </p>
+                </div>
+              </Show>
+              <Show when={!props.game || isFileUploaderVisible()}>
+                <div class="mb-6">
+                  <input
+                    class="block w-full cursor-pointer rounded-lg border bg-gray-50 text-sm text-gray-400 focus:outline-none"
+                    type="file"
+                    name="rom"
+                    value="pdfsfsfsfsfs"
+                    ref={el => {
+                      if (props.game) {
+                        return [];
+                      }
+                      return [
+                        validate(el, () => [fileRequired], { onBlur: false })
+                      ];
+                    }}
+                  />
+                  <p class="mt-1 text-sm text-gray-400">
+                    Upload your ROM (Max file size: 4KB)
+                  </p>
+                  <Show when={errors['rom']}>
+                    <ErrorMessage msg={errors['rom'] as string} />
+                  </Show>
+                </div>
+              </Show>
             </div>
             <PreviewButtonGroup
               onPreviewHandler={togglePreviewHandler}

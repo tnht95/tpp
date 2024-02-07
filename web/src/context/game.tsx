@@ -18,6 +18,9 @@ import { DiscussionSummary, Game } from '@/models';
 type GameContext = {
   game: {
     data: Resource<Game | undefined>;
+    refetch: (
+      info?: unknown
+    ) => Promise<Game | undefined> | Game | undefined | null;
   };
   discussion: {
     data: DiscussionSummary[];
@@ -35,7 +38,7 @@ const gameCtx = createContext<GameContext>();
 
 export const GameProvider = (props: ParentProps) => {
   const gameId = useParams()['id'] as string;
-  const [gameData] = createResource(gameId, fetchGameByIdAction);
+  const [gameData, { refetch }] = createResource(gameId, fetchGameByIdAction);
   const [param, setParam] = createSignal<[number, string]>([0, gameId]);
 
   const [discussionResource] = createResource(
@@ -62,7 +65,7 @@ export const GameProvider = (props: ParentProps) => {
   };
 
   const state: GameContext = {
-    game: { data: gameData },
+    game: { data: gameData, refetch: refetch },
     discussion: {
       data: discussionData,
       setDiscussions: setDiscussions,

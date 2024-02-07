@@ -104,6 +104,7 @@ where
                         .route("/games", post(game::add))
                         .route("/games/:id", get(game::get_by_id))
                         .route("/games/:id", delete(game::delete))
+                        .route("/games/:id", put(game::edit))
                         .route("/posts", get(post::filter))
                         .route("/posts", post(post::add))
                         .route("/posts/:id", delete(post::delete))

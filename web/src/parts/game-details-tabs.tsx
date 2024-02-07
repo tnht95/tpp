@@ -1,19 +1,49 @@
 import { useNavigate } from '@solidjs/router';
+import { Modal } from 'flowbite';
+import { createEffect, createSignal, Show } from 'solid-js';
 
-import { deleteGameAction } from '@/apis';
-import { GameTab, OptionButton, PillButton } from '@/components';
+import { deleteGameAction, editGameAction } from '@/apis';
+import { GameForm, GameTab, OptionButton, PillButton } from '@/components';
 import { useAuthCtx, useGameCtx, useToastCtx } from '@/context';
-import { ResponseErr } from '@/models';
+import { GameRequest, ResponseErr } from '@/models';
 
 export const GameDetailsTabs = () => {
   const {
-    game: { data }
+    game: { data, refetch },
+    utils: { getGameId }
   } = useGameCtx();
   const { dispatch } = useToastCtx();
   const navigate = useNavigate();
   const {
     utils: { user }
   } = useAuthCtx();
+  const [isEditMode, setIsEditMode] = createSignal(false);
+  const [modal, setModal] = createSignal<Modal>();
+  const [modalRef, setModalRef] = createSignal<HTMLDivElement>();
+
+  createEffect(() => {
+    setModal(
+      new Modal(modalRef(), {
+        onHide: () => {
+          setIsEditMode(false);
+        }
+      })
+    );
+  });
+
+  const onEditBlogHandler = (file: File, game: GameRequest) => {
+    setIsEditMode(false);
+    editGameAction(file, game, getGameId())
+      .then(refresh)
+      .catch((error: ResponseErr) =>
+        dispatch.showToast({ msg: error.msg, type: 'Err' })
+      );
+  };
+
+  const refresh = () => {
+    modal()?.hide();
+    return refetch();
+  };
 
   const onDeleteHandler = () => {
     deleteGameAction(data()?.id as string)
@@ -26,6 +56,11 @@ export const GameDetailsTabs = () => {
       });
   };
 
+  const onEditOptionBtn = () => {
+    setIsEditMode(!isEditMode());
+    modal()?.show();
+  };
+
   return (
     <div class="mt-4 overflow-x-hidden px-6 lg:px-10">
       <div class="flex flex-row">
@@ -34,11 +69,22 @@ export const GameDetailsTabs = () => {
           <div class="mr-3 cursor-pointer text-2xl font-medium text-indigo-900 hover:underline">
             {data()?.name}
           </div>
+          <Show when={data.state === 'ready'}>
+            <GameForm
+              ref={setModalRef}
+              onCloseHandler={() => {
+                modal()?.hide();
+              }}
+              onSubmitHandler={onEditBlogHandler}
+              game={data()}
+            />
+          </Show>
           <OptionButton
             isOwner={user()?.id === data()?.authorId}
             onDelete={onDeleteHandler}
             id={data()?.id as string}
-            onEdit={() => {}}
+            onEdit={onEditOptionBtn}
+            isEditMode={isEditMode}
           />
         </div>
 
