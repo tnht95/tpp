@@ -163,9 +163,7 @@ where
 
         tx.commit()
             .await
-            .map_err(|e| GameServiceErr::Other(e.into()))?;
-
-        Ok(())
+            .map_err(|e| GameServiceErr::Other(e.into()))
     }
 
     async fn delete(&self, id: Uuid) -> Result<(), GameServiceErr> {
@@ -227,8 +225,6 @@ where
 
         tx.commit()
             .await
-            .map_err(|e| GameServiceErr::Other(e.into()))?;
-
-        Ok(())
+            .map_err(|e| GameServiceErr::Other(e.into()))
     }
 }

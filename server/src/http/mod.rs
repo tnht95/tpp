@@ -123,7 +123,7 @@ where
                         .route("/discussions/:id", get(discussion::get_by_id))
                         .route("/discussions/:id", put(discussion::edit))
                         .route("/discussions/:id", delete(discussion::delete))
-                        .route("/search/:keyword", get(search::search))
+                        .route("/searchs", get(search::search))
                         .layer(middleware),
                 )
                 .layer(DefaultBodyLimit::max(5 * 1024)) // 5KB
