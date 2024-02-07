@@ -14,6 +14,7 @@ pub enum Category {
 #[serde(rename_all = "camelCase")]
 pub struct SearchPagination {
     #[validate(length(min = 1, message = "Can not be empty"))]
+    #[validate(length(max = 35, message = "Too long, exceeding 35 characters."))]
     pub keyword: String,
     pub category: Option<Category>,
     pub offset: Option<i64>,

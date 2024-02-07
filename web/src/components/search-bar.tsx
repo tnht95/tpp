@@ -114,9 +114,10 @@ export const Searchbar = () => {
           <input
             class="z-20 block w-full rounded-e-lg border border-s-2 border-gray-300 border-s-gray-50 bg-gray-50 p-2.5 text-sm text-gray-900"
             placeholder="Search Games, Blogs, Posts, Users..."
-            onInput={e => setSearchContent(e.target.value)}
+            onInput={e => setSearchContent(e.target.value.trim())}
             value={searchContent()}
             name="searchContent"
+            maxLength={35}
           />
         </div>
       </div>
