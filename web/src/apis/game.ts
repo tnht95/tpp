@@ -71,3 +71,8 @@ export const editGameAction = async (
     .then(errHandler)
     .then((r: Response<undefined>) => r.data);
 };
+
+export const fetchGameTagsAction = () =>
+  fetch(`${import.meta.env.VITE_SERVER_URL}/games/tags`)
+    .then(errHandler)
+    .then((r: Response<string[]>) => r.data);

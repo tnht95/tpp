@@ -9,11 +9,12 @@ import {
 } from 'solid-js';
 import { createStore, produce } from 'solid-js/store';
 
-import { addBlogAction, fetchBlogAction } from '@/apis';
+import { addBlogAction, fetchBlogAction, fetchBlogTagsAction } from '@/apis';
 import { BlogCard, BlogForm, ShowMoreButton } from '@/components';
 import { LIMIT, OFFSET } from '@/constant';
 import { useAuthCtx, useToastCtx } from '@/context';
 import { BlogRequest, BlogSummary, ResponseErr } from '@/models';
+import { TagSidebar } from '@/parts';
 
 export const Blogs = () => {
   const {
@@ -23,6 +24,7 @@ export const Blogs = () => {
   const [modalRef, setModalRef] = createSignal<HTMLDivElement>();
   const [modal, setModal] = createSignal<Modal>();
   const [currentOffset, setCurrentOffset] = createSignal(0);
+  const [tagResource] = createResource(fetchBlogTagsAction);
   const [blogResource, { refetch }] = createResource(
     currentOffset,
     fetchBlogAction,
@@ -60,34 +62,39 @@ export const Blogs = () => {
   };
 
   return (
-    <div class="ml-10 mt-10 w-4/6">
-      <div class="flex items-center justify-between">
-        <p class="text-4xl font-bold">Blogs</p>
-        {isAdmin() && (
-          <button
-            type="button"
-            class="rounded-lg border bg-green-500 px-7 py-2 font-bold text-white hover:bg-white hover:text-green-500"
-            onClick={() => {
-              modal()?.show();
+    <div class="mt-10 flex justify-between">
+      <div class="ml-10  w-4/6">
+        <div class="flex items-center justify-between">
+          <p class="text-4xl font-bold">Blogs</p>
+          {isAdmin() && (
+            <button
+              type="button"
+              class="rounded-lg border bg-green-500 px-7 py-2 font-bold text-white hover:bg-white hover:text-green-500"
+              onClick={() => {
+                modal()?.show();
+              }}
+            >
+              <i class="fa-solid fa-plus mr-2" />
+              Add New Blog
+            </button>
+          )}
+          <BlogForm
+            modalRef={setModalRef}
+            onCloseHandler={() => {
+              modal()?.hide();
             }}
-          >
-            <i class="fa-solid fa-plus mr-2" />
-            Add New Blog
-          </button>
-        )}
-        <BlogForm
-          modalRef={setModalRef}
-          onCloseHandler={() => {
-            modal()?.hide();
-          }}
-          onSubmitHandler={onSubmitHandler}
-        />
+            onSubmitHandler={onSubmitHandler}
+          />
+        </div>
+        <div class="mt-5 flex flex-col gap-5">
+          <For each={blogs}>{blog => <BlogCard blog={blog} />}</For>
+          <Show when={blogResource().length === LIMIT}>
+            <ShowMoreButton vertical onClick={handleGetMore} />
+          </Show>
+        </div>
       </div>
-      <div class="mt-5 flex flex-col gap-5">
-        <For each={blogs}>{blog => <BlogCard blog={blog} />}</For>
-        <Show when={blogResource().length === LIMIT}>
-          <ShowMoreButton vertical onClick={handleGetMore} />
-        </Show>
+      <div class="mr-36 w-1/6">
+        <TagSidebar tags={tagResource() as string[]} />
       </div>
     </div>
   );

@@ -8,13 +8,20 @@ import {
 } from 'solid-js';
 import { createStore, produce } from 'solid-js/store';
 
-import { fetchGameAction, GameQueryInput, OrderBy, OrderField } from '@/apis';
+import {
+  fetchGameAction,
+  fetchGameTagsAction,
+  GameQueryInput,
+  OrderBy,
+  OrderField
+} from '@/apis';
 import { GameCard, ShowMoreButton } from '@/components';
 import { LIMIT, OFFSET } from '@/constant';
 import { GameSummary } from '@/models';
 import { TagSidebar } from '@/parts';
 
 export const Games = () => {
+  const [tagResource] = createResource(fetchGameTagsAction);
   const [selectValue, setSelectValue] = createSignal<GameQueryInput>({
     offset: 0,
     limit: LIMIT
@@ -50,10 +57,10 @@ export const Games = () => {
   };
 
   return (
-    <>
-      <div class="ml-10 mt-5 flex flex-row justify-between">
+    <div class="mt-10">
+      <div class="ml-10  flex flex-row justify-between">
         <div class="w-3/5">
-          <p class="m-5 ml-0 text-2xl font-bold text-indigo-900">
+          <p class="mb-5 ml-0 text-2xl font-bold text-indigo-900">
             Most Subscribed Games
           </p>
           <div class="flex flex-row flex-wrap gap-7">
@@ -74,7 +81,7 @@ export const Games = () => {
           </div>
         </div>
         <div class="mr-24 w-1/5">
-          <TagSidebar tags={['tag1', 'tag2', 'tag3']} />
+          <TagSidebar tags={tagResource() as string[]} />
         </div>
       </div>
       <div>
@@ -109,6 +116,6 @@ export const Games = () => {
           <div class="flex-1" />
         </div>
       </div>
-    </>
+    </div>
   );
 };

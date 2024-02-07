@@ -29,7 +29,7 @@ export const validateTags = ({ value }: { value: string }) => {
   if (tagsArr.length > 5) return 'The maximum total of tags is 5.';
   for (const tag of tagsArr) {
     if (tag.startsWith(' ') || tag.endsWith(' '))
-      return 'Tags can not contain spacing';
+      return 'Tags can not contain spaces';
     if (tag === '') return 'The minimun length of a tag is 1';
     if (tag.length > 20) return 'The maximum length of a tag is 20';
   }

@@ -46,3 +46,8 @@ export const editBlogAction = (id: string, body: BlogRequest) =>
   })
     .then(errHandler)
     .then((r: Response<undefined>) => r.data);
+
+export const fetchBlogTagsAction = () =>
+  fetch(`${import.meta.env.VITE_SERVER_URL}/blogs/tags`)
+    .then(errHandler)
+    .then((r: Response<string[]>) => r.data);

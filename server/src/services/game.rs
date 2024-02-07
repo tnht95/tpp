@@ -42,6 +42,8 @@ pub trait IGameService {
         rom_bytes: Option<&[u8]>,
         game_id: Uuid,
     ) -> Result<(), GameServiceErr>;
+
+    async fn get_tags(&self) -> Result<Vec<Option<String>>, GameServiceErr>;
 }
 
 pub struct GameService<T: IDatabase> {
@@ -224,6 +226,13 @@ where
         }
 
         tx.commit()
+            .await
+            .map_err(|e| GameServiceErr::Other(e.into()))
+    }
+
+    async fn get_tags(&self) -> Result<Vec<Option<String>>, GameServiceErr> {
+        sqlx::query_scalar!("SELECT DISTINCT unnest(tags) AS tag FROM games")
+            .fetch_all(self.db.get_pool())
             .await
             .map_err(|e| GameServiceErr::Other(e.into()))
     }

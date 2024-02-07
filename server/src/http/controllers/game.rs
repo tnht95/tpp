@@ -170,3 +170,12 @@ pub async fn edit<TInternalServices: IInternalServices>(
         Err(GameServiceErr::Other(e)) => response_unhandled_err(e),
     }
 }
+
+pub async fn get_tags<TInternalServices: IInternalServices>(
+    State(state): InternalState<TInternalServices>,
+) -> Response {
+    match state.services.game.get_tags().await {
+        Ok(tags) => Json(HttpResponse { data: tags }).into_response(),
+        Err(GameServiceErr::Other(e)) => response_unhandled_err(e),
+    }
+}

@@ -13,6 +13,7 @@ use crate::{
         },
         responses::blog::BlogSummary,
     },
+    utils::clean_duplicate,
 };
 
 #[derive(Error, Debug)]
@@ -31,6 +32,7 @@ pub trait IBlogService {
     async fn get_by_id(&self, id: Uuid) -> Result<Option<Blog>, BlogServiceErr>;
     async fn delete(&self, id: Uuid) -> Result<(), BlogServiceErr>;
     async fn edit(&self, id: Uuid, comment: EditBlogRequest) -> Result<(), BlogServiceErr>;
+    async fn get_tags(&self) -> Result<Vec<Option<String>>, BlogServiceErr>;
 }
 
 pub struct BlogService<T: IDatabase> {
@@ -73,7 +75,7 @@ where
             blog.title,
             blog.description,
             blog.content,
-            blog.tags.as_deref()
+            &clean_duplicate(blog.tags)
         )
         .execute(self.db.get_pool())
         .await
@@ -110,5 +112,12 @@ where
         .await
         .map(|_| ())
         .map_err(|e| BlogServiceErr::Other(e.into()))
+    }
+
+    async fn get_tags(&self) -> Result<Vec<Option<String>>, BlogServiceErr> {
+        sqlx::query_scalar!("SELECT DISTINCT unnest(tags) AS tag FROM blogs")
+            .fetch_all(self.db.get_pool())
+            .await
+            .map_err(|e| BlogServiceErr::Other(e.into()))
     }
 }
