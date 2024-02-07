@@ -56,3 +56,8 @@ export const deleteDiscussionAction = (id: string) =>
   })
     .then(errHandler)
     .then((r: Response<undefined>) => r.data);
+
+export const fetchDiscussionCountAction = (gameId: string) =>
+  fetch(`${import.meta.env.VITE_SERVER_URL}/games/${gameId}/discussions/counts`)
+    .then(errHandler)
+    .then((r: Response<number | undefined>) => r.data);

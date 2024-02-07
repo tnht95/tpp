@@ -43,6 +43,7 @@ pub trait IDiscussionService {
     ) -> Result<(), DiscussionServiceErr>;
     async fn delete(&self, id: Uuid) -> Result<(), DiscussionServiceErr>;
     async fn existed(&self, id: Uuid, author_id: i64) -> Result<bool, DiscussionServiceErr>;
+    async fn count(&self, game_id: Uuid) -> Result<i64, DiscussionServiceErr>;
 }
 
 pub struct DiscussionService<T: IDatabase> {
@@ -157,6 +158,17 @@ where
         .fetch_one(self.db.get_pool())
         .await
         .map(|result| result.discussion_count.map(|c| c > 0).unwrap_or(false))
+        .map_err(|e| DiscussionServiceErr::Other(e.into()))
+    }
+
+    async fn count(&self, game_id: Uuid) -> Result<i64, DiscussionServiceErr> {
+        sqlx::query!(
+            "select count(*) as discussion_count from discussions where game_id = $1",
+            game_id,
+        )
+        .fetch_one(self.db.get_pool())
+        .await
+        .map(|result| result.discussion_count.unwrap_or_default())
         .map_err(|e| DiscussionServiceErr::Other(e.into()))
     }
 }

@@ -43,7 +43,7 @@ export const DiscussionDetails = () => {
   const { dispatch } = useToastCtx();
   const {
     utils: { getGameId },
-    discussion: { reset }
+    discussion: { reset, recount }
   } = useGameCtx();
   const navigate = useNavigate();
   const discussionId = useParams()['discussionId'] as string;
@@ -155,6 +155,7 @@ export const DiscussionDetails = () => {
     setIsEditMode(false);
     editDiscussionAction(discussionId, discussion)
       .then(refresh)
+      .then(reset)
       .catch((error: ResponseErr) =>
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       );
@@ -172,6 +173,7 @@ export const DiscussionDetails = () => {
         navigate(`/games/${getGameId()}/discussion`);
         return dispatch.showToast({ msg: 'Discussion Deleted', type: 'Ok' });
       })
+      .then(recount)
       .catch((error: ResponseErr) => {
         dispatch.showToast({ msg: error.msg, type: 'Err' });
       });

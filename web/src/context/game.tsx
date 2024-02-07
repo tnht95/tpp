@@ -12,7 +12,11 @@ import {
 } from 'solid-js';
 import { createStore, produce, SetStoreFunction } from 'solid-js/store';
 
-import { fetchDiscussionAction, fetchGameByIdAction } from '@/apis';
+import {
+  fetchDiscussionAction,
+  fetchDiscussionCountAction,
+  fetchGameByIdAction
+} from '@/apis';
 import { DiscussionSummary, Game } from '@/models';
 
 type GameContext = {
@@ -28,6 +32,10 @@ type GameContext = {
     setParam: Setter<[number, string]>;
     currentDataBatch: InitializedResource<DiscussionSummary[]>;
     reset: () => void;
+    count: Resource<number | undefined>;
+    recount: (
+      info?: unknown
+    ) => Promise<number | undefined> | number | undefined | null;
   };
   utils: {
     getGameId: () => string;
@@ -40,7 +48,10 @@ export const GameProvider = (props: ParentProps) => {
   const gameId = useParams()['id'] as string;
   const [gameData, { refetch }] = createResource(gameId, fetchGameByIdAction);
   const [param, setParam] = createSignal<[number, string]>([0, gameId]);
-
+  const [discussionCount, { refetch: recount }] = createResource(
+    gameId,
+    fetchDiscussionCountAction
+  );
   const [discussionResource] = createResource(
     () => param(),
     fetchDiscussionAction,
@@ -71,7 +82,9 @@ export const GameProvider = (props: ParentProps) => {
       setDiscussions: setDiscussions,
       setParam: setParam,
       currentDataBatch: discussionResource,
-      reset: resetDiscussion
+      reset: resetDiscussion,
+      count: discussionCount,
+      recount: recount
     },
     utils: {
       getGameId: () => gameId

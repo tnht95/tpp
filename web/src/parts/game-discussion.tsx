@@ -14,7 +14,7 @@ export const GameDiscussion = () => {
   } = useAuthCtx();
   const {
     utils: { getGameId },
-    discussion: { reset, currentDataBatch, setParam, data }
+    discussion: { reset, currentDataBatch, setParam, data, count, recount }
   } = useGameCtx();
   const { dispatch } = useToastCtx();
   const [modalRef, setModalRef] = createSignal<HTMLDivElement>();
@@ -27,13 +27,14 @@ export const GameDiscussion = () => {
   const batchSubmitHandler = () =>
     batch(() => {
       reset();
-      dispatch.showToast({ msg: 'Discussion Added', type: 'Ok' });
       modal()?.hide();
+      dispatch.showToast({ msg: 'Discussion Added', type: 'Ok' });
     });
 
   const onSubmitHandler = (discussion: DiscussionRequest) =>
     addDiscussionAction(discussion, getGameId())
       .then(batchSubmitHandler)
+      .then(recount)
       .catch((error: ResponseErr) =>
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
@@ -50,7 +51,7 @@ export const GameDiscussion = () => {
             <div class="overflow-hidden border border-gray-200 md:rounded-lg">
               <div class="min-w-full divide-y divide-gray-200">
                 <div class="flex items-center justify-between px-8 py-3.5 text-left text-base font-bold text-black rtl:text-right">
-                  <p class="text-lg">Total 2 discussions</p>
+                  <p class="text-lg">Total {count()} discussions</p>
                   <Show when={isAuth}>
                     <Button
                       withIcon="fa-solid fa-plus"

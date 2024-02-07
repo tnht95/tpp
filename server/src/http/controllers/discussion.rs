@@ -136,3 +136,18 @@ pub async fn delete<TInternalServices: IInternalServices>(
         Err(DiscussionServiceErr::Other(e)) => response_unhandled_err(e),
     }
 }
+
+pub async fn count<TInternalServices: IInternalServices>(
+    Path(game_id): Path<String>,
+    State(state): InternalState<TInternalServices>,
+) -> Response {
+    let game_id = match game_id.parse::<Uuid>() {
+        Ok(id) => id,
+        Err(_) => return response_400_with_const(INVALID_UUID_ERR),
+    };
+
+    match state.services.discussion.count(game_id).await {
+        Ok(count) => Json(HttpResponse { data: count }).into_response(),
+        Err(DiscussionServiceErr::Other(e)) => response_unhandled_err(e),
+    }
+}
