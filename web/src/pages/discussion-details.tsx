@@ -28,6 +28,7 @@ import {
   CommentForm,
   DiscussionForm,
   LoadingSpinner,
+  Markdown,
   OptionButton
 } from '@/components';
 import { useAuthCtx, useGameCtx, useToastCtx } from '@/context';
@@ -216,7 +217,7 @@ export const DiscussionDetails = () => {
               userId={discussion()?.userId as number}
             />
             <div class="ml-4 w-full rounded-lg border-2 border-dashed p-5">
-              {discussion()?.content}
+              <Markdown content={discussion()?.content as string} />
             </div>
           </div>
           <div class="my-9 flex flex-col gap-7">

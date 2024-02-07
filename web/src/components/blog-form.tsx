@@ -1,4 +1,4 @@
-import { createSignal, Ref, Show } from 'solid-js';
+import { createEffect, createSignal, Ref, Show } from 'solid-js';
 
 import { Markdown, PreviewButtonGroup } from '@/components';
 import { Blog, BlogRequest } from '@/models';
@@ -20,11 +20,9 @@ export const BlogForm = (props: BlogFormProps) => {
   const [content, setContent] = createSignal('');
   const { validate, submit, errors } = useForm({ errClass: 'border-red-600' });
 
-  const displayMarkdown = (
-    <div class="h-60 overflow-auto border border-white p-3">
-      <Markdown content={content()} />
-    </div>
-  );
+  createEffect(() => {
+    setContent(props.blog?.content ?? '');
+  });
 
   const handleClick = () => {
     setIsEditMode(mode => !mode);
@@ -76,6 +74,7 @@ export const BlogForm = (props: BlogFormProps) => {
                 ]}
               />
               {errors['title'] && <ErrorMessage msg={errors['title']} />}
+
               <textarea
                 class="rounded-xl border border-gray-300 p-3 outline-none placeholder:text-gray-400"
                 placeholder="Describe shortly about this post here"
@@ -88,6 +87,7 @@ export const BlogForm = (props: BlogFormProps) => {
               {errors['description'] && (
                 <ErrorMessage msg={errors['description']} />
               )}
+
               <input
                 placeholder="Blog tags: separate each tag with a comma"
                 class="w-full rounded-xl border p-3 placeholder:text-gray-400"
@@ -96,19 +96,26 @@ export const BlogForm = (props: BlogFormProps) => {
                 ref={el => [validate(el, () => [validateTags])]}
               />
               {errors['tags'] && <ErrorMessage msg={errors['tags']} />}
-              <Show when={isEditMode()} fallback={displayMarkdown}>
-                <textarea
-                  class="h-60 rounded-xl border border-gray-300 p-3 outline-none placeholder:text-gray-400"
-                  placeholder="Describe everything about this post here (Support some markdowns)"
-                  onFocusOut={e => setContent(e.target.value)}
-                  name="content"
-                  value={props.blog?.content || content()}
-                  ref={el => [
-                    validate(el, () => [MinStr(1, 'Required'), MaxStr(2000)])
-                  ]}
-                />
-                {errors['content'] && <ErrorMessage msg={errors['content']} />}
+
+              <textarea
+                class="h-60 rounded-xl border border-gray-300 p-3 outline-none placeholder:text-gray-400"
+                classList={{ hidden: !isEditMode() }}
+                placeholder="Describe everything about this post here (Support some markdowns)"
+                onFocusOut={e => setContent(e.target.value)}
+                name="content"
+                value={props.blog?.content || content()}
+                ref={el => [
+                  validate(el, () => [MinStr(1, 'Required'), MaxStr(2000)])
+                ]}
+              />
+              {errors['content'] && <ErrorMessage msg={errors['content']} />}
+
+              <Show when={!isEditMode()}>
+                <div class="h-60 overflow-auto border border-white p-3">
+                  <Markdown content={content()} />
+                </div>
               </Show>
+
               <div class="mb-10">
                 <PreviewButtonGroup
                   isEditMode={isEditMode()}

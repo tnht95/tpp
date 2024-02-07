@@ -1,4 +1,4 @@
-import { createSignal, Ref, Show } from 'solid-js';
+import { createEffect, createSignal, Ref, Show } from 'solid-js';
 
 import { Markdown, PreviewButtonGroup } from '@/components';
 import { Game, GameRequest } from '@/models';
@@ -26,15 +26,12 @@ const ErrorMessage = (props: { msg: string }) => (
 export const GameForm = (props: GameFormProps) => {
   const [isEditMode, setIsEditMode] = createSignal(true);
   const [isFileUploaderVisible, setIsFileUploaderVisible] = createSignal(false);
-  // eslint-disable-next-line solid/reactivity
-  const [content, setContent] = createSignal(props.game?.info || '');
+  const [content, setContent] = createSignal('');
   const { validate, submit, errors } = useForm({ errClass: 'border-red-600' });
 
-  const displayMarkdown = (
-    <div class="h-60 overflow-auto border border-white px-3 py-2">
-      <Markdown content={content()} />
-    </div>
-  );
+  createEffect(() => {
+    setContent(props.game?.info ?? '');
+  });
 
   const togglePreviewHandler = () => {
     setIsEditMode(mode => !mode);
@@ -42,6 +39,7 @@ export const GameForm = (props: GameFormProps) => {
 
   const onSubmitHandler = (formEl: HTMLFormElement) => {
     const formData = new FormData(formEl);
+    debugger;
     props.onSubmitHandler(formData.get('rom') as File, {
       name: formData.get('name') as string,
       url: getStrVal(formData.get('url') as string),
@@ -50,6 +48,7 @@ export const GameForm = (props: GameFormProps) => {
       info: getStrVal(formData.get('info') as string),
       tags: getTagValue(formData.get('tags') as string)
     });
+
     formEl.reset();
   };
 
@@ -87,6 +86,7 @@ export const GameForm = (props: GameFormProps) => {
                 name="name"
               />
               {errors['name'] && <ErrorMessage msg={errors['name']} />}
+
               <input
                 placeholder="Game url"
                 class="w-full rounded-xl border p-3 placeholder:text-gray-400"
@@ -95,6 +95,7 @@ export const GameForm = (props: GameFormProps) => {
                 ref={el => [validate(el, () => [MaxStr(255)])]}
               />
               {errors['url'] && <ErrorMessage msg={errors['url']} />}
+
               <input
                 placeholder="Game avatar url"
                 class="w-full rounded-xl border p-3 placeholder:text-gray-400"
@@ -105,6 +106,7 @@ export const GameForm = (props: GameFormProps) => {
               {errors['avatarUrl'] && (
                 <ErrorMessage msg={errors['avatarUrl']} />
               )}
+
               <input
                 placeholder="Game tags: separate each tag with a comma"
                 class="w-full rounded-xl border p-3 placeholder:text-gray-400"
@@ -113,6 +115,7 @@ export const GameForm = (props: GameFormProps) => {
                 ref={el => [validate(el, () => [validateTags])]}
               />
               {errors['tags'] && <ErrorMessage msg={errors['tags']} />}
+
               <textarea
                 name="about"
                 rows="4"
@@ -122,18 +125,25 @@ export const GameForm = (props: GameFormProps) => {
                 ref={el => [validate(el, () => [MaxStr(255)])]}
               />
               {errors['about'] && <ErrorMessage msg={errors['about']} />}
-              <Show when={isEditMode()} fallback={displayMarkdown}>
-                <textarea
-                  name="info"
-                  rows="4"
-                  class="h-60 w-full resize-none rounded-xl border border-gray-200 py-2 transition duration-150 ease-in-out placeholder:text-gray-400 focus:border-blue-500 focus:outline-none"
-                  placeholder="Game discription (Support some markdowns)"
-                  onFocusOut={e => setContent(e.target.value)}
-                  value={content()}
-                  ref={el => [validate(el, () => [MaxStr(2000)])]}
-                />
-                {errors['info'] && <ErrorMessage msg={errors['info']} />}
+
+              <textarea
+                name="info"
+                rows="4"
+                class="h-60 w-full resize-none rounded-xl border border-gray-200 py-2 transition duration-150 ease-in-out placeholder:text-gray-400 focus:border-blue-500 focus:outline-none"
+                classList={{ hidden: !isEditMode() }}
+                placeholder="Game discription (Support some markdowns)"
+                onFocusOut={e => setContent(e.target.value)}
+                value={content()}
+                ref={el => [validate(el, () => [MaxStr(2000)])]}
+              />
+              {errors['info'] && <ErrorMessage msg={errors['info']} />}
+
+              <Show when={!isEditMode()}>
+                <div class="h-60 overflow-auto border border-white px-3 py-2">
+                  <Markdown content={content()} />
+                </div>
               </Show>
+
               <Show when={props.game}>
                 <div class="flex items-center gap-1">
                   <i class="fa-regular fa-file-lines" />

@@ -1,3 +1,4 @@
+import { Markdown } from '@/components';
 import { useGameCtx } from '@/context';
 
 export const GameInfo = () => {
@@ -7,7 +8,7 @@ export const GameInfo = () => {
 
   return (
     <div class="border-b py-6 md:rounded-lg md:border md:px-8">
-      {data()?.info}
+      <Markdown content={data()?.info as string} />
     </div>
   );
 };

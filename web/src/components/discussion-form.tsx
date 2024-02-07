@@ -1,4 +1,4 @@
-import { createSignal, Ref, Show } from 'solid-js';
+import { createEffect, createSignal, Ref, Show } from 'solid-js';
 
 import { Markdown, PreviewButtonGroup } from '@/components';
 import { DiscussionDetails, DiscussionRequest } from '@/models';
@@ -20,12 +20,9 @@ export const DiscussionForm = (props: DiscussionFormProps) => {
   const [content, setContent] = createSignal('');
   const { validate, submit, errors } = useForm({ errClass: 'border-red-600' });
 
-  const displayMarkdown = (
-    <div class="h-60 overflow-auto border border-white p-3">
-      <Markdown content={content()} />
-    </div>
-  );
-
+  createEffect(() => {
+    setContent(props.discussion?.content ?? '');
+  });
   const handleClick = () => {
     setIsEditMode(mode => !mode);
   };
@@ -75,18 +72,24 @@ export const DiscussionForm = (props: DiscussionFormProps) => {
                 ]}
               />
               {errors['title'] && <ErrorMessage msg={errors['title']} />}
-              <Show when={isEditMode()} fallback={displayMarkdown}>
-                <textarea
-                  class="h-60 rounded-xl border border-gray-300 p-3 outline-none placeholder:text-gray-400"
-                  placeholder="What do you want to discuss about? (Support some markdowns)"
-                  onFocusOut={e => setContent(e.target.value)}
-                  value={props.discussion?.content || content()}
-                  name="content"
-                  ref={el => [
-                    validate(el, () => [MinStr(1, 'Required'), MaxStr(1000)])
-                  ]}
-                />
-                {errors['content'] && <ErrorMessage msg={errors['content']} />}
+
+              <textarea
+                class="h-60 rounded-xl border border-gray-300 p-3 outline-none placeholder:text-gray-400"
+                classList={{ hidden: !isEditMode() }}
+                placeholder="What do you want to discuss about? (Support some markdowns)"
+                onFocusOut={e => setContent(e.target.value)}
+                value={props.discussion?.content || content()}
+                name="content"
+                ref={el => [
+                  validate(el, () => [MinStr(1, 'Required'), MaxStr(1000)])
+                ]}
+              />
+              {errors['content'] && <ErrorMessage msg={errors['content']} />}
+
+              <Show when={!isEditMode()}>
+                <div class="h-60 overflow-auto border border-white p-3">
+                  <Markdown content={content()} />
+                </div>
               </Show>
               <div class="mb-5">
                 <PreviewButtonGroup
