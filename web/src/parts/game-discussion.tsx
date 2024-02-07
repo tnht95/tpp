@@ -27,6 +27,7 @@ export const GameDiscussion = () => {
   const batchSubmitHandler = () =>
     batch(() => {
       reset();
+      dispatch.showToast({ msg: 'Discussion Added', type: 'Ok' });
       modal()?.hide();
     });
 

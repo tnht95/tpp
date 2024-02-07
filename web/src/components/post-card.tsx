@@ -86,6 +86,7 @@ export const PostCard = (props: PostCardProps) => {
     })
       .then(newCmt =>
         batch(() => {
+          dispatch.showToast({ msg: 'Comment Added', type: 'Ok' });
           setComments(produce(c => c.unshift(newCmt)));
           addedCmts.push(newCmt);
         })
@@ -122,6 +123,7 @@ export const PostCard = (props: PostCardProps) => {
         offset: 0,
         limit: 5
       });
+      dispatch.showToast({ msg: 'Comment Deleted', type: 'Ok' });
     });
 
   const onDeleteCmtHandler = (commentId: string) =>

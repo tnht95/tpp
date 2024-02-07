@@ -39,7 +39,6 @@ export const GameForm = (props: GameFormProps) => {
 
   const onSubmitHandler = (formEl: HTMLFormElement) => {
     const formData = new FormData(formEl);
-    debugger;
     props.onSubmitHandler(formData.get('rom') as File, {
       name: formData.get('name') as string,
       url: getStrVal(formData.get('url') as string),

@@ -76,6 +76,7 @@ export const Dashboard = () => {
   const onSubmitHandler = (content: string) =>
     addPostAction({ content })
       .then(resetPosts)
+      .then(() => dispatch.showToast({ msg: 'Post Added', type: 'Ok' }))
       .catch((error: ResponseErr) =>
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
@@ -83,6 +84,7 @@ export const Dashboard = () => {
   const onDeleteHandler = (postId: string) =>
     deletePostAction(postId)
       .then(resetPosts)
+      .then(() => dispatch.showToast({ msg: 'Post Deleted', type: 'Ok' }))
       .catch((error: ResponseErr) =>
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;

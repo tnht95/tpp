@@ -15,10 +15,6 @@ import { LIMIT, OFFSET } from '@/constant';
 import { useAuthCtx, useToastCtx } from '@/context';
 import { BlogRequest, BlogSummary, ResponseErr } from '@/models';
 
-const nothingMoreToShow = (
-  <div class="mb-8 text-center text-gray-400">--- Nothing more to show ---</div>
-);
-
 export const Blogs = () => {
   const {
     utils: { isAdmin }
@@ -46,6 +42,7 @@ export const Blogs = () => {
   const resetBlogs = () =>
     batch(() => {
       setBlogs([]);
+      dispatch.showToast({ msg: 'Blog Added', type: 'Ok' });
       if (currentOffset() === 0) refetch() as unknown;
       else setCurrentOffset(0);
       modal()?.hide();
@@ -90,9 +87,6 @@ export const Blogs = () => {
         <For each={blogs}>{blog => <BlogCard blog={blog} />}</For>
         <Show when={blogResource().length === LIMIT}>
           <ShowMoreButton vertical onClick={handleGetMore} />
-        </Show>
-        <Show when={currentOffset() > 0 && blogResource().length < LIMIT}>
-          {nothingMoreToShow}
         </Show>
       </div>
     </div>

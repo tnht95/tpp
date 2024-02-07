@@ -9,8 +9,8 @@ import {
 } from 'solid-js';
 import { createStore, produce } from 'solid-js/store';
 
-import { addGameAction, fetchGameAction } from '@/apis';
-import { Button, GameCard, GameForm } from '@/components';
+import { addGameAction, fetchGameAction, GameQueryInput } from '@/apis';
+import { Button, GameCard, GameForm, ShowMoreButton } from '@/components';
 import { useAuthCtx, useToastCtx } from '@/context';
 import { GameRequest, GameSummary, ResponseErr } from '@/models';
 
@@ -18,13 +18,23 @@ type UserGamesProps = {
   userId: number;
 };
 
+const gameUserLimit = 9;
 export const UserGames = (props: UserGamesProps) => {
   const {
     utils: { isSameUser }
   } = useAuthCtx();
+  const defaultParam: GameQueryInput = {
+    // eslint-disable-next-line solid/reactivity
+    authorId: props.userId,
+    offset: 0,
+    limit: gameUserLimit,
+    orderBy: 'desc',
+    orderField: 'createdAt'
+  };
+
   const { dispatch } = useToastCtx();
-  const [userId] = createSignal({ authorId: props.userId });
-  const [gameResource, { refetch }] = createResource(userId, fetchGameAction, {
+  const [param, setParam] = createSignal(defaultParam);
+  const [gameResource, { refetch }] = createResource(param, fetchGameAction, {
     initialValue: []
   });
   const [games, setGames] = createStore<GameSummary[]>([]);
@@ -32,9 +42,18 @@ export const UserGames = (props: UserGamesProps) => {
   const [modalRef, setModalRef] = createSignal<HTMLDivElement>();
   const [modal, setModal] = createSignal<Modal>();
 
+  createEffect(() => {
+    setModal(new Modal(modalRef()));
+    if (gameResource().length > 0) {
+      setGames(produce(oldGames => oldGames.push(...gameResource())));
+    }
+  });
+
   const batchSubmitHandler = () =>
     batch(() => {
+      dispatch.showToast({ msg: 'Game Added', type: 'Ok' });
       setGames([]);
+      setParam(defaultParam);
       modal()?.hide();
       return refetch();
     });
@@ -46,12 +65,12 @@ export const UserGames = (props: UserGamesProps) => {
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
 
-  createEffect(() => {
-    setModal(new Modal(modalRef()));
-    if (gameResource().length > 0) {
-      setGames(produce(oldGames => oldGames.push(...gameResource())));
-    }
-  });
+  const onShowMoreHandler = () => {
+    setParam(oldValue => ({
+      ...oldValue,
+      offset: (oldValue.offset as number) + gameUserLimit
+    }));
+  };
 
   return (
     <div class="rounded-xl border bg-white px-8 pb-10 pt-3">
@@ -76,17 +95,20 @@ export const UserGames = (props: UserGamesProps) => {
           onSubmitHandler={onSubmitHandler}
         />
       </div>
-      <div class="flex flex-wrap items-center gap-7">
-        <Show when={games.length > 0} fallback={nothingMoreToShow}>
+      <div class="flex flex-wrap items-stretch gap-7">
+        <Show when={games.length > 0} fallback={nothingToShow}>
           <For each={games}>{game => <GameCard game={game} />}</For>
+          <Show when={gameResource().length === gameUserLimit}>
+            <ShowMoreButton onClick={onShowMoreHandler} />
+          </Show>
         </Show>
       </div>
     </div>
   );
 };
 
-const nothingMoreToShow = (
+const nothingToShow = (
   <div class="flex w-full justify-center p-7 text-gray-300">
-    <div>--- Nothing more to show ---</div>
+    <div>--- Nothing to show ---</div>
   </div>
 );

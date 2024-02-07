@@ -14,10 +14,6 @@ import { LIMIT, OFFSET } from '@/constant';
 import { GameSummary } from '@/models';
 import { TagSidebar } from '@/parts';
 
-const nothingMoreToShow = (
-  <div class="flex w-40 items-center text-gray-400">Nothing more to show</div>
-);
-
 export const Games = () => {
   const [selectValue, setSelectValue] = createSignal<GameQueryInput>({
     offset: 0,
@@ -107,14 +103,6 @@ export const Games = () => {
               <For each={games}>{game => <GameCard game={game} />}</For>
               <Show when={gameResource().length === LIMIT}>
                 <ShowMoreButton onClick={onShowMoreHandler} />
-              </Show>
-              <Show
-                when={
-                  (selectValue().offset as number) > 0 &&
-                  gameResource().length < LIMIT
-                }
-              >
-                {nothingMoreToShow}
               </Show>
             </div>
           </div>

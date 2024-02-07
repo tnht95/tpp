@@ -76,7 +76,7 @@ export const UserDetails = () => {
               <div />
             </div>
             <div class="ml-14 mt-6 flex w-3/4 flex-col gap-10">
-              <Show when={user()}>
+              <Show when={user.state === 'ready'}>
                 <UserGames userId={user()?.id as number} />
                 <UserActivity />
               </Show>
