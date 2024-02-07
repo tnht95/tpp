@@ -5,7 +5,7 @@ type EllipsisTextProps = {
 };
 
 export const EllipsisText = (props: EllipsisTextProps) => (
-  <p class={`truncate ${props.maxWidth} ${props.customStyle}`}>
+  <p class={`truncate ${props.maxWidth} ${props.customStyle} px-4`}>
     {props.children}
   </p>
 );

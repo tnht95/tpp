@@ -17,9 +17,11 @@ export const Searchbar = () => {
   const onSubmitHandler = (e: Event) => {
     e.preventDefault();
     if (searchContent()) {
-      navigate(
-        `/search?keyword=${searchContent()}&category=${searchCategory()}`
-      );
+      let url = `/search?keyword=${searchContent()}`;
+      if (searchCategory()) {
+        url = `${url}&category=${searchCategory()}`;
+      }
+      navigate(url);
       (e.target as HTMLFormElement).reset();
     }
   };

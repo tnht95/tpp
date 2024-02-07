@@ -7,3 +7,9 @@ export type User = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type UserSummary = {
+  id: number;
+  name: string;
+  avatar: string;
+};
