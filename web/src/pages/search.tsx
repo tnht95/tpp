@@ -19,6 +19,7 @@ import {
   ShowMoreButton,
   UserCard
 } from '@/components';
+import { PAGINATION } from '@/constant';
 import { useToastCtx } from '@/context';
 import {
   BlogSummary,
@@ -27,7 +28,6 @@ import {
   SearchResult,
   UserSummary
 } from '@/models';
-import { PAGINATION } from '@/constant';
 
 const nothingToShow = () => (
   <p class="text-center text-lg text-gray-400">-- Nothing to show --</p>
@@ -131,7 +131,7 @@ export const Search = () => {
   return (
     <div class="flex">
       <nav class="flex-2" />
-      <main class="flex flex-col gap-7 py-10 flex-3 border-x border-dashed px-32">
+      <main class="flex flex-3 flex-col gap-7 border-x border-dashed px-32 py-10">
         <p class="text-2xl font-bold text-indigo-900">
           Results for "{searchParams['keyword']}":
         </p>

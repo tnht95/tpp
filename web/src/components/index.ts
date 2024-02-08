@@ -1,7 +1,5 @@
-export * from './header';
 export * from './game-card';
 export * from './tag';
-export * from './search-bar';
 export * from './button';
 export * from './table-row';
 export * from './activity';
@@ -23,6 +21,5 @@ export * from './show-more-button';
 export * from './markdown';
 export * from './option-button';
 export * from './preview-button-group';
-export * from './loading-button';
 export * from './loading-spinner';
 export * from './toast';

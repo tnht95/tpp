@@ -1,22 +1,54 @@
-import { createSignal } from 'solid-js';
+import { createSignal, Show, Suspense } from 'solid-js';
+
+import { useAuthCtx } from '@/context';
+
+import { UserMenuGroup } from './user-menu-group';
+
+export const SignIn = () => {
+  const { utils } = useAuthCtx();
+  return (
+    <div class="flex flex-1 justify-end">
+      <Suspense fallback={loadingBtn}>
+        <Show
+          when={utils.isAuth()}
+          fallback={
+            <Btn url={import.meta.env.VITE_GITHUB_SIGNIN_URL} title="Sign In" />
+          }
+        >
+          <UserMenuGroup />
+        </Show>
+      </Suspense>
+    </div>
+  );
+};
 
 type LoadingButtonProps = {
   title: string;
   url: string;
 };
 
-export const LoadingButton = (props: LoadingButtonProps) => {
+const Btn = (props: LoadingButtonProps) => {
   const [isClick, setIsClick] = createSignal(false);
+  const btn = (
+    <button onClick={() => setIsClick(true)}>
+      <a
+        href={props.url}
+        class="flex h-11 items-center rounded-full border border-white px-8 font-bold hover:bg-white hover:text-indigo-900"
+      >
+        {props.title}
+      </a>
+    </button>
+  );
+  return <>{isClick() ? loadingBtn : btn}</>;
+};
 
-  const loadingBtn = (
-    <button
-      type="button"
-      class="mr-12 flex h-11 cursor-not-allowed items-center rounded-full border border-white px-8 font-bold"
-    >
+const loadingBtn = (
+  <button>
+    <div class="flex h-11 items-center rounded-full border border-white px-8 font-bold">
       <svg
         aria-hidden="true"
         role="status"
-        class="me-3 inline size-4 animate-spin text-white"
+        class="me-3 inline size-4 animate-spin items-center text-white"
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -31,19 +63,6 @@ export const LoadingButton = (props: LoadingButtonProps) => {
         />
       </svg>
       Loading...
-    </button>
-  );
-
-  const btn = (
-    <button onClick={() => setIsClick(true)}>
-      <a
-        href={props.url}
-        class="mr-12  flex h-11 items-center rounded-full border border-white px-8 font-bold hover:bg-white hover:text-indigo-900"
-      >
-        {props.title}
-      </a>
-    </button>
-  );
-
-  return <>{isClick() ? loadingBtn : btn}</>;
-};
+    </div>
+  </button>
+);

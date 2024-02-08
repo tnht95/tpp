@@ -27,14 +27,8 @@ export const Searchbar = () => {
   };
 
   return (
-    <form onSubmit={onSubmitHandler} class="w-3/5">
-      <div class="flex">
-        <label
-          for="search-dropdown"
-          class="sr-only mb-2 text-sm font-medium text-gray-900"
-        >
-          Your Email
-        </label>
+    <form onSubmit={onSubmitHandler} class="flex w-1/2">
+      <div class="flex w-full items-center">
         <button
           class="z-10 inline-flex w-40 shrink-0 items-center justify-between rounded-s-lg border border-white bg-indigo-900 px-4 py-2.5 text-center text-sm font-medium capitalize text-white hover:border-r-indigo-900 hover:bg-white hover:text-indigo-900 focus:outline-none"
           type="button"
@@ -112,8 +106,8 @@ export const Searchbar = () => {
         </div>
         <div class="relative w-full">
           <input
-            class="z-20 block w-full rounded-e-lg border border-s-2 border-gray-300 border-s-gray-50 bg-gray-50 p-2.5 text-sm text-gray-900"
-            placeholder="Search Games, Blogs, Posts, Users..."
+            class="z-20 block w-3/5 rounded-e-lg border border-s-2 border-gray-300 border-s-gray-50 bg-gray-50 p-2.5 text-sm text-gray-900"
+            placeholder="Search Games, Users, Posts, Blogs..."
             onInput={e => setSearchContent(e.target.value.trim())}
             value={searchContent()}
             name="searchContent"

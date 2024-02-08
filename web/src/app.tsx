@@ -1,8 +1,7 @@
 import { Route, Router } from '@solidjs/router';
 import { ParentProps } from 'solid-js';
 
-import { Header } from '@/components';
-import { GameActivity, GameDiscussion, GameInfo } from '@/parts';
+import { GameActivity, GameDiscussion, GameInfo, Header } from '@/parts';
 
 import {
   BlogDetails,
