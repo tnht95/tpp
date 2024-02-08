@@ -25,7 +25,6 @@ impl From<Pagination> for PaginationInternal {
         Self {
             offset: match pagination.offset.unwrap_or(0) {
                 offset if offset < 0 => 0,
-                offset if offset > 20 => 20,
                 offset => offset,
             },
             limit: match pagination.limit.unwrap_or(20) {
@@ -55,7 +54,6 @@ impl From<PaginationWithTarget> for PaginationWithTargetInternal {
             target_id: pagination.target_id,
             offset: match pagination.offset.unwrap_or(0) {
                 offset if offset < 0 => 0,
-                offset if offset > 20 => 20,
                 offset => offset,
             },
             limit: match pagination.limit.unwrap_or(20) {

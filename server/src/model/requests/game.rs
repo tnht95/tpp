@@ -89,7 +89,6 @@ impl From<GamePagination> for GamePaginationInternal {
             order_by: pagination.order_by.unwrap_or(OrderBy::Asc),
             offset: match pagination.offset.unwrap_or(0) {
                 offset if offset < 0 => 0,
-                offset if offset > 20 => 20,
                 offset => offset,
             },
             limit: match pagination.limit.unwrap_or(20) {

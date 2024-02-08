@@ -33,7 +33,6 @@ impl From<SearchPagination> for SearchPaginationInternal {
             category: pagination.category,
             offset: match pagination.offset.unwrap_or(0) {
                 offset if offset < 0 => 0,
-                offset if offset > 20 => 20,
                 offset => offset,
             },
             limit: match pagination.limit.unwrap_or(20) {
