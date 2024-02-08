@@ -49,13 +49,13 @@ impl std::fmt::Display for OrderBy {
 pub enum OrderField {
     CreatedAt,
     Name,
-    Stars,
+    Votes,
 }
 impl fmt::Display for OrderField {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             OrderField::CreatedAt => write!(f, "created_at"),
-            OrderField::Stars => write!(f, "stars"),
+            OrderField::Votes => write!(f, "up_votes"),
             OrderField::Name => write!(f, "name"),
         }
     }
