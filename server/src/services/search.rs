@@ -65,7 +65,7 @@ where
                     GameSummary,
                     "select id, name, author_id, author_name, avatar_url, up_votes, down_votes
                     from games
-                    where name like $1
+                    where name ilike $1
                     order by created_at desc offset $2 limit $3",
                     format!("%{}%", pagination.keyword),
                     pagination.offset,
@@ -99,7 +99,7 @@ where
                     UserSummary,
                     "select id, name, avatar
                     from users
-                    where name like $1
+                    where name ilike $1
                     order by created_at desc offset $2 limit $3",
                     format!("%{}%", pagination.keyword),
                     pagination.offset,
@@ -142,7 +142,7 @@ where
                         posts.created_at
                     from posts
                     left join users on users.id = posts.author_id
-                    where content like $1
+                    where content ilike $1
                     order by posts.created_at desc offset $2 limit $3",
                     format!("%{}%", pagination.keyword),
                     pagination.offset,
@@ -178,9 +178,9 @@ where
                         id, title, description, tags, created_at
                     from blogs
                     where
-                        title like $1 or
-                        description like $1 or
-                        content like $1
+                        title ilike $1 or
+                        description ilike $1 or
+                        content ilike $1
                     order by created_at desc offset $2 limit $3",
                     format!("%{}%", pagination.keyword),
                     pagination.offset,
