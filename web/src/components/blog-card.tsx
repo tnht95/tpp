@@ -9,7 +9,7 @@ type BlogPostProps = {
 };
 
 export const BlogCard = (props: BlogPostProps) => (
-  <div class="my-2 rounded-xl border bg-white px-10 py-6">
+  <div class="flex flex-col gap-3 rounded-xl border bg-white px-10 py-6">
     <div class="flex items-center justify-between">
       <span class="font-light text-gray-600">
         {formatTime(props.blog.createdAt)}
@@ -20,20 +20,15 @@ export const BlogCard = (props: BlogPostProps) => (
         </div>
       </Show>
     </div>
-    <div class="mt-2">
-      <a
-        class="text-2xl font-bold text-gray-700 hover:text-gray-600"
-        href={`/blogs/${props.blog.id}`}
-      >
-        {props.blog.title}
-      </a>
-      <p class="mt-2 text-gray-600">{props.blog.description}</p>
-    </div>
-    <div class="mt-4 flex items-center justify-between">
-      <a class="text-blue-600 hover:underline" href={`/blogs/${props.blog.id}`}>
-        Read more
-      </a>
-      <div />
-    </div>
+    <a
+      class="text-2xl font-bold text-gray-700 hover:text-gray-600"
+      href={`/blogs/${props.blog.id}`}
+    >
+      {props.blog.title}
+    </a>
+    <p class="text-gray-600">{props.blog.description}</p>
+    <a class="text-blue-600 hover:underline" href={`/blogs/${props.blog.id}`}>
+      Read more
+    </a>
   </div>
 );

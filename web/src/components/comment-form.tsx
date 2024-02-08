@@ -45,7 +45,7 @@ export const CommentForm = (props: CommentFormProps) => {
 
   return (
     <form
-      class="w-full rounded-lg border bg-white px-7 py-4"
+      class="w-full rounded-lg border bg-white px-7 py-5"
       onSubmit={onSubmitHandler}
     >
       <div class="flex flex-col gap-4">

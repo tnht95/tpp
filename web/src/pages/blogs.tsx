@@ -62,9 +62,9 @@ export const Blogs = () => {
   };
 
   return (
-    <div class="mt-10 flex justify-between">
-      <div class="ml-10  w-4/6">
-        <div class="flex items-center justify-between">
+    <div class="flex justify-between p-10">
+      <div class="flex w-4/6 flex-col gap-5">
+        <div class="flex justify-between gap-5">
           <p class="text-4xl font-bold">Blogs</p>
           {isAdmin() && (
             <button
@@ -86,14 +86,14 @@ export const Blogs = () => {
             onSubmitHandler={onSubmitHandler}
           />
         </div>
-        <div class="mt-5 flex flex-col gap-5">
+        <div class="flex flex-col gap-5">
           <For each={blogs}>{blog => <BlogCard blog={blog} />}</For>
           <Show when={blogResource().length === PAGINATION}>
             <ShowMoreButton vertical onClick={handleGetMore} />
           </Show>
         </div>
       </div>
-      <div class="mr-36 w-1/6">
+      <div class="w-1/6">
         <TagSidebar tags={tagResource() as string[]} />
       </div>
     </div>
