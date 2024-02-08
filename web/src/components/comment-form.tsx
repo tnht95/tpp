@@ -1,4 +1,4 @@
-import { createSignal, Show } from 'solid-js';
+import { createEffect, createSignal, Show } from 'solid-js';
 import { ParentProps } from 'solid-js/types/render/component';
 
 import { PreviewButtonGroup } from '@/components';
@@ -26,8 +26,7 @@ const checkErr = (content: string): string => {
 };
 
 export const CommentForm = (props: CommentFormProps) => {
-  // eslint-disable-next-line solid/reactivity
-  const [content, setContent] = createSignal(props.content || '');
+  const [content, setContent] = createSignal('');
   const [isEditMode, setIsEditMode] = createSignal(true);
   const [errMsg, setErrMsg] = createSignal('');
 
@@ -40,21 +39,21 @@ export const CommentForm = (props: CommentFormProps) => {
     }
   };
 
+  createEffect(() => {
+    setContent(props.content || '');
+  });
+
   return (
     <form
-      class="w-full rounded-lg border bg-white px-4 pt-2"
+      class="w-full rounded-lg border bg-white px-7 py-4"
       onSubmit={onSubmitHandler}
     >
-      <div class="-mx-3 mb-6 flex flex-wrap">
-        <div>
-          <h2 class="px-4 pb-2 pt-3 text-xl font-bold text-gray-800">
-            {props.children}
-          </h2>
-        </div>
-        <div class="my-2 w-full px-3 md:w-full">
+      <div class="flex flex-col gap-4">
+        <h2 class="text-xl font-bold text-gray-800">{props.children}</h2>
+        <div class="flex flex-1 flex-col gap-4">
           <Show when={isEditMode()} fallback={displayMarkdown(content())}>
             <textarea
-              class="h-20 w-full resize-none rounded border border-gray-100 bg-gray-100 px-3 py-2 leading-normal placeholder:text-gray-400 focus:border-gray-300 focus:bg-white focus:outline-none"
+              class="h-20 w-full resize-none rounded border border-gray-100 bg-gray-100 leading-normal placeholder:text-gray-400 focus:border-gray-300 focus:bg-white focus:outline-none"
               classList={{ 'border-red-600': !!errMsg() }}
               name="body"
               placeholder="Type Your Comment (Support some markdowns)"
@@ -63,15 +62,15 @@ export const CommentForm = (props: CommentFormProps) => {
               value={content()}
             />
           </Show>
-          <Show when={errMsg()}>
-            <p class="text-red-600">{errMsg()}</p>
-          </Show>
-          <div class="mt-2">
-            <PreviewButtonGroup
-              isEditMode={isEditMode()}
-              onPreviewHandler={() => setIsEditMode(mode => !mode)}
-            />
+          <div class="h-4">
+            <Show when={errMsg()}>
+              <p class="text-red-600">{errMsg()}</p>
+            </Show>
           </div>
+          <PreviewButtonGroup
+            isEditMode={isEditMode()}
+            onPreviewHandler={() => setIsEditMode(mode => !mode)}
+          />
         </div>
       </div>
     </form>

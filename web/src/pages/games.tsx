@@ -57,7 +57,7 @@ export const Games = () => {
   };
 
   return (
-    <div class="flex justify-between p-10">
+    <div class="flex p-10">
       <div class="flex w-4/5 flex-col gap-10">
         <div class="flex flex-col gap-7">
           <p class="text-2xl font-bold text-indigo-900">
