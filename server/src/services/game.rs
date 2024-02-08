@@ -42,7 +42,6 @@ pub trait IGameService {
         rom_bytes: Option<&[u8]>,
         game_id: Uuid,
     ) -> Result<(), GameServiceErr>;
-
     async fn get_tags(&self) -> Result<Vec<Option<String>>, GameServiceErr>;
 }
 
