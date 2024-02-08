@@ -1,11 +1,11 @@
-import { LIMIT } from '@/constant';
+import { PAGINATION } from '@/constant';
 import { AddPost, EditPost, PostDetails, Response } from '@/models';
 
 import { errHandler } from '.';
 
 export const fetchPostAction = async (offset: number) => {
   const baseUrl = import.meta.env.VITE_SERVER_URL;
-  return fetch(`${baseUrl}/posts?offset=${offset}&limit=${LIMIT}`)
+  return fetch(`${baseUrl}/posts?offset=${offset}&limit=${PAGINATION}`)
     .then(errHandler)
     .then((r: Response<PostDetails[]>) => r.data);
 };

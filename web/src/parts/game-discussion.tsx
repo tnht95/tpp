@@ -3,7 +3,7 @@ import { batch, createEffect, createSignal, For, Show } from 'solid-js';
 
 import { addDiscussionAction } from '@/apis';
 import { Button, DiscussionForm, ShowMoreButton, TableRow } from '@/components';
-import { LIMIT, OFFSET } from '@/constant';
+import { PAGINATION } from '@/constant';
 import { useAuthCtx, useGameCtx, useToastCtx } from '@/context';
 import { DiscussionRequest, ResponseErr } from '@/models';
 import { formatTime } from '@/utils';
@@ -40,7 +40,7 @@ export const GameDiscussion = () => {
       ) as unknown;
 
   const onShowMoreHandler = () => {
-    setParam(oldValue => [oldValue[0] + OFFSET, getGameId()]);
+    setParam(oldValue => [oldValue[0] + PAGINATION, getGameId()]);
   };
 
   return (
@@ -76,7 +76,7 @@ export const GameDiscussion = () => {
                     />
                   )}
                 </For>
-                <Show when={currentDataBatch().length == LIMIT}>
+                <Show when={currentDataBatch().length == PAGINATION}>
                   <ShowMoreButton
                     onClick={onShowMoreHandler}
                     vertical

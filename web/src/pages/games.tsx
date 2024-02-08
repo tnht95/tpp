@@ -16,7 +16,7 @@ import {
   OrderField
 } from '@/apis';
 import { GameCard, ShowMoreButton } from '@/components';
-import { LIMIT, OFFSET } from '@/constant';
+import { PAGINATION } from '@/constant';
 import { GameSummary } from '@/models';
 import { TagSidebar } from '@/parts';
 
@@ -24,7 +24,7 @@ export const Games = () => {
   const [tagResource] = createResource(fetchGameTagsAction);
   const [selectValue, setSelectValue] = createSignal<GameQueryInput>({
     offset: 0,
-    limit: LIMIT
+    limit: PAGINATION
   });
   const [gameResource] = createResource(selectValue, fetchGameAction, {
     initialValue: []
@@ -45,25 +45,25 @@ export const Games = () => {
         orderField: valueArr[0] as OrderField,
         orderBy: valueArr[1] as OrderBy,
         offset: 0,
-        limit: LIMIT
+        limit: PAGINATION
       });
     });
 
   const onShowMoreHandler = () => {
     setSelectValue(oldValue => ({
       ...oldValue,
-      offset: (oldValue.offset as number) + OFFSET
+      offset: (oldValue.offset as number) + PAGINATION
     }));
   };
 
   return (
-    <div class="mt-10">
-      <div class="ml-10  flex flex-row justify-between">
-        <div class="w-3/5">
-          <p class="mb-5 ml-0 text-2xl font-bold text-indigo-900">
+    <div class="flex justify-between p-10">
+      <div class="flex w-4/5 flex-col gap-10">
+        <div class="flex flex-col gap-7">
+          <p class="text-2xl font-bold text-indigo-900">
             Most Subscribed Games
           </p>
-          <div class="flex flex-row flex-wrap gap-7">
+          <div class="flex flex-wrap gap-7">
             <GameCard
               game={{
                 id: '123456',
@@ -80,41 +80,34 @@ export const Games = () => {
             />
           </div>
         </div>
-        <div class="mr-24 w-1/5">
-          <TagSidebar tags={tagResource() as string[]} />
-        </div>
-      </div>
-      <div>
-        <div class="ml-10 mt-10 flex">
-          <div class="flex-3">
-            <div class="flex flex-row items-center">
-              <p class="m-5 ml-0 text-2xl font-bold text-indigo-900">
-                All Games
-              </p>
-              <div class="flex items-center">
-                <select
-                  onChange={handleSelect}
-                  class="block rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-                >
-                  <option value="" disabled selected>
-                    Sort by
-                  </option>
-                  <option value="createdAt-desc">Date</option>
-                  <option value="name-asc">Name A-Z</option>
-                  <option value="name-desc">Name Z-A</option>
-                  <option value="stars-desc">Stars</option>
-                </select>
-              </div>
-            </div>
-            <div class="flex flex-row flex-wrap gap-7">
-              <For each={games}>{game => <GameCard game={game} />}</For>
-              <Show when={gameResource().length === LIMIT}>
-                <ShowMoreButton onClick={onShowMoreHandler} />
-              </Show>
+        <div class="flex flex-col gap-7">
+          <div class="flex flex-row items-center gap-7">
+            <p class="text-2xl font-bold text-indigo-900">All Games</p>
+            <div class="flex items-center">
+              <select
+                onChange={handleSelect}
+                class="block rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+              >
+                <option value="" disabled selected>
+                  Sort by
+                </option>
+                <option value="createdAt-desc">Date</option>
+                <option value="name-asc">Name A-Z</option>
+                <option value="name-desc">Name Z-A</option>
+                <option value="votes-desc">Votes</option>
+              </select>
             </div>
           </div>
-          <div class="flex-1" />
+          <div class="flex flex-row flex-wrap gap-7">
+            <For each={games}>{game => <GameCard game={game} />}</For>
+            <Show when={gameResource().length === PAGINATION}>
+              <ShowMoreButton onClick={onShowMoreHandler} />
+            </Show>
+          </div>
         </div>
+      </div>
+      <div class="w-1/5">
+        <TagSidebar tags={tagResource() as string[]} />
       </div>
     </div>
   );

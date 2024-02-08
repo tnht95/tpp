@@ -1,11 +1,11 @@
-import { LIMIT } from '@/constant';
+import { PAGINATION } from '@/constant';
 import { Blog, BlogRequest, BlogSummary, Response } from '@/models';
 
 import { errHandler } from '.';
 
 export const fetchBlogAction = (offset: number) =>
   fetch(
-    `${import.meta.env.VITE_SERVER_URL}/blogs?offset=${offset}&limit=${LIMIT}`
+    `${import.meta.env.VITE_SERVER_URL}/blogs?offset=${offset}&limit=${PAGINATION}`
   )
     .then(errHandler)
     .then((r: Response<BlogSummary[]>) => r.data);

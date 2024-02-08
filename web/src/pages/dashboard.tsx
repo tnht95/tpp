@@ -23,7 +23,7 @@ import {
   PostCard,
   VerticalGameCard
 } from '@/components';
-import { OFFSET } from '@/constant';
+import { PAGINATION } from '@/constant';
 import { useAuthCtx, useToastCtx } from '@/context';
 import { PostDetails, ResponseErr } from '@/models';
 
@@ -59,7 +59,7 @@ export const Dashboard = () => {
     const scrollPercentage = (scrollTop / (scrollHeight - clientHeight)) * 100;
     if (scrollPercentage > 90 && !hasReachedBottom()) {
       batch(() => {
-        setCurrentOffset(offset => offset + OFFSET);
+        setCurrentOffset(offset => offset + PAGINATION);
         setHasReachedBottom(true);
       });
     }
@@ -103,7 +103,7 @@ export const Dashboard = () => {
       ) as unknown;
 
   return (
-    <div class="flex h-full">
+    <div class="flex">
       <nav class="flex-2" />
       <main class="mb-10 flex-3 flex-col border-x border-dashed px-32">
         <div class="my-10">

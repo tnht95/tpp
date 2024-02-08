@@ -1,5 +1,5 @@
 import { errHandler } from '@/apis';
-import { LIMIT } from '@/constant';
+import { PAGINATION } from '@/constant';
 import {
   DiscussionDetails,
   DiscussionRequest,
@@ -14,7 +14,7 @@ export const fetchDiscussionAction = async ([offset, gameId]: [
   const baseUrl = import.meta.env.VITE_SERVER_URL;
 
   return fetch(
-    `${baseUrl}/games/${gameId}/discussions?offset=${offset}&limit=${LIMIT}`
+    `${baseUrl}/games/${gameId}/discussions?offset=${offset}&limit=${PAGINATION}`
   )
     .then(errHandler)
     .then((r: Response<DiscussionSummary[]>) => r.data);

@@ -11,7 +11,7 @@ import { createStore, produce } from 'solid-js/store';
 
 import { addBlogAction, fetchBlogAction, fetchBlogTagsAction } from '@/apis';
 import { BlogCard, BlogForm, ShowMoreButton } from '@/components';
-import { LIMIT, OFFSET } from '@/constant';
+import { PAGINATION } from '@/constant';
 import { useAuthCtx, useToastCtx } from '@/context';
 import { BlogRequest, BlogSummary, ResponseErr } from '@/models';
 import { TagSidebar } from '@/parts';
@@ -58,7 +58,7 @@ export const Blogs = () => {
       ) as unknown;
 
   const handleGetMore = () => {
-    setCurrentOffset(offset => offset + OFFSET);
+    setCurrentOffset(offset => offset + PAGINATION);
   };
 
   return (
@@ -88,7 +88,7 @@ export const Blogs = () => {
         </div>
         <div class="mt-5 flex flex-col gap-5">
           <For each={blogs}>{blog => <BlogCard blog={blog} />}</For>
-          <Show when={blogResource().length === LIMIT}>
+          <Show when={blogResource().length === PAGINATION}>
             <ShowMoreButton vertical onClick={handleGetMore} />
           </Show>
         </div>
