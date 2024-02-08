@@ -110,6 +110,7 @@ export const PostCard = (props: PostCardProps) => {
       targetType: 'Post'
     })
       .then(comment => setComments(c => c.id === comment.id, comment))
+      .then(() => dispatch.showToast({ msg: 'Comment Updated', type: 'Ok' }))
       .catch((error: ResponseErr) =>
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;

@@ -42,7 +42,7 @@ export const GameDetailsTabs = () => {
 
   const refresh = () => {
     modal()?.hide();
-    dispatch.showToast({ msg: 'Game Edited', type: 'Ok' });
+    dispatch.showToast({ msg: 'Game Updated', type: 'Ok' });
     return refetch();
   };
 

@@ -113,7 +113,7 @@ export const DiscussionDetails = () => {
     })
       .then(comment => {
         setComments(c => c.id === comment.id, comment);
-        return dispatch.showToast({ msg: 'Comment Edited', type: 'Ok' });
+        return dispatch.showToast({ msg: 'Comment Updated', type: 'Ok' });
       })
       .catch((error: ResponseErr) =>
         dispatch.showToast({ msg: error.msg, type: 'Err' })
@@ -147,7 +147,7 @@ export const DiscussionDetails = () => {
 
   const refresh = () => {
     modal()?.hide();
-    dispatch.showToast({ msg: 'Discussion Edited', type: 'Ok' });
+    dispatch.showToast({ msg: 'Discussion Updated', type: 'Ok' });
     return refetch();
   };
 

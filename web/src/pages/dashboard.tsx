@@ -98,6 +98,7 @@ export const Dashboard = () => {
   const onEditHandler = (postId: string, content: string) =>
     editPostAction(postId, { content })
       .then(post => setPosts(p => p.id === post.id, post))
+      .then(() => dispatch.showToast({ msg: 'Post Updated', type: 'Ok' }))
       .catch((error: ResponseErr) =>
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
