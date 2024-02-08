@@ -77,18 +77,6 @@ export const Searchbar = () => {
                 type="button"
                 class="inline-flex w-full px-4 py-2 hover:bg-indigo-900 hover:text-white"
                 onClick={() => {
-                  setSearchCategory('blogs');
-                  dropdown()?.hide();
-                }}
-              >
-                Blogs
-              </button>
-            </li>
-            <li>
-              <button
-                type="button"
-                class="inline-flex w-full px-4 py-2 hover:bg-indigo-900 hover:text-white"
-                onClick={() => {
                   setSearchCategory('users');
                   dropdown()?.hide();
                 }}
@@ -106,6 +94,18 @@ export const Searchbar = () => {
                 }}
               >
                 Posts
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                class="inline-flex w-full px-4 py-2 hover:bg-indigo-900 hover:text-white"
+                onClick={() => {
+                  setSearchCategory('blogs');
+                  dropdown()?.hide();
+                }}
+              >
+                Blogs
               </button>
             </li>
           </ul>

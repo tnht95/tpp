@@ -125,7 +125,7 @@ export const Dashboard = () => {
           </For>
         </div>
       </main>
-      <nav class="flex flex-2">
+      <nav class="flex-2">
         <div class="fixed flex-col overflow-hidden px-10">
           <p class="mt-7 p-4 text-xl font-bold text-indigo-900">Newest games</p>
           <div class="flex flex-col gap-5">
