@@ -114,17 +114,15 @@ export const Dashboard = () => {
           )}
         </div>
         <div class="flex flex-col gap-10 ">
-          <Show when={!postResource.loading} fallback={<LoadingSpinner />}>
-            <For each={posts}>
-              {post => (
-                <PostCard
-                  post={post}
-                  onDelete={onDeleteHandler}
-                  onEdit={onEditHandler}
-                />
-              )}
-            </For>
-          </Show>
+          <For each={posts}>
+            {post => (
+              <PostCard
+                post={post}
+                onDelete={onDeleteHandler}
+                onEdit={onEditHandler}
+              />
+            )}
+          </For>
         </div>
       </main>
       <nav class="flex flex-2">
