@@ -6,7 +6,7 @@ export const GameInfo = () => {
     gameDetails: { data }
   } = useGameCtx();
   return (
-    <div class="border-b py-6 rounded-lg border px-8">
+    <div class="rounded-lg border px-8 py-6">
       <Markdown content={data()?.info as string} />
     </div>
   );

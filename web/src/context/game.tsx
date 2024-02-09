@@ -23,24 +23,19 @@ type GameContext = {
   gameDetails: {
     data: Resource<Game | undefined>;
     dispatch: {
-      refetch: (
-        info?: unknown
-      ) => Promise<Game | undefined> | Game | undefined | null;
+      refetch: () => void;
     };
   };
   discussions: {
     data: DiscussionSummary[];
-    count: Resource<number | undefined>;
     dispatch: {
+      refetch: () => void;
+      count: Resource<number | undefined>;
       fetchMore: () => void;
     };
     utils: {
       showMore: () => boolean;
     };
-    reset: () => void;
-    recount: (
-      info?: unknown
-    ) => Promise<number | undefined> | number | undefined | null;
   };
   utils: {
     getGameId: () => string;
@@ -80,34 +75,33 @@ export const GameProvider = (props: ParentProps) => {
     }
   });
 
-  const resetDiscussion = () =>
-    batch(() => {
-      setDiscussions([]);
-      setDiscussionParams([0, gameId]);
-    });
-
-  const fetchMoreDiscussion = () => {
-    setDiscussionParams(oldValue => [oldValue[0] + PAGINATION, gameId]);
-  };
-
   const state: GameContext = {
     gameDetails: {
       data: gameData,
       dispatch: {
-        refetch: refetchGameData
+        refetch: () => {
+          refetchGameData() as unknown;
+        }
       }
     },
     discussions: {
       data: discussionData,
-      count: discussionCount,
       dispatch: {
-        fetchMore: fetchMoreDiscussion
+        refetch: () => {
+          batch(() => {
+            setDiscussions([]);
+            setDiscussionParams([0, gameId]);
+            reFetchDiscussionCount() as unknown;
+          });
+        },
+        count: discussionCount,
+        fetchMore: () => {
+          setDiscussionParams(oldValue => [oldValue[0] + PAGINATION, gameId]);
+        }
       },
       utils: {
         showMore: () => discussionResource().length === PAGINATION
-      },
-      reset: resetDiscussion,
-      recount: reFetchDiscussionCount
+      }
     },
     utils: {
       getGameId: () => gameId

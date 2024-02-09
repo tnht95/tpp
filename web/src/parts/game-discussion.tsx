@@ -14,12 +14,9 @@ export const GameDiscussion = () => {
   const {
     utils: { getGameId },
     discussions: {
-      reset,
-      dispatch: { fetchMore },
+      dispatch: { fetchMore, count, refetch },
       utils: { showMore },
-      data,
-      count,
-      recount
+      data
     }
   } = useGameCtx();
   const { dispatch } = useToastCtx();
@@ -32,7 +29,7 @@ export const GameDiscussion = () => {
 
   const batchSubmitHandler = () =>
     batch(() => {
-      reset();
+      refetch();
       modal()?.hide();
       dispatch.showToast({ msg: 'Discussion Added', type: 'Ok' });
     });
@@ -40,7 +37,6 @@ export const GameDiscussion = () => {
   const onSubmitHandler = (discussion: DiscussionRequest) =>
     addDiscussionAction(discussion, getGameId())
       .then(batchSubmitHandler)
-      .then(recount)
       .catch((error: ResponseErr) =>
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
@@ -48,45 +44,41 @@ export const GameDiscussion = () => {
   return (
     <>
       <div class="flex flex-col">
-        <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-            <div class="overflow-hidden border border-gray-200 md:rounded-lg">
-              <div class="min-w-full divide-y divide-gray-200">
-                <div class="flex items-center justify-between px-8 py-3.5 text-left text-base font-bold text-black rtl:text-right">
-                  <p class="text-lg">Total {count()} discussions</p>
-                  <Show when={isAuth}>
-                    <Button
-                      withIcon="fa-solid fa-plus"
-                      title="New"
-                      customStyle="hover:text-white hover:bg-green-500 float-right text-green-500 font-bold"
-                      onClickHandler={() => modal()?.show()}
-                    />
-                  </Show>
-                </div>
-                <DiscussionForm
-                  ref={setModalRef}
-                  onCloseHandler={() => modal()?.hide()}
-                  onSubmitHandler={onSubmitHandler}
+        <div class="border border-gray-200 rounded-lg">
+          <div class="min-w-full divide-y divide-gray-200">
+            <div class="flex items-center justify-between px-8 py-3.5 text-left text-base font-bold text-black rtl:text-right">
+              <p class="text-lg">Total {count()} discussions</p>
+              <Show when={isAuth}>
+                <Button
+                  withIcon="fa-solid fa-plus"
+                  title="New"
+                  customStyle="hover:text-white hover:bg-green-500 float-right text-green-500 font-bold"
+                  onClickHandler={() => modal()?.show()}
                 />
-                <For each={data}>
-                  {d => (
-                    <TableRow
-                      title={d.title}
-                      date={formatTime(d.createdAt)}
-                      username={d.userName}
-                      url={`/games/${getGameId()}/discussion/${d.id}`}
-                    />
-                  )}
-                </For>
-                <Show when={showMore()}>
-                  <ShowMoreButton
-                    onClick={fetchMore}
-                    vertical
-                    customStyle="border-none py-3"
-                  />
-                </Show>
-              </div>
+              </Show>
             </div>
+            <DiscussionForm
+              ref={setModalRef}
+              onCloseHandler={() => modal()?.hide()}
+              onSubmitHandler={onSubmitHandler}
+            />
+            <For each={data}>
+              {d => (
+                <TableRow
+                  title={d.title}
+                  date={formatTime(d.createdAt)}
+                  username={d.userName}
+                  url={`/games/${getGameId()}/discussion/${d.id}`}
+                />
+              )}
+            </For>
+            <Show when={showMore()}>
+              <ShowMoreButton
+                onClick={fetchMore}
+                vertical
+                customStyle="border-none py-3"
+              />
+            </Show>
           </div>
         </div>
       </div>

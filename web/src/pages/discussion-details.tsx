@@ -43,7 +43,9 @@ export const DiscussionDetails = () => {
   const { dispatch } = useToastCtx();
   const {
     utils: { getGameId },
-    discussions: { reset, recount }
+    discussions: {
+      dispatch: { refetch: rf }
+    }
   } = useGameCtx();
   const navigate = useNavigate();
   const discussionId = useParams()['discussionId'] as string;
@@ -147,6 +149,7 @@ export const DiscussionDetails = () => {
 
   const refresh = () => {
     modal()?.hide();
+    rf();
     dispatch.showToast({ msg: 'Discussion Updated', type: 'Ok' });
     return refetch();
   };
@@ -155,28 +158,26 @@ export const DiscussionDetails = () => {
     setIsEditMode(false);
     editDiscussionAction(discussionId, discussion)
       .then(refresh)
-      .then(reset)
       .catch((error: ResponseErr) =>
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       );
   };
 
-  const onEditOptionBtn = () => {
-    setIsEditMode(!isEditMode());
-    modal()?.show();
-  };
-
   const onDeleteDiscussionHandler = () => {
     deleteDiscussionAction(discussionId)
       .then(() => {
-        reset();
+        rf();
         navigate(`/games/${getGameId()}/discussion`);
         return dispatch.showToast({ msg: 'Discussion Deleted', type: 'Ok' });
       })
-      .then(recount)
       .catch((error: ResponseErr) => {
         dispatch.showToast({ msg: error.msg, type: 'Err' });
       });
+  };
+
+  const onEditOptionBtn = () => {
+    setIsEditMode(!isEditMode());
+    modal()?.show();
   };
 
   return (
