@@ -5,12 +5,11 @@ import { useGameCtx } from '@/context';
 
 export const GameDetailsSidebar = () => {
   const {
-    game: { data }
+    gameDetails: { data }
   } = useGameCtx();
-
   return (
-    <div class="ml-4 md:w-1/4">
-      <div class="hidden md:block">
+    <div class="w-1/4">
+      <div class="block">
         <p class="text-base font-semibold text-black">About</p>
         <div class="mt-4 border-b pb-2">
           <span class="text-sm lg:text-base">{data()?.about}</span>
@@ -30,7 +29,7 @@ export const GameDetailsSidebar = () => {
           </Show>
         </div>
       </div>
-      <div class="-mx-10 border-b p-6 md:mx-0 md:px-0">
+      <div class="border-b py-6">
         <p class="mb-5 text-base font-semibold text-black">Upload By</p>
         <Avatar userId={data()?.authorId as number} />
       </div>
@@ -50,7 +49,6 @@ export const GameDetailsSidebar = () => {
           <i class="fa-solid fa-gamepad mr-2" />
           Play!
         </button>
-
         <button
           type="button"
           class="mt-2 rounded-lg border border-purple-700 bg-purple-700 p-2.5 text-sm font-medium text-white hover:bg-white hover:text-purple-700 focus:outline-none focus:ring-4 focus:ring-purple-300"

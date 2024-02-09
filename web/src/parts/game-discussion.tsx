@@ -3,7 +3,6 @@ import { batch, createEffect, createSignal, For, Show } from 'solid-js';
 
 import { addDiscussionAction } from '@/apis';
 import { Button, DiscussionForm, ShowMoreButton, TableRow } from '@/components';
-import { PAGINATION } from '@/constant';
 import { useAuthCtx, useGameCtx, useToastCtx } from '@/context';
 import { DiscussionRequest, ResponseErr } from '@/models';
 import { formatTime } from '@/utils';
@@ -14,7 +13,14 @@ export const GameDiscussion = () => {
   } = useAuthCtx();
   const {
     utils: { getGameId },
-    discussion: { reset, currentDataBatch, setParam, data, count, recount }
+    discussions: {
+      reset,
+      dispatch: { fetchMore },
+      utils: { showMore },
+      data,
+      count,
+      recount
+    }
   } = useGameCtx();
   const { dispatch } = useToastCtx();
   const [modalRef, setModalRef] = createSignal<HTMLDivElement>();
@@ -38,10 +44,6 @@ export const GameDiscussion = () => {
       .catch((error: ResponseErr) =>
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
-
-  const onShowMoreHandler = () => {
-    setParam(oldValue => [oldValue[0] + PAGINATION, getGameId()]);
-  };
 
   return (
     <>
@@ -76,9 +78,9 @@ export const GameDiscussion = () => {
                     />
                   )}
                 </For>
-                <Show when={currentDataBatch().length == PAGINATION}>
+                <Show when={showMore()}>
                   <ShowMoreButton
-                    onClick={onShowMoreHandler}
+                    onClick={fetchMore}
                     vertical
                     customStyle="border-none py-3"
                   />

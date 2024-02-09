@@ -43,7 +43,7 @@ export const DiscussionDetails = () => {
   const { dispatch } = useToastCtx();
   const {
     utils: { getGameId },
-    discussion: { reset, recount }
+    discussions: { reset, recount }
   } = useGameCtx();
   const navigate = useNavigate();
   const discussionId = useParams()['discussionId'] as string;

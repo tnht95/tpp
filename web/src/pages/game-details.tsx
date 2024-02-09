@@ -4,9 +4,13 @@ import { ParentProps } from 'solid-js/types/render/component';
 import { LoadingSpinner } from '@/components';
 import { GameProvider } from '@/context';
 import { NotFound } from '@/pages';
-import { GameDetailsSidebar, GameDetailsTabs } from '@/parts';
+import {
+  GameDetailsHeader,
+  GameDetailsSidebar,
+  GameDetailsTabs
+} from '@/parts';
 
-const Game = (props: ParentProps) => (
+const GameDetailsWrapper = (props: ParentProps) => (
   <Suspense
     fallback={
       <div class="flex h-svh items-center justify-center">
@@ -15,13 +19,12 @@ const Game = (props: ParentProps) => (
     }
   >
     <ErrorBoundary fallback={<NotFound />}>
-      <div class="bg-white">
+      <div class="flex flex-col gap-5 px-10 py-8">
+        <GameDetailsHeader />
         <GameDetailsTabs />
-        <div class="ml-10 mt-8 pb-10">
-          <div class="md:flex">
-            <div class="mr-4 w-4/6">{props.children}</div>
-            <GameDetailsSidebar />
-          </div>
+        <div class="flex justify-between pt-4">
+          <div class="w-4/6">{props.children}</div>
+          <GameDetailsSidebar />
         </div>
       </div>
     </ErrorBoundary>
@@ -30,6 +33,6 @@ const Game = (props: ParentProps) => (
 
 export const GameDetails = (props: ParentProps) => (
   <GameProvider>
-    <Game>{props.children}</Game>
+    <GameDetailsWrapper>{props.children}</GameDetailsWrapper>
   </GameProvider>
 );

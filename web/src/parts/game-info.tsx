@@ -3,11 +3,10 @@ import { useGameCtx } from '@/context';
 
 export const GameInfo = () => {
   const {
-    game: { data }
+    gameDetails: { data }
   } = useGameCtx();
-
   return (
-    <div class="border-b py-6 md:rounded-lg md:border md:px-8">
+    <div class="border-b py-6 rounded-lg border px-8">
       <Markdown content={data()?.info as string} />
     </div>
   );

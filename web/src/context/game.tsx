@@ -1,38 +1,43 @@
 import { useParams } from '@solidjs/router';
 import {
+  batch,
   createContext,
   createEffect,
   createResource,
   createSignal,
-  InitializedResource,
   ParentProps,
   Resource,
-  Setter,
   useContext
 } from 'solid-js';
-import { createStore, produce, SetStoreFunction } from 'solid-js/store';
+import { createStore, produce } from 'solid-js/store';
 
 import {
   fetchDiscussionAction,
   fetchDiscussionCountAction,
   fetchGameByIdAction
 } from '@/apis';
+import { PAGINATION } from '@/constant';
 import { DiscussionSummary, Game } from '@/models';
 
 type GameContext = {
-  game: {
+  gameDetails: {
     data: Resource<Game | undefined>;
-    refetch: (
-      info?: unknown
-    ) => Promise<Game | undefined> | Game | undefined | null;
+    dispatch: {
+      refetch: (
+        info?: unknown
+      ) => Promise<Game | undefined> | Game | undefined | null;
+    };
   };
-  discussion: {
+  discussions: {
     data: DiscussionSummary[];
-    setDiscussions: SetStoreFunction<DiscussionSummary[]>;
-    setParam: Setter<[number, string]>;
-    currentDataBatch: InitializedResource<DiscussionSummary[]>;
-    reset: () => void;
     count: Resource<number | undefined>;
+    dispatch: {
+      fetchMore: () => void;
+    };
+    utils: {
+      showMore: () => boolean;
+    };
+    reset: () => void;
     recount: (
       info?: unknown
     ) => Promise<number | undefined> | number | undefined | null;
@@ -46,20 +51,25 @@ const gameCtx = createContext<GameContext>();
 
 export const GameProvider = (props: ParentProps) => {
   const gameId = useParams()['id'] as string;
-  const [gameData, { refetch }] = createResource(gameId, fetchGameByIdAction);
-  const [param, setParam] = createSignal<[number, string]>([0, gameId]);
-  const [discussionCount, { refetch: recount }] = createResource(
+  const [gameData, { refetch: refetchGameData }] = createResource(
+    gameId,
+    fetchGameByIdAction
+  );
+
+  const [discussionParams, setDiscussionParams] = createSignal<
+    [number, string]
+  >([0, gameId]);
+  const [discussionCount, { refetch: reFetchDiscussionCount }] = createResource(
     gameId,
     fetchDiscussionCountAction
   );
   const [discussionResource] = createResource(
-    () => param(),
+    () => discussionParams(),
     fetchDiscussionAction,
     {
       initialValue: []
     }
   );
-
   const [discussionData, setDiscussions] = createStore<DiscussionSummary[]>([]);
 
   createEffect(() => {
@@ -70,21 +80,34 @@ export const GameProvider = (props: ParentProps) => {
     }
   });
 
-  const resetDiscussion = () => {
-    setDiscussions([]);
-    setParam([0, gameId]);
+  const resetDiscussion = () =>
+    batch(() => {
+      setDiscussions([]);
+      setDiscussionParams([0, gameId]);
+    });
+
+  const fetchMoreDiscussion = () => {
+    setDiscussionParams(oldValue => [oldValue[0] + PAGINATION, gameId]);
   };
 
   const state: GameContext = {
-    game: { data: gameData, refetch: refetch },
-    discussion: {
+    gameDetails: {
+      data: gameData,
+      dispatch: {
+        refetch: refetchGameData
+      }
+    },
+    discussions: {
       data: discussionData,
-      setDiscussions: setDiscussions,
-      setParam: setParam,
-      currentDataBatch: discussionResource,
-      reset: resetDiscussion,
       count: discussionCount,
-      recount: recount
+      dispatch: {
+        fetchMore: fetchMoreDiscussion
+      },
+      utils: {
+        showMore: () => discussionResource().length === PAGINATION
+      },
+      reset: resetDiscussion,
+      recount: reFetchDiscussionCount
     },
     utils: {
       getGameId: () => gameId
