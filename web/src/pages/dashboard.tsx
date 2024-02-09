@@ -25,7 +25,7 @@ import {
 } from '@/components';
 import { PAGINATION } from '@/constant';
 import { useAuthCtx, useToastCtx } from '@/context';
-import { PostDetails, ResponseErr } from '@/models';
+import { PostDetails, RespErr } from '@/models';
 
 export const Dashboard = () => {
   const { utils } = useAuthCtx();
@@ -83,7 +83,7 @@ export const Dashboard = () => {
     addPostAction({ content })
       .then(resetPosts)
       .then(() => dispatch.showToast({ msg: 'Post Added', type: 'Ok' }))
-      .catch((error: ResponseErr) =>
+      .catch((error: RespErr) =>
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
 
@@ -91,7 +91,7 @@ export const Dashboard = () => {
     deletePostAction(postId)
       .then(resetPosts)
       .then(() => dispatch.showToast({ msg: 'Post Deleted', type: 'Ok' }))
-      .catch((error: ResponseErr) =>
+      .catch((error: RespErr) =>
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
 
@@ -99,7 +99,7 @@ export const Dashboard = () => {
     editPostAction(postId, { content })
       .then(post => setPosts(p => p.id === post.id, post))
       .then(() => dispatch.showToast({ msg: 'Post Updated', type: 'Ok' }))
-      .catch((error: ResponseErr) =>
+      .catch((error: RespErr) =>
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
 

@@ -12,7 +12,7 @@ import { Auth, User } from '@/models';
 // ============================================================================
 // Interfaces
 // ============================================================================
-type AuthContext = {
+type Ctx = {
   auth: Resource<Auth | undefined>;
   utils: {
     isAuth: () => boolean;
@@ -28,7 +28,7 @@ type AuthContext = {
 // ============================================================================
 // Contexts
 // ============================================================================
-const authCtx = createContext<AuthContext>();
+const ctx = createContext<Ctx>();
 export const AuthenticationProvider = (props: ParentProps) => {
   const [auth, { mutate }] = createResource(fetchUserAction);
   const state = {
@@ -43,10 +43,10 @@ export const AuthenticationProvider = (props: ParentProps) => {
       logout: () => logoutAction().then(() => mutate())
     }
   };
-  return <authCtx.Provider value={state}>{props.children}</authCtx.Provider>;
+  return <ctx.Provider value={state}>{props.children}</ctx.Provider>;
 };
 
 // ============================================================================
 // Component Apis
 // ============================================================================
-export const useAuthCtx = () => useContext(authCtx) as AuthContext;
+export const useAuthCtx = () => useContext(ctx) as Ctx;

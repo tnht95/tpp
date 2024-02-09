@@ -1,4 +1,4 @@
-import { Response, ResponseErr, SearchResult } from '@/models';
+import { RespErr, Response, SearchResult } from '@/models';
 
 import { errHandler } from '.';
 
@@ -22,7 +22,7 @@ export const searchAction = async (queryInput: SearchQueryInput) => {
   return fetch(`${baseUrl}/search?${query.join('&')}`)
     .then(errHandler)
     .then((r: Response<SearchResult>) => r.data)
-    .catch((error: ResponseErr) => {
+    .catch((error: RespErr) => {
       throw error.msg;
     });
 };

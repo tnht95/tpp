@@ -12,7 +12,7 @@ import { createStore, produce } from 'solid-js/store';
 import { addGameAction, fetchGameAction, GameQueryInput } from '@/apis';
 import { Button, GameCard, GameForm, ShowMoreButton } from '@/components';
 import { useAuthCtx, useToastCtx } from '@/context';
-import { GameRequest, GameSummary, ResponseErr } from '@/models';
+import { GameRequest, GameSummary, RespErr } from '@/models';
 
 type UserGamesProps = {
   userId: number;
@@ -61,7 +61,7 @@ export const UserGames = (props: UserGamesProps) => {
   const onSubmitHandler = (file: File, game: GameRequest) =>
     addGameAction(file, game)
       .then(batchSubmitHandler)
-      .catch((error: ResponseErr) =>
+      .catch((error: RespErr) =>
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
 

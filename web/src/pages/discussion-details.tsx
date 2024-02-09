@@ -1,5 +1,4 @@
 import { useNavigate, useParams } from '@solidjs/router';
-import { Modal } from 'flowbite';
 import {
   batch,
   createEffect,
@@ -17,9 +16,7 @@ import {
   deleteCommentAction,
   deleteDiscussionAction,
   editCommentAction,
-  editDiscussionAction,
   fetchCommentAction,
-  fetchDiscussionByIdAction,
   QueryWIthTargetInput
 } from '@/apis';
 import {
@@ -31,8 +28,8 @@ import {
   Markdown,
   OptionButton
 } from '@/components';
-import { useAuthCtx, useGameCtx, useToastCtx } from '@/context';
-import { CommentDetails, DiscussionRequest, ResponseErr } from '@/models';
+import { useAuthCtx, useDiscussionDetailsCtx, useToastCtx } from '@/context';
+import { CommentDetails, RespErr } from '@/models';
 import { NotFound } from '@/pages';
 import { formatTime } from '@/utils';
 
@@ -42,20 +39,13 @@ export const DiscussionDetails = () => {
   } = useAuthCtx();
   const { dispatch } = useToastCtx();
   const {
-    utils: { getGameId },
-    discussions: {
-      dispatch: { refetch: rf }
-    }
-  } = useGameCtx();
+    discussion,
+    dispatch: { edit },
+    utils: { gameId, isEditMode },
+    modal: { initRef, show, hide }
+  } = useDiscussionDetailsCtx();
   const navigate = useNavigate();
   const discussionId = useParams()['discussionId'] as string;
-  const [modal, setModal] = createSignal<Modal>();
-  const [modalRef, setModalRef] = createSignal<HTMLDivElement>();
-  const [isEditMode, setIsEditMode] = createSignal(false);
-  const [discussion, { refetch }] = createResource(
-    discussionId,
-    fetchDiscussionByIdAction
-  );
   const [queryValue, setQueryValue] = createSignal<QueryWIthTargetInput>({
     targetId: discussionId,
     offset: 0,
@@ -69,13 +59,6 @@ export const DiscussionDetails = () => {
   const addedCmts: CommentDetails[] = [];
 
   createEffect(() => {
-    setModal(
-      new Modal(modalRef(), {
-        onHide: () => {
-          setIsEditMode(false);
-        }
-      })
-    );
     if (commentResource().length > 0) {
       setComments(
         produce(oldComments =>
@@ -102,7 +85,7 @@ export const DiscussionDetails = () => {
           dispatch.showToast({ msg: 'Comment Added', type: 'Ok' });
         })
       )
-      .catch((error: ResponseErr) =>
+      .catch((error: RespErr) =>
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       );
   };
@@ -117,7 +100,7 @@ export const DiscussionDetails = () => {
         setComments(c => c.id === comment.id, comment);
         return dispatch.showToast({ msg: 'Comment Updated', type: 'Ok' });
       })
-      .catch((error: ResponseErr) =>
+      .catch((error: RespErr) =>
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
 
@@ -136,7 +119,7 @@ export const DiscussionDetails = () => {
   const onDeleteCmtHandler = (commentId: string) =>
     deleteCommentAction(commentId)
       .then(resetCmts)
-      .catch((error: ResponseErr) =>
+      .catch((error: RespErr) =>
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
 
@@ -147,37 +130,16 @@ export const DiscussionDetails = () => {
     }));
   };
 
-  const refresh = () => {
-    modal()?.hide();
-    rf();
-    dispatch.showToast({ msg: 'Discussion Updated', type: 'Ok' });
-    return refetch();
-  };
-
-  const onEditDiscussionHandler = (discussion: DiscussionRequest) => {
-    setIsEditMode(false);
-    editDiscussionAction(discussionId, discussion)
-      .then(refresh)
-      .catch((error: ResponseErr) =>
-        dispatch.showToast({ msg: error.msg, type: 'Err' })
-      );
-  };
-
   const onDeleteDiscussionHandler = () => {
     deleteDiscussionAction(discussionId)
       .then(() => {
-        rf();
-        navigate(`/games/${getGameId()}/discussion`);
+        // rf();
+        navigate(`/games/${gameId}/discussion`);
         return dispatch.showToast({ msg: 'Discussion Deleted', type: 'Ok' });
       })
-      .catch((error: ResponseErr) => {
+      .catch((error: RespErr) => {
         dispatch.showToast({ msg: error.msg, type: 'Err' });
       });
-  };
-
-  const onEditOptionBtn = () => {
-    setIsEditMode(!isEditMode());
-    modal()?.show();
   };
 
   return (
@@ -190,11 +152,9 @@ export const DiscussionDetails = () => {
     >
       <ErrorBoundary fallback={<NotFound />}>
         <DiscussionForm
-          ref={setModalRef}
-          onCloseHandler={() => {
-            modal()?.hide();
-          }}
-          onSubmitHandler={onEditDiscussionHandler}
+          ref={initRef}
+          onCloseHandler={hide}
+          onSubmitHandler={edit}
           discussion={discussion()}
         />
         <div class="ml-5 flex flex-col">
@@ -206,7 +166,7 @@ export const DiscussionDetails = () => {
                 onDelete={onDeleteDiscussionHandler}
                 id={''}
                 isEditMode={isEditMode}
-                onEdit={onEditOptionBtn}
+                onEdit={show}
               />
             </div>
             <p class="mt-1 text-base text-gray-400">

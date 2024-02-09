@@ -11,7 +11,7 @@ export type Response<T> = {
   data: T;
 };
 
-export type ResponseErr = {
+export type RespErr = {
   code: string;
   msg: string;
 };

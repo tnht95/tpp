@@ -1,10 +1,7 @@
-import { Modal } from 'flowbite';
-import { batch, createEffect, createSignal, For, Show } from 'solid-js';
+import { For, Show } from 'solid-js';
 
-import { addDiscussionAction } from '@/apis';
 import { Button, DiscussionForm, ShowMoreButton, TableRow } from '@/components';
-import { useAuthCtx, useGameCtx, useToastCtx } from '@/context';
-import { DiscussionRequest, ResponseErr } from '@/models';
+import { useAuthCtx, useDiscussionCtx } from '@/context';
 import { formatTime } from '@/utils';
 
 export const GameDiscussion = () => {
@@ -12,39 +9,16 @@ export const GameDiscussion = () => {
     utils: { isAuth }
   } = useAuthCtx();
   const {
-    utils: { getGameId },
-    discussions: {
-      dispatch: { fetchMore, count, refetch },
-      utils: { showMore },
-      data
-    }
-  } = useGameCtx();
-  const { dispatch } = useToastCtx();
-  const [modalRef, setModalRef] = createSignal<HTMLDivElement>();
-  const [modal, setModal] = createSignal<Modal>();
-
-  createEffect(() => {
-    setModal(new Modal(modalRef()));
-  });
-
-  const batchSubmitHandler = () =>
-    batch(() => {
-      refetch();
-      modal()?.hide();
-      dispatch.showToast({ msg: 'Discussion Added', type: 'Ok' });
-    });
-
-  const onSubmitHandler = (discussion: DiscussionRequest) =>
-    addDiscussionAction(discussion, getGameId())
-      .then(batchSubmitHandler)
-      .catch((error: ResponseErr) =>
-        dispatch.showToast({ msg: error.msg, type: 'Err' })
-      ) as unknown;
-
+    discussions,
+    count,
+    dispatch: { fetchMore, add },
+    utils: { showMore, gameId },
+    modal: { show, hide, initRef }
+  } = useDiscussionCtx();
   return (
     <>
       <div class="flex flex-col">
-        <div class="border border-gray-200 rounded-lg">
+        <div class="rounded-lg border border-gray-200">
           <div class="min-w-full divide-y divide-gray-200">
             <div class="flex items-center justify-between px-8 py-3.5 text-left text-base font-bold text-black rtl:text-right">
               <p class="text-lg">Total {count()} discussions</p>
@@ -53,22 +27,22 @@ export const GameDiscussion = () => {
                   withIcon="fa-solid fa-plus"
                   title="New"
                   customStyle="hover:text-white hover:bg-green-500 float-right text-green-500 font-bold"
-                  onClickHandler={() => modal()?.show()}
+                  onClickHandler={show}
                 />
               </Show>
             </div>
             <DiscussionForm
-              ref={setModalRef}
-              onCloseHandler={() => modal()?.hide()}
-              onSubmitHandler={onSubmitHandler}
+              ref={initRef}
+              onCloseHandler={hide}
+              onSubmitHandler={add}
             />
-            <For each={data}>
+            <For each={discussions}>
               {d => (
                 <TableRow
                   title={d.title}
                   date={formatTime(d.createdAt)}
                   username={d.userName}
-                  url={`/games/${getGameId()}/discussion/${d.id}`}
+                  url={`/games/${gameId}/discussion/${d.id}`}
                 />
               )}
             </For>

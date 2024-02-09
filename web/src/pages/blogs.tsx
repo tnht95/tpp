@@ -13,7 +13,7 @@ import { addBlogAction, fetchBlogAction, fetchBlogTagsAction } from '@/apis';
 import { BlogCard, BlogForm, ShowMoreButton } from '@/components';
 import { PAGINATION } from '@/constant';
 import { useAuthCtx, useToastCtx } from '@/context';
-import { BlogRequest, BlogSummary, ResponseErr } from '@/models';
+import { BlogRequest, BlogSummary, RespErr } from '@/models';
 import { TagSidebar } from '@/parts';
 
 export const Blogs = () => {
@@ -53,7 +53,7 @@ export const Blogs = () => {
   const onSubmitHandler = (blog: BlogRequest) =>
     addBlogAction(blog)
       .then(resetBlogs)
-      .catch((error: ResponseErr) =>
+      .catch((error: RespErr) =>
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
 

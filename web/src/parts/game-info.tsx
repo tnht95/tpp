@@ -1,13 +1,11 @@
 import { Markdown } from '@/components';
-import { useGameCtx } from '@/context';
+import { useGameDetailsCtx } from '@/context';
 
 export const GameInfo = () => {
-  const {
-    gameDetails: { data }
-  } = useGameCtx();
+  const { game } = useGameDetailsCtx();
   return (
     <div class="rounded-lg border px-8 py-6">
-      <Markdown content={data()?.info as string} />
+      <Markdown content={game()?.info as string} />
     </div>
   );
 };

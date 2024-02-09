@@ -4,6 +4,11 @@ import { ParentProps } from 'solid-js';
 import { GameActivity, GameDiscussion, GameInfo, Header } from '@/parts';
 
 import {
+  DiscussionDetailsProvider,
+  DiscussionProvider,
+  GameDetailsProvider
+} from './context';
+import {
   BlogDetails,
   Blogs,
   Dashboard,
@@ -25,17 +30,30 @@ const Root = (props: ParentProps) => (
 export const App = () => (
   <>
     <Router root={Root}>
-      <Route path={'/'} component={Dashboard} />
-      <Route path={'/games'} component={Games} />
-      <Route path={'/games/:id'} component={GameDetails}>
-        <Route path={'/info'} component={GameInfo} />
-        <Route path={'/discussion'} component={GameDiscussion} />
-        <Route path={'/activity'} component={GameActivity} />
-        <Route
-          path={'/discussion/:discussionId'}
-          component={DiscussionDetails}
-        />
+      <Route path={'/'}>
+        <Route component={Dashboard} />
       </Route>
+
+      <Route path={'/games'} component={Games} />
+
+      <Route path={'/games/:id'} component={GameDetailsProvider}>
+        <Route component={GameDetails}>
+          <Route path={'/info'} component={GameInfo} />
+
+          <Route path={'/discussion'} component={DiscussionProvider}>
+            <Route component={GameDiscussion} />
+          </Route>
+
+          <Route
+            path={'/discussion/:discussionId'}
+            component={DiscussionDetailsProvider}
+          >
+            <Route component={DiscussionDetails} />
+          </Route>
+          <Route path={'/activity'} component={GameActivity} />
+        </Route>
+      </Route>
+
       <Route path={'/users/:id'} component={UserDetails} />
       <Route path={'/blogs'} component={Blogs} />
       <Route path={'/blogs/:id'} component={BlogDetails} />

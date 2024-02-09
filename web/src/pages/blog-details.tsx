@@ -31,7 +31,7 @@ import {
   OptionButton
 } from '@/components';
 import { useAuthCtx, useToastCtx } from '@/context';
-import { BlogRequest, CommentDetails, ResponseErr } from '@/models';
+import { BlogRequest, CommentDetails, RespErr } from '@/models';
 import { NotFound } from '@/pages';
 import { TagSidebar } from '@/parts';
 import { formatTime } from '@/utils';
@@ -92,7 +92,7 @@ export const BlogDetails = () => {
           addedCmts.push(newCmt);
         })
       )
-      .catch((error: ResponseErr) =>
+      .catch((error: RespErr) =>
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       );
   };
@@ -110,7 +110,7 @@ export const BlogDetails = () => {
         navigate(`/blogs`);
         return dispatch.showToast({ msg: 'Blog Deleted', type: 'Ok' });
       })
-      .catch((error: ResponseErr) => {
+      .catch((error: RespErr) => {
         dispatch.showToast({ msg: error.msg, type: 'Err' });
       });
   };
@@ -125,7 +125,7 @@ export const BlogDetails = () => {
         setComments(c => c.id === comment.id, comment);
         return dispatch.showToast({ msg: 'Comment Updated', type: 'Ok' });
       })
-      .catch((error: ResponseErr) =>
+      .catch((error: RespErr) =>
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
 
@@ -144,7 +144,7 @@ export const BlogDetails = () => {
   const onDeleteCmtHandler = (commentId: string) =>
     deleteCommentAction(commentId)
       .then(resetCmts)
-      .catch((error: ResponseErr) =>
+      .catch((error: RespErr) =>
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
 
@@ -152,7 +152,7 @@ export const BlogDetails = () => {
     setIsEditMode(false);
     editBlogAction(blogId, blog)
       .then(refresh)
-      .catch((error: ResponseErr) =>
+      .catch((error: RespErr) =>
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       );
   };

@@ -12,7 +12,7 @@ import { Toast } from '@/components';
 // ============================================================================
 // Interfaces
 // ============================================================================
-type ToastContext = {
+type Ctx = {
   dispatch: {
     showToast: (input: ToastInput) => void;
   };
@@ -26,7 +26,7 @@ export type ToastInput = {
 // ============================================================================
 // Contexts
 // ============================================================================
-const toastCtx = createContext<ToastContext>();
+const ctx = createContext<Ctx>();
 export const ToastProvider = (props: ParentProps) => {
   // keep track of the previous timer
   let prevTimer: NodeJS.Timeout;
@@ -54,16 +54,16 @@ export const ToastProvider = (props: ParentProps) => {
   };
 
   return (
-    <toastCtx.Provider value={state}>
+    <ctx.Provider value={state}>
       {props.children}
       <Show when={input()}>
         <Toast input={input() as ToastInput} onClose={onCloseHandler} />
       </Show>
-    </toastCtx.Provider>
+    </ctx.Provider>
   );
 };
 
 // ============================================================================
 // Component Apis
 // ============================================================================
-export const useToastCtx = () => useContext(toastCtx) as ToastContext;
+export const useToastCtx = () => useContext(ctx) as Ctx;

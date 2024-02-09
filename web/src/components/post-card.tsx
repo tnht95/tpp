@@ -23,7 +23,7 @@ import {
   OptionButton
 } from '@/components';
 import { useAuthCtx, useToastCtx } from '@/context';
-import { CommentDetails, PostDetails, ResponseErr } from '@/models';
+import { CommentDetails, PostDetails, RespErr } from '@/models';
 import { formatTime } from '@/utils';
 
 type PostCardProps = {
@@ -91,7 +91,7 @@ export const PostCard = (props: PostCardProps) => {
           addedCmts.push(newCmt);
         })
       )
-      .catch((error: ResponseErr) =>
+      .catch((error: RespErr) =>
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       );
   };
@@ -111,7 +111,7 @@ export const PostCard = (props: PostCardProps) => {
     })
       .then(comment => setComments(c => c.id === comment.id, comment))
       .then(() => dispatch.showToast({ msg: 'Comment Updated', type: 'Ok' }))
-      .catch((error: ResponseErr) =>
+      .catch((error: RespErr) =>
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
 
@@ -130,7 +130,7 @@ export const PostCard = (props: PostCardProps) => {
   const onDeleteCmtHandler = (commentId: string) =>
     deleteCommentAction(commentId)
       .then(resetCmts)
-      .catch((error: ResponseErr) =>
+      .catch((error: RespErr) =>
         dispatch.showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
 
