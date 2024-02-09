@@ -68,6 +68,10 @@ export const UserDetails = () => {
                         icon="fa-solid fa-plus"
                         number={30}
                         disabled={isSameUser(Number.parseInt(userId()))}
+                        clicked={false}
+                        onClick={() => {}}
+                        titleAfterClicked="Subscribed"
+                        iconAfterClicked="fa-solid fa-minus"
                       />
                     </div>
                   </div>

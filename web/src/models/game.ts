@@ -9,6 +9,8 @@ export type Game = {
   info: string | undefined;
   upVotes: number;
   downVotes: number;
+  subscribes: number;
+  is_subscribed: boolean;
   tags: string[] | undefined;
   rom: string;
   createdAt: string;

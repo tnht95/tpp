@@ -9,6 +9,9 @@ import { GameRequest, ResponseErr } from '@/models';
 
 export const GameDetailsTabs = () => {
   const {
+    utils: { isAuth }
+  } = useAuthCtx();
+  const {
     game: { data, refetch },
     utils: { getGameId }
   } = useGameCtx();
@@ -91,16 +94,23 @@ export const GameDetailsTabs = () => {
 
         <div class="flex">
           <div class="flex gap-x-5">
-            <PillButton icon="fa-solid fa-plus" title="Subcribe" number={345} />
             <PillButton
               title="Upvote"
               number={400}
               icon="fa-solid fa-angle-up"
+              clicked={false}
+              titleAfterClicked="Upvoted"
+              onClick={() => {}}
+              disabled={!isAuth()}
             />
             <PillButton
               icon="fa-solid fa-angle-down"
               title="Downvote"
               number={200}
+              clicked={true}
+              onClick={() => {}}
+              titleAfterClicked="Downvoted"
+              disabled={!isAuth()}
             />
           </div>
         </div>
@@ -117,11 +127,6 @@ export const GameDetailsTabs = () => {
             title="Discussion"
             url={`/games/${data()?.id}/discussion`}
             icon="fa-regular fa-comment-dots"
-          />
-          <GameTab
-            title="Activity"
-            url={`/games/${data()?.id}/activity`}
-            icon="fa-regular fa-rectangle-list"
           />
         </div>
       </div>
