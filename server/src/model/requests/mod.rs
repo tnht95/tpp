@@ -64,7 +64,7 @@ impl From<PaginationWithTarget> for PaginationWithTargetInternal {
     }
 }
 
-fn validate_tags(tags: &Vec<String>) -> Result<(), ValidationError> {
+fn validate_tags(tags: &[String]) -> Result<(), ValidationError> {
     if tags.len() > 5 {
         return Err(ValidationError::new("invalid_tag_size"));
     }
