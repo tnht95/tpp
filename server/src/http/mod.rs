@@ -137,9 +137,9 @@ where
                         .route("/games/:gid/discussions", get(discussion::filter))
                         .route("/games/:gid/discussions", post(discussion::add))
                         .route("/games/:gid/discussions/counts", get(discussion::count))
-                        .route("/discussions/:id", get(discussion::get_by_id))
-                        .route("/discussions/:id", put(discussion::edit))
-                        .route("/discussions/:id", delete(discussion::delete))
+                        .route("/games/:gid/discussions/:id", get(discussion::get_by_id))
+                        .route("/games/:gid/discussions/:id", put(discussion::edit))
+                        .route("/games/:gid/discussions/:id", delete(discussion::delete))
                         .route("/search", get(search::search))
                         .layer(middleware),
                 )

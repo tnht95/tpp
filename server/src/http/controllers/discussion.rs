@@ -71,7 +71,7 @@ pub async fn add<TInternalServices: IInternalServices>(
 }
 
 pub async fn get_by_id<TInternalServices: IInternalServices>(
-    Path(id): Path<String>,
+    Path((game_id, id)): Path<(String, String)>,
     State(state): InternalState<TInternalServices>,
 ) -> Response {
     let id = match id.parse::<Uuid>() {
@@ -79,7 +79,12 @@ pub async fn get_by_id<TInternalServices: IInternalServices>(
         Err(_) => return response_400_with_const(INVALID_UUID_ERR),
     };
 
-    match state.services.discussion.get_by_id(id).await {
+    let game_id = match game_id.parse::<Uuid>() {
+        Ok(game_id) => game_id,
+        Err(_) => return response_400_with_const(INVALID_UUID_ERR),
+    };
+
+    match state.services.discussion.get_by_id(id, game_id).await {
         Ok(discussion) => match discussion {
             Some(discussion) => Json(HttpResponse { data: discussion }).into_response(),
             None => response_400_with_const(NOT_FOUND),
@@ -89,13 +94,18 @@ pub async fn get_by_id<TInternalServices: IInternalServices>(
 }
 
 pub async fn edit<TInternalServices: IInternalServices>(
-    Path(id): Path<String>,
+    Path((game_id, id)): Path<(String, String)>,
     State(state): InternalState<TInternalServices>,
     Authentication(user, ..): Authentication<TInternalServices>,
     JsonValidator(discussion): JsonValidator<EditDiscussionRequest>,
 ) -> Response {
     let id = match id.parse::<Uuid>() {
         Ok(id) => id,
+        Err(_) => return response_400_with_const(INVALID_UUID_ERR),
+    };
+
+    let game_id = match game_id.parse::<Uuid>() {
+        Ok(game_id) => game_id,
         Err(_) => return response_400_with_const(INVALID_UUID_ERR),
     };
 
@@ -107,19 +117,29 @@ pub async fn edit<TInternalServices: IInternalServices>(
         Err(DiscussionServiceErr::Other(e)) => return response_unhandled_err(e),
     };
 
-    match state.services.discussion.edit(id, discussion).await {
+    match state
+        .services
+        .discussion
+        .edit(id, game_id, discussion)
+        .await
+    {
         Ok(discussion) => Json(HttpResponse { data: discussion }).into_response(),
         Err(DiscussionServiceErr::Other(e)) => response_unhandled_err(e),
     }
 }
 
 pub async fn delete<TInternalServices: IInternalServices>(
-    Path(id): Path<String>,
+    Path((game_id, id)): Path<(String, String)>,
     State(state): InternalState<TInternalServices>,
     Authentication(user, ..): Authentication<TInternalServices>,
 ) -> Response {
     let id = match id.parse::<Uuid>() {
         Ok(id) => id,
+        Err(_) => return response_400_with_const(INVALID_UUID_ERR),
+    };
+
+    let game_id = match game_id.parse::<Uuid>() {
+        Ok(game_id) => game_id,
         Err(_) => return response_400_with_const(INVALID_UUID_ERR),
     };
 
@@ -131,7 +151,7 @@ pub async fn delete<TInternalServices: IInternalServices>(
         Err(DiscussionServiceErr::Other(e)) => return response_unhandled_err(e),
     };
 
-    match state.services.discussion.delete(id).await {
+    match state.services.discussion.delete(id, game_id).await {
         Ok(discussion) => Json(HttpResponse { data: discussion }).into_response(),
         Err(DiscussionServiceErr::Other(e)) => response_unhandled_err(e),
     }

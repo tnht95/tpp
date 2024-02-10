@@ -35,13 +35,18 @@ pub trait IDiscussionService {
         game_id: Uuid,
         discussion: AddDiscussionRequest,
     ) -> Result<(), DiscussionServiceErr>;
-    async fn get_by_id(&self, id: Uuid) -> Result<Option<DiscussionDetails>, DiscussionServiceErr>;
+    async fn get_by_id(
+        &self,
+        id: Uuid,
+        game_id: Uuid,
+    ) -> Result<Option<DiscussionDetails>, DiscussionServiceErr>;
     async fn edit(
         &self,
         id: Uuid,
+        game_id: Uuid,
         discussion: EditDiscussionRequest,
     ) -> Result<DiscussionDetails, DiscussionServiceErr>;
-    async fn delete(&self, id: Uuid) -> Result<(), DiscussionServiceErr>;
+    async fn delete(&self, id: Uuid, game_id: Uuid) -> Result<(), DiscussionServiceErr>;
     async fn existed(&self, id: Uuid, author_id: i64) -> Result<bool, DiscussionServiceErr>;
     async fn count(&self, game_id: Uuid) -> Result<i64, DiscussionServiceErr>;
 }
@@ -102,7 +107,11 @@ where
         .map_err(|e| DiscussionServiceErr::Other(e.into()))
     }
 
-    async fn get_by_id(&self, id: Uuid) -> Result<Option<DiscussionDetails>, DiscussionServiceErr> {
+    async fn get_by_id(
+        &self,
+        id: Uuid,
+        game_id: Uuid,
+    ) -> Result<Option<DiscussionDetails>, DiscussionServiceErr> {
         sqlx::query_as!(
             DiscussionDetails,
             "select 
@@ -116,8 +125,9 @@ where
                 discussions.created_at
             from discussions 
             join users on discussions.user_id = users.id
-            where discussions.id = $1",
-            id
+            where discussions.id = $1 and discussions.game_id = $2",
+            id,
+            game_id
         )
         .fetch_optional(self.db.get_pool())
         .await
@@ -127,26 +137,34 @@ where
     async fn edit(
         &self,
         id: Uuid,
+        game_id: Uuid,
         discussion: EditDiscussionRequest,
     ) -> Result<DiscussionDetails, DiscussionServiceErr> {
         sqlx::query!(
-            "update discussions set content = $1, title = $2, updated_at = now() where id = $3",
+            "update discussions set content = $1, title = $2, updated_at = now() where id = $3 and game_id = $4",
             discussion.content,
             discussion.title,
             id,
+            game_id
         )
         .execute(self.db.get_pool())
         .await
         .map_err(|e| DiscussionServiceErr::Other(e.into()))?;
-        self.get_by_id(id).await.map(|d| d.unwrap_or_default())
+        self.get_by_id(id, game_id)
+            .await
+            .map(|d| d.unwrap_or_default())
     }
 
-    async fn delete(&self, id: Uuid) -> Result<(), DiscussionServiceErr> {
-        sqlx::query!("delete from discussions where id = $1", id)
-            .execute(self.db.get_pool())
-            .await
-            .map(|_| ())
-            .map_err(|e| DiscussionServiceErr::Other(e.into()))
+    async fn delete(&self, id: Uuid, game_id: Uuid) -> Result<(), DiscussionServiceErr> {
+        sqlx::query!(
+            "delete from discussions where id = $1 and game_id = $2",
+            id,
+            game_id
+        )
+        .execute(self.db.get_pool())
+        .await
+        .map(|_| ())
+        .map_err(|e| DiscussionServiceErr::Other(e.into()))
     }
 
     async fn existed(&self, id: Uuid, author_id: i64) -> Result<bool, DiscussionServiceErr> {
