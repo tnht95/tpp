@@ -40,7 +40,7 @@ pub trait IDiscussionService {
         &self,
         id: Uuid,
         discussion: EditDiscussionRequest,
-    ) -> Result<(), DiscussionServiceErr>;
+    ) -> Result<DiscussionDetails, DiscussionServiceErr>;
     async fn delete(&self, id: Uuid) -> Result<(), DiscussionServiceErr>;
     async fn existed(&self, id: Uuid, author_id: i64) -> Result<bool, DiscussionServiceErr>;
     async fn count(&self, game_id: Uuid) -> Result<i64, DiscussionServiceErr>;
@@ -128,7 +128,7 @@ where
         &self,
         id: Uuid,
         discussion: EditDiscussionRequest,
-    ) -> Result<(), DiscussionServiceErr> {
+    ) -> Result<DiscussionDetails, DiscussionServiceErr> {
         sqlx::query!(
             "update discussions set content = $1, title = $2, updated_at = now() where id = $3",
             discussion.content,
@@ -137,8 +137,8 @@ where
         )
         .execute(self.db.get_pool())
         .await
-        .map(|_| ())
-        .map_err(|e| DiscussionServiceErr::Other(e.into()))
+        .map_err(|e| DiscussionServiceErr::Other(e.into()))?;
+        self.get_by_id(id).await.map(|d| d.unwrap_or_default())
     }
 
     async fn delete(&self, id: Uuid) -> Result<(), DiscussionServiceErr> {

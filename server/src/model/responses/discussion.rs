@@ -4,7 +4,7 @@ use uuid::Uuid;
 
 use crate::model::responses::HttpResponseConstErr;
 
-#[derive(Serialize)]
+#[derive(Serialize, Default)]
 #[serde(rename_all = "camelCase")]
 pub struct DiscussionDetails {
     pub id: Uuid,
