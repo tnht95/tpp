@@ -31,7 +31,7 @@ const otherContent = (
 );
 
 export const OptionButton = (propInput: OptionButtonProps) => {
-  const props = mergeProps({ isEditMode: () => true }, propInput);
+  const props = mergeProps({ isEditMode: () => false }, propInput);
   const [userDropdownRef, setUserDropdownRef] = createSignal<HTMLDivElement>();
   const [userBtnRef, setUserBtnRef] = createSignal<HTMLButtonElement>();
 

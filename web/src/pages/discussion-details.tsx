@@ -1,20 +1,17 @@
-import { useNavigate, useParams } from '@solidjs/router';
+import { useParams } from '@solidjs/router';
 import {
   batch,
   createEffect,
   createResource,
   createSignal,
-  ErrorBoundary,
   For,
-  Show,
-  Suspense
+  Show
 } from 'solid-js';
 import { createStore, produce } from 'solid-js/store';
 
 import {
   addCommentAction,
   deleteCommentAction,
-  deleteDiscussionAction,
   editCommentAction,
   fetchCommentAction,
   QueryWIthTargetInput
@@ -24,13 +21,11 @@ import {
   CommentContainer,
   CommentForm,
   DiscussionForm,
-  LoadingSpinner,
   Markdown,
   OptionButton
 } from '@/components';
 import { useAuthCtx, useDiscussionDetailsCtx, useToastCtx } from '@/context';
 import { CommentDetails, RespErr } from '@/models';
-import { NotFound } from '@/pages';
 import { formatTime } from '@/utils';
 
 export const DiscussionDetails = () => {
@@ -40,11 +35,9 @@ export const DiscussionDetails = () => {
   const { dispatch } = useToastCtx();
   const {
     discussion,
-    dispatch: { edit },
-    utils: { gameId, isEditMode },
+    dispatch: { edit, del },
     modal: { initRef, show, hide }
   } = useDiscussionDetailsCtx();
-  const navigate = useNavigate();
   const discussionId = useParams()['discussionId'] as string;
   const [queryValue, setQueryValue] = createSignal<QueryWIthTargetInput>({
     targetId: discussionId,
@@ -130,89 +123,68 @@ export const DiscussionDetails = () => {
     }));
   };
 
-  const onDeleteDiscussionHandler = () => {
-    deleteDiscussionAction(discussionId)
-      .then(() => {
-        // rf();
-        navigate(`/games/${gameId}/discussion`);
-        return dispatch.showToast({ msg: 'Discussion Deleted', type: 'Ok' });
-      })
-      .catch((error: RespErr) => {
-        dispatch.showToast({ msg: error.msg, type: 'Err' });
-      });
-  };
-
   return (
-    <Suspense
-      fallback={
-        <div class="flex h-svh items-center justify-center">
-          <LoadingSpinner />
-        </div>
-      }
-    >
-      <ErrorBoundary fallback={<NotFound />}>
-        <DiscussionForm
-          ref={initRef}
-          onCloseHandler={hide}
-          onSubmitHandler={edit}
-          discussion={discussion()}
-        />
-        <div class="ml-5 flex flex-col">
-          <div class="border-b pb-5">
-            <div class="flex items-center">
-              <p class="mr-3 text-3xl font-semibold">{discussion()?.title}</p>
-              <OptionButton
-                isOwner={isSameUser(discussion()?.userId as number)}
-                onDelete={onDeleteDiscussionHandler}
-                id={''}
-                isEditMode={isEditMode}
-                onEdit={show}
-              />
-            </div>
-            <p class="mt-1 text-base text-gray-400">
-              On {formatTime(discussion()?.createdAt as string)} by{' '}
-              <a
-                target="_blank"
-                href={`/users/${discussion()?.userId}`}
-                class="font-bold hover:text-gray-600 hover:underline"
-              >
-                {discussion()?.userName}
-              </a>
-            </p>
-          </div>
-          <div class="mt-9 flex justify-between border-b pb-9">
-            <Avatar
-              img={discussion()?.userAvatar as string}
-              userId={discussion()?.userId as number}
+    <>
+      <DiscussionForm
+        ref={initRef}
+        onCloseHandler={hide}
+        onSubmitHandler={edit}
+        discussion={discussion()}
+      />
+      <div class="flex flex-col gap-9 px-5">
+        <div class="border-b pb-5">
+          <div class="flex items-center">
+            <p class="mr-3 text-3xl font-semibold">{discussion()?.title}</p>
+            <OptionButton
+              isOwner={isSameUser(discussion()?.userId as number)}
+              onDelete={del}
+              id={''}
+              onEdit={show}
             />
-            <div class="ml-4 w-full rounded-lg border-2 border-dashed p-5">
-              <Markdown content={discussion()?.content as string} />
-            </div>
           </div>
-          <div class="my-9 flex flex-col gap-7">
-            <For each={comments}>
-              {comment => (
-                <CommentContainer
-                  comment={comment}
-                  onDelete={onDeleteCmtHandler}
-                  onEdit={onEditCmtHandler}
-                />
-              )}
-            </For>
-            <Show when={commentResource().length == 5}>
-              <p
-                onClick={onLoadMoreCmtHandler}
-                class="-my-1 cursor-pointer text-gray-400 hover:text-gray-600"
-              >
-                Load more...
-              </p>
-            </Show>
-            <CommentForm onSubmitHandler={onAddCmtHandler}>
-              New Comment
-            </CommentForm>
+          <p class="mt-1 text-base text-gray-400">
+            On {formatTime(discussion()?.createdAt as string)} by{' '}
+            <a
+              target="_blank"
+              href={`/users/${discussion()?.userId}`}
+              class="font-bold hover:text-gray-600 hover:underline"
+            >
+              {discussion()?.userName}
+            </a>
+          </p>
+        </div>
+        <div class="flex gap-5 border-b pb-9">
+          <Avatar
+            img={discussion()?.userAvatar as string}
+            userId={discussion()?.userId as number}
+          />
+          <div class="w-full rounded-lg border-2 border-dashed p-5">
+            <Markdown content={discussion()?.content as string} />
           </div>
         </div>
-      </ErrorBoundary>
-    </Suspense>
+        <div class="flex flex-col">
+          <For each={comments}>
+            {comment => (
+              <CommentContainer
+                comment={comment}
+                onDelete={onDeleteCmtHandler}
+                onEdit={onEditCmtHandler}
+              />
+            )}
+          </For>
+          <Show when={commentResource().length == 5}>
+            <p
+              onClick={onLoadMoreCmtHandler}
+              class="-my-1 cursor-pointer text-gray-400 hover:text-gray-600"
+            >
+              Load more...
+            </p>
+          </Show>
+          <CommentForm onSubmitHandler={onAddCmtHandler}>
+            New Comment
+          </CommentForm>
+        </div>
+      </div>
+    </>
   );
 };
