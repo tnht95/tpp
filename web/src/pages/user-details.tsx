@@ -13,12 +13,6 @@ import { NotFound } from '@/pages';
 import { UserActivity, UserGames } from '@/parts';
 import { authenticationStore } from '@/store';
 
-const spinner = (
-  <div class="flex h-svh items-center justify-center">
-    <LoadingSpinner />
-  </div>
-);
-
 export const UserDetails = () => {
   const {
     utils: { isSameUser }
@@ -27,7 +21,7 @@ export const UserDetails = () => {
   const [user] = createResource(userId, fetchUserByIdAction);
 
   return (
-    <Suspense fallback={spinner}>
+    <Suspense fallback={<LoadingSpinner />}>
       <ErrorBoundary fallback={<NotFound />}>
         <div class="mx-10 my-5 p-5">
           <div class="md:-mx-2 md:flex">

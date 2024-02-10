@@ -2,8 +2,12 @@ import { For, Show } from 'solid-js';
 
 import { CommentContainer, CommentForm } from '@/components';
 import { useCommentsCtx } from '@/context';
+import { authenticationStore } from '@/store';
 
 export const GameDetailsDiscussionDetailsComment = () => {
+  const {
+    utils: { isAuth }
+  } = authenticationStore;
   const {
     comments,
     dispatch: { edit, del, add, fetchMore },
@@ -24,7 +28,9 @@ export const GameDetailsDiscussionDetailsComment = () => {
           Load more...
         </p>
       </Show>
-      <CommentForm onSubmitHandler={add}>New Comment</CommentForm>
+      <Show when={isAuth()}>
+        <CommentForm onSubmitHandler={add}>New Comment</CommentForm>
+      </Show>
     </div>
   );
 };

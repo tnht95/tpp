@@ -1,3 +1,5 @@
+import { Show } from 'solid-js';
+
 import { GameForm, OptionButton, PillButton } from '@/components';
 import { useGameDetailsCtx } from '@/context';
 import { authenticationStore } from '@/store';
@@ -26,13 +28,15 @@ export const GameDetailsHeader = () => {
           onSubmitHandler={edit}
           game={game()}
         />
-        <OptionButton
-          isOwner={user()?.id === game()?.authorId}
-          onDelete={del}
-          id={game()?.id as string}
-          onEdit={show}
-          isEditMode={isEditMode}
-        />
+        <Show when={isAuth()}>
+          <OptionButton
+            isOwner={user()?.id === game()?.authorId}
+            onDelete={del}
+            id={game()?.id as string}
+            onEdit={show}
+            isEditMode={isEditMode}
+          />
+        </Show>
       </div>
       <div class="flex flex-1 justify-end">
         <div class="flex gap-x-5">

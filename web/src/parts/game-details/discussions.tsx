@@ -32,7 +32,7 @@ const GameDetailsDiscussionInner = () => {
     <>
       <div class="flex items-center justify-between px-8 py-3.5 text-left text-base font-bold text-black rtl:text-right">
         <p class="text-lg">Total {count()} discussions</p>
-        <Show when={isAuth}>
+        <Show when={isAuth()}>
           <Button
             withIcon="fa-solid fa-plus"
             title="New"
