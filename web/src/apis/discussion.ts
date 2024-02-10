@@ -32,28 +32,38 @@ export const addDiscussionAction = (body: DiscussionRequest, gameId: string) =>
     .then(errHandler)
     .then((r: Response<undefined>) => r.data);
 
-export const fetchDiscussionByIdAction = (id: string) =>
-  fetch(`${import.meta.env.VITE_SERVER_URL}/discussions/${id}`)
+export const fetchDiscussionByIdAction = ([gameId, id]: [string, string]) =>
+  fetch(`${import.meta.env.VITE_SERVER_URL}/games/${gameId}/discussions/${id}`)
     .then(errHandler)
     .then((r: Response<DiscussionDetails | undefined>) => r.data);
 
-export const editDiscussionAction = (id: string, body: DiscussionRequest) =>
-  fetch(`${import.meta.env.VITE_SERVER_URL}/discussions/${id}`, {
-    method: 'put',
-    credentials: 'include',
-    headers: {
-      'content-type': 'application/json'
-    },
-    body: JSON.stringify(body)
-  })
+export const editDiscussionAction = (
+  gameId: string,
+  id: string,
+  body: DiscussionRequest
+) =>
+  fetch(
+    `${import.meta.env.VITE_SERVER_URL}/games/${gameId}/discussions/${id}`,
+    {
+      method: 'put',
+      credentials: 'include',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    }
+  )
     .then(errHandler)
-    .then((r: Response<undefined>) => r.data);
+    .then((r: Response<DiscussionDetails>) => r.data);
 
-export const deleteDiscussionAction = (id: string) =>
-  fetch(`${import.meta.env.VITE_SERVER_URL}/discussions/${id}`, {
-    method: 'delete',
-    credentials: 'include'
-  })
+export const deleteDiscussionAction = (gameId: string, id: string) =>
+  fetch(
+    `${import.meta.env.VITE_SERVER_URL}/games/${gameId}/discussions/${id}`,
+    {
+      method: 'delete',
+      credentials: 'include'
+    }
+  )
     .then(errHandler)
     .then((r: Response<undefined>) => r.data);
 

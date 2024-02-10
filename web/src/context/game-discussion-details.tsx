@@ -3,6 +3,7 @@ import {
   batch,
   createContext,
   createResource,
+  createSignal,
   ErrorBoundary,
   ParentProps,
   Resource,
@@ -38,30 +39,31 @@ const ctx = createContext<Ctx>();
 export const GameDiscussionDetailsProvider = (props: ParentProps) => {
   const gameId = useParams()['id'] as string;
   const discussionId = useParams()['discussionId'] as string;
+  const [params] = createSignal<[string, string]>([gameId, discussionId]);
   const navigate = useNavigate();
   const {
     dispatch: { showToast }
   } = useToastCtx();
   const modal = useModal();
-  const [discussion, { refetch }] = createResource(
-    discussionId,
+  const [discussion, { mutate }] = createResource(
+    params,
     fetchDiscussionByIdAction
   );
 
   const edit = (discussion: DiscussionRequest) => {
-    editDiscussionAction(discussionId, discussion)
-      .then(() =>
+    editDiscussionAction(gameId, discussionId, discussion)
+      .then(discussion =>
         batch(() => {
           modal.hide();
+          mutate(discussion);
           showToast({ msg: 'Discussion Updated', type: 'Ok' });
-          refetch() as unknown;
         })
       )
       .catch((error: RespErr) => showToast({ msg: error.msg, type: 'Err' }));
   };
 
   const del = () => {
-    deleteDiscussionAction(discussionId)
+    deleteDiscussionAction(gameId, discussionId)
       .then(() =>
         batch(() => {
           navigate(`/games/${gameId}/discussion`);
