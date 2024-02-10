@@ -39,7 +39,7 @@ type Ctx = {
 };
 
 const ctx = createContext<Ctx>();
-export const DiscussionProvider = (props: ParentProps) => {
+export const GameDiscussionsProvider = (props: ParentProps) => {
   const gameId = useParams()['id'] as string;
   const {
     dispatch: { showToast }
@@ -107,4 +107,4 @@ export const DiscussionProvider = (props: ParentProps) => {
   );
 };
 
-export const useDiscussionCtx = () => useContext(ctx) as Ctx;
+export const useGameDiscussionsCtx = () => useContext(ctx) as Ctx;

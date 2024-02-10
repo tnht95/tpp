@@ -1,5 +1,5 @@
-import { HeaderLogo } from './header-logo';
-import { HeaderMenu } from './header-menu';
+import { HeaderLogo } from './logo';
+import { HeaderMenu } from './menu';
 import { Searchbar } from './search-bar';
 import { SignIn } from './sign-in';
 

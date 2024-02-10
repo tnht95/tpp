@@ -28,11 +28,14 @@ type Ctx = {
     edit: (discussion: DiscussionRequest) => void;
     del: (discussionId: string) => void;
   };
+  utils: {
+    discussionId: string;
+  };
   modal: ModalUtil;
 };
 
 const ctx = createContext<Ctx>();
-export const DiscussionDetailsProvider = (props: ParentProps) => {
+export const GameDiscussionDetailsProvider = (props: ParentProps) => {
   const gameId = useParams()['id'] as string;
   const discussionId = useParams()['discussionId'] as string;
   const navigate = useNavigate();
@@ -74,6 +77,7 @@ export const DiscussionDetailsProvider = (props: ParentProps) => {
       edit,
       del
     },
+    utils: { discussionId },
     modal
   };
 
@@ -86,4 +90,4 @@ export const DiscussionDetailsProvider = (props: ParentProps) => {
   );
 };
 
-export const useDiscussionDetailsCtx = () => useContext(ctx) as Ctx;
+export const useGameDiscussionDetailsCtx = () => useContext(ctx) as Ctx;

@@ -55,16 +55,15 @@ export const GameDetailsProvider = (props: ParentProps) => {
     utils: { user }
   } = useAuthCtx();
 
-  const handleEditSuccessfull = () =>
-    batch(() => {
-      modal.hide();
-      showToast({ msg: 'Game Updated', type: 'Ok' });
-      setIsEditMode(false);
-    });
-
   const edit = (file: File, game: GameRequest) => {
     editGameAction(file, game, gameId)
-      .then(handleEditSuccessfull)
+      .then(() =>
+        batch(() => {
+          modal.hide();
+          showToast({ msg: 'Game Updated', type: 'Ok' });
+          setIsEditMode(false);
+        })
+      )
       .catch((error: RespErr) => showToast({ msg: error.msg, type: 'Err' }));
   };
 
