@@ -9,9 +9,9 @@ import {
 
 import { fetchUserByIdAction } from '@/apis';
 import { LoadingSpinner, PillButton } from '@/components';
-import { useAuthCtx } from '@/context';
 import { NotFound } from '@/pages';
 import { UserActivity, UserGames } from '@/parts';
+import { authenticationStore } from '@/store';
 
 const spinner = (
   <div class="flex h-svh items-center justify-center">
@@ -22,7 +22,7 @@ const spinner = (
 export const UserDetails = () => {
   const {
     utils: { isSameUser }
-  } = useAuthCtx();
+  } = authenticationStore;
   const [userId] = createSignal(useParams()['id'] as string);
   const [user] = createResource(userId, fetchUserByIdAction);
 

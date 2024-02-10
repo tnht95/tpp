@@ -1,8 +1,8 @@
 import { createSignal, Show } from 'solid-js';
 
 import { Avatar, CommentForm, Markdown, OptionButton } from '@/components';
-import { useAuthCtx } from '@/context';
 import { CommentDetails } from '@/models';
+import { authenticationStore } from '@/store';
 import { formatTime } from '@/utils';
 
 type CommentProps = {
@@ -16,7 +16,7 @@ export const CommentContainer = (props: CommentProps) => {
 
   const {
     utils: { isSameUser, isAuth }
-  } = useAuthCtx();
+  } = authenticationStore;
 
   const onSubmitHandler = (content: string) => {
     setIsEditMode(false);

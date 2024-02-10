@@ -16,9 +16,9 @@ import { deleteGameAction, editGameAction, fetchGameByIdAction } from '@/apis';
 import { LoadingSpinner } from '@/components';
 import { Game, GameRequest, RespErr } from '@/models';
 import { NotFound } from '@/pages';
+import { authenticationStore } from '@/store';
 import { ModalUtil, useModal } from '@/utils';
 
-import { useAuthCtx } from './authentication';
 import { useToastCtx } from './toast';
 
 type Ctx = {
@@ -51,9 +51,7 @@ export const GameDetailsProvider = (props: ParentProps) => {
     }
   });
   const navigate = useNavigate();
-  const {
-    utils: { user }
-  } = useAuthCtx();
+  const { user } = authenticationStore;
 
   const edit = (file: File, game: GameRequest) => {
     editGameAction(file, game, gameId)

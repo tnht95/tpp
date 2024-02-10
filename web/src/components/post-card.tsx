@@ -22,8 +22,9 @@ import {
   Markdown,
   OptionButton
 } from '@/components';
-import { useAuthCtx, useToastCtx } from '@/context';
+import { useToastCtx } from '@/context';
 import { CommentDetails, PostDetails, RespErr } from '@/models';
+import { authenticationStore } from '@/store';
 import { formatTime } from '@/utils';
 
 type PostCardProps = {
@@ -33,7 +34,7 @@ type PostCardProps = {
 };
 
 export const PostCard = (props: PostCardProps) => {
-  const { utils } = useAuthCtx();
+  const { utils } = authenticationStore;
   const { dispatch } = useToastCtx();
 
   const [isEditMode, setIsEditMode] = createSignal(false);

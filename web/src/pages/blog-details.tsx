@@ -30,16 +30,17 @@ import {
   Markdown,
   OptionButton
 } from '@/components';
-import { useAuthCtx, useToastCtx } from '@/context';
+import { useToastCtx } from '@/context';
 import { BlogRequest, CommentDetails, RespErr } from '@/models';
 import { NotFound } from '@/pages';
 import { TagSidebar } from '@/parts';
+import { authenticationStore } from '@/store';
 import { formatTime } from '@/utils';
 
 export const BlogDetails = () => {
   const {
     utils: { isAdmin }
-  } = useAuthCtx();
+  } = authenticationStore;
   const { dispatch } = useToastCtx();
   const navigate = useNavigate();
   const blogId = useParams()['id'] as string;

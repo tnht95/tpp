@@ -5,17 +5,15 @@ import './index.css';
 import 'flowbite';
 
 import { App } from './app';
-import { AuthenticationProvider, ToastProvider } from './context';
+import { ToastProvider } from './context';
 
 const root = document.querySelector('#root') as MountableElement;
 
 render(
   () => (
-    <AuthenticationProvider>
-      <ToastProvider>
-        <App />
-      </ToastProvider>
-    </AuthenticationProvider>
+    <ToastProvider>
+      <App />
+    </ToastProvider>
   ),
   root
 );

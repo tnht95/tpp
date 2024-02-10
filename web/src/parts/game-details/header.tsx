@@ -1,5 +1,6 @@
 import { GameForm, OptionButton, PillButton } from '@/components';
-import { useAuthCtx, useGameDetailsCtx } from '@/context';
+import { useGameDetailsCtx } from '@/context';
+import { authenticationStore } from '@/store';
 
 export const GameDetailsHeader = () => {
   const {
@@ -9,8 +10,9 @@ export const GameDetailsHeader = () => {
     modal: { initRef, hide, show }
   } = useGameDetailsCtx();
   const {
-    utils: { user, isSameUser, isAuth }
-  } = useAuthCtx();
+    user,
+    utils: { isSameUser, isAuth }
+  } = authenticationStore;
   return (
     <div class="flex flex-row">
       <div class="flex w-7/10 items-center gap-2">

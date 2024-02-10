@@ -11,8 +11,9 @@ import { createStore, produce } from 'solid-js/store';
 
 import { addGameAction, fetchGameAction, GameQueryInput } from '@/apis';
 import { Button, GameCard, GameForm, ShowMoreButton } from '@/components';
-import { useAuthCtx, useToastCtx } from '@/context';
+import { useToastCtx } from '@/context';
 import { GameRequest, GameSummary, RespErr } from '@/models';
+import { authenticationStore } from '@/store';
 
 type UserGamesProps = {
   userId: number;
@@ -22,7 +23,7 @@ const gameUserLimit = 9;
 export const UserGames = (props: UserGamesProps) => {
   const {
     utils: { isSameUser }
-  } = useAuthCtx();
+  } = authenticationStore;
   const defaultParam: GameQueryInput = {
     // eslint-disable-next-line solid/reactivity
     authorId: props.userId,

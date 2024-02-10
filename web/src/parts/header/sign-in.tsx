@@ -1,11 +1,11 @@
 import { createSignal, Show, Suspense } from 'solid-js';
 
-import { useAuthCtx } from '@/context';
+import { authenticationStore } from '@/store';
 
 import { UserMenuGroup } from './user-menu-group';
 
 export const SignIn = () => {
-  const { utils } = useAuthCtx();
+  const { utils } = authenticationStore;
   return (
     <div class="flex flex-1 justify-end">
       <Suspense fallback={loadingBtn}>

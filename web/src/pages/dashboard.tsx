@@ -24,11 +24,12 @@ import {
   VerticalGameCard
 } from '@/components';
 import { PAGINATION } from '@/constant';
-import { useAuthCtx, useToastCtx } from '@/context';
+import { useToastCtx } from '@/context';
 import { PostDetails, RespErr } from '@/models';
+import { authenticationStore } from '@/store';
 
 export const Dashboard = () => {
-  const { utils } = useAuthCtx();
+  const { utils } = authenticationStore;
   const { dispatch } = useToastCtx();
   const [newestGames] = createResource(
     { orderField: 'createdAt', orderBy: 'desc', limit: 5 },

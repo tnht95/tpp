@@ -1,11 +1,8 @@
 import { For, Show } from 'solid-js';
 
 import { Button, DiscussionForm, ShowMoreButton, TableRow } from '@/components';
-import {
-  GameDiscussionsProvider,
-  useAuthCtx,
-  useGameDiscussionsCtx
-} from '@/context';
+import { GameDiscussionsProvider, useGameDiscussionsCtx } from '@/context';
+import { authenticationStore } from '@/store';
 import { formatTime } from '@/utils';
 
 export const GameDetailsDiscussion = () => (
@@ -23,7 +20,7 @@ export const GameDetailsDiscussion = () => (
 const GameDetailsDiscussionInner = () => {
   const {
     utils: { isAuth }
-  } = useAuthCtx();
+  } = authenticationStore;
   const {
     discussions,
     count,

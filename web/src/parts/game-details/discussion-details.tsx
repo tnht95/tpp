@@ -2,9 +2,9 @@ import { Avatar, DiscussionForm, Markdown, OptionButton } from '@/components';
 import {
   CommentsProvider,
   GameDiscussionDetailsProvider,
-  useAuthCtx,
   useGameDiscussionDetailsCtx
 } from '@/context';
+import { authenticationStore } from '@/store';
 import { formatTime } from '@/utils';
 
 import { GameDetailsDiscussionDetailsComment } from './discussion-details-comment';
@@ -18,7 +18,7 @@ export const GameDetailsDiscussionDetails = () => (
 const GameDetailsDiscussionDetailsInner = () => {
   const {
     utils: { isSameUser }
-  } = useAuthCtx();
+  } = authenticationStore;
   const {
     discussion,
     dispatch: { edit, del },

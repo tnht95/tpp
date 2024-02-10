@@ -12,14 +12,15 @@ import { createStore, produce } from 'solid-js/store';
 import { addBlogAction, fetchBlogAction, fetchBlogTagsAction } from '@/apis';
 import { BlogCard, BlogForm, ShowMoreButton } from '@/components';
 import { PAGINATION } from '@/constant';
-import { useAuthCtx, useToastCtx } from '@/context';
+import { useToastCtx } from '@/context';
 import { BlogRequest, BlogSummary, RespErr } from '@/models';
 import { TagSidebar } from '@/parts';
+import { authenticationStore } from '@/store';
 
 export const Blogs = () => {
   const {
     utils: { isAdmin }
-  } = useAuthCtx();
+  } = authenticationStore;
   const { dispatch } = useToastCtx();
   const [modalRef, setModalRef] = createSignal<HTMLDivElement>();
   const [modal, setModal] = createSignal<Modal>();
