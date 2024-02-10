@@ -7,6 +7,7 @@ import {
   createSignal,
   ParentProps,
   Resource,
+  Show,
   useContext
 } from 'solid-js';
 import { createStore, produce } from 'solid-js/store';
@@ -16,6 +17,7 @@ import {
   fetchDiscussionAction,
   fetchDiscussionCountAction
 } from '@/apis';
+import { LoadingSpinner } from '@/components';
 import { PAGINATION } from '@/constant';
 import { DiscussionRequest, DiscussionSummary, RespErr } from '@/models';
 import { ModalUtil, useModal } from '@/utils';
@@ -44,41 +46,40 @@ export const DiscussionProvider = (props: ParentProps) => {
   } = useToastCtx();
   const modal = useModal();
   const [params, setParams] = createSignal<[number, string]>([0, gameId]);
-  const [count, { refetch }] = createResource(
+  const [count, { refetch: reCount }] = createResource(
     gameId,
     fetchDiscussionCountAction
   );
-  const [discussionResource] = createResource(params, fetchDiscussionAction, {
+  const [resource] = createResource(params, fetchDiscussionAction, {
     initialValue: []
   });
   const [discussions, setDiscussions] = createStore<DiscussionSummary[]>([]);
 
   createEffect(() => {
-    if (discussionResource().length > 0) {
-      setDiscussions(
-        produce(oldValues => oldValues.push(...discussionResource()))
-      );
+    if (resource().length > 0) {
+      setDiscussions(produce(discussions => discussions.push(...resource())));
     }
   });
 
-  const reset = () =>
-    batch(() => {
-      setDiscussions([]);
-      setParams([0, gameId]);
-      refetch() as unknown;
-    });
-
   const add = (discussion: DiscussionRequest) => {
     addDiscussionAction(discussion, gameId)
-      .then(reset)
-      .then(modal.hide)
-      .then(() => showToast({ msg: 'Discussion Added', type: 'Ok' }))
+      .then(() =>
+        batch(() => {
+          setDiscussions([]);
+          setParams([0, gameId]);
+          reCount() as unknown;
+          modal.hide();
+          showToast({ msg: 'Discussion Added', type: 'Ok' });
+        })
+      )
       .catch((error: RespErr) => showToast({ msg: error.msg, type: 'Err' }));
   };
 
   const fetchMore = () => {
     setParams(params => [params[0] + PAGINATION, gameId]);
   };
+
+  const showMore = () => resource().length === PAGINATION;
 
   const state: Ctx = {
     discussions,
@@ -88,13 +89,22 @@ export const DiscussionProvider = (props: ParentProps) => {
       fetchMore
     },
     utils: {
-      showMore: () => discussionResource().length === PAGINATION,
+      showMore,
       gameId
     },
     modal
   };
 
-  return <ctx.Provider value={state}>{props.children}</ctx.Provider>;
+  return (
+    <ctx.Provider value={state}>
+      <Show
+        when={!resource.loading && !count.loading}
+        fallback={<LoadingSpinner />}
+      >
+        {props.children}
+      </Show>
+    </ctx.Provider>
+  );
 };
 
 export const useDiscussionCtx = () => useContext(ctx) as Ctx;

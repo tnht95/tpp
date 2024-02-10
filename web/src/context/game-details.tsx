@@ -92,14 +92,7 @@ export const GameDetailsProvider = (props: ParentProps) => {
 
   return (
     <ctx.Provider value={state}>
-      <Show
-        when={!game.loading}
-        fallback={
-          <div class="flex h-svh items-center justify-center">
-            <LoadingSpinner />
-          </div>
-        }
-      >
+      <Show when={!game.loading} fallback={<LoadingSpinner />}>
         <ErrorBoundary fallback={<NotFound />}>{props.children}</ErrorBoundary>
       </Show>
     </ctx.Provider>
