@@ -140,7 +140,10 @@ export const CommentsProvider = (props: Props) => {
 
   return (
     <ctx.Provider value={state}>
-      <Show when={!resource.loading} fallback={<LoadingSpinner />}>
+      <Show
+        when={comments.length > 0 || !resource.loading}
+        fallback={<LoadingSpinner />}
+      >
         {props.children}
       </Show>
     </ctx.Provider>

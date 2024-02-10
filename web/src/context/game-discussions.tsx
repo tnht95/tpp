@@ -98,7 +98,7 @@ export const GameDiscussionsProvider = (props: ParentProps) => {
   return (
     <ctx.Provider value={state}>
       <Show
-        when={!resource.loading && !count.loading}
+        when={discussions.length > 0 || (!resource.loading && !count.loading)}
         fallback={<LoadingSpinner />}
       >
         {props.children}
