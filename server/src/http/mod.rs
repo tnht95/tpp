@@ -30,7 +30,19 @@ use tracing::{info, Level};
 use crate::{
     config::Config,
     http::{
-        controllers::{auth, blog, book, comment, discussion, game, health, post, search, user},
+        controllers::{
+            auth,
+            blog,
+            book,
+            comment,
+            discussion,
+            game,
+            health,
+            post,
+            search,
+            subscribe,
+            user,
+        },
         handlers::{panic, shutdown},
         utils::err_handler::response_404_err,
     },
@@ -98,6 +110,8 @@ where
                         .route("/logout", post(auth::log_out))
                         .route("/authentication", get(auth::authentication))
                         .route("/users/:id", get(user::get_by_id))
+                        .route("/users/:id/subscribes", post(subscribe::subscribe_user))
+                        .route("/users/:id/subscribes", delete(subscribe::unsubscribe_user))
                         .route("/books", get(book::get_all))
                         .route("/books", post(book::add))
                         .route("/games", get(game::filter))

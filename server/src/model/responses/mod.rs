@@ -6,6 +6,7 @@ pub mod discussion;
 pub mod game;
 pub mod post;
 pub mod search;
+pub mod subscribe;
 pub mod user;
 
 use serde::Serialize;
@@ -60,4 +61,9 @@ pub const FIELD_MPART_ERR: HttpResponseConstErr = HttpResponseConstErr {
 pub const BYTES_MPART_ERR: HttpResponseConstErr = HttpResponseConstErr {
     code: "ERR_102",
     msg: "Failed to get multipart bytes",
+};
+
+pub const INVALID_USER_ID_ERR: HttpResponseConstErr = HttpResponseConstErr {
+    code: "ERR_103",
+    msg: "Invalid User ID",
 };

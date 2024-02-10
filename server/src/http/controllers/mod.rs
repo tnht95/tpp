@@ -7,6 +7,7 @@ pub mod game;
 pub mod health;
 pub mod post;
 pub mod search;
+pub mod subscribe;
 pub mod user;
 
 use std::sync::Arc;

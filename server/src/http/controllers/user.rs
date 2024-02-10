@@ -9,7 +9,7 @@ use crate::{
         controllers::InternalState,
         utils::err_handler::{response_400_with_const, response_unhandled_err},
     },
-    model::responses::{user::NOT_FOUND, HttpResponse, INVALID_UUID_ERR},
+    model::responses::{user::NOT_FOUND, HttpResponse, INVALID_USER_ID_ERR},
     services::{
         user::{IUserService, UserServiceErr},
         IInternalServices,
@@ -22,7 +22,7 @@ pub async fn get_by_id<TInternalServices: IInternalServices>(
 ) -> Response {
     let id = match id.parse::<i64>() {
         Ok(id) => id,
-        Err(_) => return response_400_with_const(INVALID_UUID_ERR),
+        Err(_) => return response_400_with_const(INVALID_USER_ID_ERR),
     };
 
     match state.services.user.get_by_id(id).await {

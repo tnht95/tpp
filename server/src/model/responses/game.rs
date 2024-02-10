@@ -1,3 +1,4 @@
+use chrono::{DateTime, Utc};
 use serde::Serialize;
 use uuid::Uuid;
 
@@ -11,8 +12,28 @@ pub struct GameSummary {
     pub author_id: i64,
     pub author_name: String,
     pub avatar_url: Option<String>,
-    pub up_votes: i16,
-    pub down_votes: i16,
+    pub up_votes: i64,
+    pub down_votes: i64,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct GameDetails {
+    pub id: Uuid,
+    pub name: String,
+    pub author_id: i64,
+    pub author_name: String,
+    pub url: Option<String>,
+    pub avatar_url: Option<String>,
+    pub about: Option<String>,
+    pub info: Option<String>,
+    pub up_votes: i64,
+    pub down_votes: i64,
+    pub tags: Option<Vec<String>>,
+    pub rom: String,
+    pub is_up_voted: Option<bool>,
+    pub created_at: DateTime<Utc>,
+    pub updated_at: DateTime<Utc>,
 }
 
 pub const NOT_AUTH_DEL: HttpResponseConstErr = HttpResponseConstErr {

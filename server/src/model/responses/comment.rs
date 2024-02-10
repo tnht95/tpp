@@ -12,7 +12,7 @@ pub struct CommentDetails {
     pub user_name: String,
     pub user_avatar: String,
     pub content: String,
-    pub likes: i16,
+    pub likes: i64,
     pub created_at: DateTime<Utc>,
 }
 

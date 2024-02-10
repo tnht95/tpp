@@ -12,8 +12,8 @@ pub struct PostDetails {
     pub author_name: String,
     pub author_avatar: String,
     pub content: String,
-    pub likes: i16,
-    pub comments: i16,
+    pub likes: i64,
+    pub comments: i64,
     pub created_at: DateTime<Utc>,
 }
 

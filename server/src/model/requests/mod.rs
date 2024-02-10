@@ -9,7 +9,6 @@ pub mod discussion;
 pub mod game;
 pub mod post;
 pub mod search;
-
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Pagination {
