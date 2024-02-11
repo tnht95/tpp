@@ -19,7 +19,6 @@ import {
 import { LoadingSpinner } from '@/components';
 import { PAGINATION } from '@/constant';
 import { PostDetails, RespErr } from '@/models';
-import { ModalUtil, useModal } from '@/utils';
 
 import { useToastCtx } from './toast';
 
@@ -32,29 +31,26 @@ type Ctx = {
   };
   utils: {
     handleScroll: () => void;
-    showMore: () => boolean;
   };
-  modal: ModalUtil;
 };
 
 const ctx = createContext<Ctx>();
 export const PostsProvider = (props: ParentProps) => {
   const { showToast } = useToastCtx();
-  const modal = useModal();
   const [params, setParams] = createSignal({ offset: 0 });
   const [resource] = createResource(params, fetchPostAction, {
     initialValue: []
   });
   const [posts, setPosts] = createStore<PostDetails[]>([]);
-  const [hasReachedBottom, setHasReachedBottom] = createSignal(false);
+  const [reachedBottom, setReachedBottom] = createSignal(false);
 
   const handleScroll = () => {
     const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
     const scrollPercentage = (scrollTop / (scrollHeight - clientHeight)) * 100;
-    if (scrollPercentage > 90 && !hasReachedBottom()) {
+    if (scrollPercentage > 90 && !reachedBottom()) {
       batch(() => {
         setParams(p => ({ ...p, offset: p.offset + PAGINATION }));
-        setHasReachedBottom(true);
+        setReachedBottom(true);
       });
     }
   };
@@ -63,7 +59,7 @@ export const PostsProvider = (props: ParentProps) => {
     if (resource().length > 0) {
       batch(() => {
         setPosts(produce(posts => posts.push(...resource())));
-        setHasReachedBottom(false);
+        setReachedBottom(false);
       });
     }
   });
@@ -103,8 +99,6 @@ export const PostsProvider = (props: ParentProps) => {
       .catch((error: RespErr) => showToast({ msg: error.msg, type: 'Err' }));
   };
 
-  const showMore = () => resource().length === PAGINATION;
-
   const state: Ctx = {
     posts,
     dispatch: {
@@ -113,10 +107,8 @@ export const PostsProvider = (props: ParentProps) => {
       del
     },
     utils: {
-      handleScroll,
-      showMore
-    },
-    modal
+      handleScroll
+    }
   };
 
   return (
