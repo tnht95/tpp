@@ -47,8 +47,6 @@ export const GameForm = (props: GameFormProps) => {
       info: getStrVal(formData.get('info') as string),
       tags: getTagValue(formData.get('tags') as string)
     });
-
-    formEl.reset();
   };
 
   return (
@@ -165,7 +163,6 @@ export const GameForm = (props: GameFormProps) => {
                     class="block w-full cursor-pointer rounded-lg border bg-gray-50 text-sm text-gray-400 focus:outline-none"
                     type="file"
                     name="rom"
-                    value="pdfsfsfsfsfs"
                     ref={el => {
                       if (props.game) {
                         return [];

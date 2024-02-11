@@ -54,10 +54,12 @@ export const GameDetailsProvider = (props: ParentProps) => {
 
   const del = () => {
     deleteGameAction(gameId)
-      .then(() => {
-        navigate(`/users/${user()?.id}`);
-        return showToast({ msg: 'Game Deleted', type: 'Ok' });
-      })
+      .then(() =>
+        batch(() => {
+          navigate(`/users/${user()?.id}`);
+          showToast({ msg: 'Game Deleted', type: 'Ok' });
+        })
+      )
       .catch((error: RespErr) => showToast({ msg: error.msg, type: 'Err' }));
   };
 
