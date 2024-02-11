@@ -41,7 +41,7 @@ type FetchMoreOpts = {
 };
 
 export const Search = () => {
-  const { dispatch } = useToastCtx();
+  const { showToast } = useToastCtx();
   const [searchParams] = useSearchParams();
 
   const [queryInput, setQueryInput] = createSignal<SearchQueryInput>();
@@ -94,7 +94,7 @@ export const Search = () => {
       });
     }
     if (initSearchData.error) {
-      dispatch.showToast({
+      showToast({
         msg: (initSearchData.error as Error).message,
         type: 'Err'
       });

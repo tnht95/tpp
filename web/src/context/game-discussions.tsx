@@ -41,9 +41,7 @@ type Ctx = {
 const ctx = createContext<Ctx>();
 export const GameDiscussionsProvider = (props: ParentProps) => {
   const gameId = useParams()['id'] as string;
-  const {
-    dispatch: { showToast }
-  } = useToastCtx();
+  const { showToast } = useToastCtx();
   const modal = useModal();
   const [params, setParams] = createSignal<[number, string]>([0, gameId]);
   const [count, { refetch: reCount }] = createResource(

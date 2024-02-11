@@ -13,9 +13,7 @@ import { Toast } from '@/components';
 // Interfaces
 // ============================================================================
 type Ctx = {
-  dispatch: {
-    showToast: (input: ToastInput) => void;
-  };
+  showToast: (input: ToastInput) => void;
 };
 
 export type ToastInput = {
@@ -47,14 +45,8 @@ export const ToastProvider = (props: ParentProps) => {
     }
   });
 
-  const state = {
-    dispatch: {
-      showToast: setInput
-    }
-  };
-
   return (
-    <ctx.Provider value={state}>
+    <ctx.Provider value={{ showToast: setInput }}>
       {props.children}
       <Show when={input()}>
         <Toast input={input() as ToastInput} onClose={onCloseHandler} />

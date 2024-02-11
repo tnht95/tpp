@@ -30,7 +30,7 @@ import { authenticationStore } from '@/store';
 
 export const Dashboard = () => {
   const { utils } = authenticationStore;
-  const { dispatch } = useToastCtx();
+  const { showToast } = useToastCtx();
   const [newestGames] = createResource(
     { orderField: 'createdAt', orderBy: 'desc', limit: 5 },
     fetchGameAction
@@ -83,25 +83,25 @@ export const Dashboard = () => {
   const onSubmitHandler = (content: string) =>
     addPostAction({ content })
       .then(resetPosts)
-      .then(() => dispatch.showToast({ msg: 'Post Added', type: 'Ok' }))
+      .then(() => showToast({ msg: 'Post Added', type: 'Ok' }))
       .catch((error: RespErr) =>
-        dispatch.showToast({ msg: error.msg, type: 'Err' })
+        showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
 
   const onDeleteHandler = (postId: string) =>
     deletePostAction(postId)
       .then(resetPosts)
-      .then(() => dispatch.showToast({ msg: 'Post Deleted', type: 'Ok' }))
+      .then(() => showToast({ msg: 'Post Deleted', type: 'Ok' }))
       .catch((error: RespErr) =>
-        dispatch.showToast({ msg: error.msg, type: 'Err' })
+        showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
 
   const onEditHandler = (postId: string, content: string) =>
     editPostAction(postId, { content })
       .then(post => setPosts(p => p.id === post.id, post))
-      .then(() => dispatch.showToast({ msg: 'Post Updated', type: 'Ok' }))
+      .then(() => showToast({ msg: 'Post Updated', type: 'Ok' }))
       .catch((error: RespErr) =>
-        dispatch.showToast({ msg: error.msg, type: 'Err' })
+        showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
 
   return (

@@ -35,7 +35,7 @@ type PostCardProps = {
 
 export const PostCard = (props: PostCardProps) => {
   const { utils } = authenticationStore;
-  const { dispatch } = useToastCtx();
+  const { showToast } = useToastCtx();
 
   const [isEditMode, setIsEditMode] = createSignal(false);
   const [isCommentHidden, setIsCommentHidden] = createSignal(true);
@@ -87,14 +87,12 @@ export const PostCard = (props: PostCardProps) => {
     })
       .then(newCmt =>
         batch(() => {
-          dispatch.showToast({ msg: 'Comment Added', type: 'Ok' });
+          showToast({ msg: 'Comment Added', type: 'Ok' });
           setComments(produce(c => c.unshift(newCmt)));
           addedCmts.push(newCmt);
         })
       )
-      .catch((error: RespErr) =>
-        dispatch.showToast({ msg: error.msg, type: 'Err' })
-      );
+      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'Err' }));
   };
 
   const onLoadMoreHandler = () => {
@@ -111,9 +109,9 @@ export const PostCard = (props: PostCardProps) => {
       targetType: 'Post'
     })
       .then(comment => setComments(c => c.id === comment.id, comment))
-      .then(() => dispatch.showToast({ msg: 'Comment Updated', type: 'Ok' }))
+      .then(() => showToast({ msg: 'Comment Updated', type: 'Ok' }))
       .catch((error: RespErr) =>
-        dispatch.showToast({ msg: error.msg, type: 'Err' })
+        showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
 
   const resetCmts = () =>
@@ -125,14 +123,14 @@ export const PostCard = (props: PostCardProps) => {
         offset: 0,
         limit: 5
       });
-      dispatch.showToast({ msg: 'Comment Deleted', type: 'Ok' });
+      showToast({ msg: 'Comment Deleted', type: 'Ok' });
     });
 
   const onDeleteCmtHandler = (commentId: string) =>
     deleteCommentAction(commentId)
       .then(resetCmts)
       .catch((error: RespErr) =>
-        dispatch.showToast({ msg: error.msg, type: 'Err' })
+        showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
 
   return (

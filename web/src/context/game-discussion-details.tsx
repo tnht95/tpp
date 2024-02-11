@@ -41,9 +41,7 @@ export const GameDiscussionDetailsProvider = (props: ParentProps) => {
   const discussionId = useParams()['discussionId'] as string;
   const [params] = createSignal<[string, string]>([gameId, discussionId]);
   const navigate = useNavigate();
-  const {
-    dispatch: { showToast }
-  } = useToastCtx();
+  const { showToast } = useToastCtx();
   const modal = useModal();
   const [discussion, { mutate }] = createResource(
     params,

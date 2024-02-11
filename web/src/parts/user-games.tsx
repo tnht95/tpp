@@ -24,6 +24,7 @@ export const UserGames = (props: UserGamesProps) => {
   const {
     utils: { isSameUser }
   } = authenticationStore;
+  const { showToast } = useToastCtx();
   const defaultParam: GameQueryInput = {
     // eslint-disable-next-line solid/reactivity
     authorId: props.userId,
@@ -33,7 +34,6 @@ export const UserGames = (props: UserGamesProps) => {
     orderField: 'createdAt'
   };
 
-  const { dispatch } = useToastCtx();
   const [param, setParam] = createSignal(defaultParam);
   const [gameResource, { refetch }] = createResource(param, fetchGameAction, {
     initialValue: []
@@ -52,7 +52,7 @@ export const UserGames = (props: UserGamesProps) => {
 
   const batchSubmitHandler = () =>
     batch(() => {
-      dispatch.showToast({ msg: 'Game Added', type: 'Ok' });
+      showToast({ msg: 'Game Added', type: 'Ok' });
       setGames([]);
       setParam(defaultParam);
       modal()?.hide();
@@ -63,7 +63,7 @@ export const UserGames = (props: UserGamesProps) => {
     addGameAction(file, game)
       .then(batchSubmitHandler)
       .catch((error: RespErr) =>
-        dispatch.showToast({ msg: error.msg, type: 'Err' })
+        showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
 
   const onShowMoreHandler = () => {

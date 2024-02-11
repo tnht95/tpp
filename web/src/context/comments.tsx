@@ -43,9 +43,7 @@ type Props = {
 
 const ctx = createContext<Ctx>();
 export const CommentsProvider = (props: Props) => {
-  const {
-    dispatch: { showToast }
-  } = useToastCtx();
+  const { showToast } = useToastCtx();
   const [query, setQuery] = createSignal<QueryWIthTargetInput>({
     targetId: props.targetId,
     offset: 0,
@@ -135,7 +133,7 @@ export const CommentsProvider = (props: Props) => {
   return (
     <ctx.Provider value={state}>
       <Show
-        when={comments.length > 0 || resource.loading}
+        when={comments.length > 0 || !resource.loading}
         fallback={<LoadingSpinner />}
       >
         {props.children}

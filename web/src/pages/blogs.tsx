@@ -21,7 +21,7 @@ export const Blogs = () => {
   const {
     utils: { isAdmin }
   } = authenticationStore;
-  const { dispatch } = useToastCtx();
+  const { showToast } = useToastCtx();
   const [modalRef, setModalRef] = createSignal<HTMLDivElement>();
   const [modal, setModal] = createSignal<Modal>();
   const [currentOffset, setCurrentOffset] = createSignal(0);
@@ -45,7 +45,7 @@ export const Blogs = () => {
   const resetBlogs = () =>
     batch(() => {
       setBlogs([]);
-      dispatch.showToast({ msg: 'Blog Added', type: 'Ok' });
+      showToast({ msg: 'Blog Added', type: 'Ok' });
       if (currentOffset() === 0) refetch() as unknown;
       else setCurrentOffset(0);
       modal()?.hide();
@@ -55,7 +55,7 @@ export const Blogs = () => {
     addBlogAction(blog)
       .then(resetBlogs)
       .catch((error: RespErr) =>
-        dispatch.showToast({ msg: error.msg, type: 'Err' })
+        showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
 
   const handleGetMore = () => {

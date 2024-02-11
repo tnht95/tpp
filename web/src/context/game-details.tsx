@@ -39,9 +39,7 @@ export const GameDetailsProvider = (props: ParentProps) => {
   const gameId = useParams()['id'] as string;
   const [game] = createResource(gameId, fetchGameByIdAction);
   const [isEditMode, setIsEditMode] = createSignal(false);
-  const {
-    dispatch: { showToast }
-  } = useToastCtx();
+  const { showToast } = useToastCtx();
   const modal = useModal({
     onHide: () => {
       setIsEditMode(false);

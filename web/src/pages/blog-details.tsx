@@ -41,7 +41,7 @@ export const BlogDetails = () => {
   const {
     utils: { isAdmin }
   } = authenticationStore;
-  const { dispatch } = useToastCtx();
+  const { showToast } = useToastCtx();
   const navigate = useNavigate();
   const blogId = useParams()['id'] as string;
   const [isEditMode, setIsEditMode] = createSignal(false);
@@ -89,13 +89,11 @@ export const BlogDetails = () => {
       .then(newCmt =>
         batch(() => {
           setComments(produce(c => c.unshift(newCmt)));
-          dispatch.showToast({ msg: 'Comment Added', type: 'Ok' });
+          showToast({ msg: 'Comment Added', type: 'Ok' });
           addedCmts.push(newCmt);
         })
       )
-      .catch((error: RespErr) =>
-        dispatch.showToast({ msg: error.msg, type: 'Err' })
-      );
+      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'Err' }));
   };
 
   const onLoadMoreCmtHandler = () => {
@@ -109,10 +107,10 @@ export const BlogDetails = () => {
     deleteBlogAction(blog()?.id as string)
       .then(() => {
         navigate(`/blogs`);
-        return dispatch.showToast({ msg: 'Blog Deleted', type: 'Ok' });
+        return showToast({ msg: 'Blog Deleted', type: 'Ok' });
       })
       .catch((error: RespErr) => {
-        dispatch.showToast({ msg: error.msg, type: 'Err' });
+        showToast({ msg: error.msg, type: 'Err' });
       });
   };
 
@@ -124,10 +122,10 @@ export const BlogDetails = () => {
     })
       .then(comment => {
         setComments(c => c.id === comment.id, comment);
-        return dispatch.showToast({ msg: 'Comment Updated', type: 'Ok' });
+        return showToast({ msg: 'Comment Updated', type: 'Ok' });
       })
       .catch((error: RespErr) =>
-        dispatch.showToast({ msg: error.msg, type: 'Err' })
+        showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
 
   const resetCmts = () =>
@@ -139,28 +137,26 @@ export const BlogDetails = () => {
         offset: 0,
         limit: 5
       });
-      dispatch.showToast({ msg: 'Comment Deleted', type: 'Ok' });
+      showToast({ msg: 'Comment Deleted', type: 'Ok' });
     });
 
   const onDeleteCmtHandler = (commentId: string) =>
     deleteCommentAction(commentId)
       .then(resetCmts)
       .catch((error: RespErr) =>
-        dispatch.showToast({ msg: error.msg, type: 'Err' })
+        showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
 
   const onEditBlogHandler = (blog: BlogRequest) => {
     setIsEditMode(false);
     editBlogAction(blogId, blog)
       .then(refresh)
-      .catch((error: RespErr) =>
-        dispatch.showToast({ msg: error.msg, type: 'Err' })
-      );
+      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'Err' }));
   };
 
   const refresh = () => {
     modal()?.hide();
-    dispatch.showToast({ msg: 'Blog Updated', type: 'Ok' });
+    showToast({ msg: 'Blog Updated', type: 'Ok' });
     return refetch();
   };
 
