@@ -8,3 +8,4 @@ export * from './user-games';
 export * from './posts';
 export * from './newest-games';
 export * from './games';
+export * from './blogs';
