@@ -1,78 +1,25 @@
-import { Modal } from 'flowbite';
-import {
-  batch,
-  createEffect,
-  createResource,
-  createSignal,
-  For,
-  Show
-} from 'solid-js';
-import { createStore, produce } from 'solid-js/store';
+import { For, Show } from 'solid-js';
 
-import { addGameAction, fetchGameAction, GameQueryInput } from '@/apis';
 import { Button, GameCard, GameForm, ShowMoreButton } from '@/components';
-import { useToastCtx } from '@/context';
-import { GameRequest, GameSummary, RespErr } from '@/models';
+import { UserGamesProvider, useUserGamesCtx } from '@/context';
 import { authenticationStore } from '@/store';
 
-type UserGamesProps = {
-  userId: number;
-};
+export const UserGames = () => (
+  <UserGamesProvider>
+    <UserGamesInner />
+  </UserGamesProvider>
+);
 
-const gameUserLimit = 9;
-export const UserGames = (props: UserGamesProps) => {
+const UserGamesInner = () => {
   const {
     utils: { isSameUser }
   } = authenticationStore;
-  const toast = useToastCtx();
-  const defaultParam: GameQueryInput = {
-    // eslint-disable-next-line solid/reactivity
-    authorId: props.userId,
-    offset: 0,
-    limit: gameUserLimit,
-    orderBy: 'desc',
-    orderField: 'createdAt'
-  };
-
-  const [param, setParam] = createSignal(defaultParam);
-  const [gameResource, { refetch }] = createResource(param, fetchGameAction, {
-    initialValue: []
-  });
-  const [games, setGames] = createStore<GameSummary[]>([]);
-
-  const [modalRef, setModalRef] = createSignal<HTMLDivElement>();
-  const [modal, setModal] = createSignal<Modal>();
-
-  createEffect(() => {
-    setModal(new Modal(modalRef()));
-    if (gameResource().length > 0) {
-      setGames(produce(oldGames => oldGames.push(...gameResource())));
-    }
-  });
-
-  const batchSubmitHandler = () =>
-    batch(() => {
-      toast.showToast({ msg: 'Game Added', type: 'Ok' });
-      setGames([]);
-      setParam(defaultParam);
-      modal()?.hide();
-      return refetch();
-    });
-
-  const onSubmitHandler = (file: File, game: GameRequest) =>
-    addGameAction(file, game)
-      .then(batchSubmitHandler)
-      .catch((error: RespErr) =>
-        toast.showToast({ msg: error.msg, type: 'Err' })
-      ) as unknown;
-
-  const onShowMoreHandler = () => {
-    setParam(oldValue => ({
-      ...oldValue,
-      offset: (oldValue.offset as number) + gameUserLimit
-    }));
-  };
-
+  const {
+    games,
+    dispatch: { add, fetchMore },
+    utils: { showMore, userId },
+    modal: { initRef, show, hide }
+  } = useUserGamesCtx();
   return (
     <div class="rounded-xl border bg-white px-8 pb-10 pt-3">
       <div class="mb-5 flex justify-between">
@@ -80,27 +27,21 @@ export const UserGames = (props: UserGamesProps) => {
           <i class="fa-regular fa-paper-plane text-lg text-green-400" />
           <span class="tracking-wide">Games</span>
         </div>
-        {isSameUser(props.userId) && (
+        {isSameUser(userId) && (
           <Button
             title="Add new game"
             withIcon="fa-solid fa-plus"
             customStyle="border-green-400 text-green-500 font-bold hover:bg-green-500 hover:text-white"
-            onClickHandler={() => {
-              modal()?.show();
-            }}
+            onClickHandler={show}
           />
         )}
-        <GameForm
-          ref={setModalRef}
-          onCloseHandler={() => modal()?.hide()}
-          onSubmitHandler={onSubmitHandler}
-        />
+        <GameForm ref={initRef} onCloseHandler={hide} onSubmitHandler={add} />
       </div>
       <div class="flex flex-wrap items-stretch gap-7">
         <Show when={games.length > 0} fallback={nothingToShow}>
           <For each={games}>{game => <GameCard game={game} />}</For>
-          <Show when={gameResource().length === gameUserLimit}>
-            <ShowMoreButton onClick={onShowMoreHandler} />
+          <Show when={showMore()}>
+            <ShowMoreButton onClick={fetchMore} />
           </Show>
         </Show>
       </div>

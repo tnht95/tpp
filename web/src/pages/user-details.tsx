@@ -65,7 +65,7 @@ const GaneDetailsInner = () => {
       </div>
       <div class="flex flex-1 flex-col gap-10">
         <Show when={user.state === 'ready'}>
-          <UserGames userId={user()?.id as number} />
+          <UserGames />
           <UserActivity />
         </Show>
       </div>
