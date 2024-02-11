@@ -45,7 +45,8 @@ pub trait IGameService {
         game: EditGameRequest,
         rom_bytes: Option<&[u8]>,
         game_id: Uuid,
-    ) -> Result<(), GameServiceErr>;
+        user_id: Option<i64>,
+    ) -> Result<GameDetails, GameServiceErr>;
     async fn get_tags(&self) -> Result<Vec<Option<String>>, GameServiceErr>;
 }
 
@@ -212,7 +213,8 @@ where
         game: EditGameRequest,
         rom_bytes: Option<&[u8]>,
         game_id: Uuid,
-    ) -> Result<(), GameServiceErr> {
+        user_id: Option<i64>,
+    ) -> Result<GameDetails, GameServiceErr> {
         let mut tx = self
             .db
             .get_pool()
@@ -246,7 +248,11 @@ where
 
         tx.commit()
             .await
-            .map_err(|e| GameServiceErr::Other(e.into()))
+            .map_err(|e| GameServiceErr::Other(e.into()))?;
+
+        self.get_by_id(game_id, user_id)
+            .await
+            .map(|g| g.unwrap_or_default())
     }
 
     async fn get_tags(&self) -> Result<Vec<Option<String>>, GameServiceErr> {

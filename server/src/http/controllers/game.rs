@@ -135,6 +135,7 @@ pub async fn add<TInternalServices: IInternalServices>(
 pub async fn edit<TInternalServices: IInternalServices>(
     Path(id): Path<String>,
     State(state): InternalState<TInternalServices>,
+    Authentication(user, ..): Authentication<TInternalServices>,
     mut multipart: Multipart,
 ) -> Response {
     let id = match id.parse::<Uuid>() {
@@ -168,7 +169,12 @@ pub async fn edit<TInternalServices: IInternalServices>(
     match state
         .services
         .game
-        .edit(game, rom_bytes.as_ref().map(|r| r.as_ref()), id)
+        .edit(
+            game,
+            rom_bytes.as_ref().map(|r| r.as_ref()),
+            id,
+            Some(user.id),
+        )
         .await
     {
         Ok(game) => Json(HttpResponse { data: game }).into_response(),

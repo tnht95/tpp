@@ -16,7 +16,7 @@ pub struct GameSummary {
     pub down_votes: i64,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Default)]
 #[serde(rename_all = "camelCase")]
 pub struct GameDetails {
     pub id: Uuid,
