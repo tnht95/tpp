@@ -1,4 +1,4 @@
-export type Game = {
+export type GameDetails = {
   id: string;
   name: string;
   authorId: number;
@@ -9,10 +9,9 @@ export type Game = {
   info: string | undefined;
   upVotes: number;
   downVotes: number;
-  subscribes: number;
-  isUpVoted: boolean | undefined;
   tags: string[] | undefined;
   rom: string;
+  isUpVoted: boolean | undefined;
   createdAt: string;
   updatedAt: string;
 };

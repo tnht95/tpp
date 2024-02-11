@@ -1,10 +1,8 @@
 import { useNavigate, useParams } from '@solidjs/router';
 import {
-  Accessor,
   batch,
   createContext,
   createResource,
-  createSignal,
   ErrorBoundary,
   ParentProps,
   Resource,
@@ -14,7 +12,7 @@ import {
 
 import { deleteGameAction, editGameAction, fetchGameByIdAction } from '@/apis';
 import { LoadingSpinner } from '@/components';
-import { Game, GameRequest, RespErr } from '@/models';
+import { GameDetails, GameRequest, RespErr } from '@/models';
 import { NotFound } from '@/pages';
 import { authenticationStore } from '@/store';
 import { ModalUtil, useModal } from '@/utils';
@@ -22,14 +20,13 @@ import { ModalUtil, useModal } from '@/utils';
 import { useToastCtx } from './toast';
 
 type Ctx = {
-  game: Resource<Game | undefined>;
+  game: Resource<GameDetails | undefined>;
   dispatch: {
     edit: (file: File, game: GameRequest) => void;
     del: (gameId: string) => void;
   };
   utils: {
     gameId: string;
-    isEditMode: Accessor<boolean>;
   };
   modal: ModalUtil;
 };
@@ -37,27 +34,19 @@ type Ctx = {
 const ctx = createContext<Ctx>();
 export const GameDetailsProvider = (props: ParentProps) => {
   const gameId = useParams()['id'] as string;
-  const [game] = createResource(gameId, fetchGameByIdAction);
-  const [isEditMode, setIsEditMode] = createSignal(false);
+  const [game, { mutate }] = createResource(gameId, fetchGameByIdAction);
   const { showToast } = useToastCtx();
-  const modal = useModal({
-    onHide: () => {
-      setIsEditMode(false);
-    },
-    onShow: () => {
-      setIsEditMode(true);
-    }
-  });
+  const modal = useModal();
   const navigate = useNavigate();
   const { user } = authenticationStore;
 
   const edit = (file: File, game: GameRequest) => {
     editGameAction(file, game, gameId)
-      .then(() =>
+      .then(game =>
         batch(() => {
           modal.hide();
+          mutate(game);
           showToast({ msg: 'Game Updated', type: 'Ok' });
-          setIsEditMode(false);
         })
       )
       .catch((error: RespErr) => showToast({ msg: error.msg, type: 'Err' }));
@@ -80,7 +69,6 @@ export const GameDetailsProvider = (props: ParentProps) => {
     },
     utils: {
       gameId,
-      isEditMode
     },
     modal
   };

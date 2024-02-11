@@ -10,7 +10,7 @@ export const GameDetailsHeader = () => {
   const {
     game,
     dispatch: { edit, del },
-    utils: { isEditMode, gameId },
+    utils: { gameId },
     modal: { initRef, hide, show }
   } = useGameDetailsCtx();
   const { showToast } = useToastCtx();
@@ -53,7 +53,6 @@ export const GameDetailsHeader = () => {
             onDelete={del}
             id={game()?.id as string}
             onEdit={show}
-            isEditMode={isEditMode}
           />
         </Show>
       </div>

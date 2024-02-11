@@ -1,7 +1,7 @@
 import { createEffect, createSignal, Ref, Show } from 'solid-js';
 
 import { Markdown, PreviewButtonGroup } from '@/components';
-import { Game, GameRequest } from '@/models';
+import { GameDetails, GameRequest } from '@/models';
 import {
   fileRequired,
   getStrVal,
@@ -16,7 +16,7 @@ type GameFormProps = {
   ref: Ref<HTMLDivElement>;
   onCloseHandler: () => void;
   onSubmitHandler: (file: File, game: GameRequest) => void;
-  game?: Game | undefined;
+  game?: GameDetails | undefined;
 };
 
 const ErrorMessage = (props: { msg: string }) => (

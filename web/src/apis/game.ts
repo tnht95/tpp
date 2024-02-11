@@ -1,4 +1,4 @@
-import { Game, GameRequest, GameSummary, Response } from '@/models';
+import { GameDetails, GameRequest, GameSummary, Response } from '@/models';
 
 import { errHandler } from '.';
 
@@ -32,7 +32,7 @@ export const fetchGameByIdAction = (id: string) =>
     credentials: 'include'
   })
     .then(errHandler)
-    .then((r: Response<Game | undefined>) => r.data);
+    .then((r: Response<GameDetails | undefined>) => r.data);
 
 export const deleteGameAction = (id: string) =>
   fetch(`${import.meta.env.VITE_SERVER_URL}/games/${id}`, {
@@ -40,7 +40,7 @@ export const deleteGameAction = (id: string) =>
     credentials: 'include'
   })
     .then(errHandler)
-    .then((r: Response<Game>) => r.data);
+    .then((r: Response<undefined>) => r.data);
 
 export const addGameAction = async (rom: File, game: GameRequest) => {
   const formData = new FormData();
@@ -71,7 +71,7 @@ export const editGameAction = async (
     body: formData
   })
     .then(errHandler)
-    .then((r: Response<undefined>) => r.data);
+    .then((r: Response<GameDetails>) => r.data);
 };
 
 export const fetchGameTagsAction = () =>
