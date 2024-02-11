@@ -18,7 +18,7 @@ export const Posts = () => {
     window.removeEventListener('scroll', handleScroll);
   });
   return (
-    <main class="mb-10 flex-3 flex-col border-x border-dashed px-32">
+    <div class="mb-10">
       <div class="my-10">
         {utils.isAuth() && (
           <CommentForm onSubmitHandler={add}>New post</CommentForm>
@@ -29,6 +29,6 @@ export const Posts = () => {
           {post => <PostCard post={post} onDelete={del} onEdit={edit} />}
         </For>
       </div>
-    </main>
+    </div>
   );
 };
