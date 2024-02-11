@@ -8,6 +8,7 @@ pub mod post;
 pub mod search;
 pub mod subscribe;
 pub mod user;
+pub mod vote;
 
 use serde::Serialize;
 

@@ -28,7 +28,9 @@ export const fetchGameAction = async (queryInput: GameQueryInput) => {
 };
 
 export const fetchGameByIdAction = (id: string) =>
-  fetch(`${import.meta.env.VITE_SERVER_URL}/games/${id}`)
+  fetch(`${import.meta.env.VITE_SERVER_URL}/games/${id}`, {
+    credentials: 'include'
+  })
     .then(errHandler)
     .then((r: Response<Game | undefined>) => r.data);
 

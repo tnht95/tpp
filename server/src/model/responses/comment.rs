@@ -18,10 +18,10 @@ pub struct CommentDetails {
 
 pub const NOT_AUTH_DEL: HttpResponseConstErr = HttpResponseConstErr {
     code: "CMT_001",
-    msg: "Not authorized to delete",
+    msg: "Not Authorized To Delete",
 };
 
 pub const NOT_AUTH_EDIT: HttpResponseConstErr = HttpResponseConstErr {
     code: "CMT_002",
-    msg: "Not authorized to edit",
+    msg: "Not Authorized To Edit",
 };

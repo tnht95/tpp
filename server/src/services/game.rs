@@ -7,10 +7,10 @@ use tokio::fs::{create_dir, metadata, write};
 use uuid::Uuid;
 
 use crate::{
-    database::{entities::game::Game, IDatabase},
+    database::IDatabase,
     model::{
         requests::game::{AddGameRequest, EditGameRequest, GamePaginationInternal},
-        responses::game::GameSummary,
+        responses::game::{GameDetails, GameSummary},
     },
 };
 
@@ -26,7 +26,11 @@ pub trait IGameService {
         &self,
         pagination: GamePaginationInternal,
     ) -> Result<Vec<GameSummary>, GameServiceErr>;
-    async fn get_by_id(&self, id: Uuid) -> Result<Option<Game>, GameServiceErr>;
+    async fn get_by_id(
+        &self,
+        id: Uuid,
+        user_id: Option<i64>,
+    ) -> Result<Option<GameDetails>, GameServiceErr>;
     async fn add(
         &self,
         author_id: i64,
@@ -116,11 +120,27 @@ where
             .map_err(|e| GameServiceErr::Other(e.into()))
     }
 
-    async fn get_by_id(&self, id: Uuid) -> Result<Option<Game>, GameServiceErr> {
-        sqlx::query_as!(Game, "select * from games where id = $1", id)
-            .fetch_optional(self.db.get_pool())
-            .await
-            .map_err(|e| GameServiceErr::Other(e.into()))
+    async fn get_by_id(
+        &self,
+        id: Uuid,
+        user_id: Option<i64>,
+    ) -> Result<Option<GameDetails>, GameServiceErr> {
+        sqlx::query_as!(
+            GameDetails,
+            r#"
+            SELECT
+                games.*,
+                CASE WHEN $1 IS NOT NULL THEN votes.is_up ELSE NULL END AS is_up_voted
+            FROM games
+            LEFT JOIN votes ON games.id = votes.game_id AND votes.user_id = $1
+            WHERE games.id = $2
+            "#,
+            user_id,
+            id
+        )
+        .fetch_optional(self.db.get_pool())
+        .await
+        .map_err(|e| GameServiceErr::Other(e.into()))
     }
 
     async fn add(

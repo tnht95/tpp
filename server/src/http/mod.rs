@@ -42,6 +42,7 @@ use crate::{
             search,
             subscribe,
             user,
+            vote,
         },
         handlers::{panic, shutdown},
         utils::err_handler::response_404_err,
@@ -134,6 +135,7 @@ where
                         .route("/comments", post(comment::add))
                         .route("/comments/:id", delete(comment::delete))
                         .route("/comments/:id", put(comment::edit))
+                        .route("/games/:gid/votes", post(vote::vote))
                         .route("/games/:gid/discussions", get(discussion::filter))
                         .route("/games/:gid/discussions", post(discussion::add))
                         .route("/games/:gid/discussions/counts", get(discussion::count))

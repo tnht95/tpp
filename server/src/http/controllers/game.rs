@@ -12,7 +12,7 @@ use crate::{
     http::{
         controllers::InternalState,
         utils::{
-            auth::Authentication,
+            auth::{Authentication, AuthenticationMaybe},
             err_handler::{
                 response_400_with_const,
                 response_unhandled_err,
@@ -49,13 +49,18 @@ pub async fn filter<TInternalServices: IInternalServices>(
 pub async fn get_by_id<TInternalServices: IInternalServices>(
     Path(id): Path<String>,
     State(state): InternalState<TInternalServices>,
+    AuthenticationMaybe(user, ..): AuthenticationMaybe<TInternalServices>,
 ) -> Response {
     let id = match id.parse::<Uuid>() {
         Ok(id) => id,
         Err(_) => return response_400_with_const(INVALID_UUID_ERR),
     };
-
-    match state.services.game.get_by_id(id).await {
+    match state
+        .services
+        .game
+        .get_by_id(id, user.map(|user| user.id))
+        .await
+    {
         Ok(game) => match game {
             Some(game) => Json(HttpResponse { data: game }).into_response(),
             None => response_400_with_const(NOT_FOUND),

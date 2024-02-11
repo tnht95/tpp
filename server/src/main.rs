@@ -22,6 +22,7 @@ use crate::{
         search::SearchService,
         subscribe::SubscribeService,
         user::UserService,
+        vote::VoteService,
         InternalServices,
         ServicesBuilder,
     },
@@ -94,6 +95,7 @@ async fn main() -> Result<()> {
             let discussion_service = DiscussionService::new(Arc::clone(&db));
             let search_service = SearchService::new(Arc::clone(&db));
             let subscribe_service = SubscribeService::new(Arc::clone(&db));
+            let vote_service = VoteService::new(Arc::clone(&db));
 
             Server::<InternalServices>::new(
                 config,
@@ -108,6 +110,7 @@ async fn main() -> Result<()> {
                     .discussion(discussion_service)
                     .search(search_service)
                     .subscribe(subscribe_service)
+                    .vote(vote_service)
                     .build(),
             )
             .start()

@@ -1,20 +1,39 @@
-import { Show } from 'solid-js';
+import { createSignal, Show } from 'solid-js';
 
+import { voteAction } from '@/apis';
 import { GameForm, OptionButton, PillButton } from '@/components';
-import { useGameDetailsCtx } from '@/context';
+import { useGameDetailsCtx, useToastCtx } from '@/context';
+import { RespErr } from '@/models';
 import { authenticationStore } from '@/store';
 
 export const GameDetailsHeader = () => {
   const {
     game,
     dispatch: { edit, del },
-    utils: { isEditMode },
+    utils: { isEditMode, gameId },
     modal: { initRef, hide, show }
   } = useGameDetailsCtx();
+  const { showToast } = useToastCtx();
   const {
     user,
-    utils: { isSameUser, isAuth }
+    utils: { isAuth }
   } = authenticationStore;
+  const [isUpVotes, setIsUpVotes] = createSignal(
+    game()?.isUpVoted ?? undefined
+  );
+  const [upVotes, setUpVotes] = createSignal(game()?.upVotes ?? 0);
+
+  const onUpVoteHandler = () => {
+    voteAction(gameId, { isUp: true })
+      .then(() => {
+        setUpVotes(oldVal => oldVal + 1);
+        return setIsUpVotes(true);
+      })
+      .catch((error: RespErr) => {
+        showToast({ msg: error.msg, type: 'Err' });
+      });
+  };
+
   return (
     <div class="flex flex-row">
       <div class="flex w-7/10 items-center gap-2">
@@ -42,21 +61,21 @@ export const GameDetailsHeader = () => {
         <div class="flex gap-x-5">
           <PillButton
             title="Upvote"
-            number={400}
+            number={upVotes()}
             icon="fa-solid fa-angle-up"
-            clicked={false}
+            clicked={isUpVotes() === true}
             titleAfterClicked="Upvoted"
-            onClick={() => {}}
-            disabled={isSameUser(game()?.authorId as number) || !isAuth()}
+            onClick={onUpVoteHandler}
+            disabled={!isAuth()}
           />
           <PillButton
             icon="fa-solid fa-angle-down"
             title="Downvote"
             number={200}
-            clicked={true}
+            clicked={isUpVotes() === false}
             onClick={() => {}}
             titleAfterClicked="Downvoted"
-            disabled={isSameUser(game()?.authorId as number) || !isAuth()}
+            disabled={!isAuth()}
           />
         </div>
       </div>
