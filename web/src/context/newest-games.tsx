@@ -21,7 +21,6 @@ export const NewestGamesProvider = (props: ParentProps) => {
     { orderField: 'createdAt', orderBy: 'desc', limit: 5 },
     fetchGameAction
   );
-
   return (
     <ctx.Provider value={{ newestGames }}>
       <Show when={!newestGames.loading} fallback={<LoadingSpinner />}>

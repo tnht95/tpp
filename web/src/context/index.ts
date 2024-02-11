@@ -7,3 +7,4 @@ export * from './user-details';
 export * from './user-games';
 export * from './posts';
 export * from './newest-games';
+export * from './games';
