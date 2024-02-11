@@ -5,3 +5,4 @@ export * from './game-discussion-details';
 export * from './comments';
 export * from './user-details';
 export * from './user-games';
+export * from './posts';
