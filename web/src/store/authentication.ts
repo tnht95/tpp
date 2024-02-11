@@ -3,7 +3,7 @@ import { createResource, createRoot, Resource } from 'solid-js';
 import { fetchUserAction, logoutAction } from '@/apis';
 import { Auth, User } from '@/models';
 
-type Ctx = {
+type Store = {
   auth: Resource<Auth | undefined>;
   user: () => User | undefined;
   utils: {
@@ -16,7 +16,7 @@ type Ctx = {
   };
 };
 
-export const authenticationStore = createRoot<Ctx>(() => {
+export const authenticationStore = createRoot<Store>(() => {
   const [auth, { mutate }] = createResource(fetchUserAction);
   return {
     auth,

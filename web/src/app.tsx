@@ -28,24 +28,22 @@ const Root = (props: ParentProps) => (
 );
 
 export const App = () => (
-  <>
-    <Router root={Root}>
-      <Route path={'/'} component={Dashboard} />
-      <Route path={'/games'} component={Games} />
-      <Route path={'/games/:id'} component={GameDetails}>
-        <Route path={'/info'} component={GameDetailsInfo} />
-        <Route path={'/discussion'} component={GameDetailsDiscussion} />
-        <Route
-          path={'/discussion/:discussionId'}
-          component={GameDetailsDiscussionDetails}
-        />
-        <Route path={'/activity'} component={GameDetailsActivity} />
-      </Route>
-      <Route path={'/users/:id'} component={UserDetails} />
-      <Route path={'/blogs'} component={Blogs} />
-      <Route path={'/blogs/:id'} component={BlogDetails} />
-      <Route path={'/search'} component={Search} />
-      <Route path={'*404'} component={NotFound} />
-    </Router>
-  </>
+  <Router root={Root}>
+    <Route path={'/'} component={Dashboard} />
+    <Route path={'/games'} component={Games} />
+    <Route path={'/games/:id'} component={GameDetails}>
+      <Route path={'/info'} component={GameDetailsInfo} />
+      <Route path={'/discussion'} component={GameDetailsDiscussion} />
+      <Route
+        path={'/discussion/:discussionId'}
+        component={GameDetailsDiscussionDetails}
+      />
+      <Route path={'/activity'} component={GameDetailsActivity} />
+    </Route>
+    <Route path={'/users/:id'} component={UserDetails} />
+    <Route path={'/blogs'} component={Blogs} />
+    <Route path={'/blogs/:id'} component={BlogDetails} />
+    <Route path={'/search'} component={Search} />
+    <Route path={'*404'} component={NotFound} />
+  </Router>
 );

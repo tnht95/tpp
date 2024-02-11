@@ -20,7 +20,6 @@ import {
 import { LoadingSpinner } from '@/components';
 import { PAGINATION } from '@/constant';
 import { CommentDetails, RespErr } from '@/models';
-import { ModalUtil, useModal } from '@/utils';
 
 import { useToastCtx } from './toast';
 
@@ -35,7 +34,6 @@ type Ctx = {
   utils: {
     showMore: () => boolean;
   };
-  modal: ModalUtil;
 };
 
 type Props = {
@@ -48,15 +46,12 @@ export const CommentsProvider = (props: Props) => {
   const {
     dispatch: { showToast }
   } = useToastCtx();
-  const modal = useModal();
-
-  const [queryValue, setQueryValue] = createSignal<QueryWIthTargetInput>({
+  const [query, setQuery] = createSignal<QueryWIthTargetInput>({
     targetId: props.targetId,
     offset: 0,
     limit: PAGINATION
   });
-
-  const [resource] = createResource(queryValue, fetchCommentAction, {
+  const [resource] = createResource(query, fetchCommentAction, {
     initialValue: []
   });
   const [comments, setComments] = createStore<CommentDetails[]>([]);
@@ -110,7 +105,7 @@ export const CommentsProvider = (props: Props) => {
       .then(() =>
         batch(() => {
           setComments([]);
-          setQueryValue(q => ({ ...q, offset: 0 }));
+          setQuery(q => ({ ...q, offset: 0 }));
           showToast({ msg: 'Comment Deleted', type: 'Ok' });
           addedCmts.length = 0;
         })
@@ -119,7 +114,7 @@ export const CommentsProvider = (props: Props) => {
   };
 
   const fetchMore = () => {
-    setQueryValue(q => ({ ...q, offset: (q.offset as number) + PAGINATION }));
+    setQuery(q => ({ ...q, offset: (q.offset as number) + PAGINATION }));
   };
 
   const showMore = () => resource().length === PAGINATION;
@@ -134,8 +129,7 @@ export const CommentsProvider = (props: Props) => {
     },
     utils: {
       showMore
-    },
-    modal
+    }
   };
 
   return (
