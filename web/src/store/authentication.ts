@@ -18,7 +18,8 @@ type Store = {
 
 export const authenticationStore = createRoot<Store>(() => {
   const [auth, { mutate }] = createResource(fetchUserAction);
-  return {
+
+  const store = {
     auth,
     user: () => auth()?.user,
     utils: {
@@ -34,4 +35,14 @@ export const authenticationStore = createRoot<Store>(() => {
       }
     }
   };
+
+  setInterval(
+    () => {
+      if (store.utils.isAuth()) return;
+      store.dispatch.logout();
+    },
+    10 * 60 * 1000 // 10 minutes
+  );
+
+  return store;
 });

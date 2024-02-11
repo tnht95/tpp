@@ -68,7 +68,7 @@ export const GameDetailsProvider = (props: ParentProps) => {
       del
     },
     utils: {
-      gameId,
+      gameId
     },
     modal
   };
