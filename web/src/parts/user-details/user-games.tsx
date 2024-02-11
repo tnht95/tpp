@@ -1,16 +1,10 @@
 import { For, Show } from 'solid-js';
 
 import { Button, GameCard, GameForm, ShowMoreButton } from '@/components';
-import { UserGamesProvider, useUserGamesCtx } from '@/context';
+import { useUserGamesCtx } from '@/context';
 import { authenticationStore } from '@/store';
 
-export const UserGames = () => (
-  <UserGamesProvider>
-    <UserGamesInner />
-  </UserGamesProvider>
-);
-
-const UserGamesInner = () => {
+export const UserGames = () => {
   const {
     utils: { isSameUser }
   } = authenticationStore;
