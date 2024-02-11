@@ -45,7 +45,7 @@ export const editBlogAction = (id: string, body: BlogRequest) =>
     body: JSON.stringify(body)
   })
     .then(errHandler)
-    .then((r: Response<undefined>) => r.data);
+    .then((r: Response<Blog>) => r.data);
 
 export const fetchBlogTagsAction = () =>
   fetch(`${import.meta.env.VITE_SERVER_URL}/blogs/tags`)
