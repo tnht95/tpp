@@ -15,8 +15,7 @@ export const GameDetailsHeader = () => {
   } = useGameDetailsCtx();
   const { showToast } = useToastCtx();
   const {
-    user,
-    utils: { isAuth }
+    utils: { isAuth, isSameUser }
   } = authenticationStore;
   const [isUpVotes, setIsUpVotes] = createSignal(
     game()?.isUpVoted ?? undefined
@@ -49,7 +48,7 @@ export const GameDetailsHeader = () => {
         />
         <Show when={isAuth()}>
           <OptionButton
-            isOwner={user()?.id === game()?.authorId}
+            isOwner={isSameUser(game()?.authorId as number)}
             onDelete={del}
             id={game()?.id as string}
             onEdit={show}

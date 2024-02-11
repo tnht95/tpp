@@ -24,7 +24,7 @@ export const UserGames = (props: UserGamesProps) => {
   const {
     utils: { isSameUser }
   } = authenticationStore;
-  const { showToast } = useToastCtx();
+  const toast = useToastCtx();
   const defaultParam: GameQueryInput = {
     // eslint-disable-next-line solid/reactivity
     authorId: props.userId,
@@ -52,7 +52,7 @@ export const UserGames = (props: UserGamesProps) => {
 
   const batchSubmitHandler = () =>
     batch(() => {
-      showToast({ msg: 'Game Added', type: 'Ok' });
+      toast.showToast({ msg: 'Game Added', type: 'Ok' });
       setGames([]);
       setParam(defaultParam);
       modal()?.hide();
@@ -63,7 +63,7 @@ export const UserGames = (props: UserGamesProps) => {
     addGameAction(file, game)
       .then(batchSubmitHandler)
       .catch((error: RespErr) =>
-        showToast({ msg: error.msg, type: 'Err' })
+        toast.showToast({ msg: error.msg, type: 'Err' })
       ) as unknown;
 
   const onShowMoreHandler = () => {
