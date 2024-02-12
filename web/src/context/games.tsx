@@ -11,7 +11,7 @@ import {
 } from 'solid-js';
 import { createStore, produce } from 'solid-js/store';
 
-import { filterGameAction, GameQueryInput, OrderBy, OrderField } from '@/apis';
+import { filterGamesAction, GameQueryInput, OrderBy, OrderField } from '@/apis';
 import { LoadingSpinner } from '@/components';
 import { PAGINATION } from '@/constant';
 import { GameSummary } from '@/models';
@@ -38,7 +38,7 @@ export const GamesProvider = (props: ParentProps) => {
     offset: 0,
     limit: PAGINATION
   });
-  const [resource] = createResource(query, filterGameAction, {
+  const [resource] = createResource(query, filterGamesAction, {
     initialValue: []
   });
   const [games, setGames] = createStore<GameSummary[]>([]);

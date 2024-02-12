@@ -10,7 +10,7 @@ import {
 } from 'solid-js';
 import { createStore, produce } from 'solid-js/store';
 
-import { addBlogAction, filterBlogAction } from '@/apis';
+import { addBlogAction, filterBlogsAction } from '@/apis';
 import { LoadingSpinner } from '@/components';
 import { PAGINATION } from '@/constant';
 import { BlogRequest, BlogSummary, RespErr } from '@/models';
@@ -35,7 +35,7 @@ export const BlogsProvider = (props: ParentProps) => {
   const { showToast } = useToastCtx();
   const modal = useModalUtils();
   const [query, setQuery] = createSignal({ offset: 0 });
-  const [resource] = createResource(query, filterBlogAction, {
+  const [resource] = createResource(query, filterBlogsAction, {
     initialValue: []
   });
   const [blogs, setBlogs] = createStore<BlogSummary[]>([]);

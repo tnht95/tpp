@@ -14,7 +14,7 @@ export type GameQueryInput = {
   tag?: string;
 };
 
-export const filterGameAction = async (queryInput: GameQueryInput) => {
+export const filterGamesAction = async (queryInput: GameQueryInput) => {
   const baseUrl = import.meta.env.VITE_SERVER_URL;
   const query: string[] = [] as const;
 

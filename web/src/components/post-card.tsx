@@ -7,7 +7,7 @@ import {
 } from 'solid-js';
 import { createStore, produce } from 'solid-js/store';
 
-import { filterCommentAction, QueryWIthTargetInput } from '@/apis';
+import { filterCommentsAction, QueryWIthTargetInput } from '@/apis';
 import { Avatar, CommentForm, Markdown, OptionButton } from '@/components';
 import { CommentsProvider } from '@/context';
 import { CommentDetails, PostDetails } from '@/models';
@@ -26,7 +26,7 @@ export const PostCard = (props: PostCardProps) => {
   const [isEditMode, setIsEditMode] = createSignal(false);
   const [isCommentHidden, setIsCommentHidden] = createSignal(true);
   const [queryValue, setQueryValue] = createSignal<QueryWIthTargetInput>();
-  const [commentResource] = createResource(queryValue, filterCommentAction, {
+  const [commentResource] = createResource(queryValue, filterCommentsAction, {
     initialValue: []
   });
   const [comments, setComments] = createStore<CommentDetails[]>([]);

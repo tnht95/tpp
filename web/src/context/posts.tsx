@@ -13,7 +13,7 @@ import {
   addPostAction,
   deletePostAction,
   editPostAction,
-  filterPostAction
+  filterPostsAction
 } from '@/apis';
 import { PAGINATION } from '@/constant';
 import { PostDetails, RespErr } from '@/models';
@@ -37,7 +37,7 @@ const ctx = createContext<Ctx>();
 export const PostsProvider = (props: ParentProps) => {
   const { showToast } = useToastCtx();
   const [params, setParams] = createSignal({ offset: 0 });
-  const [resource] = createResource(params, filterPostAction, {
+  const [resource] = createResource(params, filterPostsAction, {
     initialValue: []
   });
   const [posts, setPosts] = createStore<PostDetails[]>([]);

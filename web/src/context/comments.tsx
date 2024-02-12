@@ -14,7 +14,7 @@ import {
   addCommentAction,
   deleteCommentAction,
   editCommentAction,
-  filterCommentAction,
+  filterCommentsAction,
   QueryWIthTargetInput
 } from '@/apis';
 import { LoadingSpinner } from '@/components';
@@ -49,7 +49,7 @@ export const CommentsProvider = (props: Props) => {
     offset: 0,
     limit: PAGINATION
   });
-  const [resource] = createResource(query, filterCommentAction, {
+  const [resource] = createResource(query, filterCommentsAction, {
     initialValue: []
   });
   const [comments, setComments] = createStore<CommentDetails[]>([]);

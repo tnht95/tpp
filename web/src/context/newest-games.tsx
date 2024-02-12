@@ -6,7 +6,7 @@ import {
   useContext
 } from 'solid-js';
 
-import { filterGameAction } from '@/apis';
+import { filterGamesAction } from '@/apis';
 import { GameSummary } from '@/models';
 
 type Ctx = {
@@ -17,7 +17,7 @@ const ctx = createContext<Ctx>();
 export const NewestGamesProvider = (props: ParentProps) => {
   const [newestGames] = createResource(
     { orderField: 'createdAt', orderBy: 'desc', limit: 5 },
-    filterGameAction
+    filterGamesAction
   );
   return <ctx.Provider value={{ newestGames }}>{props.children}</ctx.Provider>;
 };

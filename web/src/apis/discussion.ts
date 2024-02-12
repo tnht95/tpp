@@ -7,7 +7,7 @@ import {
   Response
 } from '@/models';
 
-export const filterDiscussionAction = async ([offset, gameId]: [
+export const filterDiscussionsAction = async ([offset, gameId]: [
   number,
   string
 ]) => {

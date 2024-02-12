@@ -15,7 +15,7 @@ import { createStore, produce } from 'solid-js/store';
 import {
   addDiscussionAction,
   fetchDiscussionCountAction,
-  filterDiscussionAction
+  filterDiscussionsAction
 } from '@/apis';
 import { LoadingSpinner } from '@/components';
 import { PAGINATION } from '@/constant';
@@ -48,7 +48,7 @@ export const GameDiscussionsProvider = (props: ParentProps) => {
     gameId,
     fetchDiscussionCountAction
   );
-  const [resource] = createResource(params, filterDiscussionAction, {
+  const [resource] = createResource(params, filterDiscussionsAction, {
     initialValue: []
   });
   const [discussions, setDiscussions] = createStore<DiscussionSummary[]>([]);
