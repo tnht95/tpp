@@ -7,7 +7,7 @@ import {
   useContext
 } from 'solid-js';
 
-import { fetchGameAction } from '@/apis';
+import { filterGameAction } from '@/apis';
 import { LoadingSpinner } from '@/components';
 import { GameSummary } from '@/models';
 
@@ -19,7 +19,7 @@ const ctx = createContext<Ctx>();
 export const NewestGamesProvider = (props: ParentProps) => {
   const [newestGames] = createResource(
     { orderField: 'createdAt', orderBy: 'desc', limit: 5 },
-    fetchGameAction
+    filterGameAction
   );
   return (
     <ctx.Provider value={{ newestGames }}>

@@ -3,7 +3,7 @@ import { AddPost, EditPost, PostDetails, Response } from '@/models';
 
 import { errHandler } from '.';
 
-export const fetchPostAction = async ({ offset }: { offset: number }) => {
+export const filterPostAction = async ({ offset }: { offset: number }) => {
   const baseUrl = import.meta.env.VITE_SERVER_URL;
   return fetch(`${baseUrl}/posts?offset=${offset}&limit=${PAGINATION}`)
     .then(errHandler)

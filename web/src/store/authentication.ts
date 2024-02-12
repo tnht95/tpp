@@ -1,6 +1,6 @@
 import { createResource, createRoot, Resource } from 'solid-js';
 
-import { fetchUserAction, logoutAction } from '@/apis';
+import { fetchMeAction, logoutAction } from '@/apis';
 import { Auth, User } from '@/models';
 
 type Store = {
@@ -17,7 +17,7 @@ type Store = {
 };
 
 export const authenticationStore = createRoot<Store>(() => {
-  const [auth, { mutate }] = createResource(fetchUserAction);
+  const [auth, { mutate }] = createResource(fetchMeAction);
 
   const store = {
     auth,

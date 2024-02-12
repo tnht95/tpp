@@ -2,7 +2,7 @@ import { Auth, Response, User } from '@/models';
 
 import { errHandler } from '.';
 
-export const fetchUserAction = () =>
+export const fetchMeAction = () =>
   fetch(`${import.meta.env.VITE_SERVER_URL}/me`, {
     credentials: 'include'
   })

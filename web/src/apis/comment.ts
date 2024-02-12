@@ -2,9 +2,9 @@ import { AddComment, CommentDetails, EditComment, Response } from '@/models';
 
 import { errHandler, QueryWIthTargetInput } from '.';
 
-export const fetchCommentAction = async (queryInput: QueryWIthTargetInput) => {
+export const filterCommentAction = async (queryInput: QueryWIthTargetInput) => {
   const baseUrl = import.meta.env.VITE_SERVER_URL;
-  const query: string[] = [] as const;
+  const query: string[] = [];
 
   for (const key in queryInput) {
     query.push(`${key}=${queryInput[key as keyof QueryWIthTargetInput]}`);

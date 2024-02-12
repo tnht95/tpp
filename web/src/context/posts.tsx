@@ -14,7 +14,7 @@ import {
   addPostAction,
   deletePostAction,
   editPostAction,
-  fetchPostAction
+  filterPostAction
 } from '@/apis';
 import { LoadingSpinner } from '@/components';
 import { PAGINATION } from '@/constant';
@@ -38,7 +38,7 @@ const ctx = createContext<Ctx>();
 export const PostsProvider = (props: ParentProps) => {
   const { showToast } = useToastCtx();
   const [params, setParams] = createSignal({ offset: 0 });
-  const [resource] = createResource(params, fetchPostAction, {
+  const [resource] = createResource(params, filterPostAction, {
     initialValue: []
   });
   const [posts, setPosts] = createStore<PostDetails[]>([]);

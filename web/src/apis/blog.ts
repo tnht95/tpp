@@ -3,7 +3,7 @@ import { Blog, BlogRequest, BlogSummary, Response } from '@/models';
 
 import { errHandler } from '.';
 
-export const fetchBlogAction = ({ offset }: { offset: number }) =>
+export const filterBlogAction = ({ offset }: { offset: number }) =>
   fetch(
     `${import.meta.env.VITE_SERVER_URL}/blogs?offset=${offset}&limit=${PAGINATION}`
   )
