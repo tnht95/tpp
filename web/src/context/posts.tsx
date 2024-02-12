@@ -5,7 +5,6 @@ import {
   createResource,
   createSignal,
   ParentProps,
-  Show,
   useContext
 } from 'solid-js';
 import { createStore, produce } from 'solid-js/store';
@@ -16,7 +15,6 @@ import {
   editPostAction,
   filterPostAction
 } from '@/apis';
-import { LoadingSpinner } from '@/components';
 import { PAGINATION } from '@/constant';
 import { PostDetails, RespErr } from '@/models';
 
@@ -31,6 +29,7 @@ type Ctx = {
   };
   utils: {
     handleScroll: () => void;
+    loading: () => boolean;
   };
 };
 
@@ -43,17 +42,6 @@ export const PostsProvider = (props: ParentProps) => {
   });
   const [posts, setPosts] = createStore<PostDetails[]>([]);
   const [reachedBottom, setReachedBottom] = createSignal(false);
-
-  const handleScroll = () => {
-    const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
-    const scrollPercentage = (scrollTop / (scrollHeight - clientHeight)) * 100;
-    if (scrollPercentage > 90 && !reachedBottom()) {
-      batch(() => {
-        setParams(p => ({ ...p, offset: p.offset + PAGINATION }));
-        setReachedBottom(true);
-      });
-    }
-  };
 
   createEffect(() => {
     if (resource().length > 0) {
@@ -99,6 +87,19 @@ export const PostsProvider = (props: ParentProps) => {
       .catch((error: RespErr) => showToast({ msg: error.msg, type: 'Err' }));
   };
 
+  const handleScroll = () => {
+    const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
+    const scrollPercentage = (scrollTop / (scrollHeight - clientHeight)) * 100;
+    if (scrollPercentage > 90 && !reachedBottom()) {
+      batch(() => {
+        setParams(p => ({ ...p, offset: p.offset + PAGINATION }));
+        setReachedBottom(true);
+      });
+    }
+  };
+
+  const loading = () => posts.length === 0 && resource.loading;
+
   const state: Ctx = {
     posts,
     dispatch: {
@@ -107,20 +108,12 @@ export const PostsProvider = (props: ParentProps) => {
       del
     },
     utils: {
-      handleScroll
+      handleScroll,
+      loading
     }
   };
 
-  return (
-    <ctx.Provider value={state}>
-      <Show
-        when={posts.length > 0 || !resource.loading}
-        fallback={<LoadingSpinner />}
-      >
-        {props.children}
-      </Show>
-    </ctx.Provider>
-  );
+  return <ctx.Provider value={state}>{props.children}</ctx.Provider>;
 };
 
 export const usePostsCtx = () => useContext(ctx) as Ctx;

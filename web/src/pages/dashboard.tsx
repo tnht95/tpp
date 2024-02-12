@@ -1,12 +1,12 @@
 import { NewestGamesProvider, PostsProvider } from '@/context';
-import { NewestGames, Posts } from '@/parts';
+import { DashboardNewestGames, DashboardPosts } from '@/parts';
 
 export const Dashboard = () => (
   <div class="flex">
     <nav class="flex-2" />
     <main class="flex-3 flex-col border-x border-dashed px-32">
       <PostsProvider>
-        <Posts />
+        <DashboardPosts />
       </PostsProvider>
     </main>
     <nav class="flex-2">
@@ -14,7 +14,7 @@ export const Dashboard = () => (
         <p class="mt-7 p-4 text-xl font-bold text-indigo-900">Newest games</p>
         <div class="flex flex-col gap-5">
           <NewestGamesProvider>
-            <NewestGames />
+            <DashboardNewestGames />
           </NewestGamesProvider>
         </div>
       </div>

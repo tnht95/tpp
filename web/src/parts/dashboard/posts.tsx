@@ -1,14 +1,14 @@
-import { For, onCleanup, onMount } from 'solid-js';
+import { For, onCleanup, onMount, Show } from 'solid-js';
 
-import { CommentForm, PostCard } from '@/components';
+import { CommentForm, LoadingSpinner, PostCard } from '@/components';
 import { usePostsCtx } from '@/context';
 import { authenticationStore } from '@/store';
 
-export const Posts = () => {
+export const DashboardPosts = () => {
   const { utils } = authenticationStore;
   const {
     posts,
-    utils: { handleScroll },
+    utils: { handleScroll, loading },
     dispatch: { add, edit, del }
   } = usePostsCtx();
   onMount(() => {
@@ -18,16 +18,18 @@ export const Posts = () => {
     window.removeEventListener('scroll', handleScroll);
   });
   return (
-    <div class="mb-10">
-      <div class="my-10">
-        {utils.isAuth() && (
+    <div class="pb-10">
+      <div class="py-10">
+        <Show when={utils.isAuth()}>
           <CommentForm onSubmitHandler={add}>New post</CommentForm>
-        )}
+        </Show>
       </div>
       <div class="flex flex-col gap-10 ">
-        <For each={posts}>
-          {post => <PostCard post={post} onDelete={del} onEdit={edit} />}
-        </For>
+        <Show when={!loading()} fallback={<LoadingSpinner />}>
+          <For each={posts}>
+            {post => <PostCard post={post} onDelete={del} onEdit={edit} />}
+          </For>
+        </Show>
       </div>
     </div>
   );
