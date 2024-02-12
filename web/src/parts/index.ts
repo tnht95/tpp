@@ -8,3 +8,4 @@ export * from './games';
 export * from './blogs';
 export * from './blog-details';
 export * from './comment-container';
+export * from './search';
