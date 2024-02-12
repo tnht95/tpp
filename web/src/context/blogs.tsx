@@ -14,7 +14,7 @@ import { addBlogAction, filterBlogAction } from '@/apis';
 import { LoadingSpinner } from '@/components';
 import { PAGINATION } from '@/constant';
 import { BlogRequest, BlogSummary, RespErr } from '@/models';
-import { ModalUtil, useModal } from '@/utils';
+import { ModalUtil, useModalUtils } from '@/utils';
 
 import { useToastCtx } from './toast';
 
@@ -33,7 +33,7 @@ type Ctx = {
 const ctx = createContext<Ctx>();
 export const BlogsProvider = (props: ParentProps) => {
   const { showToast } = useToastCtx();
-  const modal = useModal();
+  const modal = useModalUtils();
   const [query, setQuery] = createSignal({ offset: 0 });
   const [resource] = createResource(query, filterBlogAction, {
     initialValue: []

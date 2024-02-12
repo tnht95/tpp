@@ -14,7 +14,7 @@ import { createStore, produce } from 'solid-js/store';
 import { addGameAction, filterGameAction, GameQueryInput } from '@/apis';
 import { LoadingSpinner } from '@/components';
 import { GameRequest, GameSummary, RespErr } from '@/models';
-import { ModalUtil, useModal } from '@/utils';
+import { ModalUtil, useModalUtils } from '@/utils';
 
 import { useToastCtx } from './toast';
 
@@ -37,7 +37,7 @@ const ctx = createContext<Ctx>();
 export const UserGamesProvider = (props: ParentProps) => {
   const userId = Number.parseInt(useParams()['id'] as string);
   const { showToast } = useToastCtx();
-  const modal = useModal();
+  const modal = useModalUtils();
   const [param, setParam] = createSignal<GameQueryInput>({
     authorId: userId,
     orderBy: 'desc',

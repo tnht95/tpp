@@ -19,7 +19,7 @@ import {
 import { LoadingSpinner } from '@/components';
 import { DiscussionDetails, DiscussionRequest, RespErr } from '@/models';
 import { NotFound } from '@/pages';
-import { ModalUtil, useModal } from '@/utils';
+import { ModalUtil, useModalUtils } from '@/utils';
 
 import { useToastCtx } from './toast';
 
@@ -42,7 +42,7 @@ export const GameDiscussionDetailsProvider = (props: ParentProps) => {
   const [params] = createSignal<[string, string]>([gameId, discussionId]);
   const navigate = useNavigate();
   const { showToast } = useToastCtx();
-  const modal = useModal();
+  const modal = useModalUtils();
   const [discussion, { mutate }] = createResource(
     params,
     fetchDiscussionByIdAction

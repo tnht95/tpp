@@ -14,7 +14,7 @@ import { deleteBlogAction, editBlogAction, fetchBlogByIdAction } from '@/apis';
 import { LoadingSpinner } from '@/components';
 import { Blog, BlogRequest, RespErr } from '@/models';
 import { NotFound } from '@/pages';
-import { ModalUtil, useModal } from '@/utils';
+import { ModalUtil, useModalUtils } from '@/utils';
 
 import { useToastCtx } from './toast';
 
@@ -34,7 +34,7 @@ const ctx = createContext<Ctx>();
 export const BlogDetailsProvider = (props: ParentProps) => {
   const { showToast } = useToastCtx();
   const navigate = useNavigate();
-  const modal = useModal();
+  const modal = useModalUtils();
   const blogId = useParams()['id'] as string;
   const [blog, { mutate }] = createResource(blogId, fetchBlogByIdAction);
 

@@ -7,7 +7,7 @@ export type ModalUtil = {
   initRef: Setter<HTMLDivElement | undefined>;
 };
 
-export const useModal = (opts?: ModalOptions): ModalUtil => {
+export const useModalUtils = (opts?: ModalOptions): ModalUtil => {
   const [modalRef, setModalRef] = createSignal<HTMLDivElement>();
   const [modal, setModal] = createSignal<Modal>();
   createEffect(() => {

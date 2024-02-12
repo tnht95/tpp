@@ -20,7 +20,7 @@ import {
 import { LoadingSpinner } from '@/components';
 import { PAGINATION } from '@/constant';
 import { DiscussionRequest, DiscussionSummary, RespErr } from '@/models';
-import { ModalUtil, useModal } from '@/utils';
+import { ModalUtil, useModalUtils } from '@/utils';
 
 import { useToastCtx } from './toast';
 
@@ -42,7 +42,7 @@ const ctx = createContext<Ctx>();
 export const GameDiscussionsProvider = (props: ParentProps) => {
   const gameId = useParams()['id'] as string;
   const { showToast } = useToastCtx();
-  const modal = useModal();
+  const modal = useModalUtils();
   const [params, setParams] = createSignal<[number, string]>([0, gameId]);
   const [count, { refetch: reCount }] = createResource(
     gameId,

@@ -15,7 +15,7 @@ import { LoadingSpinner } from '@/components';
 import { GameDetails, GameRequest, RespErr } from '@/models';
 import { NotFound } from '@/pages';
 import { authenticationStore } from '@/store';
-import { ModalUtil, useModal } from '@/utils';
+import { ModalUtil, useModalUtils } from '@/utils';
 
 import { useToastCtx } from './toast';
 
@@ -36,7 +36,7 @@ export const GameDetailsProvider = (props: ParentProps) => {
   const gameId = useParams()['id'] as string;
   const [game, { mutate }] = createResource(gameId, fetchGameByIdAction);
   const { showToast } = useToastCtx();
-  const modal = useModal();
+  const modal = useModalUtils();
   const navigate = useNavigate();
   const { user } = authenticationStore;
 
