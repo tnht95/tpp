@@ -5,13 +5,13 @@ import { CommentDetails } from '@/models';
 import { authenticationStore } from '@/store';
 import { formatTime } from '@/utils';
 
-type CommentProps = {
+type Props = {
   comment: CommentDetails;
   onDelete: (commentId: string) => void;
   onEdit: (commentId: string, content: string) => void;
 };
 
-export const CommentContainer = (props: CommentProps) => {
+export const CommentCard = (props: Props) => {
   const [isEditMode, setIsEditMode] = createSignal(false);
 
   const {

@@ -3,27 +3,15 @@ import {
   createEffect,
   createResource,
   createSignal,
-  For,
   Show
 } from 'solid-js';
 import { createStore, produce } from 'solid-js/store';
 
-import {
-  addCommentAction,
-  deleteCommentAction,
-  editCommentAction,
-  fetchCommentAction,
-  QueryWIthTargetInput
-} from '@/apis';
-import {
-  Avatar,
-  CommentContainer,
-  CommentForm,
-  Markdown,
-  OptionButton
-} from '@/components';
-import { useToastCtx } from '@/context';
-import { CommentDetails, PostDetails, RespErr } from '@/models';
+import { fetchCommentAction, QueryWIthTargetInput } from '@/apis';
+import { Avatar, CommentForm, Markdown, OptionButton } from '@/components';
+import { CommentsProvider } from '@/context';
+import { CommentDetails, PostDetails } from '@/models';
+import { CommentContainer } from '@/parts';
 import { authenticationStore } from '@/store';
 import { formatTime } from '@/utils';
 
@@ -35,8 +23,6 @@ type PostCardProps = {
 
 export const PostCard = (props: PostCardProps) => {
   const { utils } = authenticationStore;
-  const { showToast } = useToastCtx();
-
   const [isEditMode, setIsEditMode] = createSignal(false);
   const [isCommentHidden, setIsCommentHidden] = createSignal(true);
   const [queryValue, setQueryValue] = createSignal<QueryWIthTargetInput>();
@@ -78,60 +64,6 @@ export const PostCard = (props: PostCardProps) => {
     setIsEditMode(false);
     props.onEdit(props.post.id, content);
   };
-
-  const onAddCommentHandler = (content: string) => {
-    addCommentAction({
-      content,
-      targetId: props.post.id,
-      targetType: 'Post'
-    })
-      .then(newCmt =>
-        batch(() => {
-          showToast({ msg: 'Comment Added', type: 'Ok' });
-          setComments(produce(c => c.unshift(newCmt)));
-          addedCmts.push(newCmt);
-        })
-      )
-      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'Err' }));
-  };
-
-  const onLoadMoreHandler = () => {
-    setQueryValue(oldValue => ({
-      ...(oldValue as QueryWIthTargetInput),
-      offset: (oldValue?.offset as number) + 5
-    }));
-  };
-
-  const onEditCmtHandler = (commentId: string, content: string) =>
-    editCommentAction(commentId, {
-      content,
-      targetId: props.post.id,
-      targetType: 'Post'
-    })
-      .then(comment => setComments(c => c.id === comment.id, comment))
-      .then(() => showToast({ msg: 'Comment Updated', type: 'Ok' }))
-      .catch((error: RespErr) =>
-        showToast({ msg: error.msg, type: 'Err' })
-      ) as unknown;
-
-  const resetCmts = () =>
-    batch(() => {
-      addedCmts.length = 0;
-      setComments([]);
-      setQueryValue({
-        targetId: props.post.id,
-        offset: 0,
-        limit: 5
-      });
-      showToast({ msg: 'Comment Deleted', type: 'Ok' });
-    });
-
-  const onDeleteCmtHandler = (commentId: string) =>
-    deleteCommentAction(commentId)
-      .then(resetCmts)
-      .catch((error: RespErr) =>
-        showToast({ msg: error.msg, type: 'Err' })
-      ) as unknown;
 
   return (
     <div class="max-w-full break-all rounded-xl border bg-white p-10 pb-2">
@@ -194,28 +126,9 @@ export const PostCard = (props: PostCardProps) => {
           'py-5': comments.length > 0 || utils.isAuth()
         }}
       >
-        <Show when={comments}>
-          <For each={comments}>
-            {comment => (
-              <CommentContainer
-                comment={comment}
-                onDelete={onDeleteCmtHandler}
-                onEdit={onEditCmtHandler}
-              />
-            )}
-          </For>
-        </Show>
-        <Show when={commentResource().length == 5}>
-          <p
-            class="-mt-1 cursor-pointer text-gray-400 hover:text-gray-600"
-            onClick={onLoadMoreHandler}
-          >
-            Load more...
-          </p>
-        </Show>
-        {utils.isAuth() && (
-          <CommentForm onSubmitHandler={onAddCommentHandler} />
-        )}
+        <CommentsProvider targetType="Post" targetId={props.post.id}>
+          <CommentContainer />
+        </CommentsProvider>
       </div>
     </div>
   );

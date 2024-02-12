@@ -1,9 +1,7 @@
 import { createEffect, createSignal, Show } from 'solid-js';
 import { ParentProps } from 'solid-js/types/render/component';
 
-import { PreviewButtonGroup } from '@/components';
-
-import { Markdown } from './markdown';
+import { Markdown, PreviewButtonGroup } from '@/components';
 
 type CommentFormProps = {
   content?: string;

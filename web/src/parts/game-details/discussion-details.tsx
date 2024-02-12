@@ -4,10 +4,9 @@ import {
   GameDiscussionDetailsProvider,
   useGameDiscussionDetailsCtx
 } from '@/context';
+import { CommentContainer } from '@/parts';
 import { authenticationStore } from '@/store';
 import { formatTime } from '@/utils';
-
-import { GameDetailsDiscussionDetailsComment } from './discussion-details-comment';
 
 export const GameDetailsDiscussionDetails = () => (
   <GameDiscussionDetailsProvider>
@@ -64,7 +63,9 @@ const GameDetailsDiscussionDetailsInner = () => {
         </div>
       </div>
       <CommentsProvider targetType="Discussion" targetId={discussionId}>
-        <GameDetailsDiscussionDetailsComment />
+        <div class="flex flex-col gap-10">
+          <CommentContainer />
+        </div>
       </CommentsProvider>
     </div>
   );

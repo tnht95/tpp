@@ -1,10 +1,10 @@
 import { For, Show } from 'solid-js';
 
-import { CommentContainer, CommentForm } from '@/components';
+import { CommentCard, CommentForm } from '@/components';
 import { useCommentsCtx } from '@/context';
 import { authenticationStore } from '@/store';
 
-export const GameDetailsDiscussionDetailsComment = () => {
+export const CommentContainer = () => {
   const {
     utils: { isAuth }
   } = authenticationStore;
@@ -14,10 +14,10 @@ export const GameDetailsDiscussionDetailsComment = () => {
     utils: { showMore }
   } = useCommentsCtx();
   return (
-    <div class="flex flex-col gap-10">
+    <>
       <For each={comments}>
         {comment => (
-          <CommentContainer comment={comment} onDelete={del} onEdit={edit} />
+          <CommentCard comment={comment} onDelete={del} onEdit={edit} />
         )}
       </For>
       <Show when={showMore()}>
@@ -31,6 +31,6 @@ export const GameDetailsDiscussionDetailsComment = () => {
       <Show when={isAuth()}>
         <CommentForm onSubmitHandler={add}>New Comment</CommentForm>
       </Show>
-    </div>
+    </>
   );
 };
