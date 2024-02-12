@@ -24,8 +24,6 @@ export type GameSummary = {
   avatarUrl: string | undefined;
   upVotes: number;
   downVotes: number;
-  tags: string[] | undefined;
-  createdAt: string;
 };
 
 export type GameRequest = {
