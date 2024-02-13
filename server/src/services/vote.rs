@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use async_trait::async_trait;
-use sqlx::Error;
+use sqlx::{Error, Transaction};
 use thiserror::Error;
 use uuid::Uuid;
 
@@ -63,16 +63,7 @@ where
             false => ("down_votes", "up_votes"),
         };
 
-        let query = format!(
-            "update games set {} = {} + 1 where id = $1",
-            vote_column, vote_column
-        );
-
-        sqlx::query(&query)
-            .bind(game_id)
-            .execute(&mut *tx)
-            .await
-            .map_err(|e| VoteServiceErr::Other(e.into()))?;
+        update_game_votes(&mut tx, game_id, vote_column, 1).await?;
 
         let result = sqlx::query!(
             r#"
@@ -107,29 +98,11 @@ where
             match r.existed_is_up == new_vote.is_up {
                 false => {
                     // case when vote changed
-                    let query = format!(
-                        "update games set {} = {} - 1 where id = $1",
-                        other_vote_column, other_vote_column
-                    );
-
-                    sqlx::query(&query)
-                        .bind(game_id)
-                        .execute(&mut *tx)
-                        .await
-                        .map_err(|e| VoteServiceErr::Other(e.into()))?;
+                    update_game_votes(&mut tx, game_id, other_vote_column, -1).await?;
                 }
                 true => {
                     // case when same vote
-                    let query = format!(
-                        "update games set {} = {} - 1 where id = $1",
-                        vote_column, vote_column
-                    );
-
-                    sqlx::query(&query)
-                        .bind(game_id)
-                        .execute(&mut *tx)
-                        .await
-                        .map_err(|e| VoteServiceErr::Other(e.into()))?;
+                    update_game_votes(&mut tx, game_id, vote_column, -1).await?;
                 }
             }
         };
@@ -162,20 +135,30 @@ where
                 false => "down_votes",
             };
 
-            let query = format!(
-                "update games set {} = {} - 1 where id = $1",
-                vote_column, vote_column
-            );
-
-            sqlx::query(&query)
-                .bind(game_id)
-                .execute(&mut *tx)
-                .await
-                .map_err(|e| VoteServiceErr::Other(e.into()))?;
+            update_game_votes(&mut tx, game_id, vote_column, -1).await?;
         }
 
         tx.commit()
             .await
             .map_err(|e| VoteServiceErr::Other(e.into()))
     }
+}
+
+async fn update_game_votes(
+    tx: &mut Transaction<'_, sqlx::Postgres>,
+    game_id: Uuid,
+    column: &str,
+    update_value: i64,
+) -> Result<(), VoteServiceErr> {
+    let query = format!(
+        "update games set {} = {} + $1 where id = $2",
+        column, column
+    );
+    sqlx::query(&query)
+        .bind(update_value)
+        .bind(game_id)
+        .execute(&mut **tx)
+        .await
+        .map_err(|e| VoteServiceErr::Other(e.into()))
+        .map(|_| ())
 }
