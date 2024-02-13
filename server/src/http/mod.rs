@@ -136,6 +136,7 @@ where
                         .route("/games/:id", put(game::edit))
                         .route("/games/tags", get(game::get_tags))
                         .route("/games/:gid/votes", post(vote::vote))
+                        .route("/games/:gid/votes", delete(vote::un_vote))
                         .route("/games/:gid/discussions", get(discussion::filter))
                         .route("/games/:gid/discussions", post(discussion::add))
                         .route("/games/:gid/discussions/counts", get(discussion::count))
