@@ -14,7 +14,7 @@ export const CommentContainer = () => {
     utils: { showMore }
   } = useCommentsCtx();
   return (
-    <>
+    <div class="flex flex-col gap-5 pt-5">
       <For each={comments}>
         {comment => (
           <CommentCard comment={comment} onDelete={del} onEdit={edit} />
@@ -29,8 +29,8 @@ export const CommentContainer = () => {
         </p>
       </Show>
       <Show when={isAuth()}>
-        <CommentForm onSubmitHandler={add}>New Comment</CommentForm>
+        <CommentForm onSubmit={add}>New Comment</CommentForm>
       </Show>
-    </>
+    </div>
   );
 };

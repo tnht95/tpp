@@ -24,9 +24,9 @@ export const BlogInfo = () => {
                 <p class="text-3xl font-bold">{blog()?.title}</p>
                 <OptionButton
                   isOwner={isAdmin()}
-                  onDelete={del}
+                  onDeleteConfirm={del}
                   id={''}
-                  onEdit={show}
+                  onEditBtnClick={show}
                 />
                 <BlogForm
                   modalRef={initRef}

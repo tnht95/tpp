@@ -12,10 +12,10 @@ import { ConfirmModal } from './confirm-modal';
 type OptionButtonProps = {
   isOwner: boolean;
   customStyle?: string;
-  onDelete: (postId: string) => void;
+  onDeleteConfirm: (id: string) => void;
   id: string;
   isEditMode?: Accessor<boolean>;
-  onEdit: () => void;
+  onEditBtnClick: () => void;
 };
 
 const otherContent = (
@@ -60,7 +60,7 @@ export const OptionButton = (propInput: OptionButtonProps) => {
               <a
                 href="#"
                 class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                onClick={() => props.onEdit()}
+                onClick={() => props.onEditBtnClick()}
               >
                 <i class="fa-solid fa-pencil mr-2" />
                 <Show when={props.isEditMode()} fallback={'Edit'}>
@@ -84,7 +84,7 @@ export const OptionButton = (propInput: OptionButtonProps) => {
         </ul>
       </div>
       <ConfirmModal
-        onDelete={props.onDelete}
+        onDelete={props.onDeleteConfirm}
         id={props.id}
         setModalRef={setModalRef}
         onCloseHandler={() => modal()?.hide()}

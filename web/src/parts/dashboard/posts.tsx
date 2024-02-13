@@ -18,12 +18,10 @@ export const DashboardPosts = () => {
     window.removeEventListener('scroll', handleScroll);
   });
   return (
-    <div class="pb-10">
-      <div class="py-10">
-        <Show when={utils.isAuth()}>
-          <CommentForm onSubmitHandler={add}>New post</CommentForm>
-        </Show>
-      </div>
+    <div class="flex flex-col gap-10 py-10">
+      <Show when={utils.isAuth()}>
+        <CommentForm onSubmit={add}>New post</CommentForm>
+      </Show>
       <div class="flex flex-col gap-10 ">
         <Show when={!loading()} fallback={<LoadingSpinner />}>
           <For each={posts}>

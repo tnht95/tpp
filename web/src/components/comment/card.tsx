@@ -27,8 +27,8 @@ export const CommentCard = (props: Props) => {
     <div class="flex">
       <Avatar userId={props.comment.userId} img={props.comment.userAvatar} />
       <div class="ml-2 w-full">
-        <div class="flex items-center justify-between rounded-t border border-gray-200 bg-gray-200 p-2 px-5">
-          <div>
+        <div class="flex items-center justify-between rounded-t border border-gray-200 bg-gray-200 px-5 py-2">
+          <div class="flex items-center gap-1">
             <span class="font-semibold">{props.comment.userName}</span>
             <span> commented on </span>
             <span>{formatTime(props.comment.createdAt)}</span>
@@ -36,39 +36,36 @@ export const CommentCard = (props: Props) => {
           {isAuth() && (
             <OptionButton
               isOwner={isSameUser(props.comment.userId)}
-              onDelete={props.onDelete}
+              onDeleteConfirm={props.onDelete}
               id={props.comment.id}
               isEditMode={isEditMode}
-              onEdit={() => {
+              onEditBtnClick={() => {
                 setIsEditMode(!isEditMode());
               }}
             />
           )}
         </div>
-
-        <div class="rounded-b border border-gray-200 px-5 py-3">
+        <div class="flex flex-col gap-2 rounded-b border border-gray-200 px-5 py-3">
           <Show
             when={isEditMode()}
             fallback={<Markdown content={props.comment.content} />}
           >
             <CommentForm
               content={props.comment.content}
-              onSubmitHandler={onSubmitHandler}
+              onSubmit={onSubmitHandler}
             />
           </Show>
-          <div class="mt-2">
-            <Show
-              when={props.comment.likes}
-              fallback={
-                <i class="fa-regular fa-heart cursor-pointer text-xl hover:text-gray-400" />
-              }
-            >
-              <i class="fa-solid fa-heart cursor-pointer text-xl text-red-500 hover:text-gray-400" />
-            </Show>
-            {props.comment.likes > 0 && (
-              <span class="ml-1.5">{props.comment.likes}</span>
-            )}
-          </div>
+          <Show
+            when={props.comment.likes}
+            fallback={
+              <i class="fa-regular fa-heart cursor-pointer text-xl hover:text-gray-400" />
+            }
+          >
+            <i class="fa-solid fa-heart cursor-pointer text-xl text-red-500 hover:text-gray-400" />
+          </Show>
+          {props.comment.likes > 0 && (
+            <span class="ml-1.5">{props.comment.likes}</span>
+          )}
         </div>
       </div>
     </div>

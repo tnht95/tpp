@@ -31,9 +31,9 @@ const GameDetailsDiscussionDetailsInner = () => {
           <p class="mr-3 text-3xl font-semibold">{discussion()?.title}</p>
           <OptionButton
             isOwner={isSameUser(discussion()?.userId as number)}
-            onDelete={del}
+            onDeleteConfirm={del}
             id={''}
-            onEdit={show}
+            onEditBtnClick={show}
           />
           <DiscussionForm
             ref={initRef}

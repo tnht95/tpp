@@ -49,9 +49,9 @@ export const GameDetailsHeader = () => {
         <Show when={isAuth()}>
           <OptionButton
             isOwner={isSameUser(game()?.authorId as number)}
-            onDelete={del}
+            onDeleteConfirm={del}
             id={game()?.id as string}
-            onEdit={show}
+            onEditBtnClick={show}
           />
         </Show>
       </div>

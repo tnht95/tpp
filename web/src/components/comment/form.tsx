@@ -5,7 +5,7 @@ import { Markdown, PreviewButtonGroup } from '@/components';
 
 type CommentFormProps = {
   content?: string;
-  onSubmitHandler: (content: string) => void;
+  onSubmit: (content: string) => void;
 } & ParentProps;
 
 const checkErr = (content: string): string => {
@@ -32,7 +32,7 @@ export const CommentForm = (props: CommentFormProps) => {
     e.preventDefault();
     setErrMsg(checkErr(content()));
     if (!errMsg()) {
-      props.onSubmitHandler(content());
+      props.onSubmit(content());
       setContent('');
     }
   };
@@ -43,40 +43,39 @@ export const CommentForm = (props: CommentFormProps) => {
 
   return (
     <form
-      class="w-full rounded-lg border bg-white px-7 py-5"
+      class="flex flex-col gap-4 rounded-xl border p-10"
       onSubmit={onSubmitHandler}
     >
-      <div class="flex flex-col gap-4">
+      <Show when={props.children}>
         <h2 class="text-xl font-bold text-gray-800">{props.children}</h2>
-        <div class="flex flex-1 flex-col gap-4">
-          <Show when={isEditMode()} fallback={displayMarkdown(content())}>
-            <textarea
-              class="h-20 w-full resize-none rounded border border-gray-100 bg-gray-100 leading-normal placeholder:text-gray-400 focus:border-gray-300 focus:bg-white focus:outline-none"
-              classList={{ 'border-red-600': !!errMsg() }}
-              name="body"
-              placeholder="Type Your Comment (Support some markdowns)"
-              onFocusOut={e => setContent(e.target.value)}
-              onFocusIn={() => setErrMsg('')}
-              value={content()}
-            />
-          </Show>
-          <div class="h-4">
-            <Show when={errMsg()}>
-              <p class="text-red-600">{errMsg()}</p>
-            </Show>
+      </Show>
+      <Show
+        when={isEditMode()}
+        fallback={
+          <div class="min-h-20 border border-white px-3 py-2">
+            <Markdown content={content()} />
           </div>
-          <PreviewButtonGroup
-            isEditMode={isEditMode()}
-            onPreviewHandler={() => setIsEditMode(mode => !mode)}
-          />
-        </div>
+        }
+      >
+        <textarea
+          class="h-20 w-full resize-none rounded border border-gray-100 bg-gray-100 leading-normal placeholder:text-gray-400 focus:border-gray-300 focus:bg-white focus:outline-none"
+          classList={{ 'border-red-600': !!errMsg() }}
+          name="body"
+          placeholder="Type Your Comment (Support some markdowns)"
+          onFocusOut={e => setContent(e.target.value)}
+          onFocusIn={() => setErrMsg('')}
+          value={content()}
+        />
+      </Show>
+      <div class="h-4">
+        <Show when={errMsg()}>
+          <p class="text-red-600">{errMsg()}</p>
+        </Show>
       </div>
+      <PreviewButtonGroup
+        isEditMode={isEditMode()}
+        onPreviewHandler={() => setIsEditMode(mode => !mode)}
+      />
     </form>
   );
 };
-
-const displayMarkdown = (content: string) => (
-  <div class="min-h-20 border border-white px-3 py-2">
-    <Markdown content={content} />
-  </div>
-);
