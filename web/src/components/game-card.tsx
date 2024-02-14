@@ -5,7 +5,7 @@ type Props = {
   game: GameSummary;
 };
 export const GameCard = (props: Props) => (
-  <div class="w-48 rounded-lg border bg-indigo-300 shadow-md hover:bg-white">
+  <div class="w-48 rounded-lg border bg-indigo-300 shadow hover:bg-white">
     <a href={`/games/${props.game.id}/info`}>
       <img
         class="h-28 w-60 rounded-t-lg p-4"
@@ -25,7 +25,7 @@ export const GameCard = (props: Props) => (
         <EllipsisText maxWidth="max-w-28" customStyle="text-xs text-indigo-700">
           {props.game.authorName}
         </EllipsisText>
-        <div class="mb-5 mt-2.5 flex items-center gap-1 text-sm">
+        <div class="flex items-center gap-1 pb-5 pt-2.5 text-sm">
           <div class="flex items-center rounded bg-indigo-500 px-2.5 py-0.5">
             <span class="font-semibold text-white">
               <i class="fa-solid fa-angle-up pr-1 text-green-400" />

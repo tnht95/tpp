@@ -5,13 +5,11 @@ import {
   createResource,
   createSignal,
   ParentProps,
-  Show,
   useContext
 } from 'solid-js';
 import { createStore, produce } from 'solid-js/store';
 
 import { addBlogAction, filterBlogsAction } from '@/apis';
-import { LoadingSpinner } from '@/components';
 import { PAGINATION } from '@/constant';
 import { BlogRequest, BlogSummary, RespErr } from '@/models';
 import { ModalUtil, useModalUtils } from '@/utils';
@@ -26,6 +24,7 @@ type Ctx = {
   };
   utils: {
     showMore: () => boolean;
+    loading: () => boolean;
   };
   modal: ModalUtil;
 };
@@ -65,6 +64,8 @@ export const BlogsProvider = (props: ParentProps) => {
 
   const showMore = () => resource().length === PAGINATION;
 
+  const loading = () => blogs.length === 0 && resource.loading;
+
   const state: Ctx = {
     blogs,
     dispatch: {
@@ -72,21 +73,13 @@ export const BlogsProvider = (props: ParentProps) => {
       fetchMore
     },
     utils: {
-      showMore
+      showMore,
+      loading
     },
     modal
   };
 
-  return (
-    <ctx.Provider value={state}>
-      <Show
-        when={blogs.length > 0 || !resource.loading}
-        fallback={<LoadingSpinner />}
-      >
-        {props.children}
-      </Show>
-    </ctx.Provider>
-  );
+  return <ctx.Provider value={state}>{props.children}</ctx.Provider>;
 };
 
 export const useBlogsCtx = () => useContext(ctx) as Ctx;
