@@ -36,8 +36,8 @@ type Ctx = {
 const ctx = createContext<Ctx>();
 export const PostsProvider = (props: ParentProps) => {
   const { showToast } = useToastCtx();
-  const [params, setParams] = createSignal({ offset: 0 });
-  const [resource] = createResource(params, filterPostsAction, {
+  const [query, setQuery] = createSignal({ offset: 0 });
+  const [resource] = createResource(query, filterPostsAction, {
     initialValue: []
   });
   const [posts, setPosts] = createStore<PostDetails[]>([]);
@@ -57,7 +57,7 @@ export const PostsProvider = (props: ParentProps) => {
       .then(() =>
         batch(() => {
           setPosts([]);
-          setParams(p => ({ ...p, offset: 0 }));
+          setQuery(p => ({ ...p, offset: 0 }));
           showToast({ msg: 'Post Added', type: 'Ok' });
         })
       )
@@ -69,7 +69,7 @@ export const PostsProvider = (props: ParentProps) => {
       .then(() =>
         batch(() => {
           setPosts([]);
-          setParams(p => ({ ...p, offset: 0 }));
+          setQuery(p => ({ ...p, offset: 0 }));
           showToast({ msg: 'Post Deleted', type: 'Ok' });
         })
       )
@@ -92,7 +92,7 @@ export const PostsProvider = (props: ParentProps) => {
     const scrollPercentage = (scrollTop / (scrollHeight - clientHeight)) * 100;
     if (scrollPercentage > 90 && !reachedBottom()) {
       batch(() => {
-        setParams(p => ({ ...p, offset: p.offset + PAGINATION }));
+        setQuery(p => ({ ...p, offset: p.offset + PAGINATION }));
         setReachedBottom(true);
       });
     }

@@ -16,7 +16,10 @@ type PostCardProps = {
 export const PostCard = (props: PostCardProps) => {
   const { utils } = authenticationStore;
   const [isEditMode, setIsEditMode] = createSignal(false);
-  const [showCmts, setShowCmts] = createSignal(false);
+  const [showCmts, setShowCmts] = createSignal({
+    show: false,
+    hidden: true
+  });
 
   const onSubmitPostHandler = (content: string) => {
     setIsEditMode(false);
@@ -65,16 +68,18 @@ export const PostCard = (props: PostCardProps) => {
         </div>
         <div
           class="flex w-1/2 cursor-pointer items-center justify-center hover:font-bold hover:text-blue-700"
-          onClick={() => setShowCmts(!showCmts())}
+          onClick={() => setShowCmts(c => ({ show: true, hidden: !c.hidden }))}
         >
           <i class="fa-regular fa-comment" />
           <span class="ml-2">{`Comment (${props.post.comments})`}</span>
         </div>
       </div>
-      <Show when={showCmts()}>
-        <CommentsProvider targetType="Post" targetId={props.post.id}>
-          <CommentContainer />
-        </CommentsProvider>
+      <Show when={showCmts().show}>
+        <div classList={{ hidden: showCmts().hidden }}>
+          <CommentsProvider targetType="Post" targetId={props.post.id}>
+            <CommentContainer />
+          </CommentsProvider>
+        </div>
       </Show>
     </div>
   );

@@ -5,7 +5,6 @@ import {
   createResource,
   createSignal,
   ParentProps,
-  Show,
   useContext
 } from 'solid-js';
 import { createStore, produce } from 'solid-js/store';
@@ -17,7 +16,6 @@ import {
   filterCommentsAction,
   QueryWIthTargetInput
 } from '@/apis';
-import { LoadingSpinner } from '@/components';
 import { PAGINATION } from '@/constant';
 import { CommentDetails, RespErr } from '@/models';
 
@@ -33,6 +31,7 @@ type Ctx = {
   };
   utils: {
     showMore: () => boolean;
+    loading: () => boolean;
   };
 };
 
@@ -53,14 +52,14 @@ export const CommentsProvider = (props: Props) => {
     initialValue: []
   });
   const [comments, setComments] = createStore<CommentDetails[]>([]);
-  const addedCmts: CommentDetails[] = [];
+  const newAddedCmts: CommentDetails[] = [];
 
   createEffect(() => {
     if (resource().length > 0) {
       setComments(
         produce(cmts =>
           cmts.push(
-            ...resource().filter(c => !addedCmts.some(d => d.id === c.id))
+            ...resource().filter(c => !newAddedCmts.some(n => n.id === c.id))
           )
         )
       );
@@ -73,11 +72,11 @@ export const CommentsProvider = (props: Props) => {
       targetId: props.targetId,
       targetType: props.targetType
     })
-      .then(newCmt =>
+      .then(cmt =>
         batch(() => {
-          setComments(produce(c => c.unshift(newCmt)));
+          setComments(produce(c => c.unshift(cmt)));
           showToast({ msg: 'Comment Added', type: 'Ok' });
-          addedCmts.push(newCmt);
+          newAddedCmts.push(cmt);
         })
       )
       .catch((error: RespErr) => showToast({ msg: error.msg, type: 'Err' }));
@@ -89,9 +88,9 @@ export const CommentsProvider = (props: Props) => {
       targetId: props.targetId,
       targetType: props.targetType
     })
-      .then(comment =>
+      .then(cmt =>
         batch(() => {
-          setComments(c => c.id === comment.id, comment);
+          setComments(c => c.id === cmt.id, cmt);
           showToast({ msg: 'Comment Updated', type: 'Ok' });
         })
       )
@@ -105,7 +104,7 @@ export const CommentsProvider = (props: Props) => {
           setComments([]);
           setQuery(q => ({ ...q, offset: 0 }));
           showToast({ msg: 'Comment Deleted', type: 'Ok' });
-          addedCmts.length = 0;
+          newAddedCmts.length = 0;
         })
       )
       .catch((error: RespErr) => showToast({ msg: error.msg, type: 'Err' }));
@@ -117,6 +116,8 @@ export const CommentsProvider = (props: Props) => {
 
   const showMore = () => resource().length === PAGINATION;
 
+  const loading = () => comments.length === 0 && resource.loading;
+
   const state: Ctx = {
     comments,
     dispatch: {
@@ -126,20 +127,12 @@ export const CommentsProvider = (props: Props) => {
       fetchMore
     },
     utils: {
-      showMore
+      showMore,
+      loading
     }
   };
 
-  return (
-    <ctx.Provider value={state}>
-      <Show
-        when={comments.length > 0 || !resource.loading}
-        fallback={<LoadingSpinner />}
-      >
-        {props.children}
-      </Show>
-    </ctx.Provider>
-  );
+  return <ctx.Provider value={state}>{props.children}</ctx.Provider>;
 };
 
 export const useCommentsCtx = () => useContext(ctx) as Ctx;
