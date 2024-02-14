@@ -1,11 +1,11 @@
 import { EllipsisText } from '@/components';
 import { GameSummary } from '@/models';
 
-type VerticalGameCardProps = {
+type Props = {
   game: GameSummary;
 };
 
-export const VerticalGameCard = (props: VerticalGameCardProps) => (
+export const VerticalGameCard = (props: Props) => (
   <div class="flex items-center">
     <img
       class="h-24 w-40 rounded-t-lg p-4"
@@ -15,7 +15,7 @@ export const VerticalGameCard = (props: VerticalGameCardProps) => (
       }
       alt={`${props.game.name} img`}
     />
-    <div>
+    <div class="flex flex-col">
       <a href={`/games/${props.game.id}/info`}>
         <EllipsisText
           maxWidth="max-w-40"
