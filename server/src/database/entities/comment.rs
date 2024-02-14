@@ -15,7 +15,8 @@
 
 use serde::Deserialize;
 #[derive(Deserialize, sqlx::Type)]
-#[sqlx(type_name = "target_types")]
+#[serde(rename_all = "camelCase")]
+#[sqlx(type_name = "target_types", rename_all = "camelCase")]
 pub enum TargetTypes {
     Blog,
     Discussion,
