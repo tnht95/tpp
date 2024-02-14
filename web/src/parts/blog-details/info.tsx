@@ -47,7 +47,7 @@ export const BlogInfo = () => {
           </div>
         </div>
         <div class="flex w-3/5 flex-col gap-5">
-          <CommentsProvider targetId={blogId} targetType="Blog">
+          <CommentsProvider targetId={blogId} targetType="blog">
             <CommentContainer />
           </CommentsProvider>
         </div>

@@ -29,7 +29,7 @@ export const GameDetailsHeader = () => {
         return setIsUpVotes(true);
       })
       .catch((error: RespErr) => {
-        showToast({ msg: error.msg, type: 'Err' });
+        showToast({ msg: error.msg, type: 'err' });
       });
   };
 

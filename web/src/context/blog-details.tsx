@@ -44,10 +44,10 @@ export const BlogDetailsProvider = (props: ParentProps) => {
         batch(() => {
           mutate(blog);
           modal.hide();
-          showToast({ msg: 'Blog Updated', type: 'Ok' });
+          showToast({ msg: 'Blog Updated', type: 'ok' });
         })
       )
-      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'Err' }));
+      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
   };
 
   const del = () => {
@@ -55,10 +55,10 @@ export const BlogDetailsProvider = (props: ParentProps) => {
       .then(() =>
         batch(() => {
           navigate(`/blogs`);
-          showToast({ msg: 'Blog Deleted', type: 'Ok' });
+          showToast({ msg: 'Blog Deleted', type: 'ok' });
         })
       )
-      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'Err' }));
+      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
   };
 
   const state: Ctx = {

@@ -1,3 +1,5 @@
+export type TargetType = 'blog' | 'post' | 'discussion';
+
 export type CommentDetails = {
   id: string;
   userId: number;
@@ -10,7 +12,7 @@ export type CommentDetails = {
 
 export type AddComment = {
   targetId: string;
-  targetType: 'Blog' | 'Post' | 'Discussion';
+  targetType: TargetType;
   content: string;
 };
 

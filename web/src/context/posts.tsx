@@ -58,10 +58,10 @@ export const PostsProvider = (props: ParentProps) => {
         batch(() => {
           setPosts([]);
           setQuery(p => ({ ...p, offset: 0 }));
-          showToast({ msg: 'Post Added', type: 'Ok' });
+          showToast({ msg: 'Post Added', type: 'ok' });
         })
       )
-      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'Err' }));
+      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
   };
 
   const del = (postId: string) => {
@@ -70,10 +70,10 @@ export const PostsProvider = (props: ParentProps) => {
         batch(() => {
           setPosts([]);
           setQuery(p => ({ ...p, offset: 0 }));
-          showToast({ msg: 'Post Deleted', type: 'Ok' });
+          showToast({ msg: 'Post Deleted', type: 'ok' });
         })
       )
-      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'Err' }));
+      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
   };
 
   const edit = (postId: string, content: string) => {
@@ -81,10 +81,10 @@ export const PostsProvider = (props: ParentProps) => {
       .then(post =>
         batch(() => {
           setPosts(p => p.id === post.id, post);
-          showToast({ msg: 'Post Updated', type: 'Ok' });
+          showToast({ msg: 'Post Updated', type: 'ok' });
         })
       )
-      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'Err' }));
+      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
   };
 
   const handleScroll = () => {

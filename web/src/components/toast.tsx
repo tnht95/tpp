@@ -6,8 +6,8 @@ export type toastProps = {
 };
 
 const toastStyle = {
-  Ok: 'text-green-800 border-green-300 bg-green-50',
-  Err: 'text-red-800 border-red-300 bg-red-50'
+  ok: 'text-green-800 border-green-300 bg-green-50',
+  err: 'text-red-800 border-red-300 bg-red-50'
 };
 
 export const Toast = (props: toastProps) => (

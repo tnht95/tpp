@@ -76,7 +76,7 @@ export const PostCard = (props: PostCardProps) => {
       </div>
       <Show when={showCmts().show}>
         <div classList={{ hidden: showCmts().hidden }}>
-          <CommentsProvider targetType="Post" targetId={props.post.id}>
+          <CommentsProvider targetType="post" targetId={props.post.id}>
             <CommentContainer />
           </CommentsProvider>
         </div>

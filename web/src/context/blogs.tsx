@@ -53,10 +53,10 @@ export const BlogsProvider = (props: ParentProps) => {
           setBlogs([]);
           setQuery({ offset: 0 });
           modal.hide();
-          showToast({ msg: 'Blog Added', type: 'Ok' });
+          showToast({ msg: 'Blog Added', type: 'ok' });
         })
       )
-      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'Err' }));
+      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
   };
 
   const fetchMore = () => {

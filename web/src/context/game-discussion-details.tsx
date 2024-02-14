@@ -54,10 +54,10 @@ export const GameDiscussionDetailsProvider = (props: ParentProps) => {
         batch(() => {
           modal.hide();
           mutate(discussion);
-          showToast({ msg: 'Discussion Updated', type: 'Ok' });
+          showToast({ msg: 'Discussion Updated', type: 'ok' });
         })
       )
-      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'Err' }));
+      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
   };
 
   const del = () => {
@@ -65,10 +65,10 @@ export const GameDiscussionDetailsProvider = (props: ParentProps) => {
       .then(() =>
         batch(() => {
           navigate(`/games/${gameId}/discussion`);
-          showToast({ msg: 'Discussion Deleted', type: 'Ok' });
+          showToast({ msg: 'Discussion Deleted', type: 'ok' });
         })
       )
-      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'Err' }));
+      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
   };
 
   const state = {

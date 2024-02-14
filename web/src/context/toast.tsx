@@ -18,7 +18,7 @@ type Ctx = {
 
 export type ToastInput = {
   msg: string;
-  type: 'Err' | 'Ok';
+  type: 'err' | 'ok';
 };
 
 // ============================================================================

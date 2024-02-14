@@ -67,10 +67,10 @@ export const GameDiscussionsProvider = (props: ParentProps) => {
           setParams([0, gameId]);
           reCount() as unknown;
           modal.hide();
-          showToast({ msg: 'Discussion Added', type: 'Ok' });
+          showToast({ msg: 'Discussion Added', type: 'ok' });
         })
       )
-      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'Err' }));
+      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
   };
 
   const fetchMore = () => {

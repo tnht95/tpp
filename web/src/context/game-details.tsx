@@ -46,10 +46,10 @@ export const GameDetailsProvider = (props: ParentProps) => {
         batch(() => {
           modal.hide();
           mutate(game);
-          showToast({ msg: 'Game Updated', type: 'Ok' });
+          showToast({ msg: 'Game Updated', type: 'ok' });
         })
       )
-      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'Err' }));
+      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
   };
 
   const del = () => {
@@ -57,10 +57,10 @@ export const GameDetailsProvider = (props: ParentProps) => {
       .then(() =>
         batch(() => {
           navigate(`/users/${user()?.id}`);
-          showToast({ msg: 'Game Deleted', type: 'Ok' });
+          showToast({ msg: 'Game Deleted', type: 'ok' });
         })
       )
-      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'Err' }));
+      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
   };
 
   const state: Ctx = {

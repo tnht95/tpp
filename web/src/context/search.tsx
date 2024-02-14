@@ -100,7 +100,7 @@ export const SearchProvider = (props: ParentProps) => {
     if (resource.error) {
       showToast({
         msg: (resource.error as Error).message,
-        type: 'Err'
+        type: 'err'
       });
     }
   });
@@ -133,7 +133,7 @@ export const SearchProvider = (props: ParentProps) => {
           );
         })
       )
-      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'Err' }));
+      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
   };
 
   const showMore = (category: keyof FetchMoreOpts) =>

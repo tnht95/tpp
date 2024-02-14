@@ -17,7 +17,7 @@ import {
   QueryWIthTargetInput
 } from '@/apis';
 import { PAGINATION } from '@/constant';
-import { CommentDetails, RespErr } from '@/models';
+import { CommentDetails, RespErr, TargetType } from '@/models';
 
 import { useToastCtx } from './toast';
 
@@ -37,7 +37,7 @@ type Ctx = {
 
 type Props = {
   targetId: string;
-  targetType: 'Blog' | 'Post' | 'Discussion';
+  targetType: TargetType;
 } & ParentProps;
 
 const ctx = createContext<Ctx>();
@@ -75,11 +75,11 @@ export const CommentsProvider = (props: Props) => {
       .then(cmt =>
         batch(() => {
           setComments(produce(c => c.unshift(cmt)));
-          showToast({ msg: 'Comment Added', type: 'Ok' });
+          showToast({ msg: 'Comment Added', type: 'ok' });
           newAddedCmts.push(cmt);
         })
       )
-      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'Err' }));
+      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
   };
 
   const edit = (commentId: string, content: string) => {
@@ -91,10 +91,10 @@ export const CommentsProvider = (props: Props) => {
       .then(cmt =>
         batch(() => {
           setComments(c => c.id === cmt.id, cmt);
-          showToast({ msg: 'Comment Updated', type: 'Ok' });
+          showToast({ msg: 'Comment Updated', type: 'ok' });
         })
       )
-      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'Err' }));
+      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
   };
 
   const del = (commentId: string) => {
@@ -103,11 +103,11 @@ export const CommentsProvider = (props: Props) => {
         batch(() => {
           setComments([]);
           setQuery(q => ({ ...q, offset: 0 }));
-          showToast({ msg: 'Comment Deleted', type: 'Ok' });
+          showToast({ msg: 'Comment Deleted', type: 'ok' });
           newAddedCmts.length = 0;
         })
       )
-      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'Err' }));
+      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
   };
 
   const fetchMore = () => {

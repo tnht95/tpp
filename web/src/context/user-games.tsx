@@ -63,10 +63,10 @@ export const UserGamesProvider = (props: ParentProps) => {
           setGames([]);
           setParam(p => ({ ...p, offset: 0 }));
           modal.hide();
-          showToast({ msg: 'Game Added', type: 'Ok' });
+          showToast({ msg: 'Game Added', type: 'ok' });
         })
       )
-      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'Err' }));
+      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
   };
 
   const fetchMore = () => {

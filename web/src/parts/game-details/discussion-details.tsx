@@ -62,7 +62,7 @@ const GameDetailsDiscussionDetailsInner = () => {
           <Markdown content={discussion()?.content as string} />
         </div>
       </div>
-      <CommentsProvider targetType="Discussion" targetId={discussionId}>
+      <CommentsProvider targetType="discussion" targetId={discussionId}>
         <div class="flex flex-col gap-10">
           <CommentContainer />
         </div>
