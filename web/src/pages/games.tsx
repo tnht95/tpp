@@ -7,7 +7,7 @@ import { GameList, TagSidebar } from '@/parts';
 export const Games = () => {
   const [tagResource] = createResource(fetchGameTagsAction);
   return (
-    <div class="flex p-10">
+    <div class="flex gap-10 p-10">
       <GamesProvider>
         <GameList />
       </GamesProvider>

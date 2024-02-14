@@ -1,40 +1,35 @@
 import {
-  Accessor,
   batch,
   createContext,
   createEffect,
   createResource,
   createSignal,
   ParentProps,
-  Show,
   useContext
 } from 'solid-js';
 import { createStore, produce } from 'solid-js/store';
 
 import { filterGamesAction, GameQueryInput, OrderBy, OrderField } from '@/apis';
-import { LoadingSpinner } from '@/components';
 import { PAGINATION } from '@/constant';
 import { GameSummary } from '@/models';
 
 type Ctx = {
   games: GameSummary[];
   dispatch: {
-    fetchWith: (opts: string) => void;
+    fetchWith: (orderField: OrderField, orderBy: OrderBy) => void;
     fetchMore: () => void;
   };
   utils: {
-    optionValues: string[];
-    selectedValue: Accessor<number>;
     showMore: () => void;
+    loading: () => boolean;
   };
 };
 
-const optionValues = ['createdAt-desc', 'name-asc', 'name-desc', 'votes-desc'];
-
 const ctx = createContext<Ctx>();
 export const GamesProvider = (props: ParentProps) => {
-  const [selectedValue, setSelectedValue] = createSignal(-1);
   const [query, setQuery] = createSignal<GameQueryInput>({
+    orderField: 'createdAt',
+    orderBy: 'asc',
     offset: 0,
     limit: PAGINATION
   });
@@ -49,25 +44,24 @@ export const GamesProvider = (props: ParentProps) => {
     }
   });
 
-  const fetchWith = (value: string) =>
+  const fetchWith = (orderField: OrderField, orderBy: OrderBy) =>
     batch(() => {
-      setSelectedValue(optionValues.indexOf(value));
       setGames([]);
-      const v = value.split('-') as [OrderField, OrderBy];
       setQuery({
-        orderField: v[0],
-        orderBy: v[1],
+        orderField,
+        orderBy,
         offset: 0,
         limit: PAGINATION
       });
     });
 
-  const fetchMore = () =>
-    batch(() => {
-      setQuery(q => ({ ...q, offset: (q.offset as number) + PAGINATION }));
-    });
+  const fetchMore = () => {
+    setQuery(q => ({ ...q, offset: (q.offset as number) + PAGINATION }));
+  };
 
   const showMore = () => resource().length === PAGINATION;
+
+  const loading = () => games.length === 0 && resource.loading;
 
   const state: Ctx = {
     games,
@@ -76,22 +70,12 @@ export const GamesProvider = (props: ParentProps) => {
       fetchMore
     },
     utils: {
-      optionValues,
-      selectedValue,
-      showMore
+      showMore,
+      loading
     }
   };
 
-  return (
-    <ctx.Provider value={state}>
-      <Show
-        when={games.length > 0 || !resource.loading}
-        fallback={<LoadingSpinner />}
-      >
-        {props.children}
-      </Show>
-    </ctx.Provider>
-  );
+  return <ctx.Provider value={state}>{props.children}</ctx.Provider>;
 };
 
 export const useGamesCtx = () => useContext(ctx) as Ctx;

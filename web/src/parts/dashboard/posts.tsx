@@ -22,13 +22,13 @@ export const DashboardPosts = () => {
       <Show when={utils.isAuth()}>
         <CommentForm onSubmit={add}>New post</CommentForm>
       </Show>
-      <div class="flex flex-col gap-10 ">
-        <Show when={!loading()} fallback={<LoadingSpinner />}>
+      <Show when={!loading()} fallback={<LoadingSpinner />}>
+        <div class="flex flex-col gap-10 ">
           <For each={posts}>
             {post => <PostCard post={post} onDelete={del} onEdit={edit} />}
           </For>
-        </Show>
-      </div>
+        </div>
+      </Show>
     </div>
   );
 };
