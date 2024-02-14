@@ -22,9 +22,9 @@ export const SearchDetails = () => {
       <nav class="flex-2" />
       <main class="flex flex-3 flex-col gap-7 border-x border-dashed px-32 py-10">
         <p class="text-2xl font-bold text-indigo-900">
-          Results for "{keyword}":
+          Results for "{keyword()}":
         </p>
-        <Show when={(category || 'games') === 'games'}>
+        <Show when={(category() || 'games') === 'games'}>
           <GameResult
             loading={loading()}
             searchResult={searchResult}
@@ -32,7 +32,7 @@ export const SearchDetails = () => {
             handleShowMore={fetchMore}
           />
         </Show>
-        <Show when={(category || 'users') === 'users'}>
+        <Show when={(category() || 'users') === 'users'}>
           <UserResult
             loading={loading()}
             searchResult={searchResult}
@@ -40,7 +40,7 @@ export const SearchDetails = () => {
             handleShowMore={fetchMore}
           />
         </Show>
-        <Show when={(category || 'posts') === 'posts'}>
+        <Show when={(category() || 'posts') === 'posts'}>
           <PostResult
             loading={loading()}
             searchResult={searchResult}
@@ -48,7 +48,7 @@ export const SearchDetails = () => {
             handleShowMore={fetchMore}
           />
         </Show>
-        <Show when={(category || 'blogs') === 'blogs'}>
+        <Show when={(category() || 'blogs') === 'blogs'}>
           <BlogResult
             loading={loading()}
             searchResult={searchResult}

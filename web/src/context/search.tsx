@@ -29,8 +29,8 @@ type Ctx = {
   searchResult: SearchResult;
   dispatch: { fetchMore: (category: keyof SearchResult) => void };
   utils: {
-    keyword: string;
-    category: string | undefined;
+    keyword: () => string;
+    category: () => string | undefined;
     loading: () => boolean;
     showMore: (category: keyof SearchResult) => void;
   };
@@ -145,8 +145,8 @@ export const SearchProvider = (props: ParentProps) => {
       fetchMore
     },
     utils: {
-      keyword: searchParams['keyword'] as string,
-      category: searchParams['category'],
+      keyword: () => searchParams['keyword'] as string,
+      category: () => searchParams['category'],
       loading: () => resource.loading,
       showMore
     }
