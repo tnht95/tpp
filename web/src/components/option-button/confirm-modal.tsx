@@ -1,13 +1,13 @@
 import { Ref } from 'solid-js';
 
-type ConfirmModalProps = {
+type Props = {
   setModalRef: Ref<HTMLDivElement>;
   onCloseHandler: () => void;
   onDelete: (postId: string) => void;
   id: string;
 };
 
-export const ConfirmModal = (props: ConfirmModalProps) => (
+export const ConfirmModal = (props: Props) => (
   <div
     ref={props.setModalRef}
     tabindex="-1"

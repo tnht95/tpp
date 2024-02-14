@@ -9,7 +9,7 @@ import {
 
 import { ConfirmModal } from './confirm-modal';
 
-type OptionButtonProps = {
+type Props = {
   isOwner: boolean;
   customStyle?: string;
   onDeleteConfirm: (id: string) => void;
@@ -30,7 +30,7 @@ const otherContent = (
   </li>
 );
 
-export const OptionButton = (propInput: OptionButtonProps) => {
+export const OptionButton = (propInput: Props) => {
   const props = mergeProps({ isEditMode: () => false }, propInput);
   const [userDropdownRef, setUserDropdownRef] = createSignal<HTMLDivElement>();
   const [userBtnRef, setUserBtnRef] = createSignal<HTMLButtonElement>();

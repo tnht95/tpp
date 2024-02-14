@@ -2,10 +2,10 @@ import { For, Show } from 'solid-js';
 
 import { Tag } from '@/components';
 
-type TagSidebarProps = {
+type Props = {
   tags: string[];
 };
-export const TagSidebar = (props: TagSidebarProps) => (
+export const TagSidebar = (props: Props) => (
   <Show when={props.tags}>
     <div class="flex flex-col gap-5">
       <p class="text-2xl font-bold text-indigo-900">Tags</p>

@@ -12,7 +12,7 @@ import {
   validateTags
 } from '@/utils';
 
-type GameFormProps = {
+type Props = {
   ref: Ref<HTMLDivElement>;
   onCloseHandler: () => void;
   onSubmitHandler: (file: File, game: GameRequest) => void;
@@ -23,7 +23,7 @@ const ErrorMessage = (props: { msg: string }) => (
   <span class="text-red-600">{props.msg}</span>
 );
 
-export const GameForm = (props: GameFormProps) => {
+export const GameForm = (props: Props) => {
   const [isEditMode, setIsEditMode] = createSignal(true);
   const [isFileUploaderVisible, setIsFileUploaderVisible] = createSignal(false);
   const [content, setContent] = createSignal('');

@@ -22,12 +22,12 @@ export const SignIn = () => {
   );
 };
 
-type LoadingButtonProps = {
+type Props = {
   title: string;
   url: string;
 };
 
-const Btn = (props: LoadingButtonProps) => {
+const Btn = (props: Props) => {
   const [isClick, setIsClick] = createSignal(false);
   const btn = (
     <button onClick={() => setIsClick(true)}>

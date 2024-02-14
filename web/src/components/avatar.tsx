@@ -1,11 +1,11 @@
 import { mergeProps } from 'solid-js';
 
-type AvatarProps = {
+type Props = {
   img?: string;
   userId?: number;
 };
 
-export const Avatar = (p: AvatarProps) => {
+export const Avatar = (p: Props) => {
   const props = mergeProps(
     {
       img: 'https://i.pinimg.com/originals/78/ca/78/78ca785082be660b6e9d37850ddfb272.jpg'

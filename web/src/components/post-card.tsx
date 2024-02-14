@@ -7,13 +7,13 @@ import { CommentContainer } from '@/parts';
 import { authenticationStore } from '@/store';
 import { formatTime } from '@/utils';
 
-type PostCardProps = {
+type Props = {
   post: PostDetails;
   onDelete: (postId: string) => void;
   onEdit: (postId: string, content: string) => void;
 };
 
-export const PostCard = (props: PostCardProps) => {
+export const PostCard = (props: Props) => {
   const { utils } = authenticationStore;
   const [isEditMode, setIsEditMode] = createSignal(false);
   const [showCmts, setShowCmts] = createSignal({

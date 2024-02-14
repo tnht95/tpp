@@ -4,7 +4,7 @@ import { Markdown, PreviewButtonGroup } from '@/components';
 import { DiscussionDetails, DiscussionRequest } from '@/models';
 import { MaxStr, MinStr, useForm } from '@/utils';
 
-type DiscussionFormProps = {
+type Props = {
   ref: Ref<HTMLDivElement>;
   onCloseHandler: () => void;
   onSubmitHandler: (discussion: DiscussionRequest) => void;
@@ -15,7 +15,7 @@ const ErrorMessage = (props: { msg: string }) => (
   <span class="text-red-600">{props.msg}</span>
 );
 
-export const DiscussionForm = (props: DiscussionFormProps) => {
+export const DiscussionForm = (props: Props) => {
   const [isEditMode, setIsEditMode] = createSignal(true);
   const [content, setContent] = createSignal('');
   const { validate, submit, errors } = useForm({ errClass: 'border-red-600' });

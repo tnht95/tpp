@@ -4,11 +4,11 @@ import { Tag } from '@/components';
 import { BlogSummary } from '@/models';
 import { formatTime } from '@/utils';
 
-type BlogPostProps = {
+type Props = {
   blog: BlogSummary;
 };
 
-export const BlogCard = (props: BlogPostProps) => (
+export const BlogCard = (props: Props) => (
   <div class="flex flex-col gap-3 rounded-xl border bg-white px-10 py-6">
     <div class="flex items-center justify-between">
       <span class="font-light text-gray-600">

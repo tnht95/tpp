@@ -1,10 +1,10 @@
-type TableRowProps = {
+type Props = {
   title: string;
   username: string;
   date: string;
   url: string;
 };
-export const TableRow = (props: TableRowProps) => (
+export const TableRow = (props: Props) => (
   <div class="hover:bg-gray-100">
     <div class="whitespace-nowrap px-8 py-4 text-sm text-gray-500">
       <div>

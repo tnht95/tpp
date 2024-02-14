@@ -3,7 +3,7 @@ import { ParentProps } from 'solid-js/types/render/component';
 
 import { Markdown, PreviewButtonGroup } from '@/components';
 
-type CommentFormProps = {
+type Props = {
   content?: string;
   onSubmit: (content: string) => void;
 } & ParentProps;
@@ -23,7 +23,7 @@ const checkErr = (content: string): string => {
   }
 };
 
-export const CommentForm = (props: CommentFormProps) => {
+export const CommentForm = (props: Props) => {
   const [content, setContent] = createSignal('');
   const [isEditMode, setIsEditMode] = createSignal(true);
   const [errMsg, setErrMsg] = createSignal('');

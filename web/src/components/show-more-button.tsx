@@ -1,12 +1,12 @@
 import { Show } from 'solid-js';
 
-type ShowMoreButtonProps = {
+type Props = {
   vertical?: boolean;
   onClick: () => void;
   customStyle?: string;
 };
 
-export const ShowMoreButton = (props: ShowMoreButtonProps) => (
+export const ShowMoreButton = (props: Props) => (
   <div
     class={`flex cursor-pointer flex-col items-center justify-center gap-1 rounded-lg border border-dashed border-gray-500 p-5 text-gray-500 ${props.customStyle}`}
     classList={{ 'w-48 h-[212px]': !props.vertical }}

@@ -1,9 +1,9 @@
-type ActivityProps = {
+type Props = {
   title: string;
   date: string;
 };
 
-export const Activity = (props: ActivityProps) => (
+export const Activity = (props: Props) => (
   <li class="mb-10 ms-6">
     <span class="absolute -start-3 flex size-6 items-center justify-center rounded-full bg-green-100 ring-8 ring-white">
       <i class="fa-solid fa-wave-square text-xs text-green-500" />

@@ -1,6 +1,6 @@
 import { Show } from 'solid-js';
 
-type PillButtonProps = {
+type Props = {
   title: string;
   number: number;
   icon: string;
@@ -16,7 +16,7 @@ const buttonColor = {
   Default: 'border-gray-400 bg-gray-200'
 };
 
-export const PillButton = (props: PillButtonProps) => {
+export const PillButton = (props: Props) => {
   const contentDefault = () => (
     <>
       <i class={`${props.icon} mr-1 text-sm`} />

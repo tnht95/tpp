@@ -4,7 +4,7 @@ import { Markdown, PreviewButtonGroup } from '@/components';
 import { Blog, BlogRequest } from '@/models';
 import { getTagValue, MaxStr, MinStr, useForm, validateTags } from '@/utils';
 
-type BlogFormProps = {
+type Props = {
   modalRef: Ref<HTMLDivElement>;
   onCloseHandler: () => void;
   onSubmitHandler: (blog: BlogRequest) => void;
@@ -15,7 +15,7 @@ const ErrorMessage = (props: { msg: string }) => (
   <span class="text-red-600">{props.msg}</span>
 );
 
-export const BlogForm = (props: BlogFormProps) => {
+export const BlogForm = (props: Props) => {
   const [isEditMode, setIsEditMode] = createSignal(true);
   const [content, setContent] = createSignal('');
   const { validate, submit, errors } = useForm({ errClass: 'border-red-600' });

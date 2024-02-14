@@ -1,6 +1,6 @@
 import { ToastInput } from '@/context';
 
-export type toastProps = {
+type Props = {
   input: ToastInput;
   onClose: () => void;
 };
@@ -10,7 +10,7 @@ const toastStyle = {
   err: 'text-red-800 border-red-300 bg-red-50'
 };
 
-export const Toast = (props: toastProps) => (
+export const Toast = (props: Props) => (
   <div
     class={`fixed bottom-5 left-5 mb-4 flex items-center justify-center gap-5 rounded-lg border p-4 ${toastStyle[props.input.type]}`}
     role="alert"

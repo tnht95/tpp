@@ -1,9 +1,9 @@
-type PreviewButtonGroupProps = {
+type Props = {
   onPreviewHandler: () => void;
   isEditMode: boolean;
 };
 
-export const PreviewButtonGroup = (props: PreviewButtonGroupProps) => (
+export const PreviewButtonGroup = (props: Props) => (
   <div class="flex w-full items-center justify-end gap-3">
     <button
       type="button"

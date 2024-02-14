@@ -1,10 +1,10 @@
 import { EllipsisText } from '@/components';
 import { GameSummary } from '@/models';
 
-type GameCardProps = {
+type Props = {
   game: GameSummary;
 };
-export const GameCard = (props: GameCardProps) => (
+export const GameCard = (props: Props) => (
   <div class="w-48 rounded-lg border bg-indigo-300 shadow-md hover:bg-white">
     <a href={`/games/${props.game.id}/info`}>
       <img

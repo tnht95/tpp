@@ -62,7 +62,7 @@ export const SearchDetails = () => {
   );
 };
 
-type SearchResultProps = {
+type Props = {
   loading: boolean;
   searchResult: SearchResult;
   showMore: (category: keyof SearchResult) => void;
@@ -73,7 +73,7 @@ const nothingToShow = () => (
   <p class="text-center text-lg text-gray-400">-- Nothing to show --</p>
 );
 
-const GameResult = (props: SearchResultProps) => (
+const GameResult = (props: Props) => (
   <div class="flex flex-col gap-7">
     <p class="text-xl font-bold text-indigo-900">
       <i class="fa-solid fa-gamepad mr-2" />
@@ -98,7 +98,7 @@ const GameResult = (props: SearchResultProps) => (
   </div>
 );
 
-const UserResult = (props: SearchResultProps) => (
+const UserResult = (props: Props) => (
   <div class="flex flex-col gap-7">
     <p class="text-xl font-bold text-indigo-900">
       <i class="fa-solid fa-users mr-2" />
@@ -123,7 +123,7 @@ const UserResult = (props: SearchResultProps) => (
   </div>
 );
 
-const PostResult = (props: SearchResultProps) => (
+const PostResult = (props: Props) => (
   <div class="flex flex-col gap-7">
     <p class="text-xl font-bold text-indigo-900">
       <i class="fa-solid fa-highlighter mr-2" />
@@ -153,7 +153,7 @@ const PostResult = (props: SearchResultProps) => (
   </div>
 );
 
-const BlogResult = (props: SearchResultProps) => (
+const BlogResult = (props: Props) => (
   <div class="flex flex-col gap-7">
     <p class="text-xl font-bold text-indigo-900">
       <i class="fa-solid fa-cube mr-2" />

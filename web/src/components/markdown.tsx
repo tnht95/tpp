@@ -1,11 +1,11 @@
 import remarkGfm from 'remark-gfm';
 import { SolidMarkdown } from 'solid-markdown';
 
-type MarkdownProps = {
+type Props = {
   content: string;
 };
 
-export const Markdown = (props: MarkdownProps) => (
+export const Markdown = (props: Props) => (
   <SolidMarkdown
     class="markdown"
     remarkPlugins={[remarkGfm]}
