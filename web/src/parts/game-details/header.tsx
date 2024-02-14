@@ -1,6 +1,6 @@
-import { createSignal, Show } from 'solid-js';
+import { batch, createSignal, Show } from 'solid-js';
 
-import { voteAction } from '@/apis';
+import { unVoteAction, voteAction } from '@/apis';
 import { GameForm, OptionButton, PillButton } from '@/components';
 import { useGameDetailsCtx, useToastCtx } from '@/context';
 import { RespErr } from '@/models';
@@ -17,22 +17,65 @@ export const GameDetailsHeader = () => {
   const {
     utils: { isAuth, isSameUser }
   } = authenticationStore;
-  const [isUpVotes, setIsUpVotes] = createSignal(
+  const [currentVote, setCurrentVote] = createSignal(
     game()?.isUpVoted ?? undefined
   );
   const [upVotes, setUpVotes] = createSignal(game()?.upVotes ?? 0);
+  const [downVotes, setDownVotes] = createSignal(game()?.downVotes ?? 0);
+  const [isLoading, setIsLoading] = createSignal(false);
 
-  const onUpVoteHandler = () => {
-    voteAction(gameId, { isUp: true })
-      .then(() => {
-        setUpVotes(oldVal => oldVal + 1);
-        return setIsUpVotes(true);
+  const firstVoteHandler = (newVote: boolean): Promise<void> =>
+    voteAction(gameId, { isUp: newVote }).then(() =>
+      batch(() => {
+        newVote
+          ? setUpVotes(oldVal => oldVal + 1)
+          : setDownVotes(oldVal => oldVal + 1);
+        setCurrentVote(newVote);
       })
-      .catch((error: RespErr) => {
-        showToast({ msg: error.msg, type: 'err' });
-      });
-  };
+    );
 
+  const changeVoteHandler = (newVote: boolean): Promise<void> =>
+    voteAction(gameId, { isUp: newVote }).then(() =>
+      batch(() => {
+        if (newVote) {
+          setUpVotes(oldVal => oldVal + 1);
+          setDownVotes(oldVal => oldVal - 1);
+        } else {
+          setUpVotes(oldVal => oldVal - 1);
+          setDownVotes(oldVal => oldVal + 1);
+        }
+        setCurrentVote(newVote);
+      })
+    );
+
+  const unVoteHandler = (newVote: boolean): Promise<void> =>
+    unVoteAction(gameId).then(() =>
+      batch(() => {
+        newVote
+          ? setUpVotes(oldVal => oldVal - 1)
+          : setDownVotes(oldVal => oldVal - 1);
+        setCurrentVote(undefined);
+      })
+    );
+
+  const onVoteHandler = (newVote: boolean) => {
+    setIsLoading(true);
+
+    let votePromise;
+    if (currentVote() === undefined) {
+      votePromise = firstVoteHandler(newVote);
+    } else if (currentVote() === newVote) {
+      votePromise = unVoteHandler(newVote);
+    } else {
+      votePromise = changeVoteHandler(newVote);
+    }
+
+    votePromise
+      .catch(error => {
+        showToast({ msg: (error as RespErr).msg, type: 'err' });
+      })
+      .finally(() => setIsLoading(false)) as unknown;
+  };
   return (
     <div class="flex flex-row">
       <div class="flex w-7/10 items-center gap-2">
@@ -61,19 +104,19 @@ export const GameDetailsHeader = () => {
             title="Upvote"
             number={upVotes()}
             icon="fa-solid fa-angle-up"
-            clicked={isUpVotes() === true}
+            clicked={currentVote() === true}
             titleAfterClicked="Upvoted"
-            onClick={onUpVoteHandler}
-            disabled={!isAuth()}
+            onClick={() => onVoteHandler(true)}
+            disabled={!isAuth() || isLoading()}
           />
           <PillButton
             icon="fa-solid fa-angle-down"
             title="Downvote"
-            number={200}
-            clicked={isUpVotes() === false}
-            onClick={() => {}}
+            number={downVotes()}
+            clicked={currentVote() === false}
+            onClick={() => onVoteHandler(false)}
             titleAfterClicked="Downvoted"
-            disabled={!isAuth()}
+            disabled={!isAuth() || isLoading()}
           />
         </div>
       </div>

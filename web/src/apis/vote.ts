@@ -12,3 +12,11 @@ export const voteAction = (gameId: string, body: VoteRequest) =>
   })
     .then(errHandler)
     .then((r: Response<undefined>) => r.data);
+
+export const unVoteAction = (gameId: string) =>
+  fetch(`${import.meta.env.VITE_SERVER_URL}/games/${gameId}/votes`, {
+    method: 'delete',
+    credentials: 'include'
+  })
+    .then(errHandler)
+    .then((r: Response<undefined>) => r.data);
