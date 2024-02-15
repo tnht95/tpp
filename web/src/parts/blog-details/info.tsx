@@ -43,7 +43,7 @@ export const BlogInfo = () => {
             <Markdown content={blog()?.content as string} />
           </div>
           <div class="mr-36 w-1/5">
-            <TagSidebar tags={blog()?.tags as string[]} />
+            <TagSidebar tags={blog()?.tags} loading={() => false} />
           </div>
         </div>
         <div class="flex w-3/5 flex-col gap-5">

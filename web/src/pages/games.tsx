@@ -7,12 +7,12 @@ import { GameList, TagSidebar } from '@/parts';
 export const Games = () => {
   const [tagResource] = createResource(fetchGameTagsAction);
   return (
-    <div class="flex gap-10 p-10">
+    <div class="flex justify-between p-10">
       <GamesProvider>
         <GameList />
       </GamesProvider>
-      <div class="w-1/5">
-        <TagSidebar tags={tagResource() as string[]} />
+      <div class="w-1/6">
+        <TagSidebar tags={tagResource()} loading={() => tagResource.loading} />
       </div>
     </div>
   );

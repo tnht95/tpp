@@ -20,7 +20,7 @@ export const BlogList = () => {
     modal: { show, hide, initRef }
   } = useBlogsCtx();
   return (
-    <div class="flex w-4/6 flex-col gap-5">
+    <div class="flex w-4/6 flex-col gap-10">
       <div class="flex justify-between gap-5">
         <p class="text-4xl font-bold">Blogs</p>
         <Show when={isAdmin()}>
@@ -40,7 +40,7 @@ export const BlogList = () => {
         </Show>
       </div>
       <Show when={!loading()} fallback={<LoadingSpinner />}>
-        <div class="flex flex-col gap-5">
+        <div class="flex flex-col gap-7">
           <For each={blogs}>{blog => <BlogCard blog={blog} />}</For>
           <Show when={showMore()}>
             <ShowMoreButton vertical onClick={fetchMore} />

@@ -11,8 +11,8 @@ export const Blogs = () => {
       <BlogsProvider>
         <BlogList />
       </BlogsProvider>
-      <div class="w-1/5">
-        <TagSidebar tags={tagResource() as string[]} />
+      <div class="w-1/6">
+        <TagSidebar tags={tagResource()} loading={() => tagResource.loading} />
       </div>
     </div>
   );
