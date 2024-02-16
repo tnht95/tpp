@@ -15,17 +15,17 @@ export const BlogInfo = () => {
     modal: { hide, show, initRef }
   } = useBlogDetailsCtx();
   return (
-    <div class="my-10">
-      <div class="ml-20 mt-16">
-        <div class="flex justify-between">
-          <div class="mb-10 flex w-3/5 flex-col gap-7 rounded-lg border px-10 py-7">
-            <div>
+    <div class="flex justify-between p-10">
+      <div class="w-4/6">
+        <div class="flex flex-col">
+          <div class="flex flex-col gap-7 rounded-lg border px-10 py-7">
+            <div class="flex flex-col">
               <div class="flex items-center justify-between">
-                <p class="text-3xl font-bold">{blog()?.title}</p>
+                <p class="text-3xl font-bold">{blog().title}</p>
                 <OptionButton
                   isOwner={isAdmin()}
                   onDeleteConfirm={del}
-                  id={''}
+                  id={blogId}
                   onEditBtnClick={show}
                 />
                 <BlogForm
@@ -36,21 +36,19 @@ export const BlogInfo = () => {
                 />
               </div>
               <p class="text-base text-gray-400">
-                {formatTime(blog()?.createdAt as string)}
+                {formatTime(blog().createdAt)}
               </p>
             </div>
-            <p class="text-xl text-gray-600">{blog()?.description}</p>
-            <Markdown content={blog()?.content as string} />
+            <p class="text-xl text-gray-600">{blog().description}</p>
+            <Markdown content={blog().content} />
           </div>
-          <div class="mr-36 w-1/5">
-            <TagSidebar tags={blog()?.tags} loading={() => false} />
-          </div>
-        </div>
-        <div class="flex w-3/5 flex-col gap-5">
           <CommentsProvider targetId={blogId} targetType="blog">
             <CommentContainer />
           </CommentsProvider>
         </div>
+      </div>
+      <div class="w-1/6">
+        <TagSidebar tags={blog().tags} loading={() => false} />
       </div>
     </div>
   );

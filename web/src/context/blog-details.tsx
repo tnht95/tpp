@@ -5,7 +5,6 @@ import {
   createResource,
   ErrorBoundary,
   ParentProps,
-  Resource,
   Show,
   useContext
 } from 'solid-js';
@@ -19,7 +18,7 @@ import { ModalUtil, useModalUtils } from '@/utils';
 import { useToastCtx } from './toast';
 
 type Ctx = {
-  blog: Resource<Blog | undefined>;
+  blog: () => Blog;
   dispatch: {
     edit: (blog: BlogRequest) => void;
     del: () => void;
@@ -36,7 +35,7 @@ export const BlogDetailsProvider = (props: ParentProps) => {
   const navigate = useNavigate();
   const modal = useModalUtils();
   const blogId = useParams()['id'] as string;
-  const [blog, { mutate }] = createResource(blogId, fetchBlogByIdAction);
+  const [resouce, { mutate }] = createResource(blogId, fetchBlogByIdAction);
 
   const edit = (blog: BlogRequest) => {
     editBlogAction(blogId, blog)
@@ -62,7 +61,7 @@ export const BlogDetailsProvider = (props: ParentProps) => {
   };
 
   const state: Ctx = {
-    blog,
+    blog: () => resouce() as Blog,
     dispatch: { edit, del },
     utils: { blogId },
     modal
@@ -70,7 +69,7 @@ export const BlogDetailsProvider = (props: ParentProps) => {
 
   return (
     <ctx.Provider value={state}>
-      <Show when={!blog.loading} fallback={<LoadingSpinner />}>
+      <Show when={!resouce.loading} fallback={<LoadingSpinner />}>
         <ErrorBoundary fallback={<NotFound />}>{props.children}</ErrorBoundary>
       </Show>
     </ctx.Provider>
