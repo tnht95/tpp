@@ -1,8 +1,8 @@
 import { BlogDetailsProvider } from '@/context';
-import { BlogInfo } from '@/parts';
+import { BlogDetailsInfo } from '@/parts';
 
 export const BlogDetails = () => (
   <BlogDetailsProvider>
-    <BlogInfo />
+    <BlogDetailsInfo />
   </BlogDetailsProvider>
 );

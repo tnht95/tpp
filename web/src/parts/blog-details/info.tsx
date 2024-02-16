@@ -4,7 +4,7 @@ import { CommentContainer, TagSidebar } from '@/parts';
 import { authenticationStore } from '@/store';
 import { formatTime } from '@/utils';
 
-export const BlogInfo = () => {
+export const BlogDetailsInfo = () => {
   const {
     utils: { isAdmin }
   } = authenticationStore;
