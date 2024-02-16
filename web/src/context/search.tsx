@@ -55,8 +55,8 @@ export const SearchProvider = (props: ParentProps) => {
     blogs: { offset: 0, showMore: true }
   });
 
-  const [queryInput, setQueryInput] = createSignal<SearchQueryInput>();
-  const [resource] = createResource(queryInput, searchAction);
+  const [query, setQuery] = createSignal<SearchQueryInput>();
+  const [resource] = createResource(query, searchAction);
   const [searchResult, setSearchResult] = createStore<SearchResult>({
     games: [],
     users: [],
@@ -65,7 +65,7 @@ export const SearchProvider = (props: ParentProps) => {
   });
 
   createEffect(() => {
-    setQueryInput({
+    setQuery({
       keyword: searchParams['keyword'] as string,
       category: searchParams['category'],
       offset: 0,

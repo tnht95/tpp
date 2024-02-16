@@ -177,6 +177,5 @@ const BlogResult = (props: Props) => (
         </div>
       </Show>
     </Show>
-    <hr class="my-10 h-px border-0 bg-gray-200" />
   </div>
 );
