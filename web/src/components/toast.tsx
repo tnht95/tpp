@@ -25,7 +25,7 @@ export const Toast = (props: Props) => (
       class="mt-0.5"
       aria-label="Close"
     >
-      <i class="fa-solid fa-square-xmark " />
+      <i class="fa-solid fa-square-xmark" />
       <span class="sr-only">Close</span>
     </button>
   </div>

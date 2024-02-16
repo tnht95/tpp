@@ -23,7 +23,7 @@ export const DashboardPosts = () => {
         <CommentForm onSubmit={add}>New post</CommentForm>
       </Show>
       <Show when={!loading()} fallback={<LoadingSpinner />}>
-        <div class="flex flex-col gap-10 ">
+        <div class="flex flex-col gap-10">
           <For each={posts}>
             {post => <PostCard post={post} onDelete={del} onEdit={edit} />}
           </For>

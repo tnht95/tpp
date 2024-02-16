@@ -14,7 +14,7 @@ export const GameDetailsSidebar = () => {
           <Show when={game()?.url}>
             <div class="my-4">
               <a
-                class="mb-2 flex items-center text-base font-semibold text-blue-600 hover:text-blue-400 "
+                class="mb-2 flex items-center text-base font-semibold text-blue-600 hover:text-blue-400"
                 href={game()?.url as string}
                 target="_blank"
               >

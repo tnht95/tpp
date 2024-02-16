@@ -23,15 +23,18 @@ const trimSpaces = filePaths => {
       //   class="1   2 3  " id= "1 3 3   "  flag x=  ""
       //   class="1   2 3" id= "1 3 3"  flag x=  ""
       const regExRightOuterTrim = / +(?=")(?=(?:(?:[^"]*"){2})*[^"]*"[^"]*$)/g;
-      if (regExRightOuterTrim.test(newContent)) {
-        newContent = newContent.replaceAll(regExRightOuterTrim, '');
+      if (regExRightOuterTrim.test(newContent || content)) {
+        newContent = (newContent || content).replaceAll(
+          regExRightOuterTrim,
+          ''
+        );
       }
 
       //   class="1   2 3" id= "1 3 3"  flag x=  ""
       //   class="1 2 3" id= "1 3 3"  flag x=  ""
       const regExInnerTrim = /  +(?=(?:(?:[^"]*"){2})*[^"]*"[^"]*$)/g;
-      if (regExInnerTrim.test(newContent)) {
-        newContent = newContent.replaceAll(regExInnerTrim, ' ');
+      if (regExInnerTrim.test(newContent || content)) {
+        newContent = (newContent || content).replaceAll(regExInnerTrim, ' ');
       }
 
       if (newContent) {
