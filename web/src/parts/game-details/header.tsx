@@ -18,10 +18,10 @@ export const GameDetailsHeader = () => {
     utils: { isAuth, isSameUser }
   } = authenticationStore;
   const [currentVote, setCurrentVote] = createSignal(
-    game()?.isUpVoted ?? undefined
+    game().isUpVoted ?? undefined
   );
-  const [upVotes, setUpVotes] = createSignal(game()?.upVotes ?? 0);
-  const [downVotes, setDownVotes] = createSignal(game()?.downVotes ?? 0);
+  const [upVotes, setUpVotes] = createSignal(game().upVotes);
+  const [downVotes, setDownVotes] = createSignal(game().downVotes);
   const [isLoading, setIsLoading] = createSignal(false);
 
   const firstVoteHandler = (newVote: boolean): Promise<void> =>
@@ -81,7 +81,7 @@ export const GameDetailsHeader = () => {
       <div class="flex w-7/10 items-center gap-2">
         <i class="fa-solid fa-puzzle-piece text-xl text-indigo-900" />
         <div class="cursor-pointer text-2xl font-medium text-indigo-900 hover:underline">
-          {game()?.name}
+          {game().name}
         </div>
         <GameForm
           ref={initRef}
@@ -91,9 +91,9 @@ export const GameDetailsHeader = () => {
         />
         <Show when={isAuth()}>
           <OptionButton
-            isOwner={isSameUser(game()?.authorId as number)}
+            isOwner={isSameUser(game().authorId)}
             onDeleteConfirm={del}
-            id={game()?.id as string}
+            id={game().id}
             onEditBtnClick={show}
           />
         </Show>

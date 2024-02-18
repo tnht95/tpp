@@ -10,17 +10,17 @@ export const GameDetailsSidebar = () => {
       <div class="block">
         <p class="text-base font-semibold text-black">About</p>
         <div class="mt-4 border-b pb-2">
-          <span class="text-sm lg:text-base">{game()?.about}</span>
-          <Show when={game()?.url}>
+          <span class="text-sm lg:text-base">{game().about}</span>
+          <Show when={game().url}>
             <div class="my-4">
               <a
                 class="mb-2 flex items-center text-base font-semibold text-blue-600 hover:text-blue-400"
-                href={game()?.url as string}
+                href={game().url as string}
                 target="_blank"
               >
                 <i class="fa-solid fa-link mr-2" />
                 <EllipsisText maxWidth="w-90">
-                  {game()?.url as string}
+                  {game().url as string}
                 </EllipsisText>
               </a>
             </div>
@@ -29,13 +29,13 @@ export const GameDetailsSidebar = () => {
       </div>
       <div class="border-b py-6">
         <p class="mb-5 text-base font-semibold text-black">Upload By</p>
-        <Avatar userId={game()?.authorId as number} />
+        <Avatar userId={game().authorId} />
       </div>
       <div class="my-4 flex flex-col flex-wrap gap-2 border-b pb-5">
         <p class="mb-3 text-base font-semibold text-black">Tag</p>
-        <Show when={game()?.tags}>
+        <Show when={game().tags}>
           <div class="flex flex-wrap gap-2">
-            <For each={game()?.tags}>{tag => <Tag name={tag} />}</For>
+            <For each={game().tags}>{tag => <Tag name={tag} />}</For>
           </div>
         </Show>
       </div>

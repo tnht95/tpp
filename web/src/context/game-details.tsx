@@ -5,7 +5,6 @@ import {
   createResource,
   ErrorBoundary,
   ParentProps,
-  Resource,
   Show,
   useContext
 } from 'solid-js';
@@ -20,7 +19,7 @@ import { ModalUtil, useModalUtils } from '@/utils';
 import { useToastCtx } from './toast';
 
 type Ctx = {
-  game: Resource<GameDetails | undefined>;
+  game: () => GameDetails;
   dispatch: {
     edit: (file: File, game: GameRequest) => void;
     del: (gameId: string) => void;
@@ -34,7 +33,7 @@ type Ctx = {
 const ctx = createContext<Ctx>();
 export const GameDetailsProvider = (props: ParentProps) => {
   const gameId = useParams()['id'] as string;
-  const [game, { mutate }] = createResource(gameId, fetchGameByIdAction);
+  const [resource, { mutate }] = createResource(gameId, fetchGameByIdAction);
   const { showToast } = useToastCtx();
   const modal = useModalUtils();
   const navigate = useNavigate();
@@ -44,8 +43,8 @@ export const GameDetailsProvider = (props: ParentProps) => {
     editGameAction(file, game, gameId)
       .then(game =>
         batch(() => {
-          modal.hide();
           mutate(game);
+          modal.hide();
           showToast({ msg: 'Game Updated', type: 'ok' });
         })
       )
@@ -64,7 +63,7 @@ export const GameDetailsProvider = (props: ParentProps) => {
   };
 
   const state: Ctx = {
-    game,
+    game: () => resource() as GameDetails,
     dispatch: {
       edit,
       del
@@ -77,7 +76,7 @@ export const GameDetailsProvider = (props: ParentProps) => {
 
   return (
     <ctx.Provider value={state}>
-      <Show when={!game.loading} fallback={<LoadingSpinner />}>
+      <Show when={!resource.loading} fallback={<LoadingSpinner />}>
         <ErrorBoundary fallback={<NotFound />}>{props.children}</ErrorBoundary>
       </Show>
     </ctx.Provider>
