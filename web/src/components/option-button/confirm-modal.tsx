@@ -17,7 +17,7 @@ export const ConfirmModal = (props: Props) => (
       <div class="relative rounded-xl bg-white shadow">
         <button
           type="button"
-          class="absolute end-2.5 top-3 ms-auto inline-flex size-8 items-center justify-center rounded-lg bg-transparent text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-600 dark:hover:text-white"
+          class="absolute end-2.5 top-3 ms-auto inline-flex size-8 items-center justify-center rounded-lg bg-transparent text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900"
           onClick={() => props.onCloseHandler()}
         >
           <i class="fa-solid fa-x text-xs" />
