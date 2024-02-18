@@ -17,9 +17,7 @@ export const GameDetailsHeader = () => {
   const {
     utils: { isAuth, isSameUser }
   } = authenticationStore;
-  const [currentVote, setCurrentVote] = createSignal(
-    game().isUpVoted ?? undefined
-  );
+  const [currentVote, setCurrentVote] = createSignal(game().isUpVoted);
   const [upVotes, setUpVotes] = createSignal(game().upVotes);
   const [downVotes, setDownVotes] = createSignal(game().downVotes);
   const [isLoading, setIsLoading] = createSignal(false);
@@ -101,9 +99,9 @@ export const GameDetailsHeader = () => {
       <div class="flex flex-1 justify-end">
         <div class="flex gap-x-5">
           <PillButton
+            icon="fa-solid fa-angle-up"
             title="Upvote"
             number={upVotes()}
-            icon="fa-solid fa-angle-up"
             clicked={currentVote() === true}
             titleAfterClicked="Upvoted"
             onClick={() => onVoteHandler(true)}
@@ -114,8 +112,8 @@ export const GameDetailsHeader = () => {
             title="Downvote"
             number={downVotes()}
             clicked={currentVote() === false}
-            onClick={() => onVoteHandler(false)}
             titleAfterClicked="Downvoted"
+            onClick={() => onVoteHandler(false)}
             disabled={!isAuth() || isLoading()}
           />
         </div>

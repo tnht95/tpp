@@ -7,7 +7,6 @@ import {
   createSignal,
   ParentProps,
   Resource,
-  Show,
   useContext
 } from 'solid-js';
 import { createStore, produce } from 'solid-js/store';
@@ -17,7 +16,6 @@ import {
   fetchDiscussionCountAction,
   filterDiscussionsAction
 } from '@/apis';
-import { LoadingSpinner } from '@/components';
 import { PAGINATION } from '@/constant';
 import { DiscussionRequest, DiscussionSummary, RespErr } from '@/models';
 import { ModalUtil, useModalUtils } from '@/utils';
@@ -33,6 +31,7 @@ type Ctx = {
   };
   utils: {
     showMore: () => boolean;
+    loading: () => boolean;
     gameId: string;
   };
   modal: ModalUtil;
@@ -43,12 +42,12 @@ export const GameDiscussionsProvider = (props: ParentProps) => {
   const gameId = useParams()['id'] as string;
   const { showToast } = useToastCtx();
   const modal = useModalUtils();
-  const [params, setParams] = createSignal<[number, string]>([0, gameId]);
+  const [query, setQuery] = createSignal<[number, string]>([0, gameId]);
   const [count, { refetch: reCount }] = createResource(
     gameId,
     fetchDiscussionCountAction
   );
-  const [resource] = createResource(params, filterDiscussionsAction, {
+  const [resource] = createResource(query, filterDiscussionsAction, {
     initialValue: []
   });
   const [discussions, setDiscussions] = createStore<DiscussionSummary[]>([]);
@@ -64,7 +63,7 @@ export const GameDiscussionsProvider = (props: ParentProps) => {
       .then(() =>
         batch(() => {
           setDiscussions([]);
-          setParams([0, gameId]);
+          setQuery([0, gameId]);
           reCount() as unknown;
           modal.hide();
           showToast({ msg: 'Discussion Added', type: 'ok' });
@@ -74,10 +73,12 @@ export const GameDiscussionsProvider = (props: ParentProps) => {
   };
 
   const fetchMore = () => {
-    setParams(params => [params[0] + PAGINATION, gameId]);
+    setQuery(params => [params[0] + PAGINATION, gameId]);
   };
 
   const showMore = () => resource().length === PAGINATION;
+
+  const loading = () => discussions.length === 0 && resource.loading;
 
   const state: Ctx = {
     discussions,
@@ -88,21 +89,13 @@ export const GameDiscussionsProvider = (props: ParentProps) => {
     },
     utils: {
       showMore,
+      loading,
       gameId
     },
     modal
   };
 
-  return (
-    <ctx.Provider value={state}>
-      <Show
-        when={discussions.length > 0 || (!resource.loading && !count.loading)}
-        fallback={<LoadingSpinner />}
-      >
-        {props.children}
-      </Show>
-    </ctx.Provider>
-  );
+  return <ctx.Provider value={state}>{props.children}</ctx.Provider>;
 };
 
 export const useGameDiscussionsCtx = () => useContext(ctx) as Ctx;
