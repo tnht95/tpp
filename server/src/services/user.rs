@@ -3,7 +3,10 @@ use std::sync::Arc;
 use async_trait::async_trait;
 use thiserror::Error;
 
-use crate::database::{entities::user::User, IDatabase};
+use crate::{
+    database::{entities::user::User, IDatabase},
+    model::responses::user::UserDetails,
+};
 
 #[derive(Error, Debug)]
 pub enum UserServiceErr {
@@ -14,7 +17,11 @@ pub enum UserServiceErr {
 #[async_trait]
 pub trait IUserService {
     async fn sync_user(&self, user: &User) -> Result<User, UserServiceErr>;
-    async fn get_by_id(&self, id: i64) -> Result<Option<User>, UserServiceErr>;
+    async fn get_by_id(
+        &self,
+        user_id: i64,
+        subscriber_id: Option<i64>,
+    ) -> Result<Option<UserDetails>, UserServiceErr>;
 }
 
 pub struct UserService<T: IDatabase> {
@@ -54,10 +61,34 @@ where
         .map_err(|e| UserServiceErr::Other(e.into()))
     }
 
-    async fn get_by_id(&self, id: i64) -> Result<Option<User>, UserServiceErr> {
-        sqlx::query_as!(User, "select * from users where id = $1", id)
-            .fetch_optional(self.db.get_pool())
-            .await
-            .map_err(|e| UserServiceErr::Other(e.into()))
+    async fn get_by_id(
+        &self,
+        user_id: i64,
+        subscriber_id: Option<i64>,
+    ) -> Result<Option<UserDetails>, UserServiceErr> {
+        sqlx::query_as!(
+            UserDetails,
+            r#"select
+                u.*,
+                count(s.user_id) as "subscribers!",
+                case
+                    when $1::bigint is not null then bool_or(s.subscriber_id = $1)
+                    else null
+                end as is_subscribed
+            from
+                users u
+            left join
+                user_subscribers s on u.id = s.user_id
+            where
+                u.id = $2
+            group by
+                u.id
+            "#,
+            subscriber_id,
+            user_id
+        )
+        .fetch_optional(self.db.get_pool())
+        .await
+        .map_err(|e| UserServiceErr::Other(e.into()))
     }
 }

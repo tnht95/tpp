@@ -129,12 +129,18 @@ where
         sqlx::query_as!(
             GameDetails,
             r#"
-            SELECT
+            select
                 games.*,
-                CASE WHEN $1 IS NOT NULL THEN votes.is_up ELSE NULL END AS is_up_voted
-            FROM games
-            LEFT JOIN votes ON games.id = votes.game_id AND votes.user_id = $1
-            WHERE games.id = $2
+                case
+                    when $1 is not null then votes.is_up
+                    else null
+                end as is_up_voted
+            from
+                games
+            left join
+                votes on games.id = votes.game_id and votes.user_id = $1
+            where
+                games.id = $2;
             "#,
             user_id,
             id
@@ -256,7 +262,7 @@ where
     }
 
     async fn get_tags(&self) -> Result<Vec<Option<String>>, GameServiceErr> {
-        sqlx::query_scalar!("SELECT DISTINCT unnest(tags) AS tag FROM games")
+        sqlx::query_scalar!("select distinct unnest(tags) AS tag FROM games")
             .fetch_all(self.db.get_pool())
             .await
             .map_err(|e| GameServiceErr::Other(e.into()))

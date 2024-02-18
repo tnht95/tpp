@@ -1,4 +1,4 @@
-import { Auth, Response, User } from '@/models';
+import { Auth, Response, UserDetails } from '@/models';
 
 import { errHandler } from '.';
 
@@ -17,6 +17,8 @@ export const logoutAction = () =>
   }).then(errHandler);
 
 export const fetchUserByIdAction = (id: string) =>
-  fetch(`${import.meta.env.VITE_SERVER_URL}/users/${id}`)
+  fetch(`${import.meta.env.VITE_SERVER_URL}/users/${id}`, {
+    credentials: 'include'
+  })
     .then(errHandler)
-    .then((r: Response<User | undefined>) => r.data);
+    .then((r: Response<UserDetails | undefined>) => r.data);

@@ -11,11 +11,11 @@ import {
 
 import { fetchUserByIdAction } from '@/apis';
 import { LoadingSpinner } from '@/components';
-import { User } from '@/models';
+import { UserDetails } from '@/models';
 import { NotFound } from '@/pages';
 
 type Ctx = {
-  user: Resource<User | undefined>;
+  user: Resource<UserDetails | undefined>;
   utils: {
     userId: string;
   };
