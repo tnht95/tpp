@@ -6,7 +6,6 @@ import {
   createSignal,
   ErrorBoundary,
   ParentProps,
-  Resource,
   Show,
   useContext
 } from 'solid-js';
@@ -24,7 +23,7 @@ import { ModalUtil, useModalUtils } from '@/utils';
 import { useToastCtx } from './toast';
 
 type Ctx = {
-  discussion: Resource<DiscussionDetails | undefined>;
+  discussion: () => DiscussionDetails;
   dispatch: {
     edit: (discussion: DiscussionRequest) => void;
     del: (discussionId: string) => void;
@@ -39,12 +38,12 @@ const ctx = createContext<Ctx>();
 export const GameDiscussionDetailsProvider = (props: ParentProps) => {
   const gameId = useParams()['id'] as string;
   const discussionId = useParams()['discussionId'] as string;
-  const [params] = createSignal<[string, string]>([gameId, discussionId]);
+  const [query] = createSignal<[string, string]>([gameId, discussionId]);
   const navigate = useNavigate();
   const { showToast } = useToastCtx();
   const modal = useModalUtils();
-  const [discussion, { mutate }] = createResource(
-    params,
+  const [resource, { mutate }] = createResource(
+    query,
     fetchDiscussionByIdAction
   );
 
@@ -52,8 +51,8 @@ export const GameDiscussionDetailsProvider = (props: ParentProps) => {
     editDiscussionAction(gameId, discussionId, discussion)
       .then(discussion =>
         batch(() => {
-          modal.hide();
           mutate(discussion);
+          modal.hide();
           showToast({ msg: 'Discussion Updated', type: 'ok' });
         })
       )
@@ -72,7 +71,7 @@ export const GameDiscussionDetailsProvider = (props: ParentProps) => {
   };
 
   const state = {
-    discussion,
+    discussion: () => resource() as DiscussionDetails,
     dispatch: {
       edit,
       del
@@ -83,7 +82,7 @@ export const GameDiscussionDetailsProvider = (props: ParentProps) => {
 
   return (
     <ctx.Provider value={state}>
-      <Show when={!discussion.loading} fallback={<LoadingSpinner />}>
+      <Show when={!resource.loading} fallback={<LoadingSpinner />}>
         <ErrorBoundary fallback={<NotFound />}>{props.children}</ErrorBoundary>
       </Show>
     </ctx.Provider>

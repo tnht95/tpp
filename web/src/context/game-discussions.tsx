@@ -73,7 +73,7 @@ export const GameDiscussionsProvider = (props: ParentProps) => {
   };
 
   const fetchMore = () => {
-    setQuery(params => [params[0] + PAGINATION, gameId]);
+    setQuery(q => [q[0] + PAGINATION, gameId]);
   };
 
   const showMore = () => resource().length === PAGINATION;
