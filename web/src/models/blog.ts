@@ -9,7 +9,7 @@ export type BlogSummary = {
 export type Blog = {
   id: string;
   title: string;
-  description: string | undefined;
+  description: string;
   content: string;
   tags: string[] | undefined;
   createdAt: string;

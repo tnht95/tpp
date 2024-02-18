@@ -17,6 +17,7 @@ pub struct GithubUser {
     pub id: i64,
     pub avatar_url: String,
     pub html_url: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub bio: Option<String>,
 }
 

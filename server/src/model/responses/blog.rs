@@ -10,6 +10,7 @@ pub struct BlogSummary {
     pub id: Uuid,
     pub title: String,
     pub description: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tags: Option<Vec<String>>,
     pub created_at: DateTime<Utc>,
 }

@@ -11,6 +11,7 @@ pub struct GameSummary {
     pub name: String,
     pub author_id: i64,
     pub author_name: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub avatar_url: Option<String>,
     pub up_votes: i64,
     pub down_votes: i64,
@@ -23,14 +24,20 @@ pub struct GameDetails {
     pub name: String,
     pub author_id: i64,
     pub author_name: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub url: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub avatar_url: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub about: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub info: Option<String>,
     pub up_votes: i64,
     pub down_votes: i64,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub tags: Option<Vec<String>>,
     pub rom: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_up_voted: Option<bool>,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
