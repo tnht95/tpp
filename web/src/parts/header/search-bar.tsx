@@ -1,19 +1,13 @@
 import { useNavigate } from '@solidjs/router';
-import { Dropdown } from 'flowbite';
-import { createEffect, createSignal } from 'solid-js';
+import { createSignal } from 'solid-js';
+
+import { useDropdownUtils } from '@/utils';
 
 export const Searchbar = () => {
-  const [btnRef, setBtnRef] = createSignal<HTMLButtonElement>();
-  const [dropdownRef, setDropdownRef] = createSignal<HTMLDivElement>();
-  const [dropdown, setDropdown] = createSignal<Dropdown>();
+  const dropdownUtils = useDropdownUtils();
   const [searchContent, setSearchContent] = createSignal('');
   const [searchCategory, setSearchCategory] = createSignal('');
   const navigate = useNavigate();
-
-  createEffect(() => {
-    setDropdown(new Dropdown(dropdownRef(), btnRef()));
-  });
-
   const onSubmitHandler = (e: Event) => {
     e.preventDefault();
     if (searchContent()) {
@@ -25,21 +19,20 @@ export const Searchbar = () => {
       (e.target as HTMLFormElement).reset();
     }
   };
-
   return (
     <form onSubmit={onSubmitHandler} class="flex w-1/2">
       <div class="flex w-full items-center">
         <button
           class="z-10 inline-flex w-40 shrink-0 items-center justify-between rounded-s-lg border border-white bg-indigo-900 px-4 py-2.5 text-center text-sm font-medium capitalize text-white hover:border-r-indigo-900 hover:bg-white hover:text-indigo-900 focus:outline-none"
           type="button"
-          ref={setBtnRef}
+          ref={dropdownUtils.initBtnRef}
         >
           {searchCategory() || 'All categories'}
           <i class="fa-solid fa-angle-down ml-2" />
         </button>
         <div
           class="!top-0.5 z-10 hidden w-36 divide-y divide-gray-100 rounded-lg bg-white shadow"
-          ref={setDropdownRef}
+          ref={dropdownUtils.initRef}
         >
           <ul class="text-sm text-indigo-900" aria-labelledby="dropdown-button">
             <li>
@@ -48,7 +41,7 @@ export const Searchbar = () => {
                 class="inline-flex w-full rounded-t-lg px-4 py-2 hover:bg-indigo-900 hover:text-white"
                 onClick={() => {
                   setSearchCategory('');
-                  dropdown()?.hide();
+                  dropdownUtils.hide();
                 }}
               >
                 All categories
@@ -60,7 +53,7 @@ export const Searchbar = () => {
                 class="inline-flex w-full rounded-t-lg px-4 py-2 hover:bg-indigo-900 hover:text-white"
                 onClick={() => {
                   setSearchCategory('games');
-                  dropdown()?.hide();
+                  dropdownUtils.hide();
                 }}
               >
                 Games
@@ -72,7 +65,7 @@ export const Searchbar = () => {
                 class="inline-flex w-full px-4 py-2 hover:bg-indigo-900 hover:text-white"
                 onClick={() => {
                   setSearchCategory('users');
-                  dropdown()?.hide();
+                  dropdownUtils.hide();
                 }}
               >
                 Users
@@ -84,7 +77,7 @@ export const Searchbar = () => {
                 class="inline-flex w-full rounded-b-lg px-4 py-2 hover:bg-indigo-900 hover:text-white"
                 onClick={() => {
                   setSearchCategory('posts');
-                  dropdown()?.hide();
+                  dropdownUtils.hide();
                 }}
               >
                 Posts
@@ -96,7 +89,7 @@ export const Searchbar = () => {
                 class="inline-flex w-full px-4 py-2 hover:bg-indigo-900 hover:text-white"
                 onClick={() => {
                   setSearchCategory('blogs');
-                  dropdown()?.hide();
+                  dropdownUtils.hide();
                 }}
               >
                 Blogs

@@ -11,8 +11,9 @@ export const useModalUtils = (opts?: ModalOptions): ModalUtil => {
   const [modalRef, setModalRef] = createSignal<HTMLDivElement>();
   const [modal, setModal] = createSignal<Modal>();
   createEffect(() => {
-    const ref = modalRef();
-    if (ref) setModal(new Modal(modalRef(), opts));
+    if (modalRef()) {
+      setModal(new Modal(modalRef(), opts));
+    }
   });
   return {
     show: () => modal()?.show(),
