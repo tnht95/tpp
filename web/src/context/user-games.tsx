@@ -6,13 +6,11 @@ import {
   createResource,
   createSignal,
   ParentProps,
-  Show,
   useContext
 } from 'solid-js';
 import { createStore, produce } from 'solid-js/store';
 
 import { addGameAction, filterGamesAction, GameQueryInput } from '@/apis';
-import { LoadingSpinner } from '@/components';
 import { GameRequest, GameSummary, RespErr } from '@/models';
 import { ModalUtil, useModalUtils } from '@/utils';
 
@@ -28,6 +26,7 @@ type Ctx = {
   };
   utils: {
     showMore: () => boolean;
+    loading: () => boolean;
     userId: number;
   };
   modal: ModalUtil;
@@ -78,6 +77,8 @@ export const UserGamesProvider = (props: ParentProps) => {
 
   const showMore = () => resource().length === PAGINATION_INTERNAL;
 
+  const loading = () => games.length === 0 && resource.loading;
+
   const state: Ctx = {
     games,
     dispatch: {
@@ -86,21 +87,13 @@ export const UserGamesProvider = (props: ParentProps) => {
     },
     utils: {
       showMore,
+      loading,
       userId
     },
     modal
   };
 
-  return (
-    <ctx.Provider value={state}>
-      <Show
-        when={games.length > 0 || !resource.loading}
-        fallback={<LoadingSpinner />}
-      >
-        {props.children}
-      </Show>
-    </ctx.Provider>
-  );
+  return <ctx.Provider value={state}>{props.children}</ctx.Provider>;
 };
 
 export const useUserGamesCtx = () => useContext(ctx) as Ctx;

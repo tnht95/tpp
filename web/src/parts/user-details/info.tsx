@@ -8,7 +8,7 @@ import { authenticationStore } from '@/store';
 
 export const UserInfo = () => {
   const {
-    utils: { isAuth }
+    utils: { isSameUser, isAuth }
   } = authenticationStore;
   const { showToast } = useToastCtx();
   const {
@@ -70,7 +70,9 @@ export const UserInfo = () => {
             title="Subscribe"
             icon="fa-solid fa-plus"
             number={subscribers()}
-            disabled={!isAuth() || isLoading()}
+            disabled={
+              !isAuth() || isSameUser(Number.parseInt(userId)) || isLoading()
+            }
             clicked={isSubscribed() === true}
             onClick={onSubscribeHandler}
             titleAfterClicked="Subscribed"

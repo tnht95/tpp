@@ -1,6 +1,12 @@
 import { For, Show } from 'solid-js';
 
-import { Button, GameCard, GameForm, ShowMoreButton } from '@/components';
+import {
+  Button,
+  GameCard,
+  GameForm,
+  LoadingSpinner,
+  ShowMoreButton
+} from '@/components';
 import { useUserGamesCtx } from '@/context';
 import { authenticationStore } from '@/store';
 
@@ -11,7 +17,7 @@ export const UserGames = () => {
   const {
     games,
     dispatch: { add, fetchMore },
-    utils: { showMore, userId },
+    utils: { showMore, loading, userId },
     modal: { initRef, show, hide }
   } = useUserGamesCtx();
   return (
@@ -31,14 +37,16 @@ export const UserGames = () => {
         )}
         <GameForm ref={initRef} onCloseHandler={hide} onSubmitHandler={add} />
       </div>
-      <div class="flex flex-wrap items-stretch gap-7">
-        <Show when={games.length > 0} fallback={nothingToShow}>
-          <For each={games}>{game => <GameCard game={game} />}</For>
-          <Show when={showMore()}>
-            <ShowMoreButton onClick={fetchMore} />
+      <Show when={!loading()} fallback={<LoadingSpinner />}>
+        <div class="flex flex-wrap items-stretch gap-7">
+          <Show when={games.length > 0} fallback={nothingToShow}>
+            <For each={games}>{game => <GameCard game={game} />}</For>
+            <Show when={showMore()}>
+              <ShowMoreButton onClick={fetchMore} />
+            </Show>
           </Show>
-        </Show>
-      </div>
+        </div>
+      </Show>
     </div>
   );
 };
