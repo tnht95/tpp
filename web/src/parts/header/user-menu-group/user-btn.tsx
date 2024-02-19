@@ -1,24 +1,17 @@
 import { A } from '@solidjs/router';
-import { Dropdown } from 'flowbite';
-import { createEffect, createSignal } from 'solid-js';
 
 import { Avatar, EllipsisText } from '@/components';
 import { authenticationStore } from '@/store';
+import { useDropdownUtils } from '@/utils';
 
 export const UserBtn = () => {
   const { user, dispatch } = authenticationStore;
-  const [userDropdownRef, setUserDropdownRef] = createSignal<HTMLDivElement>();
-  const [userBtnRef, setUserBtnRef] = createSignal<HTMLButtonElement>();
-  const [userDropdown, setUserDropdown] = createSignal<Dropdown>();
-
-  createEffect(() => {
-    setUserDropdown(new Dropdown(userDropdownRef(), userBtnRef()));
-  });
+  const dropdown = useDropdownUtils();
 
   return (
     <>
       <button
-        ref={setUserBtnRef}
+        ref={dropdown.initBtnRef}
         class="flex items-center py-0.5 pe-1 text-sm font-bold text-white hover:text-blue-600"
       >
         <div class="pointer-events-none">
@@ -26,7 +19,7 @@ export const UserBtn = () => {
         </div>
       </button>
       <div
-        ref={setUserDropdownRef}
+        ref={dropdown.initRef}
         class="z-10 hidden w-52 divide-y divide-gray-100 rounded-lg bg-white shadow"
       >
         <div class="px-4 py-5 text-sm text-gray-900">
@@ -39,9 +32,7 @@ export const UserBtn = () => {
             class="flex items-center gap-2 px-4 py-5 hover:bg-gray-100"
             activeClass="bg-gray-100"
             href={`/users/${user()?.id}`}
-            onClick={() => {
-              userDropdown()?.hide();
-            }}
+            onClick={dropdown.hide}
           >
             <i class="fa-solid fa-user" />
             My Page
