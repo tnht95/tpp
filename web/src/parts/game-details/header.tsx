@@ -17,6 +17,7 @@ export const GameDetailsHeader = () => {
   const {
     utils: { isAuth, isSameUser }
   } = authenticationStore;
+
   const [currentVote, setCurrentVote] = createSignal(game().isUpVoted);
   const [upVotes, setUpVotes] = createSignal(game().upVotes);
   const [downVotes, setDownVotes] = createSignal(game().downVotes);
@@ -69,11 +70,10 @@ export const GameDetailsHeader = () => {
     }
 
     votePromise
-      .catch(error => {
-        showToast({ msg: (error as RespErr).msg, type: 'err' });
-      })
+      .catch(error => showToast({ msg: (error as RespErr).msg, type: 'err' }))
       .finally(() => setIsLoading(false)) as unknown;
   };
+
   return (
     <div class="flex flex-row">
       <div class="flex w-7/10 items-center gap-2">

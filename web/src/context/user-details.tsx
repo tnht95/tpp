@@ -4,7 +4,6 @@ import {
   createResource,
   ErrorBoundary,
   ParentProps,
-  Resource,
   Show,
   useContext
 } from 'solid-js';
@@ -15,7 +14,7 @@ import { UserDetails } from '@/models';
 import { NotFound } from '@/pages';
 
 type Ctx = {
-  user: Resource<UserDetails | undefined>;
+  user: () => UserDetails;
   utils: {
     userId: string;
   };
@@ -24,10 +23,10 @@ type Ctx = {
 const ctx = createContext<Ctx>();
 export const UserDetailsProvider = (props: ParentProps) => {
   const userId = useParams()['id'] as string;
-  const [user] = createResource(userId, fetchUserByIdAction);
+  const [resource] = createResource(userId, fetchUserByIdAction);
 
   const state: Ctx = {
-    user,
+    user: () => resource() as UserDetails,
     utils: {
       userId
     }
@@ -35,7 +34,7 @@ export const UserDetailsProvider = (props: ParentProps) => {
 
   return (
     <ctx.Provider value={state}>
-      <Show when={!user.loading} fallback={<LoadingSpinner />}>
+      <Show when={!resource.loading} fallback={<LoadingSpinner />}>
         <ErrorBoundary fallback={<NotFound />}>{props.children}</ErrorBoundary>
       </Show>
     </ctx.Provider>

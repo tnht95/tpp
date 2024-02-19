@@ -17,9 +17,11 @@ pub struct UserDetails {
     pub id: i64,
     pub name: String,
     pub github_url: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub bio: Option<String>,
     pub avatar: String,
     pub subscribers: i64,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub is_subscribed: Option<bool>,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
