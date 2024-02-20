@@ -1,5 +1,5 @@
 export const NotFound = () => (
-  <main class="flex h-[calc(100svh-4rem)] w-full flex-col items-center justify-center">
+  <main class="flex h-[calc(100svh-4rem)] w-full select-none flex-col items-center justify-center">
     <h1 class="mt-10 text-9xl font-extrabold tracking-widest text-indigo-900">
       404
     </h1>

@@ -8,6 +8,7 @@ export * from './search';
 export * from './vote';
 export * from './subscribe';
 export * from './like';
+export * from './activity';
 
 export const errHandler = async (r: Response) => {
   if (r.status >= 400 && r.status <= 500) {
@@ -17,7 +18,7 @@ export const errHandler = async (r: Response) => {
 };
 
 export type QueryWIthTargetInput = {
-  targetId: string;
+  targetId?: string | undefined;
   limit?: number;
   offset?: number;
 };

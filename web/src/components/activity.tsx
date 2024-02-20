@@ -1,6 +1,8 @@
 type Props = {
   title: string;
+  url: string;
   date: string;
+  info: string;
 };
 
 export const Activity = (props: Props) => (
@@ -9,14 +11,11 @@ export const Activity = (props: Props) => (
       <i class="fa-solid fa-wave-square text-xs text-green-500" />
     </span>
     <h3 class="mb-1 flex items-center text-lg font-semibold text-gray-900">
-      {props.title}
+      <a href={props.url}>{props.title}</a>
     </h3>
     <time class="mb-2 block text-sm font-normal leading-none text-gray-400">
       {props.date}
     </time>
-    <p class="mb-4 text-base font-normal text-gray-500 dark:text-gray-400">
-      Get access to over 20+ pages including a dashboard layout, charts, kanban
-      board, calendar, and pre-order E-commerce & Marketing pages.
-    </p>
+    <p class="mb-4 text-base font-normal text-gray-500">{props.info}</p>
   </li>
 );

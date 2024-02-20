@@ -6,7 +6,7 @@ import { useToastCtx, useUserDetailsCtx } from '@/context';
 import { RespErr } from '@/models';
 import { authenticationStore } from '@/store';
 
-export const UserInfo = () => {
+export const UserDetailsInfo = () => {
   const {
     utils: { isSameUser, isAuth }
   } = authenticationStore;

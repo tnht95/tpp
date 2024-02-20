@@ -1,2 +1,3 @@
 export * from './info';
-export * from './user-games';
+export * from './games';
+export * from './activity';

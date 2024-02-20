@@ -11,3 +11,4 @@ export * from './games';
 export * from './blogs';
 export * from './blog-details';
 export * from './search';
+export * from './activity';
