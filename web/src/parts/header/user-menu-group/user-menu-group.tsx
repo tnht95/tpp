@@ -1,9 +1,9 @@
-import { NotiBtn } from './noti-btn';
-import { UserBtn } from './user-btn';
+import { UserMenuGroupNotiBtn } from './noti-btn';
+import { UserMenuGroupUserBtn } from './user-btn';
 
 export const UserMenuGroup = () => (
   <div class="flex items-center gap-7">
-    <NotiBtn />
-    <UserBtn />
+    <UserMenuGroupNotiBtn />
+    <UserMenuGroupUserBtn />
   </div>
 );

@@ -4,7 +4,7 @@ import { Avatar, EllipsisText } from '@/components';
 import { authenticationStore } from '@/store';
 import { useDropdownUtils } from '@/utils';
 
-export const UserBtn = () => {
+export const UserMenuGroupUserBtn = () => {
   const { user, dispatch } = authenticationStore;
   const dropdown = useDropdownUtils();
 

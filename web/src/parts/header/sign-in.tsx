@@ -4,7 +4,7 @@ import { authenticationStore } from '@/store';
 
 import { UserMenuGroup } from './user-menu-group';
 
-export const SignIn = () => {
+export const HeaderSignIn = () => {
   const { utils } = authenticationStore;
   return (
     <div class="flex flex-1 justify-end">

@@ -3,7 +3,7 @@ import { createSignal } from 'solid-js';
 
 import { useDropdownUtils } from '@/utils';
 
-export const Searchbar = () => {
+export const HeaderSearchbar = () => {
   const dropdownUtils = useDropdownUtils();
   const [searchContent, setSearchContent] = createSignal('');
   const [searchCategory, setSearchCategory] = createSignal('');

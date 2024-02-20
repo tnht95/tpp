@@ -1,7 +1,7 @@
 import { Notification } from '@/components';
 import { useDropdownUtils } from '@/utils';
 
-export const NotiBtn = () => {
+export const UserMenuGroupNotiBtn = () => {
   const dropdown = useDropdownUtils();
   return (
     <>
