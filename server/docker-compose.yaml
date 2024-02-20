@@ -6,12 +6,12 @@ services:
     container_name: db
     image: postgres:14-alpine
     environment:
-      POSTGRES_DB: book
+      POSTGRES_DB: tpp
       POSTGRES_USER: service
       POSTGRES_PASSWORD: password
       PGDATA: /data/postgres
     healthcheck:
-      test: pg_isready -U service -d book
+      test: pg_isready -U service -d tpp
       interval: 1s
       timeout: 5s
       retries: 20

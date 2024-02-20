@@ -4,7 +4,6 @@ use crate::{
     database::Database,
     services::{
         blog::{BlogService, IBlogService},
-        book::{BookService, IBookService},
         comment::{CommentService, ICommentService},
         discussion::{DiscussionService, IDiscussionService},
         game::{GameService, IGameService},
@@ -18,7 +17,6 @@ use crate::{
 };
 
 pub mod blog;
-pub mod book;
 pub mod comment;
 pub mod discussion;
 pub mod game;
@@ -31,7 +29,6 @@ pub mod vote;
 
 pub trait IInternalServices {
     type THealthService: IHealthService + Send + Sync;
-    type TBookService: IBookService + Send + Sync;
     type TUserService: IUserService + Send + Sync;
     type TGameService: IGameService + Send + Sync;
     type TPostService: IPostService + Send + Sync;
@@ -46,7 +43,6 @@ pub trait IInternalServices {
 pub struct InternalServices;
 impl IInternalServices for InternalServices {
     type THealthService = HealthService<Database>;
-    type TBookService = BookService<Database>;
     type TUserService = UserService<Database>;
     type TGameService = GameService<Database>;
     type TPostService = PostService<Database>;
@@ -60,7 +56,6 @@ impl IInternalServices for InternalServices {
 
 pub struct Services<TInternalServices: IInternalServices> {
     pub health: RwLock<TInternalServices::THealthService>,
-    pub book: TInternalServices::TBookService,
     pub user: TInternalServices::TUserService,
     pub game: TInternalServices::TGameService,
     pub post: TInternalServices::TPostService,
@@ -74,7 +69,6 @@ pub struct Services<TInternalServices: IInternalServices> {
 
 pub struct ServicesBuilder<TInternalServices: IInternalServices> {
     health: Option<RwLock<TInternalServices::THealthService>>,
-    book: Option<TInternalServices::TBookService>,
     user: Option<TInternalServices::TUserService>,
     game: Option<TInternalServices::TGameService>,
     post: Option<TInternalServices::TPostService>,
@@ -90,7 +84,6 @@ impl<TInternalServices: IInternalServices> ServicesBuilder<TInternalServices> {
     pub fn new() -> Self {
         ServicesBuilder {
             health: None,
-            book: None,
             user: None,
             game: None,
             post: None,
@@ -105,11 +98,6 @@ impl<TInternalServices: IInternalServices> ServicesBuilder<TInternalServices> {
 
     pub fn health(mut self, health: RwLock<TInternalServices::THealthService>) -> Self {
         self.health = Some(health);
-        self
-    }
-
-    pub fn book(mut self, book: TInternalServices::TBookService) -> Self {
-        self.book = Some(book);
         self
     }
 
@@ -161,7 +149,6 @@ impl<TInternalServices: IInternalServices> ServicesBuilder<TInternalServices> {
     pub fn build(self) -> Services<TInternalServices> {
         Services {
             health: self.health.expect("missing initialization"),
-            book: self.book.expect("missing initialization"),
             user: self.user.expect("missing initialization"),
             game: self.game.expect("missing initialization"),
             post: self.post.expect("missing initialization"),

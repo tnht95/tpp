@@ -13,7 +13,6 @@ use crate::{
     http::Server,
     services::{
         blog::BlogService,
-        book::BookService,
         comment::CommentService,
         discussion::DiscussionService,
         game::GameService,
@@ -84,7 +83,6 @@ async fn main() -> Result<()> {
                     .await
                     .context("Failed to initialize database")?,
             ));
-            let book_service = BookService::new(Arc::clone(&db));
             let user_service = UserService::new(Arc::clone(&db));
             let game_service = GameService::new(Arc::clone(&db), String::from(&config.rom_dir))
                 .await
@@ -101,7 +99,6 @@ async fn main() -> Result<()> {
                 config,
                 ServicesBuilder::new()
                     .health(health_service)
-                    .book(book_service)
                     .user(user_service)
                     .game(game_service)
                     .post(post_service)

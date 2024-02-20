@@ -56,7 +56,7 @@ impl Default for Config {
             log_format: LogFmt::Text,
             server: Server {
                 http_port: 8080,
-                pg_url: "postgres://service:password@localhost:5432/book?sslmode=disable".into(),
+                pg_url: "postgres://service:password@localhost:5432/tpp?sslmode=disable".into(),
                 pg_max_pool: 50,
                 cors_max_age: 3600,
             },
