@@ -9,7 +9,7 @@ use crate::{
     http::{
         controllers::InternalState,
         utils::{
-            auth::Authentication,
+            auth::{Authentication, AuthenticationMaybe},
             err_handler::{response_400_with_const, response_unhandled_err},
             validator::JsonValidator,
         },
@@ -34,8 +34,14 @@ use crate::{
 pub async fn filter<TInternalServices: IInternalServices>(
     Query(pagination): Query<Pagination>,
     State(state): InternalState<TInternalServices>,
+    AuthenticationMaybe(user, ..): AuthenticationMaybe<TInternalServices>,
 ) -> Response {
-    match state.services.post.filter(pagination.into()).await {
+    match state
+        .services
+        .post
+        .filter(pagination.into(), user.map(|u| u.id))
+        .await
+    {
         Ok(posts) => Json(HttpResponse { data: posts }).into_response(),
         Err(PostServiceErr::Other(e)) => response_unhandled_err(e),
     }

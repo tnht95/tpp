@@ -26,6 +26,7 @@ pub trait IPostService {
     async fn filter(
         &self,
         pagination: PaginationInternal,
+        user_id: Option<i64>,
     ) -> Result<Vec<PostDetails>, PostServiceErr>;
     async fn get_by_id(&self, id: Uuid) -> Result<Option<PostDetails>, PostServiceErr>;
     async fn add(&self, author_id: i64, post: AddPostRequest) -> Result<(), PostServiceErr>;
@@ -55,23 +56,36 @@ where
     async fn filter(
         &self,
         pagination: PaginationInternal,
+        user_id: Option<i64>,
     ) -> Result<Vec<PostDetails>, PostServiceErr> {
         sqlx::query_as!(
             PostDetails,
             "select
                 posts.id,
-                posts.author_id,
-                users.name as author_name,
-                users.avatar as author_avatar,
+                posts.user_id,
+                users.name as user_name,
+                users.avatar as user_avatar,
                 posts.content,
                 posts.likes,
                 posts.comments,
-                posts.created_at
-            from posts
-            left join users on users.id = posts.author_id
-            order by posts.created_at desc offset $1 limit $2",
+                posts.created_at,
+                case
+                    when $1::bigint is not null then exists (
+                        select 1
+                        from likes
+                        where target_id = posts.id and user_id = $1
+                    )
+                    else null
+                end as is_liked
+            from
+                posts
+                left join users on users.id = posts.user_id
+            order by
+                posts.created_at desc
+            offset $2 limit $3;",
+            user_id,
             pagination.offset,
-            pagination.limit
+            pagination.limit,
         )
         .fetch_all(self.db.get_pool())
         .await
@@ -83,15 +97,16 @@ where
             PostDetails,
             "select
                 posts.id,
-                posts.author_id,
-                users.name as author_name,
-                users.avatar as author_avatar,
+                posts.user_id,
+                users.name as user_name,
+                users.avatar as user_avatar,
                 posts.content,
                 posts.likes,
                 posts.comments,
-                posts.created_at
+                posts.created_at,
+                (select true) as is_liked
             from posts
-            left join users on users.id = posts.author_id
+            left join users on users.id = posts.user_id
             where posts.id = $1",
             id
         )
@@ -102,7 +117,7 @@ where
 
     async fn add(&self, author_id: i64, post: AddPostRequest) -> Result<(), PostServiceErr> {
         sqlx::query!(
-            "insert into posts (author_id, content) values ($1, $2)",
+            "insert into posts (user_id, content) values ($1, $2)",
             author_id,
             post.content
         )
@@ -122,7 +137,7 @@ where
 
     async fn existed(&self, id: Uuid, author_id: i64) -> Result<bool, PostServiceErr> {
         sqlx::query!(
-            "select count(*) as post_count from posts where id = $1 and author_id = $2",
+            "select count(*) as post_count from posts where id = $1 and user_id = $2",
             id,
             author_id
         )

@@ -8,10 +8,12 @@ use crate::model::responses::HttpResponseConstErr;
 #[serde(rename_all = "camelCase")]
 pub struct PostDetails {
     pub id: Uuid,
-    pub author_id: i64,
-    pub author_name: String,
-    pub author_avatar: String,
+    pub user_id: i64,
+    pub user_name: String,
+    pub user_avatar: String,
     pub content: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub is_liked: Option<bool>,
     pub likes: i64,
     pub comments: i64,
     pub created_at: DateTime<Utc>,

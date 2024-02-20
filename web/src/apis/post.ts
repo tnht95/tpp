@@ -5,7 +5,9 @@ import { errHandler } from '.';
 
 export const filterPostsAction = async ({ offset }: { offset: number }) => {
   const baseUrl = import.meta.env.VITE_SERVER_URL;
-  return fetch(`${baseUrl}/posts?offset=${offset}&limit=${PAGINATION}`)
+  return fetch(`${baseUrl}/posts?offset=${offset}&limit=${PAGINATION}`, {
+    credentials: 'include'
+  })
     .then(errHandler)
     .then((r: Response<PostDetails[]>) => r.data);
 };

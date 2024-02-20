@@ -8,6 +8,7 @@ use crate::{
         discussion::{DiscussionService, IDiscussionService},
         game::{GameService, IGameService},
         health::{HealthService, IHealthService},
+        like::{ILikeService, LikeService},
         post::{IPostService, PostService},
         search::{ISearchService, SearchService},
         subscribe::{ISubscribeService, SubscribeService},
@@ -21,6 +22,7 @@ pub mod comment;
 pub mod discussion;
 pub mod game;
 pub mod health;
+pub mod like;
 pub mod post;
 pub mod search;
 pub mod subscribe;
@@ -38,6 +40,7 @@ pub trait IInternalServices {
     type TSearchService: ISearchService + Send + Sync;
     type TSubscribeService: ISubscribeService + Send + Sync;
     type TVoteService: IVoteService + Send + Sync;
+    type TLikeService: ILikeService + Send + Sync;
 }
 
 pub struct InternalServices;
@@ -52,6 +55,7 @@ impl IInternalServices for InternalServices {
     type TSearchService = SearchService<Database>;
     type TSubscribeService = SubscribeService<Database>;
     type TVoteService = VoteService<Database>;
+    type TLikeService = LikeService<Database>;
 }
 
 pub struct Services<TInternalServices: IInternalServices> {
@@ -65,6 +69,7 @@ pub struct Services<TInternalServices: IInternalServices> {
     pub search: TInternalServices::TSearchService,
     pub subscribe: TInternalServices::TSubscribeService,
     pub vote: TInternalServices::TVoteService,
+    pub like: TInternalServices::TLikeService,
 }
 
 pub struct ServicesBuilder<TInternalServices: IInternalServices> {
@@ -78,6 +83,7 @@ pub struct ServicesBuilder<TInternalServices: IInternalServices> {
     search: Option<TInternalServices::TSearchService>,
     subscribe: Option<TInternalServices::TSubscribeService>,
     vote: Option<TInternalServices::TVoteService>,
+    like: Option<TInternalServices::TLikeService>,
 }
 
 impl<TInternalServices: IInternalServices> ServicesBuilder<TInternalServices> {
@@ -93,6 +99,7 @@ impl<TInternalServices: IInternalServices> ServicesBuilder<TInternalServices> {
             search: None,
             subscribe: None,
             vote: None,
+            like: None,
         }
     }
 
@@ -146,6 +153,11 @@ impl<TInternalServices: IInternalServices> ServicesBuilder<TInternalServices> {
         self
     }
 
+    pub fn like(mut self, like: TInternalServices::TLikeService) -> Self {
+        self.like = Some(like);
+        self
+    }
+
     pub fn build(self) -> Services<TInternalServices> {
         Services {
             health: self.health.expect("missing initialization"),
@@ -158,6 +170,7 @@ impl<TInternalServices: IInternalServices> ServicesBuilder<TInternalServices> {
             search: self.search.expect("missing initialization"),
             subscribe: self.subscribe.expect("missing initialization"),
             vote: self.vote.expect("missing initialization"),
+            like: self.like.expect("missing initialization"),
         }
     }
 }

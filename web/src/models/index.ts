@@ -7,6 +7,7 @@ export * from './comment';
 export * from './discussion';
 export * from './search';
 export * from './vote';
+export * from './like';
 
 export type Response<T> = {
   data: T;

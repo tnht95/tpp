@@ -1,8 +1,9 @@
-import { createSignal, Show } from 'solid-js';
+import { batch, createEffect, createSignal, Show } from 'solid-js';
 
+import { likeAction, unLikeAction } from '@/apis';
 import { Avatar, CommentForm, Markdown, OptionButton } from '@/components';
-import { CommentsProvider } from '@/context';
-import { PostDetails } from '@/models';
+import { CommentsProvider, useToastCtx } from '@/context';
+import { PostDetails, RespErr } from '@/models';
 import { CommentContainer } from '@/parts';
 import { authenticationStore } from '@/store';
 import { formatTime } from '@/utils';
@@ -13,7 +14,11 @@ type Props = {
   onEdit: (postId: string, content: string) => void;
 };
 
+const getLikeButtonStyle = (isLiked: boolean): string =>
+  isLiked ? 'text-red-600 font-bold' : 'cursor-pointer';
+
 export const PostCard = (props: Props) => {
+  const { showToast } = useToastCtx();
   const { utils } = authenticationStore;
   const [isEditMode, setIsEditMode] = createSignal(false);
   const [showCmts, setShowCmts] = createSignal({
@@ -21,6 +26,33 @@ export const PostCard = (props: Props) => {
     hidden: true
   });
 
+  const [isLoading, setIsLoading] = createSignal(false);
+  const [liked, setLiked] = createSignal<boolean | undefined>();
+  const [likesNumber, setLikesNumber] = createSignal(0);
+
+  createEffect(() => {
+    setLikesNumber(props.post.likes);
+    setLiked(props.post.isLiked);
+  });
+
+  const likeBatch = () =>
+    batch(() => {
+      setLikesNumber(oldVal => (liked() ? oldVal - 1 : oldVal + 1));
+      setLiked(!liked());
+    });
+
+  const onLikeHandler = () => {
+    setIsLoading(true);
+
+    const actionPromise = liked()
+      ? unLikeAction({ targetType: 'posts', targetId: props.post.id })
+      : likeAction({ targetType: 'posts', targetId: props.post.id });
+
+    actionPromise
+      .then(likeBatch)
+      .catch(error => showToast({ msg: (error as RespErr).msg, type: 'err' }))
+      .finally(() => setIsLoading(false)) as unknown;
+  };
   const onSubmitPostHandler = (content: string) => {
     setIsEditMode(false);
     props.onEdit(props.post.id, content);
@@ -29,15 +61,13 @@ export const PostCard = (props: Props) => {
   return (
     <div class="flex flex-col gap-4 rounded-xl border p-10">
       <div class="flex items-center">
-        <Avatar img={props.post.authorAvatar} userId={props.post.authorId} />
+        <Avatar img={props.post.userAvatar} userId={props.post.userId} />
         <div class="w-full pl-3 leading-tight">
           <div class="flex items-center justify-between">
-            <p class="text-base font-bold text-black">
-              {props.post.authorName}
-            </p>
+            <p class="text-base font-bold text-black">{props.post.userName}</p>
             <Show when={utils.isAuth()}>
               <OptionButton
-                isOwner={utils.isSameUser(props.post.authorId)}
+                isOwner={utils.isSameUser(props.post.userId)}
                 onDeleteConfirm={props.onDelete}
                 id={props.post.id}
                 isEditMode={isEditMode}
@@ -62,17 +92,24 @@ export const PostCard = (props: Props) => {
         </Show>
       </div>
       <div class="flex select-none items-center gap-3 text-gray-500">
-        <div class="flex w-1/2 cursor-pointer items-center justify-center border-r-2 hover:font-bold hover:text-red-600">
-          <i class="fa-regular fa-heart" />
-          <span class="ml-2">{`Like (${props.post.likes})`}</span>
-        </div>
-        <div
+        <button
+          class={`flex w-1/2 items-center justify-center border-r-2 hover:font-bold hover:text-red-600 ${getLikeButtonStyle(liked() ?? false)}`}
+          classList={{ 'cursor-not-allowed': isLoading() }}
+          disabled={isLoading()}
+          onClick={onLikeHandler}
+        >
+          <Show when={liked()} fallback={<i class="fa-regular fa-heart" />}>
+            <i class="fa-solid fa-heart" />
+          </Show>
+          <span class="ml-2">{`Like (${likesNumber()})`}</span>
+        </button>
+        <button
           class="flex w-1/2 cursor-pointer items-center justify-center hover:font-bold hover:text-blue-700"
           onClick={() => setShowCmts(c => ({ show: true, hidden: !c.hidden }))}
         >
           <i class="fa-regular fa-comment" />
           <span class="ml-2">{`Comment (${props.post.comments})`}</span>
-        </div>
+        </button>
       </div>
       <Show when={showCmts().show}>
         <div classList={{ hidden: showCmts().hidden }}>

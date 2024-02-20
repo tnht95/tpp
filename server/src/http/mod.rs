@@ -37,6 +37,7 @@ use crate::{
             discussion,
             game,
             health,
+            like,
             post,
             search,
             subscribe,
@@ -126,6 +127,8 @@ where
                         .route("/comments", post(comment::add))
                         .route("/comments/:id", delete(comment::delete))
                         .route("/comments/:id", put(comment::edit))
+                        .route("/likes", post(like::like))
+                        .route("/likes", delete(like::unlike))
                         .route("/games", get(game::filter))
                         .route("/games", post(game::add))
                         .route("/games/:id", get(game::get_by_id))

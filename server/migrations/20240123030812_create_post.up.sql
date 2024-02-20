@@ -1,7 +1,7 @@
 -- Add up migration script here
 create table posts (
     id uuid default uuid_generate_v4() primary key,
-    author_id bigint references users (id) on delete cascade not null,
+    user_id bigint references users (id) on delete cascade not null,
     content varchar(200) not null,
     likes bigint not null default 0,
     comments bigint not null default 0,

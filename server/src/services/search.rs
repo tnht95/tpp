@@ -133,15 +133,16 @@ where
                     PostDetails,
                     "select
                         posts.id,
-                        posts.author_id,
-                        users.name as author_name,
-                        users.avatar as author_avatar,
+                        posts.user_id,
+                        users.name as user_name,
+                        users.avatar as user_avatar,
                         posts.content,
                         posts.likes,
                         posts.comments,
-                        posts.created_at
+                        posts.created_at,
+                        (select true) as is_liked
                     from posts
-                    left join users on users.id = posts.author_id
+                    left join users on users.id = posts.user_id
                     where content ilike $1
                     order by posts.created_at desc offset $2 limit $3",
                     format!("%{}%", pagination.keyword),

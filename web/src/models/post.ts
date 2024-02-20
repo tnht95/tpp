@@ -1,10 +1,11 @@
 export type PostDetails = {
   id: string;
-  authorId: number;
-  authorName: string;
-  authorAvatar: string;
+  userId: number;
+  userName: string;
+  userAvatar: string;
   content: string;
   likes: number;
+  isLiked: boolean | undefined;
   comments: number;
   createdAt: string;
 };
