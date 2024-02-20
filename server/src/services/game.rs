@@ -190,10 +190,10 @@ where
             .map_err(|e| GameServiceErr::Other(e.into()))?;
 
         sqlx::query!(
-            "insert into activities (user_id, target_type, target_id, memo) values ($1, 'game', $2, $3)",
+            "insert into activities (user_id, target_type, target_id, memo) values ($1, 'added_game', $2, $3)",
             author_id,
             game.id,
-            format!("Added new game: {}", game.name)
+            format!("Name: {}", game.name)
         )
         .execute(&mut *tx)
         .await
@@ -263,10 +263,10 @@ where
         }
 
         sqlx::query!(
-            "insert into activities (user_id, target_type, target_id, memo) values ($1, 'game', $2, $3)",
+            "insert into activities (user_id, target_type, target_id, memo) values ($1, 'updated_game', $2, $3)",
             user_id,
             game_id,
-            format!("Updated game: {}", game.name)
+            format!("Name: {}", game.name)
         )
         .execute(&mut *tx)
         .await

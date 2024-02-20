@@ -14,9 +14,9 @@ pub struct Activity {
 
 #[derive(Serialize, sqlx::Type)]
 #[serde(rename_all = "camelCase")]
-#[sqlx(type_name = "activity_type", rename_all = "lowercase")]
+#[sqlx(type_name = "activity_type", rename_all = "snake_case")]
 pub enum ActivityType {
-    Game,
-    User,
-    Post,
+    AddedGame,
+    UpdatedGame,
+    AddedPost,
 }

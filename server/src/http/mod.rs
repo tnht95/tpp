@@ -114,6 +114,7 @@ where
                         .route("/users/:id", get(user::get_by_id))
                         .route("/users/:id/subscribes", post(subscribe::subscribe_user))
                         .route("/users/:id/subscribes", delete(subscribe::unsubscribe_user))
+                        .route("/users/:id/activities", get(activity::filter))
                         .route("/posts", get(post::filter))
                         .route("/posts", post(post::add))
                         .route("/posts/:id", delete(post::delete))
@@ -144,7 +145,6 @@ where
                         .route("/games/:gid/discussions/:id", get(discussion::get_by_id))
                         .route("/games/:gid/discussions/:id", put(discussion::edit))
                         .route("/games/:gid/discussions/:id", delete(discussion::delete))
-                        .route("/activities", get(activity::filter))
                         .route("/search", get(search::search))
                         .layer(middleware),
                 )

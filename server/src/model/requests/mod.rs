@@ -40,7 +40,7 @@ impl From<Pagination> for PaginationInternal {
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct PaginationWithTarget {
-    pub target_id: Uuid,
+    pub target_id: Option<Uuid>,
     pub offset: Option<i64>,
     pub limit: Option<i64>,
 }
@@ -52,7 +52,7 @@ pub struct PaginationWithTargetInternal {
 impl From<PaginationWithTarget> for PaginationWithTargetInternal {
     fn from(pagination: PaginationWithTarget) -> Self {
         Self {
-            target_id: pagination.target_id,
+            target_id: pagination.target_id.unwrap_or(Uuid::nil()),
             offset: match pagination.offset.unwrap_or(0) {
                 offset if offset < 0 => 0,
                 offset => offset,

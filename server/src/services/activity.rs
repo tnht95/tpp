@@ -21,6 +21,7 @@ pub enum ActivityServiceErr {
 pub trait IActivityService {
     async fn filter(
         &self,
+        user_id: i64,
         pagination: PaginationWithTargetInternal,
     ) -> Result<Vec<Activity>, ActivityServiceErr>;
 }
@@ -45,6 +46,7 @@ where
 {
     async fn filter(
         &self,
+        user_id: i64,
         pagination: PaginationWithTargetInternal,
     ) -> Result<Vec<Activity>, ActivityServiceErr> {
         sqlx::query_as!(
@@ -57,9 +59,12 @@ where
                 memo,
                 created_at
             from activities
-            where target_id = $1
-            order by created_at desc offset $2 limit $3
+            where 
+                user_id = $1
+                AND ($2 = uuid_nil() OR target_id = $2)
+            order by created_at desc offset $3 limit $4
             "#,
+            user_id,
             pagination.target_id,
             pagination.offset,
             pagination.limit
