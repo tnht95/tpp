@@ -1,8 +1,8 @@
-export type LikeTargetType = 'comments' | 'posts' | 'discussions';
+export type LikeType = 'comments' | 'posts' | 'discussions';
 
 export type AddLike = {
   targetId: string;
-  targetType: LikeTargetType;
+  targetType: LikeType;
 };
 
 export type DeleteLike = AddLike;

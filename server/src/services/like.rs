@@ -4,7 +4,7 @@ use async_trait::async_trait;
 use thiserror::Error;
 
 use crate::{
-    database::{entities::like::LikeTargetType, IDatabase},
+    database::{entities::like::LikeType, IDatabase},
     model::requests::like::{AddLikeRequest, DeleteLikeRequest},
 };
 
@@ -43,7 +43,7 @@ where
             "SELECT insert_like($1, $2, $3)",
             user_id,
             like.target_id,
-            like.target_type as LikeTargetType
+            like.target_type as LikeType
         )
         .execute(self.db.get_pool())
         .await
@@ -56,7 +56,7 @@ where
             "SELECT delete_like($1, $2, $3)",
             user_id,
             like.target_id,
-            like.target_type as LikeTargetType
+            like.target_type as LikeType
         )
         .execute(self.db.get_pool())
         .await

@@ -42,7 +42,7 @@ export const BlogDetailsInfo = () => {
             <p class="text-xl text-gray-600">{blog().description}</p>
             <Markdown content={blog().content} />
           </div>
-          <CommentsProvider targetId={blogId} targetType="blog">
+          <CommentsProvider targetId={blogId} targetType="blogs">
             <CommentContainer />
           </CommentsProvider>
         </div>

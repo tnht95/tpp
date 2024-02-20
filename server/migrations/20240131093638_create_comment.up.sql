@@ -1,5 +1,5 @@
 -- Add up migration script here
-create type comment_type as enum ('discussion', 'blog', 'post');
+create type comment_type as enum ('discussions', 'blogs', 'posts');
 
 create table comments
 (

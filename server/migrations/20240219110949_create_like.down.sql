@@ -1,2 +1,2 @@
 drop table likes;
-drop type if exists like_target_types;
+drop type like_type;

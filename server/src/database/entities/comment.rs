@@ -18,7 +18,7 @@ use serde::Deserialize;
 #[serde(rename_all = "camelCase")]
 #[sqlx(type_name = "comment_type", rename_all = "lowercase")]
 pub enum CommentType {
-    Blog,
-    Discussion,
-    Post,
+    Blogs,
+    Discussions,
+    Posts,
 }

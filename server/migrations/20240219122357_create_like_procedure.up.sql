@@ -1,7 +1,7 @@
 create or replace function insert_like(
     _user_id bigint,
     _target_id uuid,
-    _target_type like_target_types
+    _target_type like_type
 ) returns void as $$
 DECLARE rows_affected boolean;
 BEGIN
@@ -27,7 +27,7 @@ $$ language plpgsql;
 create or replace function delete_like(
     _user_id bigint,
     _target_id uuid,
-    _target_type like_target_types
+    _target_type like_type
 ) returns void as $$
 BEGIN
     DELETE FROM likes

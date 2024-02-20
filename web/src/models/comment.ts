@@ -1,4 +1,4 @@
-export type CommentType = 'blog' | 'post' | 'discussion';
+export type CommentType = 'blogs' | 'posts' | 'discussions';
 
 export type CommentDetails = {
   id: string;
