@@ -5,7 +5,7 @@ returns trigger as $$
 BEGIN
     IF (TG_OP = 'INSERT') THEN
         INSERT INTO activities (user_id, target_type, target_id, memo)
-        VALUES (NEW.author_id, 'post', NEW.id, 'Added new post: ' || NEW.content);
+        VALUES (NEW.user_id, 'post', NEW.id, 'Added new post: ' || NEW.content);
     END IF;
     RETURN NULL;
 END;

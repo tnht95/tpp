@@ -168,7 +168,7 @@ where
             "insert into games
             (name, author_id, author_name, url, avatar_url, about, info, tags, rom) values
             ($1, $2, $3, $4, $5, $6, $7, $8, '')
-            returning id",
+            returning id, name",
             game.name,
             author_id,
             author_name,
@@ -188,6 +188,16 @@ where
             .execute(&mut *tx)
             .await
             .map_err(|e| GameServiceErr::Other(e.into()))?;
+
+        sqlx::query!(
+            "insert into activities (user_id, target_type, target_id, memo) values ($1, 'game', $2, $3)",
+            author_id,
+            game.id,
+            format!("Added new game: {}", game.name)
+        )
+        .execute(&mut *tx)
+        .await
+        .map_err(|e| GameServiceErr::Other(e.into()))?;
 
         tx.commit()
             .await
@@ -251,6 +261,16 @@ where
                 .await
                 .map_err(|e| GameServiceErr::Other(e.into()))?;
         }
+
+        sqlx::query!(
+            "insert into activities (user_id, target_type, target_id, memo) values ($1, 'game', $2, $3)",
+            user_id,
+            game_id,
+            format!("Updated game: {}", game.name)
+        )
+        .execute(&mut *tx)
+        .await
+        .map_err(|e| GameServiceErr::Other(e.into()))?;
 
         tx.commit()
             .await
