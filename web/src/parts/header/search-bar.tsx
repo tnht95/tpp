@@ -5,13 +5,15 @@ import { useDropdownUtils } from '@/utils';
 
 export const HeaderSearchbar = () => {
   const dropdownUtils = useDropdownUtils();
-  const [searchContent, setSearchContent] = createSignal('');
   const [searchCategory, setSearchCategory] = createSignal('');
   const navigate = useNavigate();
   const onSubmitHandler = (e: Event) => {
     e.preventDefault();
-    if (searchContent()) {
-      let url = `/search?keyword=${searchContent()}`;
+    const searchContent = new FormData(e.target as HTMLFormElement).get(
+      'searchContent'
+    ) as string;
+    if (searchContent) {
+      let url = `/search?keyword=${searchContent}`;
       if (searchCategory()) {
         url = `${url}&category=${searchCategory()}`;
       }
@@ -101,8 +103,6 @@ export const HeaderSearchbar = () => {
           <input
             class="z-20 block w-3/5 rounded-e-lg border border-s-2 border-gray-300 border-s-gray-50 bg-gray-50 p-2.5 text-sm text-gray-900"
             placeholder="Search Games, Users, Posts, Blogs..."
-            onInput={e => setSearchContent(e.target.value.trim())}
-            value={searchContent()}
             name="searchContent"
             maxLength={35}
           />
