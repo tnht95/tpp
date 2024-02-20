@@ -6,7 +6,11 @@ use axum::{
 
 use super::InternalState;
 use crate::{
-    http::utils::{err_handler::response_unhandled_err, validator::QueryValidator},
+    http::utils::{
+        auth::AuthenticationMaybe,
+        err_handler::response_unhandled_err,
+        validator::QueryValidator,
+    },
     model::{requests::search::SearchPagination, responses::HttpResponse},
     services::{
         search::{ISearchService, SearchServiceErr},
@@ -17,8 +21,14 @@ use crate::{
 pub async fn search<TInternalServices: IInternalServices>(
     QueryValidator(pagination): QueryValidator<SearchPagination>,
     State(state): InternalState<TInternalServices>,
+    AuthenticationMaybe(user, ..): AuthenticationMaybe<TInternalServices>,
 ) -> Response {
-    match state.services.search.search(pagination.into()).await {
+    match state
+        .services
+        .search
+        .search(pagination.into(), user.map(|u| u.id))
+        .await
+    {
         Ok(result) => Json(HttpResponse { data: result }).into_response(),
         Err(SearchServiceErr::Other(e)) => response_unhandled_err(e),
     }

@@ -29,6 +29,7 @@ pub trait ISearchService {
     async fn search(
         &self,
         pagination: SearchPaginationInternal,
+        user_id: Option<i64>,
     ) -> Result<SearchResult, SearchServiceErr>;
 }
 
@@ -116,6 +117,7 @@ where
         &self,
         pagination: Arc<SearchPaginationInternal>,
         tx: oneshot::Sender<Result<Vec<PostDetails>, SearchServiceErr>>,
+        user_id: Option<i64>,
     ) {
         if !pagination
             .category
@@ -132,22 +134,30 @@ where
                 sqlx::query_as!(
                     PostDetails,
                     "select
-                        posts.id,
-                        posts.user_id,
-                        users.name as user_name,
-                        users.avatar as user_avatar,
-                        posts.content,
-                        posts.likes,
-                        posts.comments,
-                        posts.created_at,
-                        (select true) as is_liked
+                    posts.id,
+                    posts.user_id,
+                    users.name as user_name,
+                    users.avatar as user_avatar,
+                    posts.content,
+                    posts.likes,
+                    posts.comments,
+                    posts.created_at,
+                    case
+                        when $4::bigint is not null then exists (
+                            select 1
+                            from likes
+                            where target_id = posts.id and user_id = $4
+                        )
+                        else null
+                    end as is_liked
                     from posts
                     left join users on users.id = posts.user_id
                     where content ilike $1
                     order by posts.created_at desc offset $2 limit $3",
                     format!("%{}%", pagination.keyword),
                     pagination.offset,
-                    pagination.limit
+                    pagination.limit,
+                    user_id
                 )
                 .fetch_all(db.get_pool())
                 .await
@@ -203,6 +213,7 @@ where
     async fn search(
         &self,
         pagination: SearchPaginationInternal,
+        user_id: Option<i64>,
     ) -> Result<SearchResult, SearchServiceErr> {
         let pagination_ref = Arc::new(pagination);
 
@@ -213,7 +224,7 @@ where
         self.search_users_task(Arc::clone(&pagination_ref), user_tx);
 
         let (post_tx, post_rx) = oneshot::channel();
-        self.search_posts_task(Arc::clone(&pagination_ref), post_tx);
+        self.search_posts_task(Arc::clone(&pagination_ref), post_tx, user_id);
 
         let (blog_tx, blog_rx) = oneshot::channel();
         self.search_blogs_task(pagination_ref, blog_tx);
