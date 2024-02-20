@@ -1,4 +1,10 @@
-import { AddComment, CommentDetails, EditComment, Response } from '@/models';
+import {
+  AddComment,
+  CommentDetails,
+  DeleteComment,
+  EditComment,
+  Response
+} from '@/models';
 
 import { errHandler, QueryWIthTargetInput } from '.';
 
@@ -29,10 +35,14 @@ export const addCommentAction = (body: AddComment) =>
     .then(errHandler)
     .then((r: Response<CommentDetails>) => r.data);
 
-export const deleteCommentAction = (id: string) =>
+export const deleteCommentAction = (id: string, body: DeleteComment) =>
   fetch(`${import.meta.env.VITE_SERVER_URL}/comments/${id}`, {
     method: 'delete',
-    credentials: 'include'
+    credentials: 'include',
+    headers: {
+      'content-type': 'application/json'
+    },
+    body: JSON.stringify(body)
   })
     .then(errHandler)
     .then((r: Response<undefined>) => r.data);

@@ -3,43 +3,44 @@ create or replace function insert_like(
     _target_id uuid,
     _target_type like_type
 ) returns void as $$
-DECLARE rows_affected boolean;
-BEGIN
-EXECUTE format('
-        UPDATE %I
-        SET likes = likes + 1
-        WHERE id = $1
-        RETURNING true
+declare rows_affected boolean;
+begin
+execute format('
+        update %I
+        set likes = likes + 1
+        where id = $1
+        returning true
     ', _target_type)
-    INTO rows_affected
-    USING _target_id;
+    into rows_affected
+    using _target_id;
 
-IF rows_affected IS NOT NULL THEN
-    INSERT INTO likes (user_id, target_id, target_type)
-    VALUES (_user_id, _target_id, _target_type);
-END IF;
---DO NOTHING IF ERROR
-EXCEPTION
-    WHEN OTHERS THEN
-END;
+if rows_affected is not null then
+    insert into likes (user_id, target_id, target_type)
+    values (_user_id, _target_id, _target_type);
+end if;
+-- do nothing if error
+exception
+    when others then
+end;
 $$ language plpgsql;
+
 
 create or replace function delete_like(
     _user_id bigint,
     _target_id uuid,
     _target_type like_type
 ) returns void as $$
-BEGIN
-    DELETE FROM likes
-    WHERE user_id = _user_id AND target_id = _target_id;
+begin
+delete from likes
+where user_id = _user_id and target_id = _target_id;
 
-    IF FOUND THEN
-        EXECUTE format('
-            UPDATE %I
-            SET likes = likes - 1
-            WHERE id = $1
-            ', _target_type)
-        USING _target_id;
-    END IF;
-END;
+if found then
+    execute format('
+        update %I
+        set likes = likes - 1
+        where id = $1
+        ', _target_type)
+    using _target_id;
+end if;
+end;
 $$ language plpgsql;

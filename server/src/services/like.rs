@@ -40,7 +40,7 @@ where
 {
     async fn like(&self, user_id: i64, like: AddLikeRequest) -> Result<(), LikeServiceErr> {
         sqlx::query!(
-            "SELECT insert_like($1, $2, $3)",
+            "select insert_like($1, $2, $3)",
             user_id,
             like.target_id,
             like.target_type as LikeType

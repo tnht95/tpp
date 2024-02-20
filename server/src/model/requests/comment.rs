@@ -15,3 +15,10 @@ pub struct AddCommentRequest {
 }
 
 pub type EditCommentRequest = AddCommentRequest;
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DeleteCommentRequest {
+    pub target_id: Uuid,
+    pub target_type: CommentType,
+}

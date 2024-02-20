@@ -8,7 +8,7 @@ use crate::{
     database::{entities::comment::CommentType, IDatabase},
     model::{
         requests::{
-            comment::{AddCommentRequest, EditCommentRequest},
+            comment::{AddCommentRequest, DeleteCommentRequest, EditCommentRequest},
             PaginationWithTargetInternal,
         },
         responses::comment::CommentDetails,
@@ -33,7 +33,11 @@ pub trait ICommentService {
         user_name: String,
         comment: AddCommentRequest,
     ) -> Result<CommentDetails, CommentServiceErr>;
-    async fn delete(&self, id: Uuid) -> Result<(), CommentServiceErr>;
+    async fn delete(
+        &self,
+        id: Uuid,
+        comment: DeleteCommentRequest,
+    ) -> Result<(), CommentServiceErr>;
     async fn existed(&self, id: Uuid, author_id: i64) -> Result<bool, CommentServiceErr>;
     async fn edit(
         &self,
@@ -115,25 +119,34 @@ where
         comment: AddCommentRequest,
     ) -> Result<CommentDetails, CommentServiceErr> {
         let comment = sqlx::query!(
-            "insert into comments (user_id, user_name, target_id, target_type, content) values ($1, $2, $3, $4, $5) returning id",
+            "select insert_comment($1, $2, $3, $4, $5) as id",
             user_id,
-            user_name,
             comment.target_id,
             comment.target_type as CommentType,
+            user_name,
             comment.content
         )
         .fetch_one(self.db.get_pool())
         .await
-        .map_err(|e|CommentServiceErr::Other(e.into()))?;
-        self.get_by_id(comment.id).await
+        .map_err(|e| CommentServiceErr::Other(e.into()))?;
+        self.get_by_id(comment.id.unwrap()).await
     }
 
-    async fn delete(&self, id: Uuid) -> Result<(), CommentServiceErr> {
-        sqlx::query!("delete from comments where id = $1", id)
-            .execute(self.db.get_pool())
-            .await
-            .map(|_| ())
-            .map_err(|e| CommentServiceErr::Other(e.into()))
+    async fn delete(
+        &self,
+        id: Uuid,
+        comment: DeleteCommentRequest,
+    ) -> Result<(), CommentServiceErr> {
+        sqlx::query!(
+            "select delete_comment($1, $2, $3)",
+            id,
+            comment.target_id,
+            comment.target_type as CommentType
+        )
+        .execute(self.db.get_pool())
+        .await
+        .map(|_| ())
+        .map_err(|e| CommentServiceErr::Other(e.into()))
     }
 
     async fn existed(&self, id: Uuid, author_id: i64) -> Result<bool, CommentServiceErr> {

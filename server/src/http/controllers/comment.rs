@@ -16,7 +16,7 @@ use crate::{
     },
     model::{
         requests::{
-            comment::{AddCommentRequest, EditCommentRequest},
+            comment::{AddCommentRequest, DeleteCommentRequest, EditCommentRequest},
             PaginationWithTarget,
         },
         responses::{
@@ -61,6 +61,7 @@ pub async fn delete<TInternalServices: IInternalServices>(
     Path(id): Path<String>,
     State(state): InternalState<TInternalServices>,
     Authentication(user, ..): Authentication<TInternalServices>,
+    Json(comment): Json<DeleteCommentRequest>,
 ) -> Response {
     let id = match id.parse::<Uuid>() {
         Ok(id) => id,
@@ -75,7 +76,7 @@ pub async fn delete<TInternalServices: IInternalServices>(
         Err(CommentServiceErr::Other(e)) => return response_unhandled_err(e),
     };
 
-    match state.services.comment.delete(id).await {
+    match state.services.comment.delete(id, comment).await {
         Ok(comment) => Json(HttpResponse { data: comment }).into_response(),
         Err(CommentServiceErr::Other(e)) => response_unhandled_err(e),
     }

@@ -28,16 +28,18 @@ export const PostCard = (props: Props) => {
 
   const [isLoading, setIsLoading] = createSignal(false);
   const [liked, setLiked] = createSignal<boolean | undefined>();
-  const [likesNumber, setLikesNumber] = createSignal(0);
+  const [likeNumber, setLikeNumber] = createSignal(0);
+  const [commentNumber, setCommentNumber] = createSignal(0);
 
   createEffect(() => {
-    setLikesNumber(props.post.likes);
+    setLikeNumber(props.post.likes);
     setLiked(props.post.isLiked);
+    setCommentNumber(props.post.comments);
   });
 
   const likeBatch = () =>
     batch(() => {
-      setLikesNumber(oldVal => (liked() ? oldVal - 1 : oldVal + 1));
+      setLikeNumber(oldVal => (liked() ? oldVal - 1 : oldVal + 1));
       setLiked(!liked());
     });
 
@@ -101,14 +103,14 @@ export const PostCard = (props: Props) => {
           <Show when={liked()} fallback={<i class="fa-regular fa-heart" />}>
             <i class="fa-solid fa-heart" />
           </Show>
-          <span class="ml-2">{`Like (${likesNumber()})`}</span>
+          <span class="ml-2">{`Like (${likeNumber()})`}</span>
         </button>
         <button
           class="flex w-1/2 cursor-pointer items-center justify-center hover:font-bold hover:text-blue-700"
           onClick={() => setShowCmts(c => ({ show: true, hidden: !c.hidden }))}
         >
           <i class="fa-regular fa-comment" />
-          <span class="ml-2">{`Comment (${props.post.comments})`}</span>
+          <span class="ml-2">{`Comment (${commentNumber()})`}</span>
         </button>
       </div>
       <Show when={showCmts().show}>

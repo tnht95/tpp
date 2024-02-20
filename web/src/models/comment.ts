@@ -17,3 +17,8 @@ export type AddComment = {
 };
 
 export type EditComment = AddComment;
+
+export type DeleteComment = {
+  targetId: string;
+  targetType: CommentType;
+};

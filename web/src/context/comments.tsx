@@ -98,7 +98,10 @@ export const CommentsProvider = (props: Props) => {
   };
 
   const del = (commentId: string) => {
-    deleteCommentAction(commentId)
+    deleteCommentAction(commentId, {
+      targetId: props.targetId,
+      targetType: props.targetType
+    })
       .then(() =>
         batch(() => {
           setComments([]);
