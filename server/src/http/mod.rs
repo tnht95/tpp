@@ -31,6 +31,7 @@ use crate::{
     config::Config,
     http::{
         controllers::{
+            activity,
             auth,
             blog,
             comment,
@@ -143,6 +144,7 @@ where
                         .route("/games/:gid/discussions/:id", get(discussion::get_by_id))
                         .route("/games/:gid/discussions/:id", put(discussion::edit))
                         .route("/games/:gid/discussions/:id", delete(discussion::delete))
+                        .route("/activities", get(activity::filter))
                         .route("/search", get(search::search))
                         .layer(middleware),
                 )

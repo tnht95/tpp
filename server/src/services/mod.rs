@@ -3,6 +3,7 @@ use tokio::sync::RwLock;
 use crate::{
     database::Database,
     services::{
+        activity::{ActivityService, IActivityService},
         blog::{BlogService, IBlogService},
         comment::{CommentService, ICommentService},
         discussion::{DiscussionService, IDiscussionService},
@@ -17,6 +18,7 @@ use crate::{
     },
 };
 
+pub mod activity;
 pub mod blog;
 pub mod comment;
 pub mod discussion;
@@ -41,6 +43,7 @@ pub trait IInternalServices {
     type TSubscribeService: ISubscribeService + Send + Sync;
     type TVoteService: IVoteService + Send + Sync;
     type TLikeService: ILikeService + Send + Sync;
+    type TActivityService: IActivityService + Send + Sync;
 }
 
 pub struct InternalServices;
@@ -56,6 +59,7 @@ impl IInternalServices for InternalServices {
     type TSubscribeService = SubscribeService<Database>;
     type TVoteService = VoteService<Database>;
     type TLikeService = LikeService<Database>;
+    type TActivityService = ActivityService<Database>;
 }
 
 pub struct Services<TInternalServices: IInternalServices> {
@@ -70,6 +74,7 @@ pub struct Services<TInternalServices: IInternalServices> {
     pub subscribe: TInternalServices::TSubscribeService,
     pub vote: TInternalServices::TVoteService,
     pub like: TInternalServices::TLikeService,
+    pub activity: TInternalServices::TActivityService,
 }
 
 pub struct ServicesBuilder<TInternalServices: IInternalServices> {
@@ -84,6 +89,7 @@ pub struct ServicesBuilder<TInternalServices: IInternalServices> {
     subscribe: Option<TInternalServices::TSubscribeService>,
     vote: Option<TInternalServices::TVoteService>,
     like: Option<TInternalServices::TLikeService>,
+    activity: Option<TInternalServices::TActivityService>,
 }
 
 impl<TInternalServices: IInternalServices> ServicesBuilder<TInternalServices> {
@@ -100,6 +106,7 @@ impl<TInternalServices: IInternalServices> ServicesBuilder<TInternalServices> {
             subscribe: None,
             vote: None,
             like: None,
+            activity: None,
         }
     }
 
@@ -158,6 +165,11 @@ impl<TInternalServices: IInternalServices> ServicesBuilder<TInternalServices> {
         self
     }
 
+    pub fn activity(mut self, activity: TInternalServices::TActivityService) -> Self {
+        self.activity = Some(activity);
+        self
+    }
+
     pub fn build(self) -> Services<TInternalServices> {
         Services {
             health: self.health.expect("missing initialization"),
@@ -171,6 +183,7 @@ impl<TInternalServices: IInternalServices> ServicesBuilder<TInternalServices> {
             subscribe: self.subscribe.expect("missing initialization"),
             vote: self.vote.expect("missing initialization"),
             like: self.like.expect("missing initialization"),
+            activity: self.activity.expect("missing initialization"),
         }
     }
 }

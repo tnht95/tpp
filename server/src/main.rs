@@ -12,6 +12,7 @@ use crate::{
     database::Database,
     http::Server,
     services::{
+        activity::ActivityService,
         blog::BlogService,
         comment::CommentService,
         discussion::DiscussionService,
@@ -96,6 +97,7 @@ async fn main() -> Result<()> {
             let subscribe_service = SubscribeService::new(Arc::clone(&db));
             let vote_service = VoteService::new(Arc::clone(&db));
             let like_service = LikeService::new(Arc::clone(&db));
+            let activity_service = ActivityService::new(Arc::clone(&db));
 
             Server::<InternalServices>::new(
                 config,
@@ -111,6 +113,7 @@ async fn main() -> Result<()> {
                     .subscribe(subscribe_service)
                     .vote(vote_service)
                     .like(like_service)
+                    .activity(activity_service)
                     .build(),
             )
             .start()

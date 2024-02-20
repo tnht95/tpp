@@ -1,3 +1,4 @@
+pub mod activity;
 pub mod blog;
 pub mod comment;
 pub mod discussion;
