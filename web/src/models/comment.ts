@@ -1,4 +1,4 @@
-export type TargetType = 'blog' | 'post' | 'discussion';
+export type CommentType = 'blog' | 'post' | 'discussion';
 
 export type CommentDetails = {
   id: string;
@@ -12,7 +12,7 @@ export type CommentDetails = {
 
 export type AddComment = {
   targetId: string;
-  targetType: TargetType;
+  targetType: CommentType;
   content: string;
 };
 

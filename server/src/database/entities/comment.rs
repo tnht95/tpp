@@ -8,7 +8,7 @@
 //     pub target_id: Uuid,
 //     pub content: String,
 //     pub likes: i64,
-//     pub target_type: TargetTypes,
+//     pub target_type: CommentType,
 //     pub created_at: DateTime<Utc>,
 //     pub updated_at: DateTime<Utc>,
 // }
@@ -16,8 +16,8 @@
 use serde::Deserialize;
 #[derive(Deserialize, sqlx::Type)]
 #[serde(rename_all = "camelCase")]
-#[sqlx(type_name = "target_types", rename_all = "camelCase")]
-pub enum TargetTypes {
+#[sqlx(type_name = "comment_type", rename_all = "camelCase")]
+pub enum CommentType {
     Blog,
     Discussion,
     Post,

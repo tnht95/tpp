@@ -17,7 +17,7 @@ import {
   QueryWIthTargetInput
 } from '@/apis';
 import { PAGINATION } from '@/constant';
-import { CommentDetails, RespErr, TargetType } from '@/models';
+import { CommentDetails, CommentType, RespErr } from '@/models';
 
 import { useToastCtx } from './toast';
 
@@ -37,7 +37,7 @@ type Ctx = {
 
 type Props = {
   targetId: string;
-  targetType: TargetType;
+  targetType: CommentType;
 } & ParentProps;
 
 const ctx = createContext<Ctx>();

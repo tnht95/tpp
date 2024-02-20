@@ -5,7 +5,7 @@ use thiserror::Error;
 use uuid::Uuid;
 
 use crate::{
-    database::{entities::comment::TargetTypes, IDatabase},
+    database::{entities::comment::CommentType, IDatabase},
     model::{
         requests::{
             comment::{AddCommentRequest, EditCommentRequest},
@@ -119,7 +119,7 @@ where
             user_id,
             user_name,
             comment.target_id,
-            comment.target_type as TargetTypes,
+            comment.target_type as CommentType,
             comment.content
         )
         .fetch_one(self.db.get_pool())
