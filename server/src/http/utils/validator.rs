@@ -1,9 +1,7 @@
 use axum::{
     async_trait,
-    body::HttpBody,
-    extract::{FromRequest, FromRequestParts, Query},
-    http::{request::Parts, Request, StatusCode},
-    BoxError,
+    extract::{FromRequest, FromRequestParts, Query, Request},
+    http::{request::Parts, StatusCode},
     Json,
 };
 use serde::de::DeserializeOwned;
@@ -14,16 +12,13 @@ use crate::model::responses::HttpResponseErr;
 
 pub struct JsonValidator<T>(pub T);
 #[async_trait]
-impl<T, S, B> FromRequest<S, B> for JsonValidator<T>
+impl<T, S> FromRequest<S> for JsonValidator<T>
 where
     T: DeserializeOwned + Validate,
-    B: HttpBody + Send + 'static,
-    B::Data: Send,
-    B::Error: Into<BoxError>,
     S: Send + Sync,
 {
     type Rejection = (StatusCode, Json<HttpResponseErr>);
-    async fn from_request(req: Request<B>, state: &S) -> Result<Self, Self::Rejection> {
+    async fn from_request(req: Request, state: &S) -> Result<Self, Self::Rejection> {
         match Json::<T>::from_request(req, state).await {
             Ok(Json(body)) => {
                 body.validate().map_err(response_validation_err)?;

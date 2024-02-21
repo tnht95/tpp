@@ -2,7 +2,7 @@ mod controllers;
 mod handlers;
 mod utils;
 
-use std::{iter::once, net::SocketAddr, sync::Arc, time::Duration};
+use std::{iter::once, sync::Arc, time::Duration};
 
 use anyhow::Result;
 use axum::{
@@ -10,15 +10,15 @@ use axum::{
     http::{header::AUTHORIZATION, Method},
     routing::{delete, get, post, put},
     Router,
-    ServiceExt,
 };
+use tokio::net::TcpListener;
 use tower::ServiceBuilder;
 use tower_http::{
     catch_panic::CatchPanicLayer,
     compression::{CompressionLayer, CompressionLevel},
     cors::CorsLayer,
     limit::RequestBodyLimitLayer,
-    normalize_path::NormalizePath,
+    normalize_path::NormalizePathLayer,
     request_id::{MakeRequestUuid, PropagateRequestIdLayer, SetRequestIdLayer},
     sensitive_headers::SetSensitiveRequestHeadersLayer,
     services::ServeDir,
@@ -65,9 +65,11 @@ where
     }
 
     pub async fn start(self) -> Result<()> {
-        let http_address = SocketAddr::from(([0, 0, 0, 0], self.config.server.http_port));
+        let addr = format!("0.0.0.0:{}", self.config.server.http_port);
+        info!("listening on {}", &addr);
 
         let middleware = ServiceBuilder::new()
+            .layer(NormalizePathLayer::trim_trailing_slash())
             .layer(
                 CorsLayer::new()
                     .allow_credentials(true)
@@ -101,63 +103,60 @@ where
             .layer(TimeoutLayer::new(Duration::from_secs(5)));
 
         let state = Arc::new(self);
-        let app = NormalizePath::trim_trailing_slash(
-            Router::new()
-                .nest_service("/roms", ServeDir::new(&state.config.rom_dir))
-                .route("/health", get(health::is_healthy))
-                .nest(
-                    "/api/v1",
-                    Router::new()
-                        .route("/me", get(auth::me))
-                        .route("/logout", post(auth::log_out))
-                        .route("/authentication", get(auth::authentication))
-                        .route("/users/:id", get(user::get_by_id))
-                        .route("/users/:id/subscribes", post(subscribe::subscribe_user))
-                        .route("/users/:id/subscribes", delete(subscribe::unsubscribe_user))
-                        .route("/users/:id/activities", get(activity::filter))
-                        .route("/posts", get(post::filter))
-                        .route("/posts", post(post::add))
-                        .route("/posts/:id", delete(post::delete))
-                        .route("/posts/:id", put(post::edit))
-                        .route("/blogs", get(blog::filter))
-                        .route("/blogs", post(blog::add))
-                        .route("/blogs/:id", get(blog::get_by_id))
-                        .route("/blogs/:id", delete(blog::delete))
-                        .route("/blogs/:id", put(blog::edit))
-                        .route("/blogs/tags", get(blog::get_tags))
-                        .route("/comments", get(comment::filter))
-                        .route("/comments", post(comment::add))
-                        .route("/comments/:id", delete(comment::delete))
-                        .route("/comments/:id", put(comment::edit))
-                        .route("/likes", post(like::like))
-                        .route("/likes", delete(like::unlike))
-                        .route("/games", get(game::filter))
-                        .route("/games", post(game::add))
-                        .route("/games/:id", get(game::get_by_id))
-                        .route("/games/:id", delete(game::delete))
-                        .route("/games/:id", put(game::edit))
-                        .route("/games/tags", get(game::get_tags))
-                        .route("/games/:gid/votes", post(vote::vote))
-                        .route("/games/:gid/votes", delete(vote::un_vote))
-                        .route("/games/:gid/discussions", get(discussion::filter))
-                        .route("/games/:gid/discussions", post(discussion::add))
-                        .route("/games/:gid/discussions/counts", get(discussion::count))
-                        .route("/games/:gid/discussions/:id", get(discussion::get_by_id))
-                        .route("/games/:gid/discussions/:id", put(discussion::edit))
-                        .route("/games/:gid/discussions/:id", delete(discussion::delete))
-                        .route("/search", get(search::search))
-                        .layer(middleware),
-                )
-                .layer(DefaultBodyLimit::max(5 * 1024)) // 5KB
-                .layer(RequestBodyLimitLayer::new(5 * 1024)) // 5KB
-                .fallback(response_404_err)
-                .with_state(Arc::clone(&state)),
-        );
 
-        info!("listening on {}", http_address);
+        let app = Router::new()
+            .nest_service("/roms", ServeDir::new(&state.config.rom_dir))
+            .route("/health", get(health::is_healthy))
+            .nest(
+                "/api/v1",
+                Router::new()
+                    .route("/me", get(auth::me))
+                    .route("/logout", post(auth::log_out))
+                    .route("/authentication", get(auth::authentication))
+                    .route("/users/:id", get(user::get_by_id))
+                    .route("/users/:id/subscribes", post(subscribe::subscribe_user))
+                    .route("/users/:id/subscribes", delete(subscribe::unsubscribe_user))
+                    .route("/users/:id/activities", get(activity::filter))
+                    .route("/posts", get(post::filter))
+                    .route("/posts", post(post::add))
+                    .route("/posts/:id", delete(post::delete))
+                    .route("/posts/:id", put(post::edit))
+                    .route("/blogs", get(blog::filter))
+                    .route("/blogs", post(blog::add))
+                    .route("/blogs/:id", get(blog::get_by_id))
+                    .route("/blogs/:id", delete(blog::delete))
+                    .route("/blogs/:id", put(blog::edit))
+                    .route("/blogs/tags", get(blog::get_tags))
+                    .route("/comments", get(comment::filter))
+                    .route("/comments", post(comment::add))
+                    .route("/comments/:id", delete(comment::delete))
+                    .route("/comments/:id", put(comment::edit))
+                    .route("/likes", post(like::like))
+                    .route("/likes", delete(like::unlike))
+                    .route("/games", get(game::filter))
+                    .route("/games", post(game::add))
+                    .route("/games/:id", get(game::get_by_id))
+                    .route("/games/:id", delete(game::delete))
+                    .route("/games/:id", put(game::edit))
+                    .route("/games/tags", get(game::get_tags))
+                    .route("/games/:gid/votes", post(vote::vote))
+                    .route("/games/:gid/votes", delete(vote::un_vote))
+                    .route("/games/:gid/discussions", get(discussion::filter))
+                    .route("/games/:gid/discussions", post(discussion::add))
+                    .route("/games/:gid/discussions/counts", get(discussion::count))
+                    .route("/games/:gid/discussions/:id", get(discussion::get_by_id))
+                    .route("/games/:gid/discussions/:id", put(discussion::edit))
+                    .route("/games/:gid/discussions/:id", delete(discussion::delete))
+                    .route("/search", get(search::search))
+                    .layer(middleware),
+            )
+            .layer(DefaultBodyLimit::max(5 * 1024)) // 5KB
+            .layer(RequestBodyLimitLayer::new(5 * 1024)) // 5KB
+            .fallback(response_404_err)
+            .with_state(Arc::clone(&state));
 
-        axum::Server::bind(&http_address)
-            .serve(app.into_make_service())
+        let listener = TcpListener::bind(addr).await?;
+        axum::serve(listener, app)
             .with_graceful_shutdown(shutdown::handle(state))
             .await?;
 
