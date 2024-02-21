@@ -38,6 +38,7 @@ type Ctx = {
 type Props = {
   targetId: string;
   targetType: CommentType;
+  onAddNewCmt?: () => void;
 } & ParentProps;
 
 const ctx = createContext<Ctx>();
@@ -66,19 +67,21 @@ export const CommentsProvider = (props: Props) => {
     }
   });
 
+  const onAddCmtBatchHandler = (cmt: CommentDetails) =>
+    batch(() => {
+      setComments(produce(c => c.unshift(cmt)));
+      showToast({ msg: 'Comment Added', type: 'ok' });
+      newAddedCmts.push(cmt);
+      props.onAddNewCmt && props.onAddNewCmt();
+    });
+
   const add = (content: string) => {
     addCommentAction({
       content,
       targetId: props.targetId,
       targetType: props.targetType
     })
-      .then(cmt =>
-        batch(() => {
-          setComments(produce(c => c.unshift(cmt)));
-          showToast({ msg: 'Comment Added', type: 'ok' });
-          newAddedCmts.push(cmt);
-        })
-      )
+      .then(onAddCmtBatchHandler)
       .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
   };
 

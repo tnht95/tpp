@@ -32,9 +32,11 @@ export const PostCard = (props: Props) => {
   const [commentNumber, setCommentNumber] = createSignal(0);
 
   createEffect(() => {
-    setLikeNumber(props.post.likes);
-    setLiked(props.post.isLiked);
-    setCommentNumber(props.post.comments);
+    batch(() => {
+      setLikeNumber(props.post.likes);
+      setLiked(props.post.isLiked);
+      setCommentNumber(props.post.comments);
+    });
   });
 
   const likeBatch = () =>
@@ -115,7 +117,11 @@ export const PostCard = (props: Props) => {
       </div>
       <Show when={showCmts().show}>
         <div classList={{ hidden: showCmts().hidden }}>
-          <CommentsProvider targetType="posts" targetId={props.post.id}>
+          <CommentsProvider
+            targetType="posts"
+            targetId={props.post.id}
+            onAddNewCmt={() => setCommentNumber(c => c + 1)}
+          >
             <CommentContainer />
           </CommentsProvider>
         </div>
