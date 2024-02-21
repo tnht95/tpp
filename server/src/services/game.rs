@@ -131,6 +131,7 @@ where
             r#"
             select
                 games.*,
+                users.avatar as author_avatar,
                 case
                     when $1 is not null then votes.is_up
                     else null
@@ -139,6 +140,8 @@ where
                 games
             left join
                 votes on games.id = votes.game_id and votes.user_id = $1
+            left join
+                users on games.author_id = users.id
             where
                 games.id = $2;
             "#,

@@ -33,8 +33,8 @@ const GameDetailsDiscussionInner = () => {
       <Show when={!loading()} fallback={<LoadingSpinner />}>
         <div class="rounded-lg border border-gray-200">
           <div class="min-w-full divide-y divide-gray-200">
-            <div class="flex items-center justify-between px-8 py-3.5 text-left text-base font-bold text-black rtl:text-right">
-              <p class="text-lg">Total {count()} discussions</p>
+            <div class="flex items-center justify-between px-8 py-3.5 text-left text-base text-black rtl:text-right">
+              <p class="text-lg font-bold">Total {count()} discussion(s)</p>
               <Show when={isAuth()}>
                 <Button
                   withIcon="fa-solid fa-plus"

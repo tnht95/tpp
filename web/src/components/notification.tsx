@@ -11,7 +11,7 @@ export const Notification = (props: Props) => (
     classList={{ 'bg-indigo-100': props.isNew }}
   >
     <div class="flex items-center space-x-4">
-      <Avatar />
+      <Avatar img="" />
       <div class="flex flex-col text-black">
         <a href="" class="text-sm">
           <b>{props.user}</b> dolor sit amet consectetur adipisicing elit.{' '}

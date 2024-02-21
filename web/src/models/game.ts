@@ -3,6 +3,7 @@ export type GameDetails = {
   name: string;
   authorId: number;
   authorName: string;
+  authorAvatar: string;
   url: string | undefined;
   avatarUrl: string | undefined;
   about: string | undefined;

@@ -29,7 +29,7 @@ export const GameDetailsSidebar = () => {
       </div>
       <div class="border-b py-6">
         <p class="mb-5 text-base font-semibold text-black">Upload By</p>
-        <Avatar userId={game().authorId} />
+        <Avatar userId={game().authorId} img={game().authorAvatar} />
       </div>
       <div class="my-4 flex flex-col flex-wrap gap-2 border-b pb-5">
         <p class="mb-3 text-base font-semibold text-black">Tag</p>

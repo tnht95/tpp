@@ -95,14 +95,14 @@ export const CommentCard = (props: Props) => {
                 <i class="fa-solid fa-heart cursor-pointer text-red-500" />
               </Show>
             </button>
-            {likeNumber() > 0 && (
+            <Show when={likeNumber() > 0}>
               <span
                 class="ml-1.5"
                 classList={{ 'text-red-500 font-bold': liked() }}
               >
                 {likeNumber()}
               </span>
-            )}
+            </Show>
           </div>
         </div>
       </div>
