@@ -3,7 +3,7 @@ use std::sync::Arc;
 use async_trait::async_trait;
 use sqlx::{Postgres, QueryBuilder};
 use thiserror::Error;
-use tokio::fs::{create_dir, metadata, write};
+use tokio::fs::{create_dir, metadata, remove_file, write};
 use uuid::Uuid;
 
 use crate::{
@@ -77,6 +77,13 @@ where
             .map_err(|e| GameServiceErr::Other(e.into()))?;
         let seq_path = rom_path_abs.split('/').rev().take(2).collect::<Vec<_>>();
         Ok(format!("{}/{}", seq_path[1], seq_path[0]))
+    }
+
+    async fn del_rom(&self, id: Uuid) -> Result<(), GameServiceErr> {
+        let rom_path_abs = format!("{}/{}", self.rom_dir, id);
+        remove_file(rom_path_abs)
+            .await
+            .map_err(|e| GameServiceErr::Other(e.into()))
     }
 }
 
@@ -208,6 +215,7 @@ where
     }
 
     async fn delete(&self, id: Uuid) -> Result<(), GameServiceErr> {
+        self.del_rom(id).await?;
         sqlx::query!("delete from games where id = $1", id)
             .execute(self.db.get_pool())
             .await
