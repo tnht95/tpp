@@ -4,6 +4,7 @@ create table discussions (
     user_name varchar(100) references users (name) on update cascade not null,
     game_id uuid references games (id) on delete cascade not null,
     likes bigint not null default 0,
+    comments bigint not null default 0,
     title varchar(100) not null,
     content varchar(1000) not null,
     created_at timestamp (6) with time zone default now() not null,

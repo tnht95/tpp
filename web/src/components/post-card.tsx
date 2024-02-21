@@ -121,6 +121,7 @@ export const PostCard = (props: Props) => {
             targetType="posts"
             targetId={props.post.id}
             onAddNewCmt={() => setCommentNumber(c => c + 1)}
+            onDeleteCmt={() => setCommentNumber(c => c - 1)}
           >
             <CommentContainer />
           </CommentsProvider>

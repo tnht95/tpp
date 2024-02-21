@@ -9,7 +9,7 @@ use crate::{
     http::{
         controllers::InternalState,
         utils::{
-            auth::Authentication,
+            auth::{Authentication, AuthenticationMaybe},
             err_handler::{response_400_with_const, response_unhandled_err},
             validator::JsonValidator,
         },
@@ -73,6 +73,7 @@ pub async fn add<TInternalServices: IInternalServices>(
 pub async fn get_by_id<TInternalServices: IInternalServices>(
     Path((game_id, id)): Path<(String, String)>,
     State(state): InternalState<TInternalServices>,
+    AuthenticationMaybe(user, ..): AuthenticationMaybe<TInternalServices>,
 ) -> Response {
     let id = match id.parse::<Uuid>() {
         Ok(id) => id,
@@ -84,7 +85,12 @@ pub async fn get_by_id<TInternalServices: IInternalServices>(
         Err(_) => return response_400_with_const(INVALID_UUID_ERR),
     };
 
-    match state.services.discussion.get_by_id(id, game_id).await {
+    match state
+        .services
+        .discussion
+        .get_by_id(id, game_id, user.map(|u| u.id))
+        .await
+    {
         Ok(discussion) => match discussion {
             Some(discussion) => Json(HttpResponse { data: discussion }).into_response(),
             None => response_400_with_const(NOT_FOUND),
@@ -120,7 +126,7 @@ pub async fn edit<TInternalServices: IInternalServices>(
     match state
         .services
         .discussion
-        .edit(id, game_id, discussion)
+        .edit(id, game_id, discussion, user.id)
         .await
     {
         Ok(discussion) => Json(HttpResponse { data: discussion }).into_response(),

@@ -39,6 +39,7 @@ type Props = {
   targetId: string;
   targetType: CommentType;
   onAddNewCmt?: () => void;
+  onDeleteCmt?: () => void;
 } & ParentProps;
 
 const ctx = createContext<Ctx>();
@@ -75,6 +76,15 @@ export const CommentsProvider = (props: Props) => {
       props.onAddNewCmt && props.onAddNewCmt();
     });
 
+  const onDeleteCmtBatchHandler = () =>
+    batch(() => {
+      setComments([]);
+      setQuery(q => ({ ...q, offset: 0 }));
+      showToast({ msg: 'Comment Deleted', type: 'ok' });
+      newAddedCmts.length = 0;
+      props.onDeleteCmt && props.onDeleteCmt();
+    });
+
   const add = (content: string) => {
     addCommentAction({
       content,
@@ -105,14 +115,7 @@ export const CommentsProvider = (props: Props) => {
       targetId: props.targetId,
       targetType: props.targetType
     })
-      .then(() =>
-        batch(() => {
-          setComments([]);
-          setQuery(q => ({ ...q, offset: 0 }));
-          showToast({ msg: 'Comment Deleted', type: 'ok' });
-          newAddedCmts.length = 0;
-        })
-      )
+      .then(onDeleteCmtBatchHandler)
       .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
   };
 

@@ -39,12 +39,14 @@ pub trait IDiscussionService {
         &self,
         id: Uuid,
         game_id: Uuid,
+        user_id: Option<i64>,
     ) -> Result<Option<DiscussionDetails>, DiscussionServiceErr>;
     async fn edit(
         &self,
         id: Uuid,
         game_id: Uuid,
         discussion: EditDiscussionRequest,
+        user_id: i64,
     ) -> Result<DiscussionDetails, DiscussionServiceErr>;
     async fn delete(&self, id: Uuid, game_id: Uuid) -> Result<(), DiscussionServiceErr>;
     async fn existed(&self, id: Uuid, author_id: i64) -> Result<bool, DiscussionServiceErr>;
@@ -111,6 +113,7 @@ where
         &self,
         id: Uuid,
         game_id: Uuid,
+        user_id: Option<i64>,
     ) -> Result<Option<DiscussionDetails>, DiscussionServiceErr> {
         sqlx::query_as!(
             DiscussionDetails,
@@ -122,12 +125,23 @@ where
                 discussions.game_id, 
                 discussions.title, 
                 discussions.content, 
-                discussions.created_at
+                discussions.created_at,
+                discussions.likes,
+                discussions.comments,
+                case
+                    when $3::bigint is not null then exists (
+                        select 1
+                        from likes
+                        where target_id = discussions.id and user_id = $3
+                    )
+                    else null
+                end as is_liked
             from discussions 
             join users on discussions.user_id = users.id
             where discussions.id = $1 and discussions.game_id = $2",
             id,
-            game_id
+            game_id,
+            user_id
         )
         .fetch_optional(self.db.get_pool())
         .await
@@ -139,6 +153,7 @@ where
         id: Uuid,
         game_id: Uuid,
         discussion: EditDiscussionRequest,
+        user_id: i64,
     ) -> Result<DiscussionDetails, DiscussionServiceErr> {
         sqlx::query!(
             "update discussions set content = $1, title = $2, updated_at = now() where id = $3 and game_id = $4",
@@ -150,7 +165,7 @@ where
         .execute(self.db.get_pool())
         .await
         .map_err(|e| DiscussionServiceErr::Other(e.into()))?;
-        self.get_by_id(id, game_id)
+        self.get_by_id(id, game_id, Some(user_id))
             .await
             .map(|d| d.unwrap_or_default())
     }

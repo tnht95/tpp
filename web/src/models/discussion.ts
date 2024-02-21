@@ -17,6 +17,9 @@ export type DiscussionDetails = {
   userAvatar: string;
   gameId: string;
   title: string;
+  comments: number;
+  likes: number;
+  isLiked: boolean | undefined;
   content: string;
   createdAt: string;
 };

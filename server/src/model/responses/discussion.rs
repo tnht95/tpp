@@ -13,6 +13,10 @@ pub struct DiscussionDetails {
     pub user_avatar: String,
     pub game_id: Uuid,
     pub title: String,
+    pub comments: i64,
+    pub likes: i64,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub is_liked: Option<bool>,
     pub content: String,
     pub created_at: DateTime<Utc>,
 }

@@ -33,7 +33,9 @@ export const addDiscussionAction = (body: DiscussionRequest, gameId: string) =>
     .then((r: Response<undefined>) => r.data);
 
 export const fetchDiscussionByIdAction = ([gameId, id]: [string, string]) =>
-  fetch(`${import.meta.env.VITE_API_URL}/games/${gameId}/discussions/${id}`)
+  fetch(`${import.meta.env.VITE_API_URL}/games/${gameId}/discussions/${id}`, {
+    credentials: 'include'
+  })
     .then(errHandler)
     .then((r: Response<DiscussionDetails | undefined>) => r.data);
 
