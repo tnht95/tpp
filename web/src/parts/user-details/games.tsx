@@ -10,7 +10,7 @@ import {
 import { ActivitiesProvider, useUserGamesCtx } from '@/context';
 import { authenticationStore } from '@/store';
 
-import { UserActivity } from './activity';
+import { UserDetailsActivity } from './activity';
 
 export const UserDetailsGames = () => {
   const {
@@ -51,9 +51,11 @@ export const UserDetailsGames = () => {
           </div>
         </Show>
       </div>
-      <ActivitiesProvider userId={userId}>
-        <UserActivity />
-      </ActivitiesProvider>
+      <Show when={!loading()}>
+        <ActivitiesProvider userId={userId}>
+          <UserDetailsActivity />
+        </ActivitiesProvider>
+      </Show>
     </div>
   );
 };

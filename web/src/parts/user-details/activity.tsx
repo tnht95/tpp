@@ -16,7 +16,7 @@ const urlMap = {
   addedPost: 'posts'
 };
 
-export const UserActivity = () => {
+export const UserDetailsActivity = () => {
   const {
     activities,
     dispatch: { fetchMore },

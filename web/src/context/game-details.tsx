@@ -45,6 +45,7 @@ export const GameDetailsProvider = (props: ParentProps) => {
         batch(() => {
           mutate(game);
           modal.hide();
+          navigate(`/games/${gameId}/info`);
           showToast({ msg: 'Game Updated', type: 'ok' });
         })
       )

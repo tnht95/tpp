@@ -24,7 +24,6 @@ const titleMap = {
 };
 
 const GameDetailsActivityInner = () => {
-  const { game } = useGameDetailsCtx();
   const {
     activities,
     dispatch: { fetchMore },
@@ -36,7 +35,7 @@ const GameDetailsActivityInner = () => {
         <For each={activities}>
           {activity => (
             <Activity
-              url={`/games/${game().id}/info`}
+              url={`/games/${activity.targetId}/info`}
               title={titleMap[activity.targetType]}
               date={formatTime(activity.createdAt)}
               info={activity.memo}
