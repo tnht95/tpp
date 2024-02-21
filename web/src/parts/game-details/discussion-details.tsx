@@ -120,7 +120,7 @@ const GameDetailsDiscussionDetailsInner = () => {
       >
         <div class="flex flex-col">
           <Show when={commentNumber() > 0}>
-            <div class="mb-2 text-lg font-semibold">
+            <div class="mb-6 text-lg font-semibold">
               <i class="fa-regular fa-comment-dots mr-1.5" />
               <span>{commentNumber()} comment(s)</span>
             </div>

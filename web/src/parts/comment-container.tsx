@@ -14,7 +14,7 @@ export const CommentContainer = () => {
     utils: { showMore, loading }
   } = useCommentsCtx();
   return (
-    <div class="flex flex-col gap-10 pt-5">
+    <div class="flex flex-col gap-10">
       <Show when={!loading()} fallback={<LoadingSpinner />}>
         <For each={comments}>
           {comment => (

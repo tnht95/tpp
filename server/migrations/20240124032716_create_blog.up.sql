@@ -4,6 +4,7 @@ create table blogs (
     title varchar(200) not null,
     description varchar(200) not null,
     content varchar(2000) not null,
+    comments bigint not null default 0,
     tags varchar(20) [],
     created_at timestamp (6) with time zone default now() not null,
     updated_at timestamp (6) with time zone default now() not null

@@ -11,6 +11,7 @@ export type Blog = {
   title: string;
   description: string;
   content: string;
+  comments: number;
   tags: string[] | undefined;
   createdAt: string;
   updatedAt: string;

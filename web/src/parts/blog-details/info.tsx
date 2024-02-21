@@ -1,3 +1,5 @@
+import { createEffect, createSignal, Show } from 'solid-js';
+
 import { BlogForm, Markdown, OptionButton } from '@/components';
 import { CommentsProvider, useBlogDetailsCtx } from '@/context';
 import { CommentContainer, TagSidebar } from '@/parts';
@@ -14,6 +16,12 @@ export const BlogDetailsInfo = () => {
     utils: { blogId },
     modal: { hide, show, initRef }
   } = useBlogDetailsCtx();
+  const [commentNumber, setCommentNumber] = createSignal(0);
+
+  createEffect(() => {
+    setCommentNumber(blog().comments);
+  });
+
   return (
     <div class="flex justify-between p-10">
       <div class="w-4/6">
@@ -42,7 +50,18 @@ export const BlogDetailsInfo = () => {
             <p class="text-xl text-gray-600">{blog().description}</p>
             <Markdown content={blog().content} />
           </div>
-          <CommentsProvider targetId={blogId} targetType="blogs">
+          <Show when={commentNumber() > 0}>
+            <div class="my-6 text-lg font-semibold">
+              <i class="fa-regular fa-comment-dots mr-1.5" />
+              <span>{commentNumber()} comment(s)</span>
+            </div>
+          </Show>
+          <CommentsProvider
+            targetId={blogId}
+            targetType="blogs"
+            onAddNewCmt={() => setCommentNumber(c => c + 1)}
+            onDeleteCmt={() => setCommentNumber(c => c - 1)}
+          >
             <CommentContainer />
           </CommentsProvider>
         </div>
