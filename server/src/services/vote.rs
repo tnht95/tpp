@@ -129,8 +129,8 @@ where
         .await
         .map_err(|e| VoteServiceErr::Other(e.into()))?;
 
-        if result.is_some() {
-            let vote_column = match result.unwrap().is_up {
+        if let Some(result) = result {
+            let vote_column = match result.is_up {
                 true => "up_votes",
                 false => "down_votes",
             };

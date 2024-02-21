@@ -119,7 +119,7 @@ where
         comment: AddCommentRequest,
     ) -> Result<CommentDetails, CommentServiceErr> {
         let comment = sqlx::query!(
-            "select insert_comment($1, $2, $3, $4, $5) as id",
+            r#"select insert_comment($1, $2, $3, $4, $5) as "id!""#,
             user_id,
             comment.target_id,
             comment.target_type as CommentType,
@@ -129,7 +129,7 @@ where
         .fetch_one(self.db.get_pool())
         .await
         .map_err(|e| CommentServiceErr::Other(e.into()))?;
-        self.get_by_id(comment.id.unwrap()).await
+        self.get_by_id(comment.id).await
     }
 
     async fn delete(
