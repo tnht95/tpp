@@ -47,13 +47,15 @@ export const GameDetailsSidebar = () => {
           <i class="fa-solid fa-gamepad mr-2" />
           Play!
         </button>
-        <button
+        <a
+          href={`${import.meta.env.VITE_SERVER_URL}/${game().rom}`}
+          target="_blank"
           type="button"
           class="mt-2 rounded-lg border border-purple-700 bg-purple-700 p-2.5 text-sm font-medium text-white hover:bg-white hover:text-purple-700 focus:outline-none focus:ring-4 focus:ring-purple-300"
         >
           <i class="fa-solid fa-download mr-2" />
           Download!
-        </button>
+        </a>
       </div>
     </div>
   );

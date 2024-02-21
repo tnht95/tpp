@@ -15,7 +15,7 @@ export type GameQueryInput = {
 };
 
 export const filterGamesAction = async (queryInput: GameQueryInput) => {
-  const baseUrl = import.meta.env.VITE_SERVER_URL;
+  const baseUrl = import.meta.env.VITE_API_URL;
   const query: string[] = [] as const;
 
   for (const key in queryInput) {
@@ -28,14 +28,14 @@ export const filterGamesAction = async (queryInput: GameQueryInput) => {
 };
 
 export const fetchGameByIdAction = (id: string) =>
-  fetch(`${import.meta.env.VITE_SERVER_URL}/games/${id}`, {
+  fetch(`${import.meta.env.VITE_API_URL}/games/${id}`, {
     credentials: 'include'
   })
     .then(errHandler)
     .then((r: Response<GameDetails | undefined>) => r.data);
 
 export const deleteGameAction = (id: string) =>
-  fetch(`${import.meta.env.VITE_SERVER_URL}/games/${id}`, {
+  fetch(`${import.meta.env.VITE_API_URL}/games/${id}`, {
     method: 'delete',
     credentials: 'include'
   })
@@ -47,7 +47,7 @@ export const addGameAction = async (rom: File, game: GameRequest) => {
   formData.append('rom', rom);
   formData.append('game', JSON.stringify(game));
 
-  return fetch(`${import.meta.env.VITE_SERVER_URL}/games`, {
+  return fetch(`${import.meta.env.VITE_API_URL}/games`, {
     method: 'post',
     credentials: 'include',
     body: formData
@@ -65,7 +65,7 @@ export const editGameAction = async (
   formData.append('rom', rom);
   formData.append('game', JSON.stringify(game));
 
-  return fetch(`${import.meta.env.VITE_SERVER_URL}/games/${gameId}`, {
+  return fetch(`${import.meta.env.VITE_API_URL}/games/${gameId}`, {
     method: 'put',
     credentials: 'include',
     body: formData
@@ -75,6 +75,6 @@ export const editGameAction = async (
 };
 
 export const fetchGameTagsAction = () =>
-  fetch(`${import.meta.env.VITE_SERVER_URL}/games/tags`)
+  fetch(`${import.meta.env.VITE_API_URL}/games/tags`)
     .then(errHandler)
     .then((r: Response<string[]>) => r.data);

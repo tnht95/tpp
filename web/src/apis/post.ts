@@ -4,7 +4,7 @@ import { AddPost, EditPost, PostDetails, Response } from '@/models';
 import { errHandler } from '.';
 
 export const filterPostsAction = async ({ offset }: { offset: number }) => {
-  const baseUrl = import.meta.env.VITE_SERVER_URL;
+  const baseUrl = import.meta.env.VITE_API_URL;
   return fetch(`${baseUrl}/posts?offset=${offset}&limit=${PAGINATION}`, {
     credentials: 'include'
   })
@@ -13,7 +13,7 @@ export const filterPostsAction = async ({ offset }: { offset: number }) => {
 };
 
 export const addPostAction = (body: AddPost) =>
-  fetch(`${import.meta.env.VITE_SERVER_URL}/posts`, {
+  fetch(`${import.meta.env.VITE_API_URL}/posts`, {
     method: 'post',
     credentials: 'include',
     headers: {
@@ -25,7 +25,7 @@ export const addPostAction = (body: AddPost) =>
     .then((r: Response<undefined>) => r.data);
 
 export const deletePostAction = (id: string) =>
-  fetch(`${import.meta.env.VITE_SERVER_URL}/posts/${id}`, {
+  fetch(`${import.meta.env.VITE_API_URL}/posts/${id}`, {
     method: 'delete',
     credentials: 'include'
   })
@@ -33,7 +33,7 @@ export const deletePostAction = (id: string) =>
     .then((r: Response<undefined>) => r.data);
 
 export const editPostAction = (id: string, body: EditPost) =>
-  fetch(`${import.meta.env.VITE_SERVER_URL}/posts/${id}`, {
+  fetch(`${import.meta.env.VITE_API_URL}/posts/${id}`, {
     method: 'put',
     credentials: 'include',
     headers: {

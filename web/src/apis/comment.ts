@@ -11,7 +11,7 @@ import { errHandler, QueryWIthTargetInput } from '.';
 export const filterCommentsAction = async (
   queryInput: QueryWIthTargetInput
 ) => {
-  const baseUrl = import.meta.env.VITE_SERVER_URL;
+  const baseUrl = import.meta.env.VITE_API_URL;
   const query: string[] = [];
 
   for (const key in queryInput) {
@@ -26,7 +26,7 @@ export const filterCommentsAction = async (
 };
 
 export const addCommentAction = (body: AddComment) =>
-  fetch(`${import.meta.env.VITE_SERVER_URL}/comments`, {
+  fetch(`${import.meta.env.VITE_API_URL}/comments`, {
     method: 'post',
     credentials: 'include',
     headers: {
@@ -38,7 +38,7 @@ export const addCommentAction = (body: AddComment) =>
     .then((r: Response<CommentDetails>) => r.data);
 
 export const deleteCommentAction = (id: string, body: DeleteComment) =>
-  fetch(`${import.meta.env.VITE_SERVER_URL}/comments/${id}`, {
+  fetch(`${import.meta.env.VITE_API_URL}/comments/${id}`, {
     method: 'delete',
     credentials: 'include',
     headers: {
@@ -50,7 +50,7 @@ export const deleteCommentAction = (id: string, body: DeleteComment) =>
     .then((r: Response<undefined>) => r.data);
 
 export const editCommentAction = (id: string, body: EditComment) =>
-  fetch(`${import.meta.env.VITE_SERVER_URL}/comments/${id}`, {
+  fetch(`${import.meta.env.VITE_API_URL}/comments/${id}`, {
     method: 'put',
     credentials: 'include',
     headers: {

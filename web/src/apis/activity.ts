@@ -6,7 +6,7 @@ export const filterActivitiesAction = async ([userId, queryInput]: [
   number,
   QueryWIthTargetInput
 ]) => {
-  const baseUrl = import.meta.env.VITE_SERVER_URL;
+  const baseUrl = import.meta.env.VITE_API_URL;
   const query: string[] = [];
 
   for (const key in queryInput) {

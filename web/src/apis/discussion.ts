@@ -11,7 +11,7 @@ export const filterDiscussionsAction = async ([offset, gameId]: [
   number,
   string
 ]) => {
-  const baseUrl = import.meta.env.VITE_SERVER_URL;
+  const baseUrl = import.meta.env.VITE_API_URL;
 
   return fetch(
     `${baseUrl}/games/${gameId}/discussions?offset=${offset}&limit=${PAGINATION}`
@@ -21,7 +21,7 @@ export const filterDiscussionsAction = async ([offset, gameId]: [
 };
 
 export const addDiscussionAction = (body: DiscussionRequest, gameId: string) =>
-  fetch(`${import.meta.env.VITE_SERVER_URL}/games/${gameId}/discussions`, {
+  fetch(`${import.meta.env.VITE_API_URL}/games/${gameId}/discussions`, {
     method: 'post',
     credentials: 'include',
     headers: {
@@ -33,7 +33,7 @@ export const addDiscussionAction = (body: DiscussionRequest, gameId: string) =>
     .then((r: Response<undefined>) => r.data);
 
 export const fetchDiscussionByIdAction = ([gameId, id]: [string, string]) =>
-  fetch(`${import.meta.env.VITE_SERVER_URL}/games/${gameId}/discussions/${id}`)
+  fetch(`${import.meta.env.VITE_API_URL}/games/${gameId}/discussions/${id}`)
     .then(errHandler)
     .then((r: Response<DiscussionDetails | undefined>) => r.data);
 
@@ -42,32 +42,26 @@ export const editDiscussionAction = (
   id: string,
   body: DiscussionRequest
 ) =>
-  fetch(
-    `${import.meta.env.VITE_SERVER_URL}/games/${gameId}/discussions/${id}`,
-    {
-      method: 'put',
-      credentials: 'include',
-      headers: {
-        'content-type': 'application/json'
-      },
-      body: JSON.stringify(body)
-    }
-  )
+  fetch(`${import.meta.env.VITE_API_URL}/games/${gameId}/discussions/${id}`, {
+    method: 'put',
+    credentials: 'include',
+    headers: {
+      'content-type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  })
     .then(errHandler)
     .then((r: Response<DiscussionDetails>) => r.data);
 
 export const deleteDiscussionAction = (gameId: string, id: string) =>
-  fetch(
-    `${import.meta.env.VITE_SERVER_URL}/games/${gameId}/discussions/${id}`,
-    {
-      method: 'delete',
-      credentials: 'include'
-    }
-  )
+  fetch(`${import.meta.env.VITE_API_URL}/games/${gameId}/discussions/${id}`, {
+    method: 'delete',
+    credentials: 'include'
+  })
     .then(errHandler)
     .then((r: Response<undefined>) => r.data);
 
 export const fetchDiscussionCountAction = (gameId: string) =>
-  fetch(`${import.meta.env.VITE_SERVER_URL}/games/${gameId}/discussions/counts`)
+  fetch(`${import.meta.env.VITE_API_URL}/games/${gameId}/discussions/counts`)
     .then(errHandler)
     .then((r: Response<number>) => r.data);

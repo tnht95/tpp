@@ -3,7 +3,7 @@ import { Auth, Response, UserDetails } from '@/models';
 import { errHandler } from '.';
 
 export const fetchMeAction = () =>
-  fetch(`${import.meta.env.VITE_SERVER_URL}/me`, {
+  fetch(`${import.meta.env.VITE_API_URL}/me`, {
     credentials: 'include'
   })
     .then(errHandler)
@@ -11,13 +11,13 @@ export const fetchMeAction = () =>
     .catch(() => {}) as Promise<Auth | undefined>; // empty body
 
 export const logoutAction = () =>
-  fetch(`${import.meta.env.VITE_SERVER_URL}/logout`, {
+  fetch(`${import.meta.env.VITE_API_URL}/logout`, {
     method: 'post',
     credentials: 'include'
   }).then(errHandler);
 
 export const fetchUserByIdAction = (id: string) =>
-  fetch(`${import.meta.env.VITE_SERVER_URL}/users/${id}`, {
+  fetch(`${import.meta.env.VITE_API_URL}/users/${id}`, {
     credentials: 'include'
   })
     .then(errHandler)

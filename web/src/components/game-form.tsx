@@ -47,7 +47,7 @@ export const GameForm = (props: Props) => {
       info: getStrVal(formData.get('info') as string),
       tags: getTagValue(formData.get('tags') as string)
     });
-    formEl.reset()
+    formEl.reset();
   };
 
   return (

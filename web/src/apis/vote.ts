@@ -2,7 +2,7 @@ import { errHandler } from '@/apis';
 import { Response, VoteRequest } from '@/models';
 
 export const voteAction = (gameId: string, body: VoteRequest) =>
-  fetch(`${import.meta.env.VITE_SERVER_URL}/games/${gameId}/votes`, {
+  fetch(`${import.meta.env.VITE_API_URL}/games/${gameId}/votes`, {
     method: 'post',
     credentials: 'include',
     headers: {
@@ -14,7 +14,7 @@ export const voteAction = (gameId: string, body: VoteRequest) =>
     .then((r: Response<undefined>) => r.data);
 
 export const unVoteAction = (gameId: string) =>
-  fetch(`${import.meta.env.VITE_SERVER_URL}/games/${gameId}/votes`, {
+  fetch(`${import.meta.env.VITE_API_URL}/games/${gameId}/votes`, {
     method: 'delete',
     credentials: 'include'
   })

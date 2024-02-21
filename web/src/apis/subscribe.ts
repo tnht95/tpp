@@ -2,7 +2,7 @@ import { errHandler } from '@/apis';
 import { Response } from '@/models';
 
 export const subscribeAction = (userId: string) =>
-  fetch(`${import.meta.env.VITE_SERVER_URL}/users/${userId}/subscribes`, {
+  fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/subscribes`, {
     method: 'post',
     credentials: 'include',
     headers: {
@@ -13,7 +13,7 @@ export const subscribeAction = (userId: string) =>
     .then((r: Response<undefined>) => r.data);
 
 export const unSubscribeAction = (userId: string) =>
-  fetch(`${import.meta.env.VITE_SERVER_URL}/users/${userId}/subscribes`, {
+  fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/subscribes`, {
     method: 'delete',
     credentials: 'include'
   })

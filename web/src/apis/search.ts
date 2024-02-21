@@ -10,7 +10,7 @@ export type SearchQueryInput = {
 };
 
 export const searchAction = async (queryInput: SearchQueryInput) => {
-  const baseUrl = import.meta.env.VITE_SERVER_URL;
+  const baseUrl = import.meta.env.VITE_API_URL;
   const query: string[] = [] as const;
 
   for (const key in queryInput) {
