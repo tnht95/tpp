@@ -26,6 +26,7 @@ pub trait ICommentService {
     async fn filter(
         &self,
         pagination: PaginationWithTargetInternal,
+        user_id: Option<i64>,
     ) -> Result<Vec<CommentDetails>, CommentServiceErr>;
     async fn add(
         &self,
@@ -43,6 +44,7 @@ pub trait ICommentService {
         &self,
         id: Uuid,
         comment: EditCommentRequest,
+        user_id: i64,
     ) -> Result<CommentDetails, CommentServiceErr>;
 }
 
@@ -58,7 +60,7 @@ where
         Self { db }
     }
 
-    async fn get_by_id(&self, id: Uuid) -> Result<CommentDetails, CommentServiceErr> {
+    async fn get_by_id(&self, id: Uuid, user_id: i64) -> Result<CommentDetails, CommentServiceErr> {
         sqlx::query_as!(
             CommentDetails,
             "select
@@ -68,11 +70,17 @@ where
                 users.avatar as user_avatar,
                 comments.content,
                 comments.likes,
-                comments.created_at
+                comments.created_at,
+                exists (
+                        select 1
+                        from likes
+                        where target_id = comments.id and user_id = $2
+                    ) as is_liked
             from comments
             left join users on users.id = comments.user_id
             where comments.id = $1",
-            id
+            id,
+            user_id
         )
         .fetch_one(self.db.get_pool())
         .await
@@ -88,6 +96,7 @@ where
     async fn filter(
         &self,
         pagination: PaginationWithTargetInternal,
+        user_id: Option<i64>,
     ) -> Result<Vec<CommentDetails>, CommentServiceErr> {
         sqlx::query_as!(
             CommentDetails,
@@ -98,14 +107,23 @@ where
                 users.avatar as user_avatar,
                 comments.content,
                 comments.likes,
-                comments.created_at
+                comments.created_at,
+                case
+                    when $4::bigint is not null then exists (
+                        select 1
+                        from likes
+                        where target_id = comments.id and user_id = $4
+                    )
+                    else null
+                end as is_liked
             from comments
             left join users on users.id = comments.user_id
             where target_id = $1
             offset $2 limit $3",
             pagination.target_id,
             pagination.offset,
-            pagination.limit
+            pagination.limit,
+            user_id
         )
         .fetch_all(self.db.get_pool())
         .await
@@ -129,7 +147,7 @@ where
         .fetch_one(self.db.get_pool())
         .await
         .map_err(|e| CommentServiceErr::Other(e.into()))?;
-        self.get_by_id(comment.id).await
+        self.get_by_id(comment.id, user_id).await
     }
 
     async fn delete(
@@ -165,6 +183,7 @@ where
         &self,
         id: Uuid,
         comment: EditCommentRequest,
+        user_id: i64,
     ) -> Result<CommentDetails, CommentServiceErr> {
         sqlx::query!(
             "update comments set content = $1, updated_at = now() where id = $2",
@@ -174,6 +193,6 @@ where
         .execute(self.db.get_pool())
         .await
         .map_err(|e| CommentServiceErr::Other(e.into()))?;
-        self.get_by_id(id).await
+        self.get_by_id(id, user_id).await
     }
 }

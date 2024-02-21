@@ -13,6 +13,7 @@ pub struct CommentDetails {
     pub user_avatar: String,
     pub content: String,
     pub likes: i64,
+    pub is_liked: Option<bool>,
     pub created_at: DateTime<Utc>,
 }
 

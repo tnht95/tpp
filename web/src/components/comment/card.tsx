@@ -1,7 +1,9 @@
-import { createSignal, Show } from 'solid-js';
+import { batch, createEffect, createSignal, Show } from 'solid-js';
 
+import { likeAction, unLikeAction } from '@/apis';
 import { Avatar, CommentForm, Markdown, OptionButton } from '@/components';
-import { CommentDetails } from '@/models';
+import { useToastCtx } from '@/context';
+import { CommentDetails, RespErr } from '@/models';
 import { authenticationStore } from '@/store';
 import { formatTime } from '@/utils';
 
@@ -13,14 +15,42 @@ type Props = {
 
 export const CommentCard = (props: Props) => {
   const [isEditMode, setIsEditMode] = createSignal(false);
+  const { showToast } = useToastCtx();
 
+  const [isLoading, setIsLoading] = createSignal(false);
+  const [liked, setLiked] = createSignal<boolean | undefined>();
+  const [likeNumber, setLikeNumber] = createSignal(0);
   const {
     utils: { isSameUser, isAuth }
   } = authenticationStore;
 
+  createEffect(() => {
+    setLikeNumber(props.comment.likes);
+    setLiked(props.comment.isLiked);
+  });
+
   const onSubmitHandler = (content: string) => {
     setIsEditMode(false);
     props.onEdit(props.comment.id, content);
+  };
+
+  const likeBatch = () =>
+    batch(() => {
+      setLikeNumber(oldVal => (liked() ? oldVal - 1 : oldVal + 1));
+      setLiked(!liked());
+    });
+
+  const onLikeHandler = () => {
+    setIsLoading(true);
+
+    const actionPromise = liked()
+      ? unLikeAction({ targetType: 'comments', targetId: props.comment.id })
+      : likeAction({ targetType: 'comments', targetId: props.comment.id });
+
+    actionPromise
+      .then(likeBatch)
+      .catch(error => showToast({ msg: (error as RespErr).msg, type: 'err' }))
+      .finally(() => setIsLoading(false)) as unknown;
   };
 
   return (
@@ -45,7 +75,7 @@ export const CommentCard = (props: Props) => {
             />
           )}
         </div>
-        <div class="flex flex-col gap-2 rounded-b border border-gray-200 px-5 py-3">
+        <div class="flex flex-col items-baseline gap-2 rounded-b border border-gray-200 px-5 py-3">
           <Show
             when={isEditMode()}
             fallback={<Markdown content={props.comment.content} />}
@@ -55,17 +85,25 @@ export const CommentCard = (props: Props) => {
               onSubmit={onSubmitHandler}
             />
           </Show>
-          <Show
-            when={props.comment.likes}
-            fallback={
-              <i class="fa-regular fa-heart cursor-pointer text-xl hover:text-gray-400" />
-            }
-          >
-            <i class="fa-solid fa-heart cursor-pointer text-xl text-red-500 hover:text-gray-400" />
-          </Show>
-          {props.comment.likes > 0 && (
-            <span class="ml-1.5">{props.comment.likes}</span>
-          )}
+          <div>
+            <button
+              onClick={onLikeHandler}
+              disabled={isLoading()}
+              class={`${isLoading() ? 'cursor-not-allowed' : 'cursor-pointer'} text-xl hover:text-gray-400`}
+            >
+              <Show when={liked()} fallback={<i class="fa-regular fa-heart" />}>
+                <i class="fa-solid fa-heart cursor-pointer text-red-500" />
+              </Show>
+            </button>
+            {likeNumber() > 0 && (
+              <span
+                class="ml-1.5"
+                classList={{ 'text-red-500 font-bold': liked() }}
+              >
+                {likeNumber()}
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </div>

@@ -7,6 +7,7 @@ export type CommentDetails = {
   userAvatar: string;
   content: string;
   likes: number;
+  isLiked: boolean | undefined;
   createdAt: string;
 };
 

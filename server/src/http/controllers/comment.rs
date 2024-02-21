@@ -9,7 +9,7 @@ use crate::{
     http::{
         controllers::InternalState,
         utils::{
-            auth::Authentication,
+            auth::{Authentication, AuthenticationMaybe},
             err_handler::{response_400_with_const, response_unhandled_err},
             validator::JsonValidator,
         },
@@ -34,8 +34,14 @@ use crate::{
 pub async fn filter<TInternalServices: IInternalServices>(
     State(state): InternalState<TInternalServices>,
     Query(pagination): Query<PaginationWithTarget>,
+    AuthenticationMaybe(user, ..): AuthenticationMaybe<TInternalServices>,
 ) -> Response {
-    match state.services.comment.filter(pagination.into()).await {
+    match state
+        .services
+        .comment
+        .filter(pagination.into(), user.map(|u| u.id))
+        .await
+    {
         Ok(comments) => Json(HttpResponse { data: comments }).into_response(),
         Err(CommentServiceErr::Other(e)) => response_unhandled_err(e),
     }
@@ -101,7 +107,7 @@ pub async fn edit<TInternalServices: IInternalServices>(
         Err(CommentServiceErr::Other(e)) => return response_unhandled_err(e),
     };
 
-    match state.services.comment.edit(id, comment).await {
+    match state.services.comment.edit(id, comment, user.id).await {
         Ok(comment) => Json(HttpResponse { data: comment }).into_response(),
         Err(CommentServiceErr::Other(e)) => response_unhandled_err(e),
     }

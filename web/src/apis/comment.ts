@@ -18,7 +18,9 @@ export const filterCommentsAction = async (
     query.push(`${key}=${queryInput[key as keyof QueryWIthTargetInput]}`);
   }
 
-  return fetch(`${baseUrl}/comments?${query.join('&')}`)
+  return fetch(`${baseUrl}/comments?${query.join('&')}`, {
+    credentials: 'include'
+  })
     .then(errHandler)
     .then((r: Response<CommentDetails[]>) => r.data);
 };
