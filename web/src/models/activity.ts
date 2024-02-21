@@ -1,4 +1,8 @@
-export type ActivityType = 'addedGame' | 'updatedGame' | 'addedPost';
+export type ActivityType =
+  | 'userJoined'
+  | 'addedGame'
+  | 'updatedGame'
+  | 'addedPost';
 
 export type Activity = {
   userId: number;

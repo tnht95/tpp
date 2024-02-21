@@ -16,6 +16,7 @@ pub struct Activity {
 #[serde(rename_all = "camelCase")]
 #[sqlx(type_name = "activity_type", rename_all = "snake_case")]
 pub enum ActivityType {
+    UserJoined,
     AddedGame,
     UpdatedGame,
     AddedPost,

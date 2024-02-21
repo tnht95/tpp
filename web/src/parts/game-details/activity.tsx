@@ -1,6 +1,6 @@
 import { For, Show } from 'solid-js';
 
-import { Activity, LoadingSpinner, ShowMoreButton } from '@/components';
+import { ActivityCard, LoadingSpinner, ShowMoreButton } from '@/components';
 import {
   ActivitiesProvider,
   useActivitiesCtx,
@@ -18,8 +18,9 @@ export const GameDetailsActivity = () => {
 };
 
 const titleMap = {
-  addedGame: 'Added new game',
-  updatedGame: 'Updated game',
+  userJoined: 'should not be here',
+  addedGame: 'Added New Game',
+  updatedGame: 'Updated Game',
   addedPost: 'should not be here'
 };
 
@@ -34,7 +35,7 @@ const GameDetailsActivityInner = () => {
       <ol class="relative border-s border-gray-200">
         <For each={activities}>
           {activity => (
-            <Activity
+            <ActivityCard
               url={`/games/${activity.targetId}/info`}
               title={titleMap[activity.targetType]}
               date={formatTime(activity.createdAt)}

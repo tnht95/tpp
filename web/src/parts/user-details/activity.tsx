@@ -1,19 +1,36 @@
 import { For, Show } from 'solid-js';
 
-import { Activity, LoadingSpinner, ShowMoreButton } from '@/components';
+import { ActivityCard, LoadingSpinner, ShowMoreButton } from '@/components';
 import { useActivitiesCtx } from '@/context';
+import { Activity } from '@/models';
 import { formatTime } from '@/utils';
 
 const titleMap = {
-  addedGame: 'Added new game',
-  updatedGame: 'Updated game',
-  addedPost: 'Added new post'
+  userJoined: 'User Joined',
+  addedGame: 'Added New Game',
+  updatedGame: 'Updated Game',
+  addedPost: 'Added New Post'
 };
 
 const urlMap = {
+  userJoined: 'users',
   addedGame: 'games',
   updatedGame: 'games',
   addedPost: 'posts'
+};
+
+const pathMap = {
+  userJoined: '',
+  addedGame: 'info',
+  updatedGame: 'info',
+  addedPost: ''
+};
+
+const buildUrl = ({ targetType, targetId, userId }: Activity): string => {
+  const base = urlMap[targetType];
+  const id = targetType === 'userJoined' ? userId : targetId;
+  const path = pathMap[targetType];
+  return `/${base}/${id}/${path}`;
 };
 
 export const UserDetailsActivity = () => {
@@ -33,8 +50,8 @@ export const UserDetailsActivity = () => {
           <ol class="relative start-2 border-s border-gray-200">
             <For each={activities}>
               {activity => (
-                <Activity
-                  url={`/${urlMap[activity.targetType]}/${activity.targetId}/info`}
+                <ActivityCard
+                  url={buildUrl(activity)}
                   title={titleMap[activity.targetType]}
                   date={formatTime(activity.createdAt)}
                   info={activity.memo}

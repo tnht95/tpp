@@ -2,7 +2,7 @@ export * from './game-card';
 export * from './tag';
 export * from './button';
 export * from './table-row';
-export * from './activity';
+export * from './activity-card';
 export * from './avatar';
 export * from './comment';
 export * from './pill-button';
