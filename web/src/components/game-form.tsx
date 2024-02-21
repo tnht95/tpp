@@ -47,6 +47,7 @@ export const GameForm = (props: Props) => {
       info: getStrVal(formData.get('info') as string),
       tags: getTagValue(formData.get('tags') as string)
     });
+    formEl.reset()
   };
 
   return (
@@ -129,8 +130,8 @@ export const GameForm = (props: Props) => {
                 class="h-60 w-full resize-none rounded-xl border border-gray-200 py-2 transition duration-150 ease-in-out placeholder:text-gray-400 focus:border-blue-500 focus:outline-none"
                 classList={{ hidden: !isEditMode() }}
                 placeholder="Game discription (Support some markdowns)"
+                value={props.game?.info || ''}
                 onFocusOut={e => setContent(e.target.value)}
-                value={content()}
                 ref={el => [validate(el, () => [MaxStr(2000)])]}
               />
               {errors['info'] && <ErrorMessage msg={errors['info']} />}
