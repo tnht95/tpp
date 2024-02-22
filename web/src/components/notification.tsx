@@ -17,7 +17,7 @@ export const Notification = (props: Props) => {
         <Avatar img="" />
         <div class="flex flex-col text-black">
           <a href="" class="text-sm">
-            <b>{props.user}</b> dolor sit amet consectetur adipisicing elit.{' '}
+            <b>{props.user}</b> dolor sit amet consectetur adipisicing elit.
           </a>
           <span class="text-xs text-gray-500">11 Jan 2023 </span>
         </div>
