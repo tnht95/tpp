@@ -3,9 +3,9 @@
 create function insert_activity_on_game_insert()
 returns trigger as $$
 BEGIN
-INSERT INTO activities (user_id, target_type, target_id, memo)
-VALUES (NEW.author_id, 'added_game', NEW.id, 'Name: ' || NEW.name);
-RETURN NULL;
+    INSERT INTO activities (user_id, target_type, target_id, memo)
+    VALUES (NEW.author_id, 'added_game', NEW.id, 'Name: ' || NEW.name);
+    RETURN NULL;
 END;
 $$ language plpgsql;
 
