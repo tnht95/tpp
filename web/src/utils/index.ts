@@ -4,3 +4,4 @@ export * from './validation';
 export * from './form-fields';
 export * from './modal';
 export * from './dropdown';
+export * from './ws';

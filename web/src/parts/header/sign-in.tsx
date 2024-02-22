@@ -43,7 +43,7 @@ const Btn = (props: Props) => {
 };
 
 const loadingBtn = (
-  <button>
+  <button class="cursor-not-allowed">
     <div class="flex h-11 items-center rounded-full border border-white px-8 font-bold">
       <svg
         aria-hidden="true"
