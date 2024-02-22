@@ -1,8 +1,9 @@
 mod controllers;
 mod handlers;
 mod utils;
+mod ws;
 
-use std::{iter::once, sync::Arc, time::Duration};
+use std::{iter::once, net::SocketAddr, sync::Arc, time::Duration};
 
 use anyhow::Result;
 use axum::{
@@ -109,6 +110,7 @@ where
             Router::new()
                 .nest_service("/roms", ServeDir::new(&state.config.rom_dir))
                 .route("/health", get(health::is_healthy))
+                .route("/ws", get(ws::handler))
                 .nest(
                     "/api/v1",
                     Router::new()
@@ -156,7 +158,8 @@ where
                 .layer(DefaultBodyLimit::max(5 * 1024)) // 5KB
                 .layer(RequestBodyLimitLayer::new(5 * 1024)) // 5KB
                 .fallback(response_404_err)
-                .with_state(Arc::clone(&state)),
+                .with_state(Arc::clone(&state))
+                .into_make_service_with_connect_info::<SocketAddr>(),
         )
         .with_graceful_shutdown(shutdown::handle(state))
         .await?;
