@@ -116,7 +116,7 @@ export const PostCard = (props: Props) => {
         </button>
       </div>
       <Show when={showCmts().show}>
-        <div classList={{ hidden: showCmts().hidden }}>
+        <div classList={{ hidden: showCmts().hidden }} class="mt-7">
           <CommentsProvider
             targetType="posts"
             targetId={props.post.id}

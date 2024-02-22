@@ -16,6 +16,7 @@ import {
   GameDetails,
   Games,
   NotFound,
+  PostDetailsPage,
   Search,
   UserDetails
 } from './pages';
@@ -44,6 +45,7 @@ export const App = () => (
     <Route path={'/blogs'} component={Blogs} />
     <Route path={'/blogs/:id'} component={BlogDetails} />
     <Route path={'/search'} component={Search} />
+    <Route path={'/posts/:id'} component={PostDetailsPage} />
     <Route path={'*404'} component={NotFound} />
   </Router>
 );

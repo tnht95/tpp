@@ -1,5 +1,5 @@
 -- Add up migration script here
-create type activity_type as enum ('user_joined', 'added_game', 'updated_game', 'added_post');
+create type activity_type as enum ('user', 'added_game', 'updated_game', 'post');
 
 create table activities (
     user_id bigint not null,

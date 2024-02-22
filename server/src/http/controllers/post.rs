@@ -101,7 +101,23 @@ pub async fn edit<TInternalServices: IInternalServices>(
         Err(PostServiceErr::Other(e)) => return response_unhandled_err(e),
     };
 
-    match state.services.post.edit(id, post).await {
+    match state.services.post.edit(id, post, user.id).await {
+        Ok(post) => Json(HttpResponse { data: post }).into_response(),
+        Err(PostServiceErr::Other(e)) => response_unhandled_err(e),
+    }
+}
+
+pub async fn get_by_id<TInternalServices: IInternalServices>(
+    Path(id): Path<String>,
+    State(state): InternalState<TInternalServices>,
+    AuthenticationMaybe(user, ..): AuthenticationMaybe<TInternalServices>,
+) -> Response {
+    let id = match id.parse::<Uuid>() {
+        Ok(id) => id,
+        Err(_) => return response_400_with_const(INVALID_UUID_ERR),
+    };
+
+    match state.services.post.get_by_id(id, user.map(|u| u.id)).await {
         Ok(post) => Json(HttpResponse { data: post }).into_response(),
         Err(PostServiceErr::Other(e)) => response_unhandled_err(e),
     }

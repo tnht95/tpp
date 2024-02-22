@@ -45,7 +45,8 @@ export const GameForm = (props: Props) => {
       avatarUrl: getStrVal(formData.get('avatarUrl') as string),
       about: getStrVal(formData.get('about') as string),
       info: getStrVal(formData.get('info') as string),
-      tags: getTagValue(formData.get('tags') as string)
+      tags: getTagValue(formData.get('tags') as string),
+      memo: props.game ? (formData.get('memo') as string) : 'new'
     });
     formEl.reset();
   };
@@ -140,6 +141,18 @@ export const GameForm = (props: Props) => {
                 <div class="h-60 overflow-auto border border-white px-3 py-2">
                   <Markdown content={content()} />
                 </div>
+              </Show>
+
+              <Show when={props.game}>
+                <input
+                  placeholder="What's new in this change?"
+                  class="w-full rounded-xl border p-3 placeholder:text-gray-400"
+                  name="memo"
+                  ref={el => [
+                    validate(el, () => [MinStr(1, 'Required'), MaxStr(350)])
+                  ]}
+                />
+                {errors['memo'] && <ErrorMessage msg={errors['memo']} />}
               </Show>
 
               <Show when={props.game}>

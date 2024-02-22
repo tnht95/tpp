@@ -18,10 +18,10 @@ export const GameDetailsActivity = () => {
 };
 
 const titleMap = {
-  userJoined: 'should not be here',
+  user: 'should not be here',
   addedGame: 'Added New Game',
   updatedGame: 'Updated Game',
-  addedPost: 'should not be here'
+  post: 'should not be here'
 };
 
 const GameDetailsActivityInner = () => {

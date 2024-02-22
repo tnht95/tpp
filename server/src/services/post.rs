@@ -28,11 +28,20 @@ pub trait IPostService {
         pagination: PaginationInternal,
         user_id: Option<i64>,
     ) -> Result<Vec<PostDetails>, PostServiceErr>;
-    async fn get_by_id(&self, id: Uuid) -> Result<Option<PostDetails>, PostServiceErr>;
+    async fn get_by_id(
+        &self,
+        id: Uuid,
+        user_id: Option<i64>,
+    ) -> Result<Option<PostDetails>, PostServiceErr>;
     async fn add(&self, author_id: i64, post: AddPostRequest) -> Result<(), PostServiceErr>;
     async fn delete(&self, id: Uuid) -> Result<(), PostServiceErr>;
     async fn existed(&self, id: Uuid, author_id: i64) -> Result<bool, PostServiceErr>;
-    async fn edit(&self, id: Uuid, post: EditPostRequest) -> Result<PostDetails, PostServiceErr>;
+    async fn edit(
+        &self,
+        id: Uuid,
+        post: EditPostRequest,
+        user_id: i64,
+    ) -> Result<PostDetails, PostServiceErr>;
 }
 
 pub struct PostService<T: IDatabase> {
@@ -92,7 +101,11 @@ where
         .map_err(|e| PostServiceErr::Other(e.into()))
     }
 
-    async fn get_by_id(&self, id: Uuid) -> Result<Option<PostDetails>, PostServiceErr> {
+    async fn get_by_id(
+        &self,
+        id: Uuid,
+        user_id: Option<i64>,
+    ) -> Result<Option<PostDetails>, PostServiceErr> {
         sqlx::query_as!(
             PostDetails,
             "select
@@ -104,10 +117,18 @@ where
                 posts.likes,
                 posts.comments,
                 posts.created_at,
-                (select true) as is_liked
+                case
+                    when $1::bigint is not null then exists (
+                        select 1
+                        from likes
+                        where target_id = posts.id and user_id = $1
+                    )
+                    else null
+                end as is_liked
             from posts
             left join users on users.id = posts.user_id
-            where posts.id = $1",
+            where posts.id = $2",
+            user_id,
             id
         )
         .fetch_optional(self.db.get_pool())
@@ -147,7 +168,12 @@ where
         .map_err(|e| PostServiceErr::Other(e.into()))
     }
 
-    async fn edit(&self, id: Uuid, post: EditPostRequest) -> Result<PostDetails, PostServiceErr> {
+    async fn edit(
+        &self,
+        id: Uuid,
+        post: EditPostRequest,
+        user_id: i64,
+    ) -> Result<PostDetails, PostServiceErr> {
         sqlx::query!(
             "update posts set content = $1, updated_at = now() where id = $2",
             post.content,
@@ -156,6 +182,8 @@ where
         .execute(self.db.get_pool())
         .await
         .map_err(|e| PostServiceErr::Other(e.into()))?;
-        self.get_by_id(id).await.map(|p| p.unwrap_or_default())
+        self.get_by_id(id, Some(user_id))
+            .await
+            .map(|p| p.unwrap_or_default())
     }
 }

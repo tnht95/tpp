@@ -26,6 +26,10 @@ pub struct AddGameRequest {
 
     #[validate(custom(function = "validate_tags"))]
     pub tags: Option<Vec<String>>,
+
+    #[validate(length(min = 1, message = "Can not be empty"))]
+    #[validate(length(max = 40, message = "Too long, exceeding 350 characters."))]
+    pub memo: String,
 }
 
 pub type EditGameRequest = AddGameRequest;

@@ -2,15 +2,13 @@
 create function insert_activity_on_user_insert_update()
 returns trigger as $$
 BEGIN
-    IF (TG_OP = 'INSERT') THEN
-        INSERT INTO activities (user_id, target_type, target_id, memo)
-        VALUES (NEW.id, 'user_joined', uuid_nil(), '');
-    END IF;
+    INSERT INTO activities (user_id, target_type, target_id, memo)
+    VALUES (NEW.id, 'user', uuid_nil(), '');
     RETURN NULL;
 END;
 $$ language plpgsql;
 
 -- Create a trigger that inserts a record into the activities table when a new user is inserted or updated
 create trigger user_insert_update_trigger
-after insert or update on users
+after insert on users
 for each row execute function insert_activity_on_user_insert_update();

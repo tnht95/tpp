@@ -216,10 +216,27 @@ where
 
     async fn delete(&self, id: Uuid) -> Result<(), GameServiceErr> {
         self.del_rom(id).await?;
-        sqlx::query!("delete from games where id = $1", id)
-            .execute(self.db.get_pool())
+
+        let mut tx = self
+            .db
+            .get_pool()
+            .begin()
+            .await
+            .map_err(|e| GameServiceErr::Other(e.into()))?;
+
+        sqlx::query!("delete from games where id = $1;", id)
+            .execute(&mut *tx)
             .await
             .map(|_| ())
+            .map_err(|e| GameServiceErr::Other(e.into()))?;
+
+        sqlx::query!("delete from activities where target_id = $1", id,)
+            .execute(&mut *tx)
+            .await
+            .map_err(|e| GameServiceErr::Other(e.into()))?;
+
+        tx.commit()
+            .await
             .map_err(|e| GameServiceErr::Other(e.into()))
     }
 
@@ -277,7 +294,7 @@ where
             "insert into activities (user_id, target_type, target_id, memo) values ($1, 'updated_game', $2, $3)",
             user_id,
             game_id,
-            format!("Name: {}", game.name)
+            game.memo
         )
         .execute(&mut *tx)
         .await

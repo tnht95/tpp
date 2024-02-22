@@ -34,4 +34,5 @@ export type GameRequest = {
   about: string | undefined;
   info: string | undefined;
   tags: string[] | undefined;
+  memo: string;
 };

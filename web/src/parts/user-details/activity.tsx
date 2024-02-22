@@ -6,29 +6,29 @@ import { Activity } from '@/models';
 import { formatTime } from '@/utils';
 
 const titleMap = {
-  userJoined: 'User Joined',
+  user: 'User Joined',
   addedGame: 'Added New Game',
   updatedGame: 'Updated Game',
-  addedPost: 'Added New Post'
+  post: 'Added New Post'
 };
 
 const urlMap = {
-  userJoined: 'users',
+  user: 'users',
   addedGame: 'games',
   updatedGame: 'games',
-  addedPost: 'posts'
+  post: 'posts'
 };
 
 const pathMap = {
-  userJoined: '',
+  user: '',
   addedGame: 'info',
   updatedGame: 'info',
-  addedPost: ''
+  post: ''
 };
 
 const buildUrl = ({ targetType, targetId, userId }: Activity): string => {
   const base = urlMap[targetType];
-  const id = targetType === 'userJoined' ? userId : targetId;
+  const id = targetType === 'user' ? userId : targetId;
   const path = pathMap[targetType];
   return `/${base}/${id}/${path}`;
 };

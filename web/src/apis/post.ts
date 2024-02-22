@@ -43,3 +43,10 @@ export const editPostAction = (id: string, body: EditPost) =>
   })
     .then(errHandler)
     .then((r: Response<PostDetails>) => r.data);
+
+export const getPostByIdAction = (id: string) =>
+  fetch(`${import.meta.env.VITE_API_URL}/posts/${id}`, {
+    credentials: 'include'
+  })
+    .then(errHandler)
+    .then((r: Response<PostDetails>) => r.data);

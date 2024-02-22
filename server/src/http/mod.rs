@@ -121,6 +121,7 @@ where
                         .route("/users/:id/activities", get(activity::filter))
                         .route("/posts", get(post::filter))
                         .route("/posts", post(post::add))
+                        .route("/posts/:id", get(post::get_by_id))
                         .route("/posts/:id", delete(post::delete))
                         .route("/posts/:id", put(post::edit))
                         .route("/blogs", get(blog::filter))
