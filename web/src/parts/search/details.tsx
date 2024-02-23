@@ -24,38 +24,34 @@ export const SearchDetails = () => {
         <p class="text-2xl font-bold text-indigo-900">
           Results for "{keyword()}":
         </p>
-        <Show when={(category() || 'games') === 'games'}>
-          <GameResult
-            loading={loading()}
-            searchResult={searchResult}
-            showMore={showMore}
-            handleShowMore={fetchMore}
-          />
-        </Show>
-        <Show when={(category() || 'users') === 'users'}>
-          <UserResult
-            loading={loading()}
-            searchResult={searchResult}
-            showMore={showMore}
-            handleShowMore={fetchMore}
-          />
-        </Show>
-        <Show when={(category() || 'posts') === 'posts'}>
-          <PostResult
-            loading={loading()}
-            searchResult={searchResult}
-            showMore={showMore}
-            handleShowMore={fetchMore}
-          />
-        </Show>
-        <Show when={(category() || 'blogs') === 'blogs'}>
-          <BlogResult
-            loading={loading()}
-            searchResult={searchResult}
-            showMore={showMore}
-            handleShowMore={fetchMore}
-          />
-        </Show>
+        <GameResult
+          loading={loading()}
+          category={category()}
+          searchResult={searchResult}
+          showMore={showMore}
+          handleShowMore={fetchMore}
+        />
+        <UserResult
+          loading={loading()}
+          category={category()}
+          searchResult={searchResult}
+          showMore={showMore}
+          handleShowMore={fetchMore}
+        />
+        <PostResult
+          loading={loading()}
+          category={category()}
+          searchResult={searchResult}
+          showMore={showMore}
+          handleShowMore={fetchMore}
+        />
+        <BlogResult
+          loading={loading()}
+          category={category()}
+          searchResult={searchResult}
+          showMore={showMore}
+          handleShowMore={fetchMore}
+        />
       </main>
       <nav class="flex-2" />
     </div>
@@ -64,6 +60,7 @@ export const SearchDetails = () => {
 
 type Props = {
   loading: boolean;
+  category: string | undefined;
   searchResult: SearchResult;
   showMore: (category: keyof SearchResult) => void;
   handleShowMore: (category: keyof SearchResult) => void;
@@ -74,108 +71,122 @@ const nothingToShow = () => (
 );
 
 const GameResult = (props: Props) => (
-  <div class="flex flex-col gap-7">
-    <p class="text-xl font-bold text-indigo-900">
-      <i class="fa-solid fa-gamepad mr-2" />
-      Games:
-    </p>
-    <Show when={!props.loading} fallback={<LoadingSpinner />}>
-      <Show
-        when={props.searchResult.games.length > 0}
-        fallback={nothingToShow()}
-      >
-        <div class="flex flex-wrap gap-5">
-          <For each={props.searchResult.games}>
-            {game => <GameCard game={game} />}
-          </For>
-          <Show when={props.showMore('games')}>
-            <ShowMoreButton onClick={() => props.handleShowMore('games')} />
-          </Show>
-        </div>
+  <Show when={(props.category || 'games') === 'games'}>
+    <div class="flex flex-col gap-7">
+      <p class="text-xl font-bold text-indigo-900">
+        <i class="fa-solid fa-gamepad mr-2" />
+        Games:
+      </p>
+      <Show when={!props.loading} fallback={<LoadingSpinner />}>
+        <Show
+          when={props.searchResult.games.length > 0}
+          fallback={nothingToShow()}
+        >
+          <div class="flex flex-wrap gap-5">
+            <For each={props.searchResult.games}>
+              {game => <GameCard game={game} />}
+            </For>
+            <Show when={props.showMore('games')}>
+              <ShowMoreButton onClick={() => props.handleShowMore('games')} />
+            </Show>
+          </div>
+        </Show>
       </Show>
-    </Show>
-    <hr class="my-10 h-px border-0 bg-gray-200" />
-  </div>
+      <Show when={props.category !== 'games'}>
+        <hr class="my-10 h-px border-0 bg-gray-200" />
+      </Show>
+    </div>
+  </Show>
 );
 
 const UserResult = (props: Props) => (
-  <div class="flex flex-col gap-7">
-    <p class="text-xl font-bold text-indigo-900">
-      <i class="fa-solid fa-users mr-2" />
-      Users:
-    </p>
-    <Show when={!props.loading} fallback={<LoadingSpinner />}>
-      <Show
-        when={props.searchResult.users.length > 0}
-        fallback={nothingToShow()}
-      >
-        <div class="flex flex-wrap gap-5">
-          <For each={props.searchResult.users}>
-            {user => <UserCard user={user} />}
-          </For>
-          <Show when={props.showMore('users')}>
-            <ShowMoreButton onClick={() => props.handleShowMore('users')} />
-          </Show>
-        </div>
+  <Show when={(props.category || 'users') === 'users'}>
+    <div class="flex flex-col gap-7">
+      <p class="text-xl font-bold text-indigo-900">
+        <i class="fa-solid fa-users mr-2" />
+        Users:
+      </p>
+      <Show when={!props.loading} fallback={<LoadingSpinner />}>
+        <Show
+          when={props.searchResult.users.length > 0}
+          fallback={nothingToShow()}
+        >
+          <div class="flex flex-wrap gap-5">
+            <For each={props.searchResult.users}>
+              {user => <UserCard user={user} />}
+            </For>
+            <Show when={props.showMore('users')}>
+              <ShowMoreButton onClick={() => props.handleShowMore('users')} />
+            </Show>
+          </div>
+        </Show>
       </Show>
-    </Show>
-    <hr class="my-10 h-px border-0 bg-gray-200" />
-  </div>
+      <Show when={props.category !== 'users'}>
+        <hr class="my-10 h-px border-0 bg-gray-200" />
+      </Show>
+    </div>
+  </Show>
 );
 
 const PostResult = (props: Props) => (
-  <div class="flex flex-col gap-7">
-    <p class="text-xl font-bold text-indigo-900">
-      <i class="fa-solid fa-highlighter mr-2" />
-      Posts:
-    </p>
-    <Show when={!props.loading} fallback={<LoadingSpinner />}>
-      <Show
-        when={props.searchResult.posts.length > 0}
-        fallback={nothingToShow()}
-      >
-        <div class="flex flex-col gap-5">
-          <For each={props.searchResult.posts}>
-            {post => (
-              <PostCard post={post} onEdit={() => {}} onDelete={() => {}} />
-            )}
-          </For>
-          <Show when={props.showMore('posts')}>
-            <ShowMoreButton
-              vertical
-              onClick={() => props.handleShowMore('posts')}
-            />
-          </Show>
-        </div>
+  <Show when={(props.category || 'posts') === 'posts'}>
+    <div class="flex flex-col gap-7">
+      <p class="text-xl font-bold text-indigo-900">
+        <i class="fa-solid fa-highlighter mr-2" />
+        Posts:
+      </p>
+      <Show when={!props.loading} fallback={<LoadingSpinner />}>
+        <Show
+          when={props.searchResult.posts.length > 0}
+          fallback={nothingToShow()}
+        >
+          <div class="flex flex-col gap-5">
+            <For each={props.searchResult.posts}>
+              {post => (
+                <PostCard post={post} onEdit={() => {}} onDelete={() => {}} />
+              )}
+            </For>
+            <Show when={props.showMore('posts')}>
+              <ShowMoreButton
+                vertical
+                onClick={() => props.handleShowMore('posts')}
+              />
+            </Show>
+          </div>
+        </Show>
       </Show>
-    </Show>
-    <hr class="my-10 h-px border-0 bg-gray-200" />
-  </div>
+      <Show when={props.category !== 'posts'}>
+        <hr class="my-10 h-px border-0 bg-gray-200" />
+      </Show>
+    </div>
+  </Show>
 );
 
 const BlogResult = (props: Props) => (
-  <div class="flex flex-col gap-7">
-    <p class="text-xl font-bold text-indigo-900">
-      <i class="fa-solid fa-cube mr-2" />
-      Blogs:
-    </p>
-    <Show when={!props.loading} fallback={<LoadingSpinner />}>
-      <Show
-        when={props.searchResult.blogs.length > 0}
-        fallback={nothingToShow()}
-      >
-        <div class="flex flex-col gap-5">
-          <For each={props.searchResult.blogs}>
-            {blog => <BlogCard blog={blog} />}
-          </For>
-          <Show when={props.showMore('blogs')}>
-            <ShowMoreButton
-              vertical
-              onClick={() => props.handleShowMore('blogs')}
-            />
-          </Show>
-        </div>
+  <Show when={(props.category || 'blogs') === 'blogs'}>
+    <div class="flex flex-col gap-7">
+      <p class="text-xl font-bold text-indigo-900">
+        <i class="fa-solid fa-cube mr-2" />
+        Blogs:
+      </p>
+      <Show when={!props.loading} fallback={<LoadingSpinner />}>
+        <Show
+          when={props.searchResult.blogs.length > 0}
+          fallback={nothingToShow()}
+        >
+          <div class="flex flex-col gap-5">
+            <For each={props.searchResult.blogs}>
+              {blog => <BlogCard blog={blog} />}
+            </For>
+            <Show when={props.showMore('blogs')}>
+              <ShowMoreButton
+                vertical
+                onClick={() => props.handleShowMore('blogs')}
+              />
+            </Show>
+          </div>
+        </Show>
       </Show>
-    </Show>
-  </div>
+    </div>
+  </Show>
 );
