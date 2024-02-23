@@ -28,7 +28,7 @@ pub trait IBlogService {
         &self,
         pagination: PaginationInternal,
     ) -> Result<Vec<BlogSummary>, BlogServiceErr>;
-    async fn add(&self, blog: AddBlogRequest) -> Result<(), BlogServiceErr>;
+    async fn add(&self, user_id: i64, blog: AddBlogRequest) -> Result<(), BlogServiceErr>;
     async fn get_by_id(&self, id: Uuid) -> Result<Option<Blog>, BlogServiceErr>;
     async fn delete(&self, id: Uuid) -> Result<(), BlogServiceErr>;
     async fn edit(&self, id: Uuid, comment: EditBlogRequest) -> Result<Blog, BlogServiceErr>;
@@ -68,10 +68,11 @@ where
         .map_err(|e| BlogServiceErr::Other(e.into()))
     }
 
-    async fn add(&self, blog: AddBlogRequest) -> Result<(), BlogServiceErr> {
+    async fn add(&self, user_id: i64, blog: AddBlogRequest) -> Result<(), BlogServiceErr> {
         sqlx::query_as!(
             Blog,
-            "insert into blogs (title, description, content, tags) values ($1, $2, $3, $4)",
+            "insert into blogs (user_id, title, description, content, tags) values ($1, $2, $3, $4, $5)",
+            user_id,
             blog.title,
             blog.description,
             blog.content,

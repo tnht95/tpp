@@ -39,13 +39,13 @@ pub async fn filter<TInternalServices: IInternalServices>(
 
 pub async fn add<TInternalServices: IInternalServices>(
     State(state): InternalState<TInternalServices>,
-    Authentication(_, is_admin, _): Authentication<TInternalServices>,
+    Authentication(user, is_admin, _): Authentication<TInternalServices>,
     JsonValidator(blog): JsonValidator<AddBlogRequest>,
 ) -> Response {
     if !is_admin {
         return response_403_err();
     }
-    match state.services.blog.add(blog).await {
+    match state.services.blog.add(user.id, blog).await {
         Ok(blog) => Json(HttpResponse { data: blog }).into_response(),
         Err(BlogServiceErr::Other(e)) => response_unhandled_err(e),
     }

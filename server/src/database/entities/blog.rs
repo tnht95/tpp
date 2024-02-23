@@ -6,6 +6,7 @@ use uuid::Uuid;
 #[serde(rename_all = "camelCase")]
 pub struct Blog {
     pub id: Uuid,
+    pub user_id: i64,
     pub title: String,
     pub description: String,
     pub content: String,

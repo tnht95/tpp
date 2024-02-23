@@ -8,6 +8,7 @@ export type BlogSummary = {
 
 export type Blog = {
   id: string;
+  userId: number;
   title: string;
   description: string;
   content: string;

@@ -28,8 +28,7 @@ begin
       -- CASE: comment blog
       elsif (noti_target_type = 'blogs') then
         select 'like_comment_blog' into noti_target_type;
-        -- hack: only admin can add blog
-        select 40195902 into noti_to_user_id;
+        select user_id into noti_to_user_id from blogs where id = noti_target_id;
 
       -- CASE: comment post
       elsif (noti_target_type = 'posts') then
