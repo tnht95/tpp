@@ -43,7 +43,7 @@ export const CommentForm = (props: Props) => {
 
   return (
     <form
-      class="flex flex-col gap-4 rounded-xl border p-10"
+      class="flex w-full flex-col gap-4 rounded-xl border p-10"
       onSubmit={onSubmitHandler}
     >
       <Show when={props.children}>

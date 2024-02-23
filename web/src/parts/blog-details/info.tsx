@@ -26,7 +26,7 @@ export const BlogDetailsInfo = () => {
     <div class="flex justify-between p-10">
       <div class="w-4/6">
         <div class="flex flex-col">
-          <div class="flex flex-col gap-7 rounded-lg border px-10 py-7">
+          <div class="mb-6 flex flex-col gap-7 rounded-lg border px-10 py-7">
             <div class="flex flex-col">
               <div class="flex items-center justify-between">
                 <p class="text-3xl font-bold">{blog().title}</p>
@@ -51,7 +51,7 @@ export const BlogDetailsInfo = () => {
             <Markdown content={blog().content} />
           </div>
           <Show when={commentNumber() > 0}>
-            <div class="my-6 text-lg font-semibold">
+            <div class="mb-6 text-lg font-semibold">
               <i class="fa-regular fa-comment-dots mr-1.5" />
               <span>{commentNumber()} comment(s)</span>
             </div>
