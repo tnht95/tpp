@@ -1,2 +1,3 @@
 -- Add down migration script here
-delete from games;
+DELETE FROM games;
+

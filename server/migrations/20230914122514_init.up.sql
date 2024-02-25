@@ -1,4 +1,5 @@
 -- Add up migration script here
-set timezone = utc;
+SET timezone = utc;
 
-create extension "uuid-ossp";
+CREATE EXTENSION "uuid-ossp";
+

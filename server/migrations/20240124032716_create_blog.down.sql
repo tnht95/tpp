@@ -1,1 +1,2 @@
-drop table blogs;
+DROP TABLE blogs;
+

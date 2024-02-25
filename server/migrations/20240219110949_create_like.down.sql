@@ -1,2 +1,4 @@
-drop table likes;
-drop type like_type;
+DROP TABLE likes;
+
+DROP TYPE like_type;
+

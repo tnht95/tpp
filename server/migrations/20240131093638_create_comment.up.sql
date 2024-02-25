@@ -1,15 +1,19 @@
 -- Add up migration script here
-create type comment_type as enum ('discussions', 'blogs', 'posts');
-
-create table comments
-(
-    id uuid default uuid_generate_v4() primary key,
-    user_id bigint references users (id) on delete cascade not null,
-    user_name varchar(100) references users (name) on update cascade not null,
-    target_id uuid not null,
-    content varchar(200) not null,
-    target_type comment_type not null,
-    likes bigint not null default 0,
-    created_at timestamp (6) with time zone default now() not null,
-    updated_at timestamp (6) with time zone default now() not null
+CREATE TYPE comment_type AS enum (
+    'discussions',
+    'blogs',
+    'posts'
 );
+
+CREATE TABLE comments (
+    id uuid DEFAULT uuid_generate_v4 () PRIMARY KEY,
+    user_id bigint REFERENCES users (id) ON DELETE CASCADE NOT NULL,
+    user_name varchar(100) REFERENCES users (name) ON UPDATE CASCADE NOT NULL,
+    target_id uuid NOT NULL,
+    content varchar(200) NOT NULL,
+    target_type comment_type NOT NULL,
+    likes bigint NOT NULL DEFAULT 0,
+    created_at timestamp(6) with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp(6) with time zone DEFAULT now() NOT NULL
+);
+

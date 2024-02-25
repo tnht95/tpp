@@ -1,2 +1,4 @@
-drop table comments;
-drop type comment_type;
+DROP TABLE comments;
+
+DROP TYPE comment_type;
+

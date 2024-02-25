@@ -1,2 +1,3 @@
 -- Add down migration script here
-drop extension "uuid-ossp";
+DROP EXTENSION "uuid-ossp";
+

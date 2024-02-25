@@ -1,3 +1,5 @@
 -- Add down migration script here
-drop trigger game_insert_trigger on games;
-drop function insert_activity_on_game_insert;
+DROP TRIGGER game_insert_trigger ON games;
+
+DROP FUNCTION insert_activity_on_game_insert;
+

@@ -8,7 +8,7 @@ docker:
 
 fmt:
 	cargo +nightly fmt
-	sqlfluff format --disable-progress-bar --nocolor migrations
+	pg_format migrations/* --inplace
 
 lint:
 	cargo clippy --all-targets --all-features -- -D warnings -D clippy::all

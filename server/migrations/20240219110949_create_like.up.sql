@@ -1,11 +1,15 @@
-create type like_type as enum ('discussions', 'comments', 'posts');
-
-create table likes
-(
-    user_id bigint references users (id) on delete cascade not null,
-    target_id uuid not null,
-    target_type like_type not null,
-    created_at timestamp (6) with time zone default now() not null,
-    updated_at timestamp (6) with time zone default now() not null,
-    primary key (user_id, target_id)
+CREATE TYPE like_type AS enum (
+    'discussions',
+    'comments',
+    'posts'
 );
+
+CREATE TABLE likes (
+    user_id bigint REFERENCES users (id) ON DELETE CASCADE NOT NULL,
+    target_id uuid NOT NULL,
+    target_type like_type NOT NULL,
+    created_at timestamp(6) with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp(6) with time zone DEFAULT now() NOT NULL,
+    PRIMARY KEY (user_id, target_id)
+);
+

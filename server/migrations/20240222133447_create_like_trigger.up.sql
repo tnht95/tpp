@@ -1,61 +1,103 @@
 -- Add up migration script here
 -- Trigger function to insert into the activities table when a new like is inserted
-create function insert_noti_on_like_insert() returns trigger as $$
-declare
+CREATE FUNCTION insert_noti_on_like_insert ()
+    RETURNS TRIGGER
+    AS $$
+DECLARE
     noti_by_user_name varchar(100);
     noti_target_type varchar(100);
     noti_target_id uuid;
     noti_parent_target_id uuid;
     noti_to_user_id bigint;
-begin
+BEGIN
     -- get user_name
-    select name into noti_by_user_name from users where id = new.user_id;
-
+    SELECT
+        name INTO noti_by_user_name
+    FROM
+        users
+    WHERE
+        id = NEW.user_id;
     -- init target_type, target_id
-    select new.target_type, new.target_id into noti_target_type, noti_target_id;
-
+    SELECT
+        NEW.target_type,
+        NEW.target_id INTO noti_target_type,
+        noti_target_id;
     -- CASE: like comment
-    if (noti_target_type = 'comments') then
-
-      -- get target from comments
-      select target_type, target_id into noti_target_type, noti_target_id from comments where id = noti_target_id;
-
-      -- CASE: comment discussion
-      if (noti_target_type = 'discussions') then
-        select 'like_comment_discussion' into noti_target_type;
-        select user_id, game_id into noti_to_user_id, noti_parent_target_id from discussions where id = noti_target_id;
-
-      -- CASE: comment blog
-      elsif (noti_target_type = 'blogs') then
-        select 'like_comment_blog' into noti_target_type;
-        select user_id into noti_to_user_id from blogs where id = noti_target_id;
-
-      -- CASE: comment post
-      elsif (noti_target_type = 'posts') then
-        select 'like_comment_post' into noti_target_type;
-        select user_id into noti_to_user_id from posts where id = noti_target_id;
-      end if;
-
-    -- CASE: like discussion
-    elsif (noti_target_type = 'discussions') then
-        select 'like_discussion' into noti_target_type;
-        select user_id, game_id into noti_to_user_id, noti_parent_target_id from discussions where id = noti_target_id;
-
-    -- CASE: like post
-    elsif (noti_target_type = 'posts') then
-        select 'like_post' into noti_target_type;
-        select user_id into noti_to_user_id from posts where id = noti_target_id;
-    end if;
-
-    insert into notis (to_user_id, by_user_id, by_user_name, target_type, target_id, parent_target_id)
-    values(noti_to_user_id, new.user_id, noti_by_user_name, noti_target_type::noti_type, noti_target_id, noti_parent_target_id);
-
-    return null;
-end;
-$$ language plpgsql;
+    IF (noti_target_type = 'comments') THEN
+        -- get target from comments
+        SELECT
+            target_type,
+            target_id INTO noti_target_type,
+            noti_target_id
+        FROM
+            comments
+        WHERE
+            id = noti_target_id;
+        -- CASE: comment discussion
+        IF (noti_target_type = 'discussions') THEN
+            SELECT
+                'like_comment_discussion' INTO noti_target_type;
+            SELECT
+                user_id,
+                game_id INTO noti_to_user_id,
+                noti_parent_target_id
+            FROM
+                discussions
+            WHERE
+                id = noti_target_id;
+            -- CASE: comment blog
+        ELSIF (noti_target_type = 'blogs') THEN
+            SELECT
+                'like_comment_blog' INTO noti_target_type;
+            SELECT
+                user_id INTO noti_to_user_id
+            FROM
+                blogs
+            WHERE
+                id = noti_target_id;
+            -- CASE: comment post
+        ELSIF (noti_target_type = 'posts') THEN
+            SELECT
+                'like_comment_post' INTO noti_target_type;
+            SELECT
+                user_id INTO noti_to_user_id
+            FROM
+                posts
+            WHERE
+                id = noti_target_id;
+        END IF;
+        -- CASE: like discussion
+    ELSIF (noti_target_type = 'discussions') THEN
+        SELECT
+            'like_discussion' INTO noti_target_type;
+        SELECT
+            user_id,
+            game_id INTO noti_to_user_id,
+            noti_parent_target_id
+        FROM
+            discussions
+        WHERE
+            id = noti_target_id;
+        -- CASE: like post
+    ELSIF (noti_target_type = 'posts') THEN
+        SELECT
+            'like_post' INTO noti_target_type;
+        SELECT
+            user_id INTO noti_to_user_id
+        FROM
+            posts
+        WHERE
+            id = noti_target_id;
+    END IF;
+    INSERT INTO notis (to_user_id, by_user_id, by_user_name, target_type, target_id, parent_target_id)
+        VALUES (noti_to_user_id, NEW.user_id, noti_by_user_name, noti_target_type::noti_type, noti_target_id, noti_parent_target_id);
+    RETURN NULL;
+END;
+$$
+LANGUAGE plpgsql;
 
 -- Create a trigger that inserts a record into the activities table when a new like is inserted
+CREATE TRIGGER like_insert_trigger
+    AFTER INSERT ON likes FOR EACH ROW
+    EXECUTE FUNCTION insert_noti_on_like_insert ();
 
-create trigger like_insert_trigger
-after insert on likes
-for each row execute function insert_noti_on_like_insert();

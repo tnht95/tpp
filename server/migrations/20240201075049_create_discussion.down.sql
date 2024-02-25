@@ -1,2 +1,3 @@
 -- Add down migration script here
-drop table discussions;
+DROP TABLE discussions;
+
