@@ -1,5 +1,5 @@
 -- Add up migration script here
--- Trigger function to insert into the activities table when a new like is inserted
+-- Trigger function to insert into the notis table when a new like is inserted
 CREATE FUNCTION insert_noti_on_like_insert ()
     RETURNS TRIGGER
     AS $$
@@ -89,6 +89,7 @@ BEGIN
         WHERE
             id = noti_target_id;
     END IF;
+    -- FIXME: prevent noti to oneself
     INSERT INTO notis (to_user_id, by_user_id, by_user_name, target_type, target_id, parent_target_id)
         VALUES (noti_to_user_id, NEW.user_id, noti_by_user_name, noti_target_type::noti_type, noti_target_id, noti_parent_target_id);
     RETURN NULL;
@@ -96,7 +97,7 @@ END;
 $$
 LANGUAGE plpgsql;
 
--- Create a trigger that inserts a record into the activities table when a new like is inserted
+-- Create a trigger that inserts a record into the notis table when a new like is inserted
 CREATE TRIGGER like_insert_trigger
     AFTER INSERT ON likes
     FOR EACH ROW
