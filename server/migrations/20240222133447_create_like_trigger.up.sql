@@ -98,6 +98,7 @@ LANGUAGE plpgsql;
 
 -- Create a trigger that inserts a record into the activities table when a new like is inserted
 CREATE TRIGGER like_insert_trigger
-    AFTER INSERT ON likes FOR EACH ROW
+    AFTER INSERT ON likes
+    FOR EACH ROW
     EXECUTE FUNCTION insert_noti_on_like_insert ();
 

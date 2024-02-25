@@ -13,6 +13,7 @@ LANGUAGE plpgsql;
 
 -- Create a trigger that inserts a record into the activities table when a new game is inserted
 CREATE TRIGGER game_insert_trigger
-    AFTER INSERT ON games FOR EACH ROW
+    AFTER INSERT ON games
+    FOR EACH ROW
     EXECUTE FUNCTION insert_activity_on_game_insert ();
 

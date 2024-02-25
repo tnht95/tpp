@@ -14,7 +14,7 @@ BEGIN
             memo = 'Content: ' || NEW.content
         WHERE
             target_id = NEW.id;
-    ELSE
+    ELSIF (TG_OP = 'DELETE') THEN
         DELETE FROM activities
         WHERE target_id = OLD.id;
     END IF;
@@ -25,6 +25,7 @@ LANGUAGE plpgsql;
 
 -- Create a trigger that inserts a record into the activities table when a new post is inserted, updated or deleted
 CREATE TRIGGER post_insert_update_delete_trigger
-    AFTER INSERT OR UPDATE OR DELETE ON posts FOR EACH ROW
+    AFTER INSERT OR UPDATE OR DELETE ON posts
+    FOR EACH ROW
     EXECUTE FUNCTION insert_activity_on_post_insert_update_delete ();
 
