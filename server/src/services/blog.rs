@@ -115,7 +115,7 @@ where
     }
 
     async fn get_tags(&self) -> Result<Vec<String>, BlogServiceErr> {
-        sqlx::query_scalar!(r#"SELECT DISTINCT unnest(tags) AS "tag!" FROM blogs"#)
+        sqlx::query_scalar!(r#"select distinct unnest(tags) as "tag!" from blogs"#)
             .fetch_all(self.db.get_pool())
             .await
             .map_err(|e| BlogServiceErr::Other(e.into()))

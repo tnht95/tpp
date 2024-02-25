@@ -53,7 +53,7 @@ where
 
     async fn unlike(&self, user_id: i64, like: DeleteLikeRequest) -> Result<(), LikeServiceErr> {
         sqlx::query!(
-            "SELECT delete_like($1, $2, $3)",
+            "select delete_like($1, $2, $3)",
             user_id,
             like.target_id,
             like.target_type as LikeType

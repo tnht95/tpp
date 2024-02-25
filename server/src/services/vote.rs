@@ -76,8 +76,7 @@ where
                 insert into votes (game_id, user_id, is_up)
                 values ($1, $2, $3)
                 on conflict (game_id, user_id)
-                do update set is_up = excluded.is_up
-
+                do update set is_up = excluded.is_up, updated_at = now()
             )
             select existing_vote.is_up as existed_is_up
             from existing_vote
@@ -151,7 +150,7 @@ async fn update_game_votes(
     update_value: i64,
 ) -> Result<(), VoteServiceErr> {
     let query = format!(
-        "update games set {} = {} + $1 where id = $2",
+        "update games set {} = {} + $1, updated_at = now() where id = $2",
         column, column
     );
     sqlx::query(&query)

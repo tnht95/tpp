@@ -6,7 +6,7 @@ DECLARE
 BEGIN
     EXECUTE format('
         update %I
-        set likes = likes + 1
+        set likes = likes + 1, updated_at = now()
         where id = $1
         returning true
     ', _target_type) INTO rows_affected
@@ -33,7 +33,7 @@ BEGIN
     IF found THEN
         EXECUTE format('
         update %I
-        set likes = likes - 1
+        set likes = likes - 1, updated_at = now()
         where id = $1
         ', _target_type)
         USING _target_id;

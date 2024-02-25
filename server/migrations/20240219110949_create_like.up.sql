@@ -9,7 +9,6 @@ CREATE TABLE likes (
     target_id uuid NOT NULL,
     target_type like_type NOT NULL,
     created_at timestamp(6) with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp(6) with time zone DEFAULT now() NOT NULL,
     PRIMARY KEY (user_id, target_id)
 );
 

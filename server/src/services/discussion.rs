@@ -137,7 +137,7 @@ where
                     else null
                 end as is_liked
             from discussions 
-            join users on discussions.user_id = users.id
+            left join users on discussions.user_id = users.id
             where discussions.id = $1 and discussions.game_id = $2",
             id,
             game_id,

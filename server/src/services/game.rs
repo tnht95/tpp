@@ -268,7 +268,7 @@ where
 
         sqlx::query!(
             "update games set
-            name = $1, url = $2, avatar_url = $3, about = $4, info = $5, tags = $6 where id = $7",
+            name = $1, url = $2, avatar_url = $3, about = $4, info = $5, tags = $6, updated_at = now() where id = $7",
             game.name,
             game.url,
             game.avatar_url,

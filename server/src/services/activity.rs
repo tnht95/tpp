@@ -61,7 +61,7 @@ where
             from activities
             where 
                 user_id = $1
-                AND ($2 = uuid_nil() OR target_id = $2)
+                and ($2 = uuid_nil() or target_id = $2)
             order by created_at desc offset $3 limit $4
             "#,
             user_id,
