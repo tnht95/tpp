@@ -30,12 +30,13 @@ export const BlogDetailsInfo = () => {
             <div class="flex flex-col">
               <div class="flex items-center justify-between">
                 <p class="text-3xl font-bold">{blog().title}</p>
-                <OptionButton
-                  isOwner={isAdmin()}
-                  onDeleteConfirm={del}
-                  id={blogId}
-                  onEditBtnClick={show}
-                />
+                <Show when={isAdmin()}>
+                  <OptionButton
+                    onDeleteConfirm={del}
+                    id={blogId}
+                    onEditBtnClick={show}
+                  />
+                </Show>
                 <BlogForm
                   modalRef={initRef}
                   onCloseHandler={hide}

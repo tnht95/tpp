@@ -21,7 +21,7 @@ export const CommentCard = (props: Props) => {
   const [liked, setLiked] = createSignal<boolean | undefined>();
   const [likeNumber, setLikeNumber] = createSignal(0);
   const {
-    utils: { isSameUser, isAuth }
+    utils: { isSameUser }
   } = authenticationStore;
 
   createEffect(() => {
@@ -63,9 +63,8 @@ export const CommentCard = (props: Props) => {
             <span> commented on </span>
             <span>{formatTime(props.comment.createdAt)}</span>
           </div>
-          {isAuth() && (
+          <Show when={isSameUser(props.comment.userId)}>
             <OptionButton
-              isOwner={isSameUser(props.comment.userId)}
               onDeleteConfirm={props.onDelete}
               id={props.comment.id}
               isEditMode={isEditMode}
@@ -73,7 +72,7 @@ export const CommentCard = (props: Props) => {
                 setIsEditMode(!isEditMode());
               }}
             />
-          )}
+          </Show>
         </div>
         <div class="flex flex-col items-baseline gap-2 rounded-b border border-gray-200 px-5 py-3">
           <Show

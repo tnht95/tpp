@@ -4,7 +4,7 @@ type Props = {
   name: string;
 };
 export const Tag = (props: Props) => (
-  <div class="group relative inline-block py-1 text-sm">
+  <div class="group relative inline-block cursor-pointer py-1 text-sm">
     <div class="absolute inset-0 flex text-indigo-200 group-hover:text-indigo-300">
       <svg height="100%" viewBox="0 0 50 100">
         <path
@@ -15,7 +15,7 @@ export const Tag = (props: Props) => (
       </svg>
       <div class="-ml-px h-full grow rounded-md rounded-l-none bg-indigo-200 group-hover:bg-indigo-900" />
     </div>
-    <span class="relative flex cursor-pointer items-center p-0.5 pr-px font-semibold uppercase text-indigo-500 group-hover:text-white">
+    <span class="relative flex items-center p-0.5 pr-px font-semibold uppercase text-indigo-500 group-hover:text-white">
       <EllipsisText maxWidth="max-w-80" customStyle="ml-2 px-2">
         {props.name}
       </EllipsisText>

@@ -87,9 +87,8 @@ export const GameDetailsHeader = () => {
           onSubmitHandler={edit}
           game={game()}
         />
-        <Show when={isAuth()}>
+        <Show when={isSameUser(game().authorId)}>
           <OptionButton
-            isOwner={isSameUser(game().authorId)}
             onDeleteConfirm={del}
             id={game().id}
             onEditBtnClick={show}

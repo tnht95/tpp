@@ -186,7 +186,7 @@ export const Emulator = () => {
                 </label>
               </Show>
               <div
-                class="cursor-pointer text-white hover:text-yellow-300"
+                class="cursor-pointer text-white hover:text-amber-300"
                 onClick={reloadPage}
               >
                 <i class="fa-solid fa-rotate-right mr-2" />

@@ -66,12 +66,13 @@ const GameDetailsDiscussionDetailsInner = () => {
       <div class="border-b pb-5">
         <div class="flex items-center">
           <p class="mr-3 text-3xl font-bold">{discussion().title}</p>
-          <OptionButton
-            isOwner={isSameUser(discussion().userId)}
-            onDeleteConfirm={del}
-            id={discussionId}
-            onEditBtnClick={show}
-          />
+          <Show when={isSameUser(discussion().userId)}>
+            <OptionButton
+              onDeleteConfirm={del}
+              id={discussionId}
+              onEditBtnClick={show}
+            />
+          </Show>
           <DiscussionForm
             ref={initRef}
             onCloseHandler={hide}

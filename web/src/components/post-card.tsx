@@ -69,9 +69,8 @@ export const PostCard = (props: Props) => {
         <div class="w-full pl-3 leading-tight">
           <div class="flex items-center justify-between">
             <p class="text-base font-bold text-black">{props.post.userName}</p>
-            <Show when={utils.isAuth()}>
+            <Show when={utils.isSameUser(props.post.userId)}>
               <OptionButton
-                isOwner={utils.isSameUser(props.post.userId)}
                 onDeleteConfirm={props.onDelete}
                 id={props.post.id}
                 isEditMode={isEditMode}

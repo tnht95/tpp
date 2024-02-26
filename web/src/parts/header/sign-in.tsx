@@ -7,7 +7,7 @@ import { UserMenuGroup } from './user-menu-group';
 export const HeaderSignIn = () => {
   const { utils } = authenticationStore;
   return (
-    <div class="flex flex-1 justify-end">
+    <div class="flex min-w-32 flex-1 justify-end">
       <Suspense fallback={loadingBtn}>
         <Show
           when={utils.isAuth()}
