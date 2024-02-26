@@ -23,8 +23,11 @@ BEGIN
         games
     WHERE
         id = NEW.game_id;
-    INSERT INTO notis (to_user_id, by_user_id, by_user_name, target_type, target_id, parent_target_id)
-        VALUES (noti_to_user_id, NEW.user_id, noti_by_user_name, 'vote_game', NEW.game_id, NULL);
+    -- prevent noti to oneself
+    IF (noti_to_user_id != NEW.user_id) THEN
+        INSERT INTO notis (to_user_id, by_user_id, by_user_name, target_type, target_id, parent_target_id)
+            VALUES (noti_to_user_id, NEW.user_id, noti_by_user_name, 'vote_game', NEW.game_id, NULL);
+    END IF;
     RETURN NULL;
 END;
 $$

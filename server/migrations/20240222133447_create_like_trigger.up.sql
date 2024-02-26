@@ -89,9 +89,11 @@ BEGIN
         WHERE
             id = noti_target_id;
     END IF;
-    -- FIXME: prevent noti to oneself
-    INSERT INTO notis (to_user_id, by_user_id, by_user_name, target_type, target_id, parent_target_id)
-        VALUES (noti_to_user_id, NEW.user_id, noti_by_user_name, noti_target_type::noti_type, noti_target_id, noti_parent_target_id);
+    -- prevent noti to oneself
+    IF (noti_to_user_id != NEW.user_id) THEN
+        INSERT INTO notis (to_user_id, by_user_id, by_user_name, target_type, target_id, parent_target_id)
+            VALUES (noti_to_user_id, NEW.user_id, noti_by_user_name, noti_target_type::noti_type, noti_target_id, noti_parent_target_id);
+    END IF;
     RETURN NULL;
 END;
 $$

@@ -47,9 +47,11 @@ BEGIN
         WHERE
             id = noti_target_id;
     END IF;
-    -- FIXME: prevent noti to oneself
-    INSERT INTO notis (to_user_id, by_user_id, by_user_name, target_type, target_id, parent_target_id)
-        VALUES (noti_to_user_id, NEW.user_id, NEW.user_name, noti_target_type::noti_type, noti_target_id, noti_parent_target_id);
+    -- prevent noti to oneself
+    IF (noti_to_user_id != NEW.user_id) THEN
+        INSERT INTO notis (to_user_id, by_user_id, by_user_name, target_type, target_id, parent_target_id)
+            VALUES (noti_to_user_id, NEW.user_id, NEW.user_name, noti_target_type::noti_type, noti_target_id, noti_parent_target_id);
+    END IF;
     -- tag comments
     INSERT INTO notis (to_user_id, by_user_id, by_user_name, target_type, target_id, parent_target_id)
     SELECT
@@ -67,7 +69,8 @@ BEGIN
         noti_parent_target_id
     FROM ( SELECT DISTINCT
             unnest(regexp_matches(NEW.content, '@([[:alnum:]]+-?[[:alnum:]]*)', 'g')) AS name) AS match_users
-    INNER JOIN users ON users.name = match_users.name;
+    INNER JOIN users ON users.name = match_users.name
+        AND users.id != NEW.user_id;
     RETURN NULL;
 END;
 $$
