@@ -69,19 +69,20 @@ where
         let addr = format!("0.0.0.0:{}", self.config.server.http_port);
         info!("listening on {}", &addr);
 
-        let middleware = ServiceBuilder::new()
+        let cors_middleware = ServiceBuilder::new().layer(
+            CorsLayer::new()
+                .allow_credentials(true)
+                .allow_methods([Method::GET, Method::POST, Method::PUT, Method::DELETE])
+                .allow_origin([self.config.site_url.parse().expect("invalid site url")])
+                .allow_headers([
+                    "x-request-id".parse().expect("invalid header"),
+                    "content-type".parse().expect("invalid header"),
+                ])
+                .max_age(Duration::from_secs(self.config.server.cors_max_age)),
+        );
+
+        let api_middleware = ServiceBuilder::new()
             .layer(NormalizePathLayer::trim_trailing_slash())
-            .layer(
-                CorsLayer::new()
-                    .allow_credentials(true)
-                    .allow_methods([Method::GET, Method::POST, Method::PUT, Method::DELETE])
-                    .allow_origin([self.config.site_url.parse().expect("invalid site url")])
-                    .allow_headers([
-                        "x-request-id".parse().expect("invalid header"),
-                        "content-type".parse().expect("invalid header"),
-                    ])
-                    .max_age(Duration::from_secs(self.config.server.cors_max_age)),
-            )
             .layer(SetSensitiveRequestHeadersLayer::new(once(AUTHORIZATION)))
             .layer(CompressionLayer::new().quality(CompressionLevel::Fastest))
             .layer(CatchPanicLayer::custom(panic::recover))
@@ -153,8 +154,9 @@ where
                         .route("/games/:gid/discussions/:id", put(discussion::edit))
                         .route("/games/:gid/discussions/:id", delete(discussion::delete))
                         .route("/search", get(search::search))
-                        .layer(middleware),
+                        .layer(api_middleware),
                 )
+                .layer(cors_middleware)
                 .layer(DefaultBodyLimit::max(5 * 1024)) // 5KB
                 .layer(RequestBodyLimitLayer::new(5 * 1024)) // 5KB
                 .fallback(response_404_err)
