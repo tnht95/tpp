@@ -1,6 +1,6 @@
 -- Add up migration script here
 -- Trigger function to insert into the notis table when a new user_subscribers is inserted
-CREATE FUNCTION insert_noti_on_user_subscribers_insert ()
+CREATE FUNCTION insert_noti_on_user_subscriber_insert ()
     RETURNS TRIGGER
     AS $$
 DECLARE
@@ -21,8 +21,8 @@ $$
 LANGUAGE plpgsql;
 
 -- Create a trigger that inserts a record into the notis table when a new user_subscribers is inserted
-CREATE TRIGGER user_subscribers_insert_trigger
+CREATE TRIGGER user_subscriber_insert_trigger
     AFTER INSERT ON user_subscribers
     FOR EACH ROW
-    EXECUTE FUNCTION insert_noti_on_user_subscribers_insert ();
+    EXECUTE FUNCTION insert_noti_on_user_subscriber_insert ();
 
