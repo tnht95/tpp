@@ -6,9 +6,6 @@ CREATE FUNCTION insert_noti_on_activity_insert ()
 DECLARE
     noti_by_user_name varchar(100);
     noti_target_type varchar(100);
-    noti_target_id uuid;
-    noti_parent_target_id uuid;
-    noti_to_user_id bigint;
 BEGIN
     -- get user_name
     SELECT
