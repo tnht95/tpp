@@ -119,6 +119,7 @@ where
             from comments
             left join users on users.id = comments.user_id
             where target_id = $1
+            order by comments.created_at asc
             offset $2 limit $3",
             pagination.target_id,
             pagination.offset,
