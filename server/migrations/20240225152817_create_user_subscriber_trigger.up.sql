@@ -13,8 +13,8 @@ BEGIN
         users
     WHERE
         id = NEW.subscriber_id;
-    INSERT INTO notis (to_user_id, by_user_id, by_user_name, target_type, target_id, parent_target_id)
-        VALUES (NEW.user_id, NEW.subscriber_id, noti_by_user_name, 'subscribe', uuid_nil (), NULL);
+    INSERT INTO notis (to_user_id, by_user_id, by_user_name, by_object_id, target_type, target_id, parent_target_id)
+        VALUES (NEW.user_id, NEW.subscriber_id, noti_by_user_name, uuid_nil (), 'subscribe', uuid_nil (), NULL);
     RETURN NULL;
 END;
 $$
