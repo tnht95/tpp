@@ -24,11 +24,12 @@ BEGIN
         SELECT
             'user_post' INTO noti_target_type;
     END IF;
-    INSERT INTO notis (to_user_id, by_user_id, by_user_name, target_type, target_id, parent_target_id)
+    INSERT INTO notis (to_user_id, by_user_id, by_user_name, by_object_id, target_type, target_id, parent_target_id)
     SELECT
         user_subscribers.subscriber_id,
         NEW.user_id,
         noti_by_user_name,
+        uuid_nil (),
         noti_target_type::noti_type,
         NEW.target_id,
         NULL
