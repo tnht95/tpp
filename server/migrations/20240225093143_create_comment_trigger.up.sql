@@ -49,15 +49,16 @@ BEGIN
     END IF;
     -- prevent noti to oneself
     IF (noti_to_user_id != NEW.user_id) THEN
-        INSERT INTO notis (to_user_id, by_user_id, by_user_name, target_type, target_id, parent_target_id)
-            VALUES (noti_to_user_id, NEW.user_id, NEW.user_name, noti_target_type::noti_type, noti_target_id, noti_parent_target_id);
+        INSERT INTO notis (to_user_id, by_user_id, by_user_name, by_object_id, target_type, target_id, parent_target_id)
+            VALUES (noti_to_user_id, NEW.user_id, NEW.user_name, NEW.id, noti_target_type::noti_type, noti_target_id, noti_parent_target_id);
     END IF;
     -- tag comments
-    INSERT INTO notis (to_user_id, by_user_id, by_user_name, target_type, target_id, parent_target_id)
+    INSERT INTO notis (to_user_id, by_user_id, by_user_name, by_object_id, target_type, target_id, parent_target_id)
     SELECT
         users.id,
         NEW.user_id,
         NEW.user_name,
+        NEW.id,
         CASE WHEN noti_target_type = 'comment_discussion' THEN
             'comment_tag_discussion'::noti_type
         WHEN noti_target_type = 'comment_blog' THEN

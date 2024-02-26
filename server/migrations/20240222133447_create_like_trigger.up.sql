@@ -5,6 +5,7 @@ CREATE FUNCTION insert_noti_on_like_insert ()
     AS $$
 DECLARE
     noti_by_user_name varchar(100);
+    noti_object_id uuid;
     noti_target_type varchar(100);
     noti_target_id uuid;
     noti_parent_target_id uuid;
@@ -17,17 +18,23 @@ BEGIN
         users
     WHERE
         id = NEW.user_id;
-    -- init target_type, target_id
+    -- init object_id, target_type, target_id
     SELECT
+        uuid_nil (),
         NEW.target_type,
-        NEW.target_id INTO noti_target_type,
+        NEW.target_id INTO noti_object_id,
+        noti_target_type,
         noti_target_id;
     -- CASE: like comment
     IF (noti_target_type = 'comments') THEN
-        -- get target from comments
+        -- get id, target from comments
         SELECT
+            user_id,
+            id,
             target_type,
-            target_id INTO noti_target_type,
+            target_id INTO noti_to_user_id,
+            noti_object_id,
+            noti_target_type,
             noti_target_id
         FROM
             comments
@@ -38,9 +45,7 @@ BEGIN
             SELECT
                 'like_comment_discussion' INTO noti_target_type;
             SELECT
-                user_id,
-                game_id INTO noti_to_user_id,
-                noti_parent_target_id
+                game_id INTO noti_parent_target_id
             FROM
                 discussions
             WHERE
@@ -49,22 +54,10 @@ BEGIN
         ELSIF (noti_target_type = 'blogs') THEN
             SELECT
                 'like_comment_blog' INTO noti_target_type;
-            SELECT
-                user_id INTO noti_to_user_id
-            FROM
-                blogs
-            WHERE
-                id = noti_target_id;
             -- CASE: comment post
         ELSIF (noti_target_type = 'posts') THEN
             SELECT
                 'like_comment_post' INTO noti_target_type;
-            SELECT
-                user_id INTO noti_to_user_id
-            FROM
-                posts
-            WHERE
-                id = noti_target_id;
         END IF;
         -- CASE: like discussion
     ELSIF (noti_target_type = 'discussions') THEN
@@ -91,8 +84,10 @@ BEGIN
     END IF;
     -- prevent noti to oneself
     IF (noti_to_user_id != NEW.user_id) THEN
-        INSERT INTO notis (to_user_id, by_user_id, by_user_name, target_type, target_id, parent_target_id)
-            VALUES (noti_to_user_id, NEW.user_id, noti_by_user_name, noti_target_type::noti_type, noti_target_id, noti_parent_target_id);
+        INSERT INTO notis (to_user_id, by_user_id, by_user_name, by_object_id, target_type, target_id, parent_target_id)
+            VALUES (noti_to_user_id, NEW.user_id, noti_by_user_name, noti_object_id, noti_target_type::noti_type, noti_target_id, noti_parent_target_id)
+        ON CONFLICT (to_user_id, by_user_id, by_object_id, target_type, target_id)
+            DO NOTHING;
     END IF;
     RETURN NULL;
 END;

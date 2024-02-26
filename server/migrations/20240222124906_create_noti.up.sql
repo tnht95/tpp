@@ -23,8 +23,11 @@ CREATE TABLE notis (
     to_user_id bigint REFERENCES users (id) ON DELETE CASCADE NOT NULL,
     by_user_id bigint REFERENCES users (id) ON DELETE CASCADE NOT NULL,
     by_user_name varchar(100) REFERENCES users (name) ON UPDATE CASCADE NOT NULL,
+    by_object_id uuid NOT NULL, -- caused by
     target_type noti_type NOT NULL,
     target_id uuid NOT NULL,
     parent_target_id uuid,
     is_read boolean NOT NULL DEFAULT FALSE,
-    created_at timestamp(6) with time zone DEFAULT now() NOT NULL)
+    created_at timestamp(6) with time zone DEFAULT now() NOT NULL,
+    UNIQUE (to_user_id, by_user_id, by_object_id, target_type, target_id) -- noti once only
+)
