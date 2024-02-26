@@ -14,7 +14,9 @@ BEGIN
     WHERE
         id = NEW.subscriber_id;
     INSERT INTO notis (to_user_id, by_user_id, by_user_name, by_object_id, target_type, target_id, parent_target_id)
-        VALUES (NEW.user_id, NEW.subscriber_id, noti_by_user_name, uuid_nil (), 'subscribe', uuid_nil (), NULL);
+        VALUES (NEW.user_id, NEW.subscriber_id, noti_by_user_name, uuid_nil (), 'subscribe', uuid_nil (), NULL)
+    ON CONFLICT (to_user_id, by_user_id, by_object_id, target_type, target_id)
+        DO NOTHING;
     RETURN NULL;
 END;
 $$
