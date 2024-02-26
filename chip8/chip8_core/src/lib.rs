@@ -38,7 +38,6 @@ pub struct Emulator {
     keys_input: [bool; NUM_KEYS],
     sound_timer: u8,
     delay_timer: u8,
-    current_opcode: u16,
 }
 
 impl Default for Emulator {
@@ -60,7 +59,6 @@ impl Emulator {
             keys_input: [false; NUM_KEYS],
             sound_timer: 0,
             delay_timer: 0,
-            current_opcode: 0,
         };
 
         emulator.ram[..FONTSET_SIZE].copy_from_slice(&FONTSET);
@@ -80,7 +78,6 @@ impl Emulator {
         self.delay_timer = 0;
         self.sound_timer = 0;
         self.ram[..FONTSET_SIZE].copy_from_slice(&FONTSET);
-        self.current_opcode = 0;
     }
 
     fn push(&mut self, v: u16) {
@@ -93,10 +90,10 @@ impl Emulator {
         self.stack[self.stack_pointer as usize]
     }
 
-    pub fn tick(&mut self) {
+    pub fn tick(&mut self) -> Result<(), String>{
         let opcode = self.fetch();
         //decode and execute
-        self.execute(opcode);
+        self.execute(opcode)
     }
 
     fn fetch(&mut self) -> u16 {
@@ -104,12 +101,10 @@ impl Emulator {
         let back_byte = self.ram[(self.pc + 1) as usize] as u16;
         let opcode = (front_byte << 8) | back_byte;
         self.pc += 2;
-        self.current_opcode = opcode;
-
         opcode
     }
 
-    fn execute(&mut self, opcode: u16) {
+    fn execute(&mut self, opcode: u16) -> Result<(), String>{
         //decode the opcode into 4 parts
         //AND the opcode with a number to get the digit in the position we want
         //each digit is 4 bit => 16 possibilities
@@ -385,8 +380,10 @@ impl Emulator {
             //clear screen
             (0, 0, 0xE, 0) => self.screen = [false; SCREEN_WIDTH * SCREEN_HEIGHT],
             (0, 0, 0, 0) => (),
-            (..) => unimplemented!("Unimplemented opcode: {}", opcode),
+            (..) => return Err(format!("Unimplemented opcode: {}", opcode)),
         }
+
+        Ok(())
     }
 
     pub fn tick_timers(&mut self) {
@@ -417,7 +414,7 @@ impl Emulator {
         self.ram[start..end].copy_from_slice(data);
     }
 
-    pub fn get_opcode(&mut self) -> u16 {
-        self.current_opcode
+    pub fn get_pc(&mut self) -> u16 {
+        self.pc
     }
 }

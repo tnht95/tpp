@@ -35,8 +35,8 @@ impl EmuWasm {
 #[wasm_bindgen]
 impl EmuWasm {
     #[wasm_bindgen]
-    pub fn tick(&mut self) {
-        self.emu.tick();
+    pub fn tick(&mut self) -> Result<(), String> {
+        self.emu.tick()
     }
     #[wasm_bindgen]
     pub fn tick_timers(&mut self) {
@@ -46,6 +46,10 @@ impl EmuWasm {
     #[wasm_bindgen]
     pub fn reset(&mut self) {
         self.emu.reset();
+    }
+    #[wasm_bindgen]
+    pub fn get_pc(&mut self) -> u16 {
+        self.emu.get_pc()
     }
 
     #[wasm_bindgen]
@@ -77,11 +81,6 @@ impl EmuWasm {
                 );
             }
         }
-    }
-
-    #[wasm_bindgen]
-    pub fn get_opcode(&mut self) -> u16 {
-        self.emu.get_opcode()
     }
 }
 

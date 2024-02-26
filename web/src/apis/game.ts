@@ -78,3 +78,15 @@ export const fetchGameTagsAction = () =>
   fetch(`${import.meta.env.VITE_API_URL}/games/tags`)
     .then(errHandler)
     .then((r: Response<string[]>) => r.data);
+
+export const fetchRomAction = (id: string) =>
+  fetch(`${import.meta.env.VITE_SERVER_URL}/roms/${id}`, {
+    credentials: 'include'
+  })
+    .then(r => {
+      if (r.status >= 400 && r.status <= 500) {
+        throw new Error('Error fetching game ROM');
+      }
+      return r.arrayBuffer();
+    })
+    .then(r => new Uint8Array(r));

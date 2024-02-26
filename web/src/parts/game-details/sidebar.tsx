@@ -1,3 +1,4 @@
+import { useNavigate } from '@solidjs/router';
 import { For, Show } from 'solid-js';
 
 import { Avatar, EllipsisText, Tag } from '@/components';
@@ -5,6 +6,11 @@ import { useGameDetailsCtx } from '@/context';
 
 export const GameDetailsSidebar = () => {
   const { game } = useGameDetailsCtx();
+  const navigate = useNavigate();
+
+  const click = () => {
+    navigate(`/emulator/${game().id}`);
+  };
   return (
     <div class="w-1/4">
       <div class="block">
@@ -41,6 +47,7 @@ export const GameDetailsSidebar = () => {
       </div>
       <div class="mt-3 flex gap-3">
         <button
+          onClick={click}
           type="button"
           class="mt-2 rounded-lg border border-green-600 bg-green-600 p-2.5 text-sm font-medium text-white hover:bg-white hover:text-green-600 focus:outline-none focus:ring-4 focus:ring-purple-300"
         >

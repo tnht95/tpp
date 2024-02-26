@@ -7,3 +7,4 @@ export * from './dashboard';
 export * from './search';
 export * from './not-found';
 export * from './post-details';
+export * from './emulator';

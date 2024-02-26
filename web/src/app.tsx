@@ -13,6 +13,7 @@ import {
   BlogDetails,
   Blogs,
   Dashboard,
+  Emulator,
   GameDetails,
   Games,
   NotFound,
@@ -45,6 +46,8 @@ export const App = () => (
     <Route path={'/blogs'} component={Blogs} />
     <Route path={'/blogs/:id'} component={BlogDetails} />
     <Route path={'/search'} component={Search} />
+    <Route path={'/emulator/'} component={Emulator} />
+    <Route path={'/emulator/:id?'} component={Emulator} />
     <Route path={'/posts/:id'} component={PostDetailsPage} />
     <Route path={'*404'} component={NotFound} />
   </Router>
