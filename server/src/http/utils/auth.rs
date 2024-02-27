@@ -7,7 +7,10 @@ use axum::{
     response::Response,
 };
 
-use super::{cookie::extract_access_token, err_handler::response_401_err};
+use super::{
+    cookie::{extract_access_token, extract_ws_ticket},
+    err_handler::response_401_err,
+};
 use crate::{
     database::entities::user::User,
     http::Server,
@@ -15,11 +18,12 @@ use crate::{
     utils::jwt::{self},
 };
 
-pub struct Authentication<TInternalServices: IInternalServices>(
-    pub User,
-    pub bool,
-    pub PhantomData<TInternalServices>,
-);
+pub struct Authentication<TInternalServices: IInternalServices> {
+    pub user: User,
+    pub is_admin: bool,
+    pub ws_ticket: String,
+    pub data: PhantomData<TInternalServices>,
+}
 
 #[async_trait]
 impl<S, TInternalServices> FromRequestParts<S> for Authentication<TInternalServices>
@@ -32,18 +36,27 @@ where
     async fn from_request_parts(parts: &mut Parts, state: &S) -> Result<Self, Self::Rejection> {
         let state = Arc::from_ref(state);
         let access_token = extract_access_token(&parts.headers).map_err(|_| response_401_err())?;
+        let ws_ticket = extract_ws_ticket(&parts.headers)
+            .map_err(|_| response_401_err())?
+            .into();
         match jwt::decode(access_token, &state.config.auth.jwt.secret) {
-            Ok(jwt::JwtClaim { user, is_admin, .. }) => Ok(Self(user, is_admin, PhantomData)),
+            Ok(jwt::JwtClaim { user, is_admin, .. }) => Ok(Self {
+                user,
+                is_admin,
+                ws_ticket,
+                data: PhantomData,
+            }),
             Err(_) => Err(response_401_err()),
         }
     }
 }
 
-pub struct AuthenticationMaybe<TInternalServices: IInternalServices>(
-    pub Option<User>,
-    pub Option<bool>,
-    pub PhantomData<TInternalServices>,
-);
+pub struct AuthenticationMaybe<TInternalServices: IInternalServices> {
+    pub user: Option<User>,
+    pub is_admin: Option<bool>,
+    pub ws_ticket: Option<String>,
+    pub data: PhantomData<TInternalServices>,
+}
 
 #[async_trait]
 impl<S, TInternalServices> FromRequestParts<S> for AuthenticationMaybe<TInternalServices>
@@ -57,12 +70,37 @@ where
         let state = Arc::from_ref(state);
         let access_token = match extract_access_token(&parts.headers) {
             Ok(access_token) => access_token,
-            Err(_) => return Ok(Self(None, None, PhantomData)),
+            Err(_) =>
+                return Ok(Self {
+                    user: None,
+                    is_admin: None,
+                    ws_ticket: None,
+                    data: PhantomData,
+                }),
+        };
+        let ws_ticket = match extract_ws_ticket(&parts.headers) {
+            Ok(ws_ticket) => ws_ticket.into(),
+            Err(_) =>
+                return Ok(Self {
+                    user: None,
+                    is_admin: None,
+                    ws_ticket: None,
+                    data: PhantomData,
+                }),
         };
         match jwt::decode(access_token, &state.config.auth.jwt.secret) {
-            Ok(jwt::JwtClaim { user, is_admin, .. }) =>
-                Ok(Self(Some(user), Some(is_admin), PhantomData)),
-            Err(_) => Ok(Self(None, None, PhantomData)),
+            Ok(jwt::JwtClaim { user, is_admin, .. }) => Ok(Self {
+                user: Some(user),
+                is_admin: Some(is_admin),
+                ws_ticket: Some(ws_ticket),
+                data: PhantomData,
+            }),
+            Err(_) => Ok(Self {
+                user: None,
+                is_admin: None,
+                ws_ticket: None,
+                data: PhantomData,
+            }),
         }
     }
 }
