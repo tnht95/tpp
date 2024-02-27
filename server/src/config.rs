@@ -11,6 +11,7 @@ use serde::{Deserialize, Serialize};
 pub struct Config {
     pub log_format: LogFmt,
     pub server: Server,
+    pub cache: Cache,
     pub github_app: GithubApp,
     pub auth: Auth,
     pub site_url: String,
@@ -29,6 +30,12 @@ pub struct Server {
     pub pg_url: String,
     pub pg_max_pool: u32,
     pub cors_max_age: u64, // seconds
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct Cache {
+    pub redis_url: String,
+    pub exp: u64, // seconds
 }
 
 #[derive(Serialize, Deserialize, Debug, Default)]
@@ -59,6 +66,10 @@ impl Default for Config {
                 pg_url: "postgres://service:password@localhost:5432/tpp?sslmode=disable".into(),
                 pg_max_pool: 50,
                 cors_max_age: 3600,
+            },
+            cache: Cache {
+                redis_url: "redis://:redis@localhost:6379/".into(),
+                exp: 3600,
             },
             github_app: GithubApp::default(),
             auth: Auth {
