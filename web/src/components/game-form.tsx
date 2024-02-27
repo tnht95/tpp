@@ -178,12 +178,12 @@ export const GameForm = (props: Props) => {
                     type="file"
                     name="rom"
                     ref={el => {
-                      if (props.game) {
-                        return [];
+                      if (!props.game || isFileUploaderVisible()) {
+                        return validate(el, () => [fileRequired], {
+                          onBlur: false
+                        });
                       }
-                      return [
-                        validate(el, () => [fileRequired], { onBlur: false })
-                      ];
+                      return [];
                     }}
                   />
                   <p class="mt-1 text-sm text-gray-400">

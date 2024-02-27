@@ -35,7 +35,6 @@ export const Emulator = () => {
   const [canvasRef, setCanvasRef] = createSignal<HTMLCanvasElement>();
 
   let ctx: CanvasRenderingContext2D;
-
   const setupCanvas = () => {
     const canvas = canvasRef();
 
@@ -51,11 +50,9 @@ export const Emulator = () => {
   createEffect(() => {
     if (canvasRef()) {
       setupCanvas();
-    }
-    run().catch(() => setErrMsg(OTHER_ERR_STRING));
-
-    if (frame !== 0) {
-      window.cancelAnimationFrame(frame);
+      run().catch(() => {
+        setErrMsg(OTHER_ERR_STRING);
+      });
     }
   });
 
@@ -84,6 +81,10 @@ export const Emulator = () => {
   };
 
   const uploadGameHandler = (event: Event) => {
+    if (frame !== 0) {
+      window.cancelAnimationFrame(frame);
+    }
+
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) {
       setErrMsg('No file chosen');
@@ -118,6 +119,7 @@ export const Emulator = () => {
       loadGame(rom);
     }
   };
+
   const loop = (chip8: EmuWasm) => {
     // Only draw every few ticks
     try {
@@ -156,18 +158,20 @@ export const Emulator = () => {
           <div class="flex flex-col">
             <canvas ref={setCanvasRef} id="canvas" />
             <div class="mt-2 flex justify-between font-semibold text-white">
-              <Show when={!gameId}>
-                <label class="cursor-pointer hover:text-green-300">
+              <label class="cursor-pointer hover:text-green-300">
+                <Show when={!gameId}>
                   <input
                     onChange={uploadGameHandler}
                     type="file"
                     id="fileInput"
                     class="hidden"
                   />
-                  <Show
-                    when={!errMsg()}
-                    fallback={<div class="text-red-500">{errMsg()}</div>}
-                  >
+                </Show>
+                <Show
+                  when={!errMsg()}
+                  fallback={<div class="text-red-500">{errMsg()}</div>}
+                >
+                  {!gameId && (
                     <Show
                       when={fileName()}
                       fallback={
@@ -180,9 +184,9 @@ export const Emulator = () => {
                       <i class="fa-solid fa-ghost mr-2" />
                       {fileName()}
                     </Show>
-                  </Show>
-                </label>
-              </Show>
+                  )}
+                </Show>
+              </label>
               <div
                 class="cursor-pointer text-white hover:text-amber-300"
                 onClick={reloadPage}
