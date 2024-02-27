@@ -1,6 +1,8 @@
+use std::sync::Arc;
+
 use async_trait::async_trait;
 
-use crate::database::IDatabase;
+use crate::{cache::ICache, database::IDatabase};
 
 #[async_trait]
 pub trait IHealthService {
@@ -8,30 +10,36 @@ pub trait IHealthService {
     fn app_close(&mut self);
 }
 
-pub struct HealthService<T: IDatabase> {
-    db: T,
+pub struct HealthService<TDb: IDatabase, TCache: ICache> {
+    db: TDb,
+    cache: Arc<TCache>,
     is_app_closed: bool,
 }
 
-impl<T> HealthService<T>
+impl<TDb, TCache> HealthService<TDb, TCache>
 where
-    T: IDatabase,
+    TDb: IDatabase,
+    TCache: ICache,
 {
-    pub fn new(db: T) -> Self {
+    pub fn new(db: TDb, cache: Arc<TCache>) -> Self {
         Self {
             db,
+            cache,
             is_app_closed: false,
         }
     }
 }
 
 #[async_trait]
-impl<T> IHealthService for HealthService<T>
+impl<TDb, TCache> IHealthService for HealthService<TDb, TCache>
 where
-    T: IDatabase + Send + Sync,
+    TDb: IDatabase + Sync,
+    TCache: ICache + Sync + Send,
 {
     async fn is_healthy(&self) -> bool {
-        !self.is_app_closed && self.db.is_healthy().await
+        !self.is_app_closed
+            && self.cache.is_healthy().await.unwrap_or(false)
+            && self.db.is_healthy().await
     }
 
     fn app_close(&mut self) {
