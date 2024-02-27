@@ -4,7 +4,7 @@ version: "3.5"
 services:
   db:
     container_name: db
-    image: postgres:14-alpine
+    image: postgres:16.2-bookworm
     environment:
       POSTGRES_DB: tpp
       POSTGRES_USER: service
@@ -22,14 +22,15 @@ services:
 
   cache:
     container_name: cache
-    image: redis/redis-stack-server:latest
-    environment:
-      REDIS_ARGS: "--requirepass redis"
+    image: redis:7.2.4-bookworm
+    command: redis-server --requirepass redis
     healthcheck:
-      test: ["CMD", "redis-cli","ping"]
+      test: ["CMD", "redis-cli", "ping"]
       interval: 1s
       timeout: 5s
       retries: 10
+    volumes:
+      - ./data/cache:/data
     ports:
       - 6379:6379
 
