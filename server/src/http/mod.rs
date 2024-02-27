@@ -111,7 +111,7 @@ where
             Router::new()
                 .nest_service("/roms", ServeDir::new(&state.config.rom_dir))
                 .route("/health", get(health::is_healthy))
-                .route("/ws", get(ws::handler))
+                .route("/ws/:ws_ticket", get(ws::handler))
                 .nest(
                     "/api/v1",
                     Router::new()
