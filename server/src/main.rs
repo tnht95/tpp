@@ -20,6 +20,7 @@ use crate::{
         game::GameService,
         health::HealthService,
         like::LikeService,
+        notification::NofitifcationService,
         post::PostService,
         search::SearchService,
         subscribe::SubscribeService,
@@ -94,7 +95,7 @@ async fn main() -> Result<()> {
                     .context("Failed to initialize database")?,
                 Arc::clone(&cache),
             ));
-            let auth_service = AuthService::new(Arc::clone(&cache));
+            let auth_service = AuthService::new(cache);
             let user_service = UserService::new(Arc::clone(&db));
             let game_service = GameService::new(Arc::clone(&db), String::from(&config.rom_dir))
                 .await
@@ -108,6 +109,7 @@ async fn main() -> Result<()> {
             let vote_service = VoteService::new(Arc::clone(&db));
             let like_service = LikeService::new(Arc::clone(&db));
             let activity_service = ActivityService::new(Arc::clone(&db));
+            let notification_service = NofitifcationService::new(db);
 
             Server::<InternalServices>::new(
                 config,
@@ -125,6 +127,7 @@ async fn main() -> Result<()> {
                     .vote(vote_service)
                     .like(like_service)
                     .activity(activity_service)
+                    .notification(notification_service)
                     .build(),
             )
             .start()
