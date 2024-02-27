@@ -13,6 +13,7 @@ use crate::{
     http::Server,
     services::{
         activity::ActivityService,
+        auth::AuthService,
         blog::BlogService,
         comment::CommentService,
         discussion::DiscussionService,
@@ -29,6 +30,7 @@ use crate::{
     },
 };
 
+mod cache;
 mod cli;
 mod config;
 mod database;
@@ -74,6 +76,12 @@ async fn main() -> Result<()> {
                 .await
                 .context("Failed to migrate database")?;
 
+            let cache = Arc::new(
+                cache::Cache::new(&config)
+                    .await
+                    .context("Failed to initialize cache")?,
+            );
+
             let db = Arc::new(
                 Database::new(&config)
                     .await
@@ -84,7 +92,9 @@ async fn main() -> Result<()> {
                 Database::new_with_default_log(&config)
                     .await
                     .context("Failed to initialize database")?,
+                Arc::clone(&cache),
             ));
+            let auth_service = AuthService::new(Arc::clone(&cache));
             let user_service = UserService::new(Arc::clone(&db));
             let game_service = GameService::new(Arc::clone(&db), String::from(&config.rom_dir))
                 .await
@@ -103,6 +113,7 @@ async fn main() -> Result<()> {
                 config,
                 ServicesBuilder::new()
                     .health(health_service)
+                    .auth(auth_service)
                     .user(user_service)
                     .game(game_service)
                     .post(post_service)
