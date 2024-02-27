@@ -25,7 +25,7 @@ use crate::{
 
 pub async fn like<TInternalServices: IInternalServices>(
     State(state): InternalState<TInternalServices>,
-    Authentication(user, ..): Authentication<TInternalServices>,
+    Authentication { user, .. }: Authentication<TInternalServices>,
     JsonValidator(like_req): JsonValidator<AddLikeRequest>,
 ) -> Response {
     match state.services.like.like(user.id, like_req).await {
@@ -36,7 +36,7 @@ pub async fn like<TInternalServices: IInternalServices>(
 
 pub async fn unlike<TInternalServices: IInternalServices>(
     State(state): InternalState<TInternalServices>,
-    Authentication(user, ..): Authentication<TInternalServices>,
+    Authentication { user, .. }: Authentication<TInternalServices>,
     JsonValidator(like_req): JsonValidator<DeleteLikeRequest>,
 ) -> Response {
     match state.services.like.unlike(user.id, like_req).await {

@@ -22,7 +22,7 @@ use crate::{
 pub async fn get_by_id<TInternalServices: IInternalServices>(
     Path(user_id): Path<String>,
     State(state): InternalState<TInternalServices>,
-    AuthenticationMaybe(subscriber, ..): AuthenticationMaybe<TInternalServices>,
+    AuthenticationMaybe { user, .. }: AuthenticationMaybe<TInternalServices>,
 ) -> Response {
     let user_id = match user_id.parse::<i64>() {
         Ok(id) => id,
@@ -32,7 +32,7 @@ pub async fn get_by_id<TInternalServices: IInternalServices>(
     match state
         .services
         .user
-        .get_by_id(user_id, subscriber.map(|s| s.id))
+        .get_by_id(user_id, user.map(|s| s.id))
         .await
     {
         Ok(user) => match user {

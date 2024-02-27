@@ -49,7 +49,7 @@ pub async fn filter<TInternalServices: IInternalServices>(
 pub async fn get_by_id<TInternalServices: IInternalServices>(
     Path(id): Path<String>,
     State(state): InternalState<TInternalServices>,
-    AuthenticationMaybe(user, ..): AuthenticationMaybe<TInternalServices>,
+    AuthenticationMaybe { user, .. }: AuthenticationMaybe<TInternalServices>,
 ) -> Response {
     let id = match id.parse::<Uuid>() {
         Ok(id) => id,
@@ -72,7 +72,7 @@ pub async fn get_by_id<TInternalServices: IInternalServices>(
 pub async fn delete<TInternalServices: IInternalServices>(
     Path(id): Path<String>,
     State(state): InternalState<TInternalServices>,
-    Authentication(user, ..): Authentication<TInternalServices>,
+    Authentication { user, .. }: Authentication<TInternalServices>,
 ) -> Response {
     let id = match id.parse::<Uuid>() {
         Ok(id) => id,
@@ -95,7 +95,7 @@ pub async fn delete<TInternalServices: IInternalServices>(
 
 pub async fn add<TInternalServices: IInternalServices>(
     State(state): InternalState<TInternalServices>,
-    Authentication(user, ..): Authentication<TInternalServices>,
+    Authentication { user, .. }: Authentication<TInternalServices>,
     mut multipart: Multipart,
 ) -> Response {
     let rom_bytes = match extract_bytes_from_multipart(&mut multipart).await {
@@ -135,7 +135,7 @@ pub async fn add<TInternalServices: IInternalServices>(
 pub async fn edit<TInternalServices: IInternalServices>(
     Path(id): Path<String>,
     State(state): InternalState<TInternalServices>,
-    Authentication(user, ..): Authentication<TInternalServices>,
+    Authentication { user, .. }: Authentication<TInternalServices>,
     mut multipart: Multipart,
 ) -> Response {
     let id = match id.parse::<Uuid>() {

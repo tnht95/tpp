@@ -26,7 +26,7 @@ use crate::{
 pub async fn subscribe_user<TInternalServices: IInternalServices>(
     Path(user_id): Path<i64>,
     State(state): InternalState<TInternalServices>,
-    Authentication(user, ..): Authentication<TInternalServices>,
+    Authentication { user, .. }: Authentication<TInternalServices>,
 ) -> Response {
     if user.id == user_id {
         return response_400_with_const(SELF_SUBSCRIBE);
@@ -49,7 +49,7 @@ pub async fn subscribe_user<TInternalServices: IInternalServices>(
 pub async fn unsubscribe_user<TInternalServices: IInternalServices>(
     Path(user_id): Path<String>,
     State(state): InternalState<TInternalServices>,
-    Authentication(user, ..): Authentication<TInternalServices>,
+    Authentication { user, .. }: Authentication<TInternalServices>,
 ) -> Response {
     let user_id = match user_id.parse::<i64>() {
         Ok(id) => id,

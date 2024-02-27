@@ -39,7 +39,7 @@ pub async fn filter<TInternalServices: IInternalServices>(
 
 pub async fn add<TInternalServices: IInternalServices>(
     State(state): InternalState<TInternalServices>,
-    Authentication(user, is_admin, _): Authentication<TInternalServices>,
+    Authentication { user, is_admin, .. }: Authentication<TInternalServices>,
     JsonValidator(blog): JsonValidator<AddBlogRequest>,
 ) -> Response {
     if !is_admin {
@@ -72,7 +72,7 @@ pub async fn get_by_id<TInternalServices: IInternalServices>(
 pub async fn delete<TInternalServices: IInternalServices>(
     Path(id): Path<String>,
     State(state): InternalState<TInternalServices>,
-    Authentication(_, is_admin, _): Authentication<TInternalServices>,
+    Authentication { is_admin, .. }: Authentication<TInternalServices>,
 ) -> Response {
     if !is_admin {
         return response_403_err();
@@ -92,7 +92,7 @@ pub async fn delete<TInternalServices: IInternalServices>(
 pub async fn edit<TInternalServices: IInternalServices>(
     Path(id): Path<String>,
     State(state): InternalState<TInternalServices>,
-    Authentication(_, is_admin, _): Authentication<TInternalServices>,
+    Authentication { is_admin, .. }: Authentication<TInternalServices>,
     JsonValidator(blog): JsonValidator<EditBlogRequest>,
 ) -> Response {
     if !is_admin {

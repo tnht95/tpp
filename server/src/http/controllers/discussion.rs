@@ -51,7 +51,7 @@ pub async fn filter<TInternalServices: IInternalServices>(
 pub async fn add<TInternalServices: IInternalServices>(
     Path(game_id): Path<String>,
     State(state): InternalState<TInternalServices>,
-    Authentication(user, ..): Authentication<TInternalServices>,
+    Authentication { user, .. }: Authentication<TInternalServices>,
     JsonValidator(discussion): JsonValidator<AddDiscussionRequest>,
 ) -> Response {
     let game_id = match game_id.parse::<Uuid>() {
@@ -73,7 +73,7 @@ pub async fn add<TInternalServices: IInternalServices>(
 pub async fn get_by_id<TInternalServices: IInternalServices>(
     Path((game_id, id)): Path<(String, String)>,
     State(state): InternalState<TInternalServices>,
-    AuthenticationMaybe(user, ..): AuthenticationMaybe<TInternalServices>,
+    AuthenticationMaybe { user, .. }: AuthenticationMaybe<TInternalServices>,
 ) -> Response {
     let id = match id.parse::<Uuid>() {
         Ok(id) => id,
@@ -102,7 +102,7 @@ pub async fn get_by_id<TInternalServices: IInternalServices>(
 pub async fn edit<TInternalServices: IInternalServices>(
     Path((game_id, id)): Path<(String, String)>,
     State(state): InternalState<TInternalServices>,
-    Authentication(user, ..): Authentication<TInternalServices>,
+    Authentication { user, .. }: Authentication<TInternalServices>,
     JsonValidator(discussion): JsonValidator<EditDiscussionRequest>,
 ) -> Response {
     let id = match id.parse::<Uuid>() {
@@ -137,7 +137,7 @@ pub async fn edit<TInternalServices: IInternalServices>(
 pub async fn delete<TInternalServices: IInternalServices>(
     Path((game_id, id)): Path<(String, String)>,
     State(state): InternalState<TInternalServices>,
-    Authentication(user, ..): Authentication<TInternalServices>,
+    Authentication { user, .. }: Authentication<TInternalServices>,
 ) -> Response {
     let id = match id.parse::<Uuid>() {
         Ok(id) => id,

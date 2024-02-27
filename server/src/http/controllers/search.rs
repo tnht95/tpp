@@ -24,7 +24,7 @@ use crate::{
 pub async fn search<TInternalServices: IInternalServices>(
     QueryValidator(pagination): QueryValidator<SearchPagination>,
     State(state): InternalState<TInternalServices>,
-    AuthenticationMaybe(user, ..): AuthenticationMaybe<TInternalServices>,
+    AuthenticationMaybe { user, .. }: AuthenticationMaybe<TInternalServices>,
 ) -> Response {
     match state
         .services

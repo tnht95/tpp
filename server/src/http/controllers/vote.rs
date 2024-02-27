@@ -27,7 +27,7 @@ use crate::{
 pub async fn vote<TInternalServices: IInternalServices>(
     Path(game_id): Path<String>,
     State(state): InternalState<TInternalServices>,
-    Authentication(user, ..): Authentication<TInternalServices>,
+    Authentication { user, .. }: Authentication<TInternalServices>,
     JsonValidator(vote): JsonValidator<AddVoteRequest>,
 ) -> Response {
     let game_id = match game_id.parse::<Uuid>() {
@@ -46,7 +46,7 @@ pub async fn vote<TInternalServices: IInternalServices>(
 pub async fn un_vote<TInternalServices: IInternalServices>(
     Path(game_id): Path<String>,
     State(state): InternalState<TInternalServices>,
-    Authentication(user, ..): Authentication<TInternalServices>,
+    Authentication { user, .. }: Authentication<TInternalServices>,
 ) -> Response {
     let game_id = match game_id.parse::<Uuid>() {
         Ok(id) => id,

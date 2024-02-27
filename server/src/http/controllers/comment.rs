@@ -34,7 +34,7 @@ use crate::{
 pub async fn filter<TInternalServices: IInternalServices>(
     State(state): InternalState<TInternalServices>,
     Query(pagination): Query<PaginationWithTarget>,
-    AuthenticationMaybe(user, ..): AuthenticationMaybe<TInternalServices>,
+    AuthenticationMaybe { user, .. }: AuthenticationMaybe<TInternalServices>,
 ) -> Response {
     match state
         .services
@@ -49,7 +49,7 @@ pub async fn filter<TInternalServices: IInternalServices>(
 
 pub async fn add<TInternalServices: IInternalServices>(
     State(state): InternalState<TInternalServices>,
-    Authentication(user, ..): Authentication<TInternalServices>,
+    Authentication { user, .. }: Authentication<TInternalServices>,
     JsonValidator(comment): JsonValidator<AddCommentRequest>,
 ) -> Response {
     match state
@@ -66,7 +66,7 @@ pub async fn add<TInternalServices: IInternalServices>(
 pub async fn delete<TInternalServices: IInternalServices>(
     Path(id): Path<String>,
     State(state): InternalState<TInternalServices>,
-    Authentication(user, ..): Authentication<TInternalServices>,
+    Authentication { user, .. }: Authentication<TInternalServices>,
     Json(comment): Json<DeleteCommentRequest>,
 ) -> Response {
     let id = match id.parse::<Uuid>() {
@@ -91,7 +91,7 @@ pub async fn delete<TInternalServices: IInternalServices>(
 pub async fn edit<TInternalServices: IInternalServices>(
     Path(id): Path<String>,
     State(state): InternalState<TInternalServices>,
-    Authentication(user, ..): Authentication<TInternalServices>,
+    Authentication { user, .. }: Authentication<TInternalServices>,
     JsonValidator(comment): JsonValidator<EditCommentRequest>,
 ) -> Response {
     let id = match id.parse::<Uuid>() {
