@@ -121,7 +121,7 @@ pub async fn me<TInternalServices: IInternalServices>(
     }: Authentication<TInternalServices>,
 ) -> Response {
     Json(HttpResponse {
-        data: json!({"user": user, "isAdmin": is_admin, "ws_ticket": ws_ticket }),
+        data: json!({"user": user, "isAdmin": is_admin, "wsTicket": ws_ticket }),
     })
     .into_response()
 }
@@ -134,10 +134,16 @@ pub async fn log_out<TInternalServices: IInternalServices>(
         return response_unhandled_err(anyhow!(e));
     };
     (
-        [(
-            SET_COOKIE,
-            "access_token=;SameSite=None;Secure;HttpOnly;Max-Age=0".to_string(),
-        )],
+        AppendHeaders([
+            (
+                SET_COOKIE,
+                "access_token=;SameSite=None;Secure;HttpOnly;Max-Age=0".to_string(),
+            ),
+            (
+                SET_COOKIE,
+                "ws_ticket=;SameSite=None;Secure;HttpOnly;Max-Age=0".to_string(),
+            ),
+        ]),
         Json(HttpResponse { data: () }),
     )
         .into_response()
