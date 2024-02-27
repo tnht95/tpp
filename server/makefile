@@ -11,7 +11,7 @@ fmt:
 	pg_format migrations/* --inplace
 
 lint:
-	cargo clippy --all-features --all --tests --examples -- -D clippy::all -D warnings
+	cargo clippy --bins --examples --tests --benches --all-targets --all-features --frozen --locked -- -D warnings -D clippy::all
 
 test:
 	cargo test
