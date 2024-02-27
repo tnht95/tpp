@@ -7,7 +7,7 @@ use axum::{
         header::{LOCATION, SET_COOKIE},
         StatusCode,
     },
-    response::{IntoResponse, Response},
+    response::{AppendHeaders, IntoResponse, Response},
     Json,
 };
 use chrono::Utc;
@@ -90,16 +90,23 @@ pub async fn authentication<TInternalServices: IInternalServices>(
 
     (
         StatusCode::FOUND,
-        [
+        AppendHeaders([
             (
                 SET_COOKIE,
                 format!(
-                    "access_token={jwt};ws_ticket={ws_ticket};SameSite=None;Secure;HttpOnly;Max-Age={}",
+                    "access_token={jwt};SameSite=None;Secure;HttpOnly;Max-Age={}",
+                    state.config.auth.jwt.expire_in
+                ),
+            ),
+            (
+                SET_COOKIE,
+                format!(
+                    "ws_ticket={ws_ticket};SameSite=None;Secure;HttpOnly;Max-Age={}",
                     state.config.auth.jwt.expire_in
                 ),
             ),
             (LOCATION, String::from(&state.config.auth.redirect_url)),
-        ],
+        ]),
         Json(HttpResponse { data: () }),
     )
         .into_response()

@@ -13,11 +13,11 @@ pub fn extract_access_token(headers: &HeaderMap) -> Result<&str> {
 
     let access_token = cookie
         .split(';')
-        .find(|item| item.starts_with("access_token="))
+        .find(|item| item.trim().starts_with("access_token="))
         .ok_or(anyhow!("access token not found"))?;
 
     // skip "access_token="
-    Ok(&access_token[13..])
+    Ok(&access_token.trim()[13..])
 }
 
 pub fn extract_ws_ticket(headers: &HeaderMap) -> Result<&str> {
@@ -25,9 +25,9 @@ pub fn extract_ws_ticket(headers: &HeaderMap) -> Result<&str> {
 
     let ws_ticket = cookie
         .split(';')
-        .find(|item| item.starts_with("ws_ticket="))
+        .find(|item| item.trim().starts_with("ws_ticket="))
         .ok_or(anyhow!("websocket ticket not found"))?;
 
     // skip "ws_ticket="
-    Ok(&ws_ticket[10..])
+    Ok(&ws_ticket.trim()[10..])
 }
