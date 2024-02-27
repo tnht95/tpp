@@ -25,6 +25,7 @@ use crate::{
         HttpResponse,
     },
     services::{
+        auth::IAuthService,
         user::{IUserService, UserServiceErr},
         IInternalServices,
     },
@@ -77,6 +78,11 @@ pub async fn authentication<TInternalServices: IInternalServices>(
         Err(UserServiceErr::Other(e)) => return response_unhandled_err(e),
     };
 
+    let ws_ticket = match state.services.auth.issue_ws_ticket(&user).await {
+        Ok(ws_ticket) => ws_ticket,
+        Err(e) => return response_unhandled_err(anyhow!(e)),
+    };
+
     let jwt = match jwt::encode(user, &state.config) {
         Ok(jwt) => jwt,
         Err(e) => return response_unhandled_err(anyhow!(e)),
@@ -88,7 +94,7 @@ pub async fn authentication<TInternalServices: IInternalServices>(
             (
                 SET_COOKIE,
                 format!(
-                    "access_token={jwt};SameSite=None;Secure;HttpOnly;Max-Age={}",
+                    "access_token={jwt};ws_ticket={ws_ticket};SameSite=None;Secure;HttpOnly;Max-Age={}",
                     state.config.auth.jwt.expire_in
                 ),
             ),
@@ -100,15 +106,26 @@ pub async fn authentication<TInternalServices: IInternalServices>(
 }
 
 pub async fn me<TInternalServices: IInternalServices>(
-    Authentication(user, is_admin, _): Authentication<TInternalServices>,
+    Authentication {
+        user,
+        is_admin,
+        ws_ticket,
+        ..
+    }: Authentication<TInternalServices>,
 ) -> Response {
     Json(HttpResponse {
-        data: json!({"user": user, "isAdmin": is_admin}),
+        data: json!({"user": user, "isAdmin": is_admin, "ws_ticket": ws_ticket }),
     })
     .into_response()
 }
 
-pub async fn log_out() -> Response {
+pub async fn log_out<TInternalServices: IInternalServices>(
+    Authentication { ws_ticket, .. }: Authentication<TInternalServices>,
+    State(state): InternalState<TInternalServices>,
+) -> Response {
+    if let Err(e) = state.services.auth.delete_ws_ticket(&ws_ticket).await {
+        return response_unhandled_err(anyhow!(e));
+    };
     (
         [(
             SET_COOKIE,
