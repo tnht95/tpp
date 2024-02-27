@@ -4,6 +4,6 @@ pub mod comment;
 pub mod discussion;
 pub mod game;
 pub mod like;
+pub mod notification;
 pub mod post;
 pub mod user;
-pub mod notification;

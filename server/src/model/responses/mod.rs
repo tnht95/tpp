@@ -3,12 +3,12 @@ pub mod blog;
 pub mod comment;
 pub mod discussion;
 pub mod game;
+pub mod notification;
 pub mod post;
 pub mod search;
 pub mod subscribe;
 pub mod user;
 pub mod vote;
-pub mod notification;
 
 use serde::Serialize;
 
