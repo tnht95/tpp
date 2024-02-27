@@ -10,3 +10,10 @@ pub struct SearchResult {
     pub posts: Vec<PostDetails>,
     pub blogs: Vec<BlogSummary>,
 }
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct TagSearchResult {
+    pub games: Vec<GameSummary>,
+    pub blogs: Vec<BlogSummary>,
+}

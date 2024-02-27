@@ -9,7 +9,7 @@ use uuid::Uuid;
 use crate::{
     database::IDatabase,
     model::{
-        requests::game::{AddGameRequest, EditGameRequest, GamePaginationInternal},
+        requests::game::{AddGameRequest, EditGameRequest, GamePaginationInternal, OrderField},
         responses::game::{GameDetails, GameSummary},
     },
 };
@@ -111,10 +111,13 @@ where
             separated.push("= any(tags)");
         }
 
-        separated.push(format!(
-            "order by {} {}",
-            pagination.order_field, pagination.order_by
-        ));
+        separated.push(format!("order by {}", pagination.order_field));
+
+        if pagination.order_field == OrderField::Name {
+            separated.push("collate \"en-US-x-icu\"");
+        };
+
+        separated.push(format!("{}", pagination.order_by));
 
         separated.push("offset");
         separated.push_bind(pagination.offset);

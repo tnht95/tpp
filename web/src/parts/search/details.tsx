@@ -18,9 +18,9 @@ export const SearchDetails = () => {
     utils: { keyword, category, loading, showMore }
   } = useSearchCtx();
   return (
-    <div class="flex">
-      <nav class="flex-2" />
-      <main class="flex flex-3 flex-col gap-7 border-x border-dashed px-32 py-10">
+    <div class="flex min-h-[calc(100svh-4rem)]">
+      <nav class="sticky right-0 top-0 flex-2 border border-dashed" />
+      <main class="flex flex-3 flex-col gap-7 px-32 py-10">
         <p class="text-2xl font-bold text-indigo-900">
           Results for "{keyword()}":
         </p>
@@ -53,7 +53,7 @@ export const SearchDetails = () => {
           handleShowMore={fetchMore}
         />
       </main>
-      <nav class="flex-2" />
+      <nav class="sticky left-0 top-0 flex-2 border border-dashed" />
     </div>
   );
 };

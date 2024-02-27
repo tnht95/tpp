@@ -67,7 +67,7 @@ export const BlogDetailsInfo = () => {
           </CommentsProvider>
         </div>
       </div>
-      <div class="w-1/6">
+      <div class="w-1/4">
         <TagSidebar tags={blog().tags} loading={() => false} />
       </div>
     </div>

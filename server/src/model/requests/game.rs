@@ -48,7 +48,7 @@ impl std::fmt::Display for OrderBy {
         }
     }
 }
-#[derive(Deserialize)]
+#[derive(Deserialize, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub enum OrderField {
     CreatedAt,

@@ -7,12 +7,17 @@ use tokio::sync::oneshot;
 use crate::{
     database::IDatabase,
     model::{
-        requests::search::{Category, SearchPaginationInternal},
+        requests::search::{
+            Category,
+            SearchPaginationInternal,
+            TagCategory,
+            TagSearchPaginationInternal,
+        },
         responses::{
             blog::BlogSummary,
             game::GameSummary,
             post::PostDetails,
-            search::SearchResult,
+            search::{SearchResult, TagSearchResult},
             user::UserSummary,
         },
     },
@@ -31,6 +36,12 @@ pub trait ISearchService {
         pagination: SearchPaginationInternal,
         user_id: Option<i64>,
     ) -> Result<SearchResult, SearchServiceErr>;
+
+    async fn tag_search(
+        &self,
+        pagination: TagSearchPaginationInternal,
+        tag: String,
+    ) -> Result<TagSearchResult, SearchServiceErr>;
 }
 
 pub struct SearchService<T: IDatabase> {
@@ -203,6 +214,80 @@ where
             );
         });
     }
+
+    fn search_blogs_by_tag(
+        &self,
+        tag: Arc<String>,
+        pagination: Arc<TagSearchPaginationInternal>,
+        tx: oneshot::Sender<Result<Vec<BlogSummary>, SearchServiceErr>>,
+    ) {
+        if !pagination
+            .category
+            .as_ref()
+            .map(|c| matches!(c, TagCategory::Blogs))
+            .unwrap_or(true)
+        {
+            let _ = tx.send(Ok(vec![]));
+            return;
+        }
+
+        let db = Arc::clone(&self.db);
+        tokio::spawn(async move {
+            let _ = tx.send(
+                sqlx::query_as!(
+                    BlogSummary,
+                    "select
+                        id, title, description, tags, created_at
+                    from blogs
+                    where
+                        $1 ilike any(tags)
+                    order by created_at desc offset $2 limit $3",
+                    format!("{}", tag),
+                    pagination.offset,
+                    pagination.limit,
+                )
+                .fetch_all(db.get_pool())
+                .await
+                .map_err(|e| SearchServiceErr::Other(e.into())),
+            );
+        });
+    }
+
+    fn search_games_by_tag(
+        &self,
+        tag: Arc<String>,
+        pagination: Arc<TagSearchPaginationInternal>,
+        tx: oneshot::Sender<Result<Vec<GameSummary>, SearchServiceErr>>,
+    ) {
+        if !pagination
+            .category
+            .as_ref()
+            .map(|c| matches!(c, TagCategory::Games))
+            .unwrap_or(true)
+        {
+            let _ = tx.send(Ok(vec![]));
+            return;
+        }
+
+        let db = Arc::clone(&self.db);
+        tokio::spawn(async move {
+            let _ = tx.send(
+                sqlx::query_as!(
+                    GameSummary,
+                    "select id, name, author_id, author_name, avatar_url, up_votes, down_votes
+                    from games
+                    where $1 ilike any(tags)
+                    order by created_at desc offset $2 limit $3",
+                    format!("{}", tag),
+                    pagination.offset,
+                    pagination.limit,
+                )
+                .fetch_all(db.get_pool())
+                .await
+                .map_err(|e| SearchServiceErr::Other(e.into())),
+            );
+        });
+    }
 }
 
 #[async_trait]
@@ -239,6 +324,31 @@ where
             posts: post_rx
                 .await
                 .unwrap_or_else(|e| Err(SearchServiceErr::Other(e.into())))?,
+            blogs: blog_rx
+                .await
+                .unwrap_or_else(|e| Err(SearchServiceErr::Other(e.into())))?,
+        })
+    }
+
+    async fn tag_search(
+        &self,
+        pagination: TagSearchPaginationInternal,
+        tag: String,
+    ) -> Result<TagSearchResult, SearchServiceErr> {
+        let pagination_ref = Arc::new(pagination);
+        let tag_ref = Arc::new(tag);
+
+        let (game_tx, game_rx) = oneshot::channel();
+        self.search_games_by_tag(Arc::clone(&tag_ref), Arc::clone(&pagination_ref), game_tx);
+
+        let (blog_tx, blog_rx) = oneshot::channel();
+        self.search_blogs_by_tag(Arc::clone(&tag_ref), pagination_ref, blog_tx);
+
+        Ok(TagSearchResult {
+            games: game_rx
+                .await
+                .unwrap_or_else(|e| Err(SearchServiceErr::Other(e.into())))?,
+
             blogs: blog_rx
                 .await
                 .unwrap_or_else(|e| Err(SearchServiceErr::Other(e.into())))?,

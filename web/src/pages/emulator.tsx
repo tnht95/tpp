@@ -53,6 +53,10 @@ export const Emulator = () => {
       setupCanvas();
     }
     run().catch(() => setErrMsg(OTHER_ERR_STRING));
+
+    if (frame !== 0) {
+      window.cancelAnimationFrame(frame);
+    }
   });
 
   let chip8: EmuWasm;
@@ -80,10 +84,6 @@ export const Emulator = () => {
   };
 
   const uploadGameHandler = (event: Event) => {
-    if (frame !== 0) {
-      window.cancelAnimationFrame(frame);
-    }
-
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) {
       setErrMsg('No file chosen');
@@ -129,8 +129,6 @@ export const Emulator = () => {
       return;
     }
     chip8.tick_timers();
-
-    // Clear the canvas before drawing
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, WIDTH * SCALE, HEIGHT * SCALE);
 

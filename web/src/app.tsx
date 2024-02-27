@@ -19,6 +19,7 @@ import {
   NotFound,
   PostDetailsPage,
   Search,
+  TagSearch,
   UserDetails
 } from './pages';
 
@@ -49,6 +50,7 @@ export const App = () => (
     <Route path={'/emulator/'} component={Emulator} />
     <Route path={'/emulator/:id?'} component={Emulator} />
     <Route path={'/posts/:id'} component={PostDetailsPage} />
+    <Route path={'/tags/:name'} component={TagSearch} />
     <Route path={'*404'} component={NotFound} />
   </Router>
 );

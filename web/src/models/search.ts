@@ -9,3 +9,8 @@ export type SearchResult = {
   posts: PostDetails[];
   blogs: BlogSummary[];
 };
+
+export type TagSearchResult = {
+  games: GameSummary[];
+  blogs: BlogSummary[];
+};

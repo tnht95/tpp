@@ -11,7 +11,7 @@ export const Games = () => {
       <GamesProvider>
         <GameList />
       </GamesProvider>
-      <div class="w-1/6">
+      <div class="w-1/4">
         <TagSidebar tags={tagResource()} loading={() => tagResource.loading} />
       </div>
     </div>
