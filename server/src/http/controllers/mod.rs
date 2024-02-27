@@ -6,6 +6,7 @@ pub mod discussion;
 pub mod game;
 pub mod health;
 pub mod like;
+pub mod notification;
 pub mod post;
 pub mod search;
 pub mod subscribe;
