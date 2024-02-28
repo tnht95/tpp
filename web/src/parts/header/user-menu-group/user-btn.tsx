@@ -7,7 +7,6 @@ import { useDropdownUtils } from '@/utils';
 export const UserMenuGroupUserBtn = () => {
   const { user, dispatch } = authenticationStore;
   const dropdown = useDropdownUtils();
-
   return (
     <>
       <button
@@ -15,7 +14,10 @@ export const UserMenuGroupUserBtn = () => {
         class="flex items-center py-0.5 pe-1 text-sm font-bold text-white hover:text-blue-600"
       >
         <div class="pointer-events-none">
-          <Avatar img={user()?.avatar as string} />
+          <Avatar
+            img={user()?.avatar as string}
+            userId={user()?.id as number}
+          />
         </div>
       </button>
       <div
