@@ -9,6 +9,7 @@ export * from './vote';
 export * from './subscribe';
 export * from './like';
 export * from './activity';
+export * from './notification';
 
 export const errHandler = async (r: Response) => {
   if (r.status >= 400 && r.status <= 500) {
