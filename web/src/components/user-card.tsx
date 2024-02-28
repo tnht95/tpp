@@ -11,6 +11,5 @@ export const UserCard = (props: Props) => (
     <EllipsisText maxWidth="max-w-36" customStyle="font-bold mt-2">
       {props.user.name}
     </EllipsisText>
-    <p class="text-xs text-gray-400">23 followers</p>
   </div>
 );

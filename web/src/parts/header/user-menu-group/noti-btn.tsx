@@ -24,7 +24,10 @@ import { authenticationStore } from '@/store';
 import { connect, disconnect, useDropdownUtils } from '@/utils';
 
 export const UserMenuGroupNotiBtn = () => {
-  const dropdown = useDropdownUtils();
+  const dropdown = useDropdownUtils({
+    onHide: () => setIsNotiOpen(false),
+    onShow: () => setIsNotiOpen(true)
+  });
   const { showToast } = useToastCtx();
   const {
     utils: { getWsTicket }
@@ -32,6 +35,7 @@ export const UserMenuGroupNotiBtn = () => {
   const [isCheckResource] = createResource(fetchNotificationCheckAction, {
     initialValue: true
   });
+  const [isNotiOpen, setIsNotiOpen] = createSignal(false);
   const [isCheck, setIsCheck] = createSignal(isCheckResource());
   const [reachedBottom, setReachedBottom] = createSignal(false);
   const [query, setQuery] = createSignal({ offset: 0 });
@@ -99,6 +103,7 @@ export const UserMenuGroupNotiBtn = () => {
           showToast({ msg: (error as RespErr).msg, type: 'err' })
         );
         setIsCheck(true);
+        setIsNotiOpen(true);
       }
     });
 
@@ -117,10 +122,8 @@ export const UserMenuGroupNotiBtn = () => {
   return (
     <>
       <button
-        class="relative py-1.5 text-sm font-medium text-black hover:text-gray-500 focus:outline-none"
+        class={`relative py-1.5 text-sm font-medium  ${isNotiOpen() ? 'text-gray-300' : 'text-black'} hover:text-gray-500 focus:outline-none`}
         ref={dropdown.initBtnRef}
-        disabled={notifications.length === 0}
-        classList={{ 'cursor-not-allowed': notifications.length === 0 }}
         onClick={onNotiClickHandler}
       >
         <i class="fa-solid fa-earth-americas text-2xl" />
@@ -132,14 +135,23 @@ export const UserMenuGroupNotiBtn = () => {
         class="z-10 hidden max-h-96 w-96 divide-y divide-gray-100 overflow-y-auto rounded-lg bg-white shadow"
         ref={dropdown.initRef}
       >
-        <For each={notifications}>
-          {notification => (
-            <NotificationCard
-              notification={notification}
-              onClick={onNotiCardClickHandler}
-            />
-          )}
-        </For>
+        <Show
+          when={notifications.length > 0}
+          fallback={
+            <div class="flex h-20 items-center justify-center text-gray-300">
+              <p>---Nothing to show---</p>
+            </div>
+          }
+        >
+          <For each={notifications}>
+            {notification => (
+              <NotificationCard
+                notification={notification}
+                onClick={onNotiCardClickHandler}
+              />
+            )}
+          </For>
+        </Show>
       </div>
     </>
   );

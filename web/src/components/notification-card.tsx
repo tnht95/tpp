@@ -84,7 +84,7 @@ const buildUrl = (
 
 export const NotificationCard = (props: Props) => (
   <div
-    class="flex justify-between p-4"
+    class="flex justify-between p-4 hover:bg-gray-100"
     classList={{ 'bg-indigo-100': !props.notification.isRead }}
   >
     <div class="flex flex-1 items-center gap-3">
