@@ -1,5 +1,12 @@
 import { useParams } from '@solidjs/router';
-import { batch, createResource, ErrorBoundary, Show } from 'solid-js';
+import {
+  batch,
+  createEffect,
+  createResource,
+  createSignal,
+  ErrorBoundary,
+  Show
+} from 'solid-js';
 
 import { deletePostAction, editPostAction, getPostByIdAction } from '@/apis';
 import { LoadingSpinner, PostCard } from '@/components';
@@ -8,9 +15,13 @@ import { PostDetails, RespErr } from '@/models';
 import { NotFound } from '@/pages';
 
 export const PostDetailsPage = () => {
-  const postId = useParams()['id'] as string;
+  const [postId, setPostId] = createSignal<string>(useParams()['id'] as string);
   const { showToast } = useToastCtx();
   const [post, { mutate }] = createResource(postId, getPostByIdAction);
+
+  createEffect(() => {
+    setPostId(useParams()['id'] as string);
+  });
 
   const del = (postId: string) => {
     deletePostAction(postId)
