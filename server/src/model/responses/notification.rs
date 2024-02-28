@@ -1,11 +1,11 @@
 use chrono::{DateTime, Utc};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 use crate::database::entities::notification::NotificationType;
 
-#[derive(Serialize)]
-#[serde(rename_all = "camelCase")]
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all(serialize = "camelCase"))]
 pub struct Notification {
     pub id: i64,
     pub to_user_id: i64,

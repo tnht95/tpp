@@ -1,7 +1,7 @@
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, sqlx::Type)]
-#[serde(rename_all = "camelCase")]
+#[derive(Serialize, Deserialize, sqlx::Type)]
+#[serde(rename_all(serialize = "camelCase", deserialize = "snake_case"))]
 #[sqlx(type_name = "noti_type", rename_all = "snake_case")]
 pub enum NotificationType {
     LikePost,
