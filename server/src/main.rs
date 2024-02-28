@@ -41,9 +41,7 @@ mod services;
 mod utils;
 
 // TODO
-// docker
 // swagger
-// redis
 // test
 // CI/CD
 #[tokio::main]

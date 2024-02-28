@@ -1,11 +1,12 @@
 import { Dropdown, DropdownOptions } from 'flowbite';
-import { createEffect, createSignal, Setter } from 'solid-js';
+import { Accessor, createEffect, createSignal, Setter } from 'solid-js';
 
 export type DropdownUtil = {
   show: () => void;
   hide: () => void;
   initRef: Setter<HTMLDivElement | undefined>;
   initBtnRef: Setter<HTMLButtonElement | undefined>;
+  dropdownRef: Accessor<HTMLDivElement | undefined>;
 };
 
 export const useDropdownUtils = (opts?: DropdownOptions): DropdownUtil => {
@@ -21,6 +22,7 @@ export const useDropdownUtils = (opts?: DropdownOptions): DropdownUtil => {
     show: () => dropdown()?.show(),
     hide: () => dropdown()?.hide(),
     initRef: setDropdownRef,
-    initBtnRef: setBtnRef
+    initBtnRef: setBtnRef,
+    dropdownRef
   };
 };

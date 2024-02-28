@@ -17,6 +17,7 @@ import {
   readNotificationAction
 } from '@/apis';
 import { NotificationCard } from '@/components';
+import { PAGINATION } from '@/constant';
 import { useToastCtx } from '@/context';
 import { Notification, RespErr } from '@/models';
 import { authenticationStore } from '@/store';
@@ -32,11 +33,32 @@ export const UserMenuGroupNotiBtn = () => {
     initialValue: true
   });
   const [isCheck, setIsCheck] = createSignal(isCheckResource());
-  const [query] = createSignal({ offset: 0 });
+  const [reachedBottom, setReachedBottom] = createSignal(false);
+  const [query, setQuery] = createSignal({ offset: 0 });
   const [notiResource] = createResource(query, filterNotificationsAction, {
     initialValue: []
   });
   const [notifications, setNotifications] = createStore<Notification[]>([]);
+
+  onMount(() => {
+    connect(getWsTicket() as string, handleNewNoti);
+    const ddRef = dropdown.dropdownRef();
+    if (ddRef) {
+      ddRef.addEventListener('scroll', handleScroll);
+    }
+  });
+
+  onCleanup(() => {
+    disconnect();
+    const ddRef = dropdown.dropdownRef();
+    if (ddRef) {
+      ddRef.removeEventListener('scroll', handleScroll);
+    }
+  });
+
+  createEffect(() => {
+    setIsCheck(isCheckResource());
+  });
 
   createEffect(() => {
     if (notiResource().length > 0) {
@@ -44,38 +66,45 @@ export const UserMenuGroupNotiBtn = () => {
     }
   });
 
-  onMount(() => {
-    connect(getWsTicket() as string, noti => {
+  const handleScroll = () => {
+    const { scrollTop, clientHeight, scrollHeight } =
+      dropdown.dropdownRef() as HTMLDivElement;
+    const scrollPercentage = (scrollTop / (scrollHeight - clientHeight)) * 100;
+    if (scrollPercentage > 90 && !reachedBottom()) {
       batch(() => {
+        setQuery(p => ({ ...p, offset: p.offset + PAGINATION }));
+        setReachedBottom(true);
+      });
+    }
+  };
+
+  const handleNewNoti = (noti: Notification) =>
+    batch(() => {
+      if (noti.id > (notifications[0]?.id || 0)) {
         setNotifications(produce(notis => notis.unshift(noti)));
         setIsCheck(false);
-      });
+      }
     });
-  });
-
-  onCleanup(() => {
-    disconnect();
-  });
-
-  createEffect(() => {
-    setIsCheck(isCheckResource());
-  });
 
   const onNotiClickHandler = () =>
     batch(() => {
-      checkNotificationAction().catch(error =>
-        showToast({ msg: (error as RespErr).msg, type: 'err' })
-      );
-      setIsCheck(true);
-    });
-
-  const onNotiCardClickHandler = (id: number) =>
-    batch(() => {
-      readNotificationAction(id)
-        .then(() => setNotifications(n => n.id === id, 'isRead', true))
-        .catch(error =>
+      if (!isCheck()) {
+        checkNotificationAction().catch(error =>
           showToast({ msg: (error as RespErr).msg, type: 'err' })
         );
+        setIsCheck(true);
+      }
+    });
+
+  const onNotiCardClickHandler = (noti: Notification) =>
+    batch(() => {
+      if (!noti.isRead) {
+        readNotificationAction(noti.id)
+          .then(() => setNotifications(n => n.id === noti.id, 'isRead', true))
+          .catch(error =>
+            showToast({ msg: (error as RespErr).msg, type: 'err' })
+          );
+      }
       dropdown.hide();
     });
 
@@ -89,12 +118,12 @@ export const UserMenuGroupNotiBtn = () => {
         onClick={onNotiClickHandler}
       >
         <i class="fa-solid fa-earth-americas text-2xl" />
-        <Show when={isCheck() === false}>
+        <Show when={!isCheck()}>
           <div class="absolute left-4 start-4 top-1.5 block size-3 rounded-full border-2 border-white bg-red-500" />
         </Show>
       </button>
       <div
-        class="z-10 hidden w-80 divide-y divide-gray-100 rounded-lg bg-white shadow"
+        class="z-10 hidden max-h-96 w-96 divide-y divide-gray-100 overflow-y-auto rounded-lg bg-white shadow"
         ref={dropdown.initRef}
       >
         <For each={notifications}>
