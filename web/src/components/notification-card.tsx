@@ -6,7 +6,7 @@ import { formatTime } from '@/utils';
 
 type Props = {
   notification: Notification;
-  onClick?: () => void;
+  onClick?: (id: number) => void;
 };
 
 const content: Record<NotificationType, string> = {
@@ -100,7 +100,7 @@ export const NotificationCard = (props: Props) => (
           props.notification.byUserId
         )}
         class="flex flex-1 flex-col text-sm text-black"
-        onClick={() => props.onClick && props.onClick()}
+        onClick={() => props.onClick && props.onClick(props.notification.id)}
       >
         <div class="">
           <b>{props.notification.byUserName}</b>{' '}
