@@ -125,11 +125,11 @@ where
 
     async fn is_check(&self, user_id: i64) -> Result<bool, NofitifcationServiceErr> {
         let mut con = self.cache.get_con();
-        let is_check: String = con
+        let is_check: Option<String> = con
             .get(format!("is_check_{}", user_id))
             .await
             .map_err(|e| NofitifcationServiceErr::Other(e.into()))?;
-        Ok(is_check.eq("1"))
+        Ok(is_check.map(|c| c.eq("1")).unwrap_or(true))
     }
 
     async fn check(&self, user_id: i64) -> Result<(), NofitifcationServiceErr> {
