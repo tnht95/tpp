@@ -16,7 +16,7 @@ pub enum AuthServiceErr {
 #[async_trait]
 pub trait IAuthService {
     async fn issue_ws_ticket(&self, user: &User) -> Result<String, AuthServiceErr>;
-    async fn get_ws_ticket(&self, ws_ticket: &str) -> Result<User, AuthServiceErr>;
+    async fn get_ws_ticket(&self, ws_ticket: &str) -> Result<Option<User>, AuthServiceErr>;
     async fn delete_ws_ticket(&self, ws_ticket: &str) -> Result<(), AuthServiceErr>;
 }
 
@@ -49,13 +49,20 @@ where
         Ok(ws_ticket)
     }
 
-    async fn get_ws_ticket(&self, ws_ticket: &str) -> Result<User, AuthServiceErr> {
+    async fn get_ws_ticket(&self, ws_ticket: &str) -> Result<Option<User>, AuthServiceErr> {
         let mut con = self.cache.get_con();
-        let user_str: String = con
+        let user_str: Option<String> = con
             .get(ws_ticket)
             .await
             .map_err(|e| AuthServiceErr::Other(anyhow!(e)))?;
-        serde_json::from_str::<User>(&user_str).map_err(|e| AuthServiceErr::Other(anyhow!(e)))
+        user_str.map_or_else(
+            || Ok(None),
+            |user_str| {
+                serde_json::from_str::<User>(&user_str)
+                    .map(Some)
+                    .map_err(|e| AuthServiceErr::Other(anyhow!(e)))
+            },
+        )
     }
 
     async fn delete_ws_ticket(&self, ws_ticket: &str) -> Result<(), AuthServiceErr> {

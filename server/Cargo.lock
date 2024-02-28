@@ -1928,6 +1928,8 @@ dependencies = [
  "axum",
  "chrono",
  "clap",
+ "futures",
+ "futures-util",
  "jsonwebtoken",
  "log",
  "octocrab",
