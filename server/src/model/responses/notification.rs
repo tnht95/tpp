@@ -2,6 +2,7 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
+use super::HttpResponseConstErr;
 use crate::database::entities::notification::NotificationType;
 
 #[derive(Serialize, Deserialize)]
@@ -19,3 +20,8 @@ pub struct Notification {
     pub is_read: bool,
     pub created_at: DateTime<Utc>,
 }
+
+pub const INVALID_NOTI_ID: HttpResponseConstErr = HttpResponseConstErr {
+    code: "NOTI_001",
+    msg: "Invalid notification id",
+};

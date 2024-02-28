@@ -159,6 +159,7 @@ where
                         .route("/notifications", get(notification::filter))
                         .route("/notifications/check", get(notification::is_check))
                         .route("/notifications/check", post(notification::check))
+                        .route("/notifications/read/:id", post(notification::read))
                         .layer(api_middleware),
                 )
                 .layer(cors_middleware)

@@ -26,6 +26,7 @@ pub trait INofitifcationService {
     ) -> Result<Vec<Notification>, NofitifcationServiceErr>;
     async fn is_check(&self, user_id: i64) -> Result<bool, NofitifcationServiceErr>;
     async fn check(&self, user_id: i64) -> Result<(), NofitifcationServiceErr>;
+    async fn read(&self, id: i64, user_id: i64) -> Result<(), NofitifcationServiceErr>;
     async fn listen(
         &self,
         channel: &str,
@@ -136,5 +137,19 @@ where
         con.set(format!("is_check_{}", user_id), "1")
             .await
             .map_err(|e| NofitifcationServiceErr::Other(e.into()))
+    }
+
+    async fn read(&self, id: i64, user_id: i64) -> Result<(), NofitifcationServiceErr> {
+        sqlx::query!(
+            "update notis
+            set is_read = true
+            where id = $1 AND to_user_id = $2",
+            id,
+            user_id,
+        )
+        .execute(self.db.get_pool())
+        .await
+        .map(|_| ())
+        .map_err(|e| NofitifcationServiceErr::Other(e.into()))
     }
 }
