@@ -1,6 +1,6 @@
 type Props = {
   img: string;
-  userId?: number;
+  userId: number;
 };
 
 export const Avatar = (props: Props) => (

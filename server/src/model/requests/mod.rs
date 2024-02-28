@@ -11,7 +11,7 @@ pub mod post;
 pub mod search;
 pub mod vote;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Default)]
 #[serde(rename_all = "camelCase")]
 pub struct Pagination {
     pub offset: Option<i64>,
