@@ -10,6 +10,7 @@ type Store = {
     isAuth: () => boolean;
     isAdmin: () => boolean;
     isSameUser: (id: number) => boolean;
+    getWsTicket: () => string | undefined;
   };
   dispatch: {
     logout: () => void;
@@ -25,7 +26,8 @@ export const authenticationStore = createRoot<Store>(() => {
     utils: {
       isAuth: () => !!auth(),
       isAdmin: () => !!auth()?.isAdmin,
-      isSameUser: (id: number) => auth()?.user.id === id
+      isSameUser: (id: number) => auth()?.user.id === id,
+      getWsTicket: () => auth()?.wsTicket
     },
     dispatch: {
       logout: () => {
