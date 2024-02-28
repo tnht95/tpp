@@ -2,7 +2,9 @@ import { useNavigate, useParams } from '@solidjs/router';
 import {
   batch,
   createContext,
+  createEffect,
   createResource,
+  createSignal,
   ErrorBoundary,
   ParentProps,
   Show,
@@ -24,7 +26,7 @@ type Ctx = {
     del: () => void;
   };
   utils: {
-    blogId: string;
+    blogId: () => string;
   };
   modal: ModalUtil;
 };
@@ -34,11 +36,15 @@ export const BlogDetailsProvider = (props: ParentProps) => {
   const { showToast } = useToastCtx();
   const navigate = useNavigate();
   const modal = useModalUtils();
-  const blogId = useParams()['id'] as string;
+  const [blogId, setBlogId] = createSignal<string>(useParams()['id'] as string);
   const [resouce, { mutate }] = createResource(blogId, fetchBlogByIdAction);
 
+  createEffect(() => {
+    setBlogId(useParams()['id'] as string);
+  });
+
   const edit = (blog: BlogRequest) => {
-    editBlogAction(blogId, blog)
+    editBlogAction(blogId(), blog)
       .then(blog =>
         batch(() => {
           mutate(blog);
@@ -50,7 +56,7 @@ export const BlogDetailsProvider = (props: ParentProps) => {
   };
 
   const del = () => {
-    deleteBlogAction(blogId)
+    deleteBlogAction(blogId())
       .then(() =>
         batch(() => {
           navigate(`/blogs`);

@@ -33,7 +33,7 @@ export const BlogDetailsInfo = () => {
                 <Show when={isAdmin()}>
                   <OptionButton
                     onDeleteConfirm={del}
-                    id={blogId}
+                    id={blogId()}
                     onEditBtnClick={show}
                   />
                 </Show>
@@ -58,7 +58,7 @@ export const BlogDetailsInfo = () => {
             </div>
           </Show>
           <CommentsProvider
-            targetId={blogId}
+            targetId={blogId()}
             targetType="blogs"
             onAddNewCmt={() => setCommentNumber(c => c + 1)}
             onDeleteCmt={() => setCommentNumber(c => c - 1)}
