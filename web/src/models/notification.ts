@@ -10,6 +10,7 @@ export type NotificationType =
   | 'commentTagBlog'
   | 'commentTagPost'
   | 'commentTagDiscussion'
+  | 'gameDiscussion'
   | 'subscribe'
   | 'userAddedGame'
   | 'userUpdatedGame'

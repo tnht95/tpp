@@ -21,6 +21,7 @@ const content: Record<NotificationType, string> = {
   commentTagBlog: 'mentioned you in a comment on a blog!',
   commentTagPost: 'mentioned you in a comment on a post!',
   commentTagDiscussion: 'mentioned you in a comment on a discussion!',
+  gameDiscussion: 'created a new discussion in your game!',
   subscribe: 'subscribed to you!',
   userAddedGame: 'added a new game!',
   userUpdatedGame: 'updated a game!',
@@ -66,6 +67,9 @@ const buildUrl = (
       return `/blogs/${targetId}`;
     }
     case 'commentTagDiscussion': {
+      return `/games/${parentId}/discussions/${targetId}`;
+    }
+    case 'gameDiscussion': {
       return `/games/${parentId}/discussions/${targetId}`;
     }
     case 'subscribe': {

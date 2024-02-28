@@ -15,6 +15,7 @@ pub enum NotificationType {
     CommentTagBlog,
     CommentTagPost,
     CommentTagDiscussion,
+    GameDiscussion,
     Subscribe,
     UserAddedGame,
     UserUpdatedGame,

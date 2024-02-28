@@ -11,6 +11,7 @@ CREATE TYPE noti_type AS enum (
     'comment_tag_blog',
     'comment_tag_post',
     'comment_tag_discussion',
+    'game_discussion',
     'subscribe',
     'user_added_game',
     'user_updated_game',
