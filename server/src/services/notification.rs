@@ -1,10 +1,12 @@
 use std::sync::Arc;
 
 use async_trait::async_trait;
+use redis::AsyncCommands;
 use thiserror::Error;
 use tokio::sync::mpsc::Sender;
 
 use crate::{
+    cache::ICache,
     database::{entities::notification::NotificationType, IDatabase},
     model::{requests::PaginationInternal, responses::notification::Notification},
 };
@@ -22,6 +24,8 @@ pub trait INofitifcationService {
         user_id: i64,
         pagination: PaginationInternal,
     ) -> Result<Vec<Notification>, NofitifcationServiceErr>;
+    async fn is_check(&self, user_id: i64) -> Result<bool, NofitifcationServiceErr>;
+    async fn check(&self, user_id: i64) -> Result<(), NofitifcationServiceErr>;
     async fn listen(
         &self,
         channel: &str,
@@ -29,23 +33,26 @@ pub trait INofitifcationService {
     ) -> Result<(), NofitifcationServiceErr>;
 }
 
-pub struct NofitifcationService<T: IDatabase> {
-    db: Arc<T>,
+pub struct NofitifcationService<TDb: IDatabase, TCache: ICache> {
+    db: Arc<TDb>,
+    cache: Arc<TCache>,
 }
 
-impl<T> NofitifcationService<T>
+impl<TDb, TCache> NofitifcationService<TDb, TCache>
 where
-    T: IDatabase,
+    TDb: IDatabase,
+    TCache: ICache,
 {
-    pub fn new(db: Arc<T>) -> Self {
-        Self { db }
+    pub fn new(db: Arc<TDb>, cache: Arc<TCache>) -> Self {
+        Self { db, cache }
     }
 }
 
 #[async_trait]
-impl<T> INofitifcationService for NofitifcationService<T>
+impl<TDb, TCache> INofitifcationService for NofitifcationService<TDb, TCache>
 where
-    T: IDatabase + Send + Sync,
+    TDb: IDatabase + Sync + Send,
+    TCache: ICache + Sync + Send,
 {
     async fn filter(
         &self,
@@ -90,6 +97,7 @@ where
         let mut listener = sqlx::postgres::PgListener::connect_with(self.db.get_pool())
             .await
             .map_err(|e| NofitifcationServiceErr::Other(e.into()))?;
+        let mut con = self.cache.get_con();
         listener
             .listen(channel)
             .await
@@ -101,6 +109,9 @@ where
         {
             let noti = serde_json::from_str::<Notification>(notification.payload())
                 .map_err(|e| NofitifcationServiceErr::Other(e.into()))?;
+            con.set(format!("is_check_{}", noti.to_user_id), "0")
+                .await
+                .map_err(|e| NofitifcationServiceErr::Other(e.into()))?;
             let payload = serde_json::to_string(&noti)
                 .map_err(|e| NofitifcationServiceErr::Other(e.into()))?;
             sender
@@ -109,5 +120,21 @@ where
                 .map_err(|e| NofitifcationServiceErr::Other(e.into()))?;
         }
         Ok(())
+    }
+
+    async fn is_check(&self, user_id: i64) -> Result<bool, NofitifcationServiceErr> {
+        let mut con = self.cache.get_con();
+        let is_check: String = con
+            .get(format!("is_check_{}", user_id))
+            .await
+            .map_err(|e| NofitifcationServiceErr::Other(e.into()))?;
+        Ok(is_check.eq("1"))
+    }
+
+    async fn check(&self, user_id: i64) -> Result<(), NofitifcationServiceErr> {
+        let mut con = self.cache.get_con();
+        con.set(format!("is_check_{}", user_id), "1")
+            .await
+            .map_err(|e| NofitifcationServiceErr::Other(e.into()))
     }
 }

@@ -68,7 +68,7 @@ impl IInternalServices for InternalServices {
     type TVoteService = VoteService<Database>;
     type TLikeService = LikeService<Database>;
     type TActivityService = ActivityService<Database>;
-    type TNotificationService = NofitifcationService<Database>;
+    type TNotificationService = NofitifcationService<Database, Cache>;
 }
 
 pub struct Services<TInternalServices: IInternalServices> {

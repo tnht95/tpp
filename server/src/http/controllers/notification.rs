@@ -29,3 +29,23 @@ pub async fn filter<TInternalServices: IInternalServices>(
         Err(NofitifcationServiceErr::Other(e)) => response_unhandled_err(e),
     }
 }
+
+pub async fn is_check<TInternalServices: IInternalServices>(
+    State(state): InternalState<TInternalServices>,
+    Authentication { user, .. }: Authentication<TInternalServices>,
+) -> Response {
+    match state.services.notification.is_check(user.id).await {
+        Ok(is_check) => Json(HttpResponse { data: is_check }).into_response(),
+        Err(NofitifcationServiceErr::Other(e)) => response_unhandled_err(e),
+    }
+}
+
+pub async fn check<TInternalServices: IInternalServices>(
+    State(state): InternalState<TInternalServices>,
+    Authentication { user, .. }: Authentication<TInternalServices>,
+) -> Response {
+    match state.services.notification.check(user.id).await {
+        Ok(check) => Json(HttpResponse { data: check }).into_response(),
+        Err(NofitifcationServiceErr::Other(e)) => response_unhandled_err(e),
+    }
+}

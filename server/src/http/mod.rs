@@ -157,6 +157,8 @@ where
                         .route("/search", get(search::search))
                         .route("/tags/:tag", get(search::tag_search))
                         .route("/notifications", get(notification::filter))
+                        .route("/notifications/check", get(notification::is_check))
+                        .route("/notifications/check", post(notification::check))
                         .layer(api_middleware),
                 )
                 .layer(cors_middleware)
