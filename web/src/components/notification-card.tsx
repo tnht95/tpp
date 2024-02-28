@@ -100,7 +100,7 @@ export const NotificationCard = (props: Props) => (
           props.notification.byUserId
         )}
         class="flex flex-1 flex-col text-sm text-black"
-        onclick={() => props.onClick && props.onClick()}
+        onClick={() => props.onClick && props.onClick()}
       >
         <div class="">
           <b>{props.notification.byUserName}</b>{' '}

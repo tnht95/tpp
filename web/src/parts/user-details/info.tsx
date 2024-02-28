@@ -30,8 +30,8 @@ export const UserDetailsInfo = () => {
     setIsLoading(true);
 
     const actionPromise = isSubscribed()
-      ? unSubscribeAction(userId)
-      : subscribeAction(userId);
+      ? unSubscribeAction(userId())
+      : subscribeAction(userId());
 
     actionPromise
       .then(subscribeBatch)
@@ -71,7 +71,7 @@ export const UserDetailsInfo = () => {
             icon="fa-solid fa-plus"
             number={subscribers()}
             disabled={
-              !isAuth() || isSameUser(Number.parseInt(userId)) || isLoading()
+              !isAuth() || isSameUser(Number.parseInt(userId())) || isLoading()
             }
             clicked={isSubscribed() === true}
             onClick={onSubscribeHandler}

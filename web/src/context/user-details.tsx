@@ -1,7 +1,9 @@
 import { useParams } from '@solidjs/router';
 import {
   createContext,
+  createEffect,
   createResource,
+  createSignal,
   ErrorBoundary,
   ParentProps,
   Show,
@@ -16,14 +18,18 @@ import { NotFound } from '@/pages';
 type Ctx = {
   user: () => UserDetails;
   utils: {
-    userId: string;
+    userId: () => string;
   };
 };
 
 const ctx = createContext<Ctx>();
 export const UserDetailsProvider = (props: ParentProps) => {
-  const userId = useParams()['id'] as string;
+  const [userId, setUserId] = createSignal(useParams()['id'] as string);
   const [resource] = createResource(userId, fetchUserByIdAction);
+
+  createEffect(() => {
+    setUserId(useParams()['id'] as string);
+  });
 
   const state: Ctx = {
     user: () => resource() as UserDetails,
