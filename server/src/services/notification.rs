@@ -2,6 +2,7 @@ use std::sync::Arc;
 
 use async_trait::async_trait;
 use thiserror::Error;
+use tokio::sync::mpsc::Sender;
 
 use crate::{
     database::{entities::notification::NotificationType, IDatabase},
@@ -21,7 +22,11 @@ pub trait INofitifcationService {
         user_id: i64,
         pagination: PaginationInternal,
     ) -> Result<Vec<Notification>, NofitifcationServiceErr>;
-    async fn listen(&self, channel: &str) -> Result<(), NofitifcationServiceErr>;
+    async fn listen(
+        &self,
+        channel: &str,
+        sender: Sender<String>,
+    ) -> Result<(), NofitifcationServiceErr>;
 }
 
 pub struct NofitifcationService<T: IDatabase> {
@@ -77,7 +82,11 @@ where
         .map_err(|e| NofitifcationServiceErr::Other(e.into()))
     }
 
-    async fn listen(&self, channel: &str) -> Result<(), NofitifcationServiceErr> {
+    async fn listen(
+        &self,
+        channel: &str,
+        sender: Sender<String>,
+    ) -> Result<(), NofitifcationServiceErr> {
         let mut listener = sqlx::postgres::PgListener::connect_with(self.db.get_pool())
             .await
             .map_err(|e| NofitifcationServiceErr::Other(e.into()))?;
@@ -90,15 +99,15 @@ where
             .await
             .map_err(|e| NofitifcationServiceErr::Other(e.into()))?
         {
-            println!(
-                "Received notification on channel '{}': {}",
-                notification.channel(),
-                notification.payload()
-            );
-            // Handle the notification payload as needed
+            let noti = serde_json::from_str::<Notification>(notification.payload())
+                .map_err(|e| NofitifcationServiceErr::Other(e.into()))?;
+            let payload = serde_json::to_string(&noti)
+                .map_err(|e| NofitifcationServiceErr::Other(e.into()))?;
+            sender
+                .send(payload)
+                .await
+                .map_err(|e| NofitifcationServiceErr::Other(e.into()))?;
         }
-        // connection lost, do something interesting
-        println!("connection lost");
         Ok(())
     }
 }
