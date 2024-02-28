@@ -14,7 +14,7 @@ export type NotificationType =
   | 'userAddedGame'
   | 'userUpdatedGame'
   | 'userPost'
-  | 'uoteGame';
+  | 'voteGame';
 
 export type Notification = {
   id: string;
