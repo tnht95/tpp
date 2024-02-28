@@ -74,7 +74,7 @@ const buildUrl = (
     case 'userAddedGame':
     case 'userUpdatedGame':
     case 'voteGame': {
-      return `/games/${targetId}`;
+      return `/games/${targetId}/info`;
     }
     case 'userPost': {
       return `/posts/${targetId}`;
