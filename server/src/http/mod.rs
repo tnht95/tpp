@@ -40,6 +40,7 @@ use crate::{
             game,
             health,
             like,
+            notification,
             post,
             search,
             subscribe,
@@ -155,6 +156,7 @@ where
                         .route("/games/:gid/discussions/:id", delete(discussion::delete))
                         .route("/search", get(search::search))
                         .route("/tags/:tag", get(search::tag_search))
+                        .route("/notifications", get(notification::filter))
                         .layer(api_middleware),
                 )
                 .layer(cors_middleware)

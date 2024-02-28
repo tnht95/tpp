@@ -25,10 +25,7 @@ pub async fn filter<TInternalServices: IInternalServices>(
         .filter(user.id, pagination.into())
         .await
     {
-        Ok(notifications) => Json(HttpResponse {
-            data: notifications,
-        })
-        .into_response(),
+        Ok(notis) => Json(HttpResponse { data: notis }).into_response(),
         Err(NofitifcationServiceErr::Other(e)) => response_unhandled_err(e),
     }
 }
