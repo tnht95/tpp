@@ -17,7 +17,7 @@ export type NotificationType =
   | 'voteGame';
 
 export type Notification = {
-  id: string;
+  id: number;
   toUserId: number;
   byUserId: number;
   byUserName: string;

@@ -7,7 +7,7 @@ use crate::database::entities::notification::NotificationType;
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Notification {
-    pub id: Uuid,
+    pub id: i64,
     pub to_user_id: i64,
     pub by_user_id: i64,
     pub by_user_name: String,

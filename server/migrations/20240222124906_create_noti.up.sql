@@ -19,7 +19,7 @@ CREATE TYPE noti_type AS enum (
 );
 
 CREATE TABLE notis (
-    id uuid DEFAULT uuid_generate_v4 () PRIMARY KEY,
+    id bigserial PRIMARY KEY,
     to_user_id bigint REFERENCES users (id) ON DELETE CASCADE NOT NULL,
     by_user_id bigint REFERENCES users (id) ON DELETE CASCADE NOT NULL,
     by_user_name varchar(100) REFERENCES users (name) ON UPDATE CASCADE NOT NULL,
