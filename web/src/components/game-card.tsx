@@ -17,12 +17,12 @@ export const GameCard = (props: Props) => (
       />
       <div class="px-5 pb-2">
         <EllipsisText
-          maxWidth="max-w-28"
+          maxWidth="max-w-60"
           customStyle="text-indigo-900 font-bold text-sm"
         >
           {props.game.name}
         </EllipsisText>
-        <EllipsisText maxWidth="max-w-28" customStyle="text-xs text-indigo-700">
+        <EllipsisText maxWidth="max-w-60" customStyle="text-xs text-indigo-700">
           {props.game.authorName}
         </EllipsisText>
         <div class="flex items-center gap-1 pb-5 pt-2.5 text-sm">

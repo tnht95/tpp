@@ -12,6 +12,7 @@ use crate::{
         requests::game::{AddGameRequest, EditGameRequest, GamePaginationInternal, OrderField},
         responses::game::{GameDetails, GameSummary},
     },
+    utils::clean_duplicate,
 };
 
 #[derive(Error, Debug)]
@@ -189,7 +190,7 @@ where
             game.avatar_url,
             game.about,
             game.info,
-            game.tags.as_deref(),
+            &clean_duplicate(game.tags),
         )
         .fetch_one(&mut *tx)
         .await
@@ -277,7 +278,7 @@ where
             game.avatar_url,
             game.about,
             game.info,
-            game.tags.as_deref(),
+            &clean_duplicate(game.tags),
             game_id
         )
         .execute(&mut *tx)

@@ -114,8 +114,8 @@ export const TagSearch = () => {
 
   return (
     <div class="flex min-h-[calc(100svh-4rem)]">
-      <nav class="sticky right-0 top-0 flex-2 border border-dashed" />
-      <main class="flex flex-3 flex-col gap-7 px-32 py-10">
+      <nav class="sticky right-0 top-0 flex-1 border border-dashed" />
+      <main class="flex flex-2 flex-col gap-7 px-32 py-10">
         <p class="text-2xl font-bold text-indigo-900">
           Results for tag {`"${decodeURIComponent(tag())}"`}:
         </p>
@@ -134,7 +134,7 @@ export const TagSearch = () => {
           handleShowMore={fetchMore}
         />
       </main>
-      <nav class="sticky left-0 top-0 flex-2 border border-dashed" />
+      <nav class="sticky left-0 top-0 flex-1 border border-dashed" />
     </div>
   );
 };

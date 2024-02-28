@@ -14,6 +14,9 @@ export default {
     extend: {
       width: {
         '7/10': '70%'
+      },
+      maxWidth: {
+        '2/3': '66.666667%'
       }
     }
   },

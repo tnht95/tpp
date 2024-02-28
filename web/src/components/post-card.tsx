@@ -14,10 +14,10 @@ type Props = {
   onEdit: (postId: string, content: string) => void;
 };
 
-const getLikeButtonStyle = (isLiked: boolean): string =>
-  isLiked ? 'text-red-600 font-bold' : 'cursor-pointer';
-
 export const PostCard = (props: Props) => {
+  const {
+    utils: { isAuth }
+  } = authenticationStore;
   const { showToast } = useToastCtx();
   const { utils } = authenticationStore;
   const [isEditMode, setIsEditMode] = createSignal(false);
@@ -27,28 +27,35 @@ export const PostCard = (props: Props) => {
   });
 
   const [isLoading, setIsLoading] = createSignal(false);
-  const [liked, setLiked] = createSignal<boolean | undefined>();
+  const [isLiked, setIsLiked] = createSignal<boolean | undefined>();
   const [likeNumber, setLikeNumber] = createSignal(0);
   const [commentNumber, setCommentNumber] = createSignal(0);
 
   createEffect(() => {
     batch(() => {
       setLikeNumber(props.post.likes);
-      setLiked(props.post.isLiked);
+      setIsLiked(props.post.isLiked);
       setCommentNumber(props.post.comments);
     });
   });
 
   const likeBatch = () =>
     batch(() => {
-      setLikeNumber(oldVal => (liked() ? oldVal - 1 : oldVal + 1));
-      setLiked(!liked());
+      setLikeNumber(oldVal => (isLiked() ? oldVal - 1 : oldVal + 1));
+      setIsLiked(!isLiked());
     });
+
+  const isDisabled = (): boolean => !isAuth() || isLoading();
+
+  const getLikeButtonStyle = (): string =>
+    isDisabled()
+      ? 'cursor-not-allowed'
+      : 'hover:font-bold hover:text-red-600 cursor-pointer';
 
   const onLikeHandler = () => {
     setIsLoading(true);
 
-    const actionPromise = liked()
+    const actionPromise = isLiked()
       ? unLikeAction({ targetType: 'posts', targetId: props.post.id })
       : likeAction({ targetType: 'posts', targetId: props.post.id });
 
@@ -96,12 +103,11 @@ export const PostCard = (props: Props) => {
       </div>
       <div class="flex select-none items-center gap-3 text-gray-500">
         <button
-          class={`flex w-1/2 items-center justify-center border-r-2 hover:font-bold hover:text-red-600 ${getLikeButtonStyle(liked() ?? false)}`}
-          classList={{ 'cursor-not-allowed': isLoading() }}
-          disabled={isLoading()}
+          class={`flex w-1/2 items-center justify-center border-r-2 ${isLiked() ? 'font-bold text-red-600' : ''} ${getLikeButtonStyle()}`}
+          disabled={isDisabled()}
           onClick={onLikeHandler}
         >
-          <Show when={liked()} fallback={<i class="fa-regular fa-heart" />}>
+          <Show when={isLiked()} fallback={<i class="fa-regular fa-heart" />}>
             <i class="fa-solid fa-heart" />
           </Show>
           <span class="ml-2">{`Like (${likeNumber()})`}</span>

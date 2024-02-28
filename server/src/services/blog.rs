@@ -106,7 +106,7 @@ where
             blog.content,
             blog.title,
             blog.description,
-            blog.tags.as_deref(),
+            &clean_duplicate(blog.tags),
             id,
         )
         .fetch_one(self.db.get_pool())

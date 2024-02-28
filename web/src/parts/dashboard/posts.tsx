@@ -18,7 +18,7 @@ export const DashboardPosts = () => {
     window.removeEventListener('scroll', handleScroll);
   });
   return (
-    <div class="flex flex-col gap-10 py-10">
+    <div class="flex flex-col gap-10">
       <Show when={utils.isAuth()}>
         <CommentForm onSubmit={add}>New post</CommentForm>
       </Show>

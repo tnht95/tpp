@@ -70,7 +70,7 @@ export const CommentsProvider = (props: Props) => {
 
   const onAddCmtBatchHandler = (cmt: CommentDetails) =>
     batch(() => {
-      setComments(produce(c => c.unshift(cmt)));
+      setComments(produce(c => c.push(cmt)));
       showToast({ msg: 'Comment Added', type: 'ok' });
       newAddedCmts.push(cmt);
       props.onAddNewCmt && props.onAddNewCmt();
