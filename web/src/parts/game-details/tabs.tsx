@@ -10,7 +10,7 @@ export const GameDetailsTabs = () => {
     <div class="-mx-10 flex select-none border-b px-10">
       <div class="flex">
         <A
-          href={`/games/${gameId}/info`}
+          href={`/games/${gameId()}/info`}
           class="px-5"
           activeClass="border-b-2 border-orange-400"
         >
@@ -20,7 +20,7 @@ export const GameDetailsTabs = () => {
           </div>
         </A>
         <A
-          href={`/games/${gameId}/discussion`}
+          href={`/games/${gameId()}/discussions`}
           class="px-5"
           activeClass="border-b-2 border-orange-400"
         >
@@ -30,7 +30,7 @@ export const GameDetailsTabs = () => {
           </div>
         </A>
         <A
-          href={`/games/${gameId}/activity`}
+          href={`/games/${gameId()}/activities`}
           class="px-5"
           activeClass="border-b-2 border-orange-400"
         >

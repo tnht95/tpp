@@ -2,7 +2,9 @@ import { useNavigate, useParams } from '@solidjs/router';
 import {
   batch,
   createContext,
+  createEffect,
   createResource,
+  createSignal,
   ErrorBoundary,
   ParentProps,
   Show,
@@ -25,27 +27,31 @@ type Ctx = {
     del: (gameId: string) => void;
   };
   utils: {
-    gameId: string;
+    gameId: () => string;
   };
   modal: ModalUtil;
 };
 
 const ctx = createContext<Ctx>();
 export const GameDetailsProvider = (props: ParentProps) => {
-  const gameId = useParams()['id'] as string;
+  const [gameId, setGameId] = createSignal(useParams()['id'] as string);
   const [resource, { mutate }] = createResource(gameId, fetchGameByIdAction);
   const { showToast } = useToastCtx();
   const modal = useModalUtils();
   const navigate = useNavigate();
   const { user } = authenticationStore;
 
+  createEffect(() => {
+    setGameId(useParams()['id'] as string);
+  });
+
   const edit = (file: File, game: GameRequest) => {
-    editGameAction(file, game, gameId)
+    editGameAction(file, game, gameId())
       .then(game =>
         batch(() => {
           mutate(game);
           modal.hide();
-          navigate(`/games/${gameId}/info`);
+          navigate(`/games/${game.id}/info`);
           showToast({ msg: 'Game Updated', type: 'ok' });
         })
       )
@@ -53,7 +59,7 @@ export const GameDetailsProvider = (props: ParentProps) => {
   };
 
   const del = () => {
-    deleteGameAction(gameId)
+    deleteGameAction(gameId())
       .then(() =>
         batch(() => {
           navigate(`/users/${user()?.id}`);

@@ -69,7 +69,7 @@ const GameDetailsDiscussionDetailsInner = () => {
           <Show when={isSameUser(discussion().userId)}>
             <OptionButton
               onDeleteConfirm={del}
-              id={discussionId}
+              id={discussionId()}
               onEditBtnClick={show}
             />
           </Show>
@@ -115,7 +115,7 @@ const GameDetailsDiscussionDetailsInner = () => {
       </div>
       <CommentsProvider
         targetType="discussions"
-        targetId={discussionId}
+        targetId={discussionId()}
         onAddNewCmt={() => setCommentNumber(c => c + 1)}
         onDeleteCmt={() => setCommentNumber(c => c - 1)}
       >

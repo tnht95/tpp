@@ -36,12 +36,12 @@ export const App = () => (
     <Route path={'/games'} component={Games} />
     <Route path={'/games/:id'} component={GameDetails}>
       <Route path={'/info'} component={GameDetailsInfo} />
-      <Route path={'/discussion'} component={GameDetailsDiscussion} />
+      <Route path={'/discussions'} component={GameDetailsDiscussion} />
       <Route
-        path={'/discussion/:discussionId'}
+        path={'/discussions/:discussionId'}
         component={GameDetailsDiscussionDetails}
       />
-      <Route path={'/activity'} component={GameDetailsActivity} />
+      <Route path={'/activities'} component={GameDetailsActivity} />
     </Route>
     <Route path={'/users/:id'} component={UserDetails} />
     <Route path={'/blogs'} component={Blogs} />

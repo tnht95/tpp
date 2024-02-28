@@ -24,7 +24,7 @@ export const GameDetailsHeader = () => {
   const [isLoading, setIsLoading] = createSignal(false);
 
   const firstVoteHandler = (newVote: boolean): Promise<void> =>
-    voteAction(gameId, { isUp: newVote }).then(() =>
+    voteAction(gameId(), { isUp: newVote }).then(() =>
       batch(() => {
         newVote
           ? setUpVotes(oldVal => oldVal + 1)
@@ -34,7 +34,7 @@ export const GameDetailsHeader = () => {
     );
 
   const changeVoteHandler = (newVote: boolean): Promise<void> =>
-    voteAction(gameId, { isUp: newVote }).then(() =>
+    voteAction(gameId(), { isUp: newVote }).then(() =>
       batch(() => {
         if (newVote) {
           setUpVotes(oldVal => oldVal + 1);
@@ -48,7 +48,7 @@ export const GameDetailsHeader = () => {
     );
 
   const unVoteHandler = (newVote: boolean): Promise<void> =>
-    unVoteAction(gameId).then(() =>
+    unVoteAction(gameId()).then(() =>
       batch(() => {
         newVote
           ? setUpVotes(oldVal => oldVal - 1)

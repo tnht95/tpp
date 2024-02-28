@@ -2,6 +2,7 @@ import { useNavigate, useParams } from '@solidjs/router';
 import {
   batch,
   createContext,
+  createEffect,
   createResource,
   createSignal,
   ErrorBoundary,
@@ -29,16 +30,18 @@ type Ctx = {
     del: (discussionId: string) => void;
   };
   utils: {
-    discussionId: string;
+    discussionId: () => string;
   };
   modal: ModalUtil;
 };
 
 const ctx = createContext<Ctx>();
 export const GameDiscussionDetailsProvider = (props: ParentProps) => {
-  const gameId = useParams()['id'] as string;
-  const discussionId = useParams()['discussionId'] as string;
-  const [query] = createSignal<[string, string]>([gameId, discussionId]);
+  const [gameId, setGameId] = createSignal(useParams()['id'] as string);
+  const [discussionId, setDiscussionId] = createSignal(
+    useParams()['discussionId'] as string
+  );
+  const [query] = createSignal<[string, string]>([gameId(), discussionId()]);
   const navigate = useNavigate();
   const { showToast } = useToastCtx();
   const modal = useModalUtils();
@@ -47,8 +50,15 @@ export const GameDiscussionDetailsProvider = (props: ParentProps) => {
     fetchDiscussionByIdAction
   );
 
+  createEffect(() => {
+    setGameId(useParams()['id'] as string);
+  });
+  createEffect(() => {
+    setDiscussionId(useParams()['discussionId'] as string);
+  });
+
   const edit = (discussion: DiscussionRequest) => {
-    editDiscussionAction(gameId, discussionId, discussion)
+    editDiscussionAction(gameId(), discussionId(), discussion)
       .then(discussion =>
         batch(() => {
           mutate(discussion);
@@ -59,14 +69,15 @@ export const GameDiscussionDetailsProvider = (props: ParentProps) => {
       .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
   };
 
+  const handleBatchDelete = () =>
+    batch(() => {
+      navigate(`/games/${gameId()}/discussions`);
+      showToast({ msg: 'Discussion Deleted', type: 'ok' });
+    });
+
   const del = () => {
-    deleteDiscussionAction(gameId, discussionId)
-      .then(() =>
-        batch(() => {
-          navigate(`/games/${gameId}/discussion`);
-          showToast({ msg: 'Discussion Deleted', type: 'ok' });
-        })
-      )
+    deleteDiscussionAction(gameId(), discussionId())
+      .then(handleBatchDelete)
       .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
   };
 

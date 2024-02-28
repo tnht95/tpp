@@ -55,7 +55,7 @@ const GameDetailsDiscussionInner = () => {
                   title={d.title}
                   date={formatTime(d.createdAt)}
                   username={d.userName}
-                  url={`/games/${gameId}/discussion/${d.id}`}
+                  url={`/games/${gameId}/discussions/${d.id}`}
                 />
               )}
             </For>
