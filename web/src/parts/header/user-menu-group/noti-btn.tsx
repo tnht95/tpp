@@ -39,6 +39,7 @@ export const UserMenuGroupNotiBtn = () => {
     initialValue: []
   });
   const [notifications, setNotifications] = createStore<Notification[]>([]);
+  let newNotiCount = 0;
 
   onMount(() => {
     connect(getWsTicket() as string, handleNewNoti);
@@ -62,7 +63,10 @@ export const UserMenuGroupNotiBtn = () => {
 
   createEffect(() => {
     if (notiResource().length > 0) {
-      setNotifications(produce(notis => notis.push(...notiResource())));
+      batch(() => {
+        setNotifications(produce(notis => notis.push(...notiResource())));
+        setReachedBottom(false);
+      });
     }
   });
 
@@ -72,8 +76,9 @@ export const UserMenuGroupNotiBtn = () => {
     const scrollPercentage = (scrollTop / (scrollHeight - clientHeight)) * 100;
     if (scrollPercentage > 90 && !reachedBottom()) {
       batch(() => {
-        setQuery(p => ({ ...p, offset: p.offset + PAGINATION }));
+        setQuery(p => ({ ...p, offset: p.offset + PAGINATION + newNotiCount }));
         setReachedBottom(true);
+        newNotiCount = 0;
       });
     }
   };
@@ -83,6 +88,7 @@ export const UserMenuGroupNotiBtn = () => {
       if (noti.id > (notifications[0]?.id || 0)) {
         setNotifications(produce(notis => notis.unshift(noti)));
         setIsCheck(false);
+        newNotiCount++;
       }
     });
 

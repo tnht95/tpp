@@ -79,7 +79,7 @@ where
             left join users on users.id = notis.by_user_id
             where
                 to_user_id = $1
-            order by created_at desc offset $2 limit $3
+            order by id desc offset $2 limit $3
             "#,
             user_id,
             pagination.offset,
