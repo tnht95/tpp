@@ -17,6 +17,8 @@ BEGIN
     ELSIF (TG_OP = 'DELETE') THEN
         DELETE FROM notis
         WHERE target_id = OLD.id;
+        DELETE FROM comments
+        WHERE target_id = OLD.id;
     END IF;
     RETURN NULL;
 END;
