@@ -13,7 +13,7 @@ use super::{
 };
 use crate::{
     database::entities::user::User,
-    http::Server,
+    http::ApiServer,
     services::IInternalServices,
     utils::jwt::{self},
 };
@@ -30,7 +30,7 @@ impl<S, TInternalServices> FromRequestParts<S> for Authentication<TInternalServi
 where
     S: Send + Sync,
     TInternalServices: IInternalServices,
-    Arc<Server<TInternalServices>>: FromRef<S>,
+    Arc<ApiServer<TInternalServices>>: FromRef<S>,
 {
     type Rejection = Response;
     async fn from_request_parts(parts: &mut Parts, state: &S) -> Result<Self, Self::Rejection> {
@@ -63,7 +63,7 @@ impl<S, TInternalServices> FromRequestParts<S> for AuthenticationMaybe<TInternal
 where
     S: Send + Sync,
     TInternalServices: IInternalServices,
-    Arc<Server<TInternalServices>>: FromRef<S>,
+    Arc<ApiServer<TInternalServices>>: FromRef<S>,
 {
     type Rejection = ();
     async fn from_request_parts(parts: &mut Parts, state: &S) -> Result<Self, Self::Rejection> {
@@ -106,7 +106,7 @@ where
 }
 
 #[async_trait]
-impl<S, TInternalServices> FromRequestParts<S> for Server<TInternalServices>
+impl<S, TInternalServices> FromRequestParts<S> for ApiServer<TInternalServices>
 where
     S: Send + Sync,
     TInternalServices: IInternalServices,

@@ -17,6 +17,6 @@ use std::sync::Arc;
 
 use axum::extract::State;
 
-use super::Server;
+use super::ApiServer;
 
-type InternalState<TInternalServices> = State<Arc<Server<TInternalServices>>>;
+type InternalState<TInternalServices> = State<Arc<ApiServer<TInternalServices>>>;

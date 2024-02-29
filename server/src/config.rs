@@ -10,7 +10,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Config {
     pub log_format: LogFmt,
-    pub server: Server,
+    pub server: HttpServer,
     pub cache: Cache,
     pub github_app: GithubApp,
     pub auth: Auth,
@@ -25,7 +25,7 @@ pub enum LogFmt {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct Server {
+pub struct HttpServer {
     pub http_port: u16,
     pub pg_url: String,
     pub pg_max_pool: u32,
@@ -61,7 +61,7 @@ impl Default for Config {
     fn default() -> Self {
         Self {
             log_format: LogFmt::Text,
-            server: Server {
+            server: HttpServer {
                 http_port: 8080,
                 pg_url: "postgres://service:password@localhost:5432/tpp?sslmode=disable".into(),
                 pg_max_pool: 50,

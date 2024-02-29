@@ -14,13 +14,13 @@ use futures::{sink::SinkExt, stream::StreamExt};
 use tokio::sync::mpsc;
 use tracing::{debug, error};
 
-use super::Server;
+use super::ApiServer;
 use crate::services::{auth::IAuthService, notification::INofitifcationService, IInternalServices};
 
 pub async fn handler<TInternalServices: IInternalServices + 'static>(
     ws: WebSocketUpgrade,
     ConnectInfo(who): ConnectInfo<SocketAddr>,
-    State(state): State<Arc<Server<TInternalServices>>>,
+    State(state): State<Arc<ApiServer<TInternalServices>>>,
 ) -> Response {
     ws.on_upgrade(move |socket| handle_socket(socket, who, state))
 }
@@ -28,7 +28,7 @@ pub async fn handler<TInternalServices: IInternalServices + 'static>(
 async fn handle_socket<TInternalServices: IInternalServices + 'static>(
     socket: WebSocket,
     who: SocketAddr,
-    state: Arc<Server<TInternalServices>>,
+    state: Arc<ApiServer<TInternalServices>>,
 ) {
     let (mut socket_sender, mut socket_receiver) = socket.split();
     let ws_ticket = tokio::select! {

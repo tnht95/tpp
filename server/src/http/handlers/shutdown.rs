@@ -3,11 +3,13 @@ use std::sync::Arc;
 use tracing::info;
 
 use crate::{
-    http::Server,
+    http::ApiServer,
     services::{health::IHealthService, IInternalServices},
 };
 
-pub async fn handle<TInternalServices: IInternalServices>(state: Arc<Server<TInternalServices>>) {
+pub async fn handle<TInternalServices: IInternalServices>(
+    state: Arc<ApiServer<TInternalServices>>,
+) {
     let ctrl_c = async {
         tokio::signal::ctrl_c()
             .await

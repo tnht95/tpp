@@ -53,12 +53,12 @@ use crate::{
     services::{IInternalServices, Services},
 };
 
-pub struct Server<TInternalServices: IInternalServices> {
+pub struct ApiServer<TInternalServices: IInternalServices> {
     config: Config,
     services: Services<TInternalServices>,
 }
 
-impl<TInternalServices> Server<TInternalServices>
+impl<TInternalServices> ApiServer<TInternalServices>
 where
     TInternalServices: IInternalServices + 'static + Send,
 {
