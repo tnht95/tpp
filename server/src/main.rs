@@ -41,7 +41,6 @@ mod services;
 mod utils;
 
 // TODO
-// swagger
 // test
 // CI/CD
 #[tokio::main]
