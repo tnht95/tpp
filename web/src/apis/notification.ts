@@ -31,7 +31,7 @@ export const fetchNotificationCheckAction = async () => {
 export const checkNotificationAction = async () => {
   const baseUrl = import.meta.env.VITE_API_URL;
   return fetch(`${baseUrl}/notifications/check`, {
-    method: 'post',
+    method: 'put',
     credentials: 'include'
   })
     .then(errHandler)
@@ -41,7 +41,7 @@ export const checkNotificationAction = async () => {
 export const readNotificationAction = async (id: number) => {
   const baseUrl = import.meta.env.VITE_API_URL;
   return fetch(`${baseUrl}/notifications/read/${id}`, {
-    method: 'post',
+    method: 'put',
     credentials: 'include'
   })
     .then(errHandler)
