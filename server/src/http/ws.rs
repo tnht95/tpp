@@ -42,13 +42,13 @@ async fn handle_socket<TInternalServices: IInternalServices + 'static>(
         }
         // close connection when the client is not able to send the websocket ticket within 1s.
         _ = tokio::time::sleep(Duration::from_secs(1)) => {
-            debug!("client {} timed out", who);
+            debug!("client {} websocket ticket initialized timed out", who);
             return;
         }
     };
 
     // verify websocket ticket
-    let user = if let Ok(Some(user)) = state.services.auth.get_ws_ticket(&ws_ticket).await {
+    let (user, ttl) = if let Ok(Some(user)) = state.services.auth.get_ws_ticket(&ws_ticket).await {
         user
     } else {
         debug!("client {who} sent a bad websocket ticket: {ws_ticket}");
@@ -82,6 +82,11 @@ async fn handle_socket<TInternalServices: IInternalServices + 'static>(
     tokio::select! {
         _ = &mut noti_sender_task => {}
         _ = &mut noti_receiver_task => {}
+        // close connection when the client exceed ttl
+        _ = tokio::time::sleep(Duration::from_secs(ttl)) => {
+            debug!("client {} timed out", who);
+            return;
+        }
         msg = socket_receiver.next() => {
             if let Some(Ok(msg)) = msg {
                 process_message(msg, who);

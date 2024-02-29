@@ -47,6 +47,10 @@ where
     pub fn new(db: Arc<TDb>, cache: Arc<TCache>) -> Self {
         Self { db, cache }
     }
+
+    fn build_cache_key(&self, user_id: i64) -> String {
+        format!("is_check_{user_id}")
+    }
 }
 
 #[async_trait]
@@ -118,7 +122,7 @@ where
                 .map_err(|e| NofitifcationServiceErr::Other(e.into()))?;
 
             cache_connection
-                .set(format!("is_check_{}", noti.to_user_id), "0")
+                .set(self.build_cache_key(noti.to_user_id), "0")
                 .await
                 .map_err(|e| NofitifcationServiceErr::Other(e.into()))?;
 
@@ -133,7 +137,7 @@ where
     async fn is_check(&self, user_id: i64) -> Result<bool, NofitifcationServiceErr> {
         let mut cache_connection = self.cache.get_con();
         let is_check: Option<String> = cache_connection
-            .get(format!("is_check_{}", user_id))
+            .get(self.build_cache_key(user_id))
             .await
             .map_err(|e| NofitifcationServiceErr::Other(e.into()))?;
         Ok(is_check.map(|c| c.eq("1")).unwrap_or(true))
@@ -142,7 +146,7 @@ where
     async fn check(&self, user_id: i64) -> Result<(), NofitifcationServiceErr> {
         let mut cache_connection = self.cache.get_con();
         cache_connection
-            .set(format!("is_check_{}", user_id), "1")
+            .set(self.build_cache_key(user_id), "1")
             .await
             .map_err(|e| NofitifcationServiceErr::Other(e.into()))
     }
