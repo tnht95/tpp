@@ -7,11 +7,7 @@ use axum::{
 use crate::{
     http::{
         controllers::InternalState,
-        utils::{
-            auth::Authentication,
-            err_handler::response_unhandled_err,
-            validator::JsonValidator,
-        },
+        utils::{auth::Authentication, err_handler::response_unhandled_err},
     },
     model::{
         requests::like::{AddLikeRequest, DeleteLikeRequest},
@@ -26,7 +22,7 @@ use crate::{
 pub async fn like<TInternalServices: IInternalServices>(
     State(state): InternalState<TInternalServices>,
     Authentication { user, .. }: Authentication<TInternalServices>,
-    JsonValidator(like_req): JsonValidator<AddLikeRequest>,
+    Json(like_req): Json<AddLikeRequest>,
 ) -> Response {
     match state.services.like.like(user.id, like_req).await {
         Ok(post) => Json(HttpResponse { data: post }).into_response(),
@@ -37,7 +33,7 @@ pub async fn like<TInternalServices: IInternalServices>(
 pub async fn unlike<TInternalServices: IInternalServices>(
     State(state): InternalState<TInternalServices>,
     Authentication { user, .. }: Authentication<TInternalServices>,
-    JsonValidator(like_req): JsonValidator<DeleteLikeRequest>,
+    Json(like_req): Json<DeleteLikeRequest>,
 ) -> Response {
     match state.services.like.unlike(user.id, like_req).await {
         Ok(post) => Json(HttpResponse { data: post }).into_response(),

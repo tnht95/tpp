@@ -20,7 +20,7 @@ BEGIN
         id = NEW.user_id;
     -- init object_id, target_type, target_id
     SELECT
-        uuid_nil (),
+        NEW.id,
         NEW.target_type,
         NEW.target_id INTO noti_object_id,
         noti_target_type,
@@ -99,4 +99,22 @@ CREATE TRIGGER like_insert_trigger
     AFTER INSERT ON likes
     FOR EACH ROW
     EXECUTE FUNCTION insert_noti_on_like_insert ();
+
+-- Trigger function to delte from the notis table when a like is deleted
+CREATE FUNCTION delete_noti_on_like_delete ()
+    RETURNS TRIGGER
+    AS $$
+BEGIN
+    DELETE FROM notis
+    WHERE by_object_id = OLD.id;
+    RETURN NULL;
+END;
+$$
+LANGUAGE plpgsql;
+
+-- Create a trigger that inserts a record into the notis table when a new like is inserted
+CREATE TRIGGER like_delete_trigger
+    AFTER DELETE ON likes
+    FOR EACH ROW
+    EXECUTE FUNCTION delete_noti_on_like_delete ();
 
