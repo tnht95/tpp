@@ -1,4 +1,4 @@
-use std::{net::SocketAddr, sync::Arc};
+use std::{net::SocketAddr, ops::ControlFlow, sync::Arc, time::Duration};
 
 use axum::{
     extract::{
@@ -8,7 +8,8 @@ use axum::{
     },
     response::Response,
 };
-use tokio::spawn;
+//allows to split the websocket stream into separate TX and RX branches
+use futures::{sink::SinkExt, stream::StreamExt};
 //allows to extract the IP of connecting user
 use tokio::sync::mpsc;
 use tracing::{debug, error};
@@ -25,59 +26,91 @@ pub async fn handler<TInternalServices: IInternalServices + 'static>(
 }
 
 async fn handle_socket<TInternalServices: IInternalServices + 'static>(
-    mut socket: WebSocket,
+    socket: WebSocket,
     who: SocketAddr,
     state: Arc<Server<TInternalServices>>,
 ) {
-    // todo: timeout
-    // await client to send ws_ticket as an initial handshake
-    let ws_ticket = if let Some(msg) = socket.recv().await {
-        if let Ok(Message::Text(msg)) = msg {
-            msg
-        } else {
-            debug!("client {who} send invalid message");
+    let (mut socket_sender, mut socket_receiver) = socket.split();
+    let ws_ticket = tokio::select! {
+        msg = socket_receiver.next() => {
+            if let Some(Ok(Message::Text(ws_ticket))) = msg {
+                ws_ticket
+            } else {
+                debug!("client {} sent an invalid message or abruptly disconnected", who);
+                return;
+            }
+        }
+        // close connection when the client is not able to send the websocket ticket within 1s.
+        _ = tokio::time::sleep(Duration::from_secs(1)) => {
+            debug!("client {} timed out", who);
             return;
         }
-    } else {
-        debug!("client {who} abruptly disconnected");
-        return;
     };
 
-    // verify webSocket ticket
-    let user = if let Ok(user) = state.services.auth.get_ws_ticket(&ws_ticket).await {
+    // verify websocket ticket
+    let user = if let Ok(Some(user)) = state.services.auth.get_ws_ticket(&ws_ticket).await {
         user
     } else {
-        let _ = socket
-            .send(Message::Text("Bad Websocket Ticket".into()))
-            .await;
+        debug!("client {who} sent a bad websocket ticket: {ws_ticket}");
         return;
     };
 
-    // listen new event
-    let (sender, mut receiver) = mpsc::channel::<String>(64);
-    let sender_task = spawn(async move {
+    let (noti_sender, mut noti_receiver) = mpsc::channel::<String>(64);
+
+    // Spawn a task to listen for notifications
+    let mut noti_sender_task = tokio::spawn(async move {
         if let Err(e) = state
             .services
             .notification
-            .listen(&format!("to_user_id_{}", user.id), sender)
+            .listen(&format!("to_user_id_{}", user.id), noti_sender)
             .await
         {
-            error!("Listener has stopped due to: {e}");
+            error!("Listener has stopped due to: {}", e);
         };
     });
-    let receiver_task = spawn(async move {
-        while let Some(payload) = receiver.recv().await {
-            if let Err(e) = socket.send(Message::Text(payload)).await {
-                error!("Error sending message: {e}");
+
+    // Spawn a task to receive messages from the sender and send them to the client
+    let mut noti_receiver_task = tokio::spawn(async move {
+        while let Some(payload) = noti_receiver.recv().await {
+            if let Err(e) = socket_sender.send(Message::Text(payload)).await {
+                error!("Error sending message: {}", e);
                 return;
             }
         }
     });
 
-    if let Err(e) = sender_task.await {
-        error!("Error stopping sender task: {e}");
-    };
-    if let Err(e) = receiver_task.await {
-        error!("Error stopping receiver task: {e}");
-    };
+    tokio::select! {
+        _ = &mut noti_sender_task => {}
+        _ = &mut noti_receiver_task => {}
+        msg = socket_receiver.next() => {
+            if let Some(Ok(msg)) = msg {
+                process_message(msg, who);
+            }
+        }
+    }
+    noti_receiver_task.abort();
+    noti_sender_task.abort();
+    debug!("websocket context {who} destroyed");
+}
+
+fn process_message(msg: Message, who: SocketAddr) -> ControlFlow<(), ()> {
+    match msg {
+        Message::Text(_) => {}
+        Message::Binary(_) => {}
+        Message::Close(close_frame) => {
+            if let Some(close_frame) = close_frame {
+                debug!(
+                    ">>> {} sent close with code {} and reason `{}`",
+                    who, close_frame.code, close_frame.reason
+                );
+            } else {
+                debug!(">>> {who} somehow sent close message without CloseFrame");
+            }
+            return ControlFlow::Break(());
+        }
+
+        Message::Pong(_) => {}
+        Message::Ping(_) => {}
+    }
+    ControlFlow::Continue(())
 }

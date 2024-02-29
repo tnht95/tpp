@@ -26,6 +26,7 @@ export const connect = (
 
   return ws;
 };
+
 export const disconnect = () => {
   if (!ws) return;
   ws.close();

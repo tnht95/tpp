@@ -95,26 +95,33 @@ where
         channel: &str,
         sender: Sender<String>,
     ) -> Result<(), NofitifcationServiceErr> {
-        let mut listener = sqlx::postgres::PgListener::connect_with(self.db.get_pool())
+        let mut pg_listener = sqlx::postgres::PgListener::connect_with(self.db.get_pool())
             .await
             .map_err(|e| NofitifcationServiceErr::Other(e.into()))?;
-        let mut con = self.cache.get_con();
-        listener
+
+        pg_listener
             .listen(channel)
             .await
             .map_err(|e| NofitifcationServiceErr::Other(e.into()))?;
-        while let Some(notification) = listener
+
+        let mut cache_connection = self.cache.get_con();
+
+        while let Some(notification) = pg_listener
             .try_recv()
             .await
             .map_err(|e| NofitifcationServiceErr::Other(e.into()))?
         {
             let noti = serde_json::from_str::<Notification>(notification.payload())
                 .map_err(|e| NofitifcationServiceErr::Other(e.into()))?;
-            con.set(format!("is_check_{}", noti.to_user_id), "0")
-                .await
-                .map_err(|e| NofitifcationServiceErr::Other(e.into()))?;
+
             let payload = serde_json::to_string(&noti)
                 .map_err(|e| NofitifcationServiceErr::Other(e.into()))?;
+
+            cache_connection
+                .set(format!("is_check_{}", noti.to_user_id), "0")
+                .await
+                .map_err(|e| NofitifcationServiceErr::Other(e.into()))?;
+
             sender
                 .send(payload)
                 .await
@@ -124,8 +131,8 @@ where
     }
 
     async fn is_check(&self, user_id: i64) -> Result<bool, NofitifcationServiceErr> {
-        let mut con = self.cache.get_con();
-        let is_check: Option<String> = con
+        let mut cache_connection = self.cache.get_con();
+        let is_check: Option<String> = cache_connection
             .get(format!("is_check_{}", user_id))
             .await
             .map_err(|e| NofitifcationServiceErr::Other(e.into()))?;
@@ -133,17 +140,16 @@ where
     }
 
     async fn check(&self, user_id: i64) -> Result<(), NofitifcationServiceErr> {
-        let mut con = self.cache.get_con();
-        con.set(format!("is_check_{}", user_id), "1")
+        let mut cache_connection = self.cache.get_con();
+        cache_connection
+            .set(format!("is_check_{}", user_id), "1")
             .await
             .map_err(|e| NofitifcationServiceErr::Other(e.into()))
     }
 
     async fn read(&self, id: i64, user_id: i64) -> Result<(), NofitifcationServiceErr> {
         sqlx::query!(
-            "update notis
-            set is_read = true
-            where id = $1 AND to_user_id = $2",
+            "update notis set is_read = true where id = $1 AND to_user_id = $2",
             id,
             user_id,
         )
