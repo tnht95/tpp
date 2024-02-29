@@ -85,9 +85,7 @@ BEGIN
     -- prevent noti to oneself
     IF (noti_to_user_id != NEW.user_id) THEN
         INSERT INTO notis (to_user_id, by_user_id, by_user_name, by_object_id, target_type, target_id, parent_target_id)
-            VALUES (noti_to_user_id, NEW.user_id, noti_by_user_name, noti_object_id, noti_target_type::noti_type, noti_target_id, noti_parent_target_id)
-        ON CONFLICT (to_user_id, by_user_id, by_object_id, target_type, target_id)
-            DO NOTHING;
+            VALUES (noti_to_user_id, NEW.user_id, noti_by_user_name, noti_object_id, noti_target_type::noti_type, noti_target_id, noti_parent_target_id);
     END IF;
     RETURN NULL;
 END;

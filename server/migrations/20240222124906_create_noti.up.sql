@@ -29,6 +29,4 @@ CREATE TABLE notis (
     target_id uuid NOT NULL,
     parent_target_id uuid,
     is_read boolean NOT NULL DEFAULT FALSE,
-    created_at timestamp(6) with time zone DEFAULT now() NOT NULL,
-    UNIQUE (to_user_id, by_user_id, by_object_id, target_type, target_id) -- noti once only
-)
+    created_at timestamp(6) with time zone DEFAULT now() NOT NULL)

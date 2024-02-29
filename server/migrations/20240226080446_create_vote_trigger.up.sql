@@ -26,9 +26,7 @@ BEGIN
     -- prevent noti to oneself
     IF (noti_to_user_id != NEW.user_id) THEN
         INSERT INTO notis (to_user_id, by_user_id, by_user_name, by_object_id, target_type, target_id, parent_target_id)
-            VALUES (noti_to_user_id, NEW.user_id, noti_by_user_name, uuid_nil (), 'vote_game', NEW.game_id, NULL)
-        ON CONFLICT (to_user_id, by_user_id, by_object_id, target_type, target_id)
-            DO NOTHING;
+            VALUES (noti_to_user_id, NEW.user_id, noti_by_user_name, uuid_nil (), 'vote_game', NEW.game_id, NULL);
     END IF;
     RETURN NULL;
 END;
