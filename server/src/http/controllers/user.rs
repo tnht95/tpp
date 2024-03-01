@@ -42,3 +42,16 @@ pub async fn get_by_id<TInternalServices: IInternalServices>(
         Err(UserServiceErr::Other(e)) => response_unhandled_err(e),
     }
 }
+
+pub async fn get_id_by_name<TInternalServices: IInternalServices>(
+    Path(name): Path<String>,
+    State(state): InternalState<TInternalServices>,
+) -> Response {
+    match state.services.user.get_id_by_name(&name).await {
+        Ok(id) => match id {
+            Some(id) => Json(HttpResponse { data: id }).into_response(),
+            None => response_400_with_const(NOT_FOUND),
+        },
+        Err(UserServiceErr::Other(e)) => response_unhandled_err(e),
+    }
+}

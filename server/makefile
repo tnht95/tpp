@@ -1,7 +1,7 @@
 .PHONY: build docker fmt lint test pg-up pg-down clean-data
 
 build:
-	cargo build -r
+	cargo build -r --frozen --locked
 
 docker:
 	docker compose up -d
@@ -11,7 +11,7 @@ fmt:
 	pg_format migrations/* --inplace
 
 lint:
-	cargo clippy --bins --examples --tests --benches --all-targets --all-features --frozen --locked -- -D warnings -D clippy::all
+	cargo clippy --bins --examples --tests --benches --all-targets --all-features -- -D warnings -D clippy::all
 
 test: docker pgdown pgup
 	cargo test -- --show-output

@@ -113,6 +113,7 @@ where
                     .route("/logout", post(auth::log_out))
                     .route("/authentication", get(auth::authentication))
                     .route("/users/:id", get(user::get_by_id))
+                    .route("/users/name/:name", get(user::get_id_by_name))
                     .route("/users/:id/subscribes", post(subscribe::subscribe_user))
                     .route("/users/:id/subscribes", delete(subscribe::unsubscribe_user))
                     .route("/users/:id/activities", get(activity::filter))

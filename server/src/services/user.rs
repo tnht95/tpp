@@ -22,6 +22,7 @@ pub trait IUserService {
         user_id: i64,
         subscriber_id: Option<i64>,
     ) -> Result<Option<UserDetails>, UserServiceErr>;
+    async fn get_id_by_name(&self, name: &str) -> Result<Option<i64>, UserServiceErr>;
 }
 
 pub struct UserService<T: IDatabase> {
@@ -90,5 +91,13 @@ where
         .fetch_optional(self.db.get_pool())
         .await
         .map_err(|e| UserServiceErr::Other(e.into()))
+    }
+
+    async fn get_id_by_name(&self, name: &str) -> Result<Option<i64>, UserServiceErr> {
+        sqlx::query!("select id from users where name = $1", name)
+            .fetch_optional(self.db.get_pool())
+            .await
+            .map(|u| u.map(|u| u.id))
+            .map_err(|e| UserServiceErr::Other(e.into()))
     }
 }
