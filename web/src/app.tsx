@@ -20,7 +20,8 @@ import {
   PostDetailsPage,
   Search,
   TagSearch,
-  UserDetails
+  UserDetails,
+  UserRedirect
 } from './pages';
 
 const Root = (props: ParentProps) => (
@@ -44,6 +45,7 @@ export const App = () => (
       <Route path={'/activities'} component={GameDetailsActivity} />
     </Route>
     <Route path={'/users/:id'} component={UserDetails} />
+    <Route path={'/users/name/:name'} component={UserRedirect} />
     <Route path={'/blogs'} component={Blogs} />
     <Route path={'/blogs/:id'} component={BlogDetails} />
     <Route path={'/search'} component={Search} />

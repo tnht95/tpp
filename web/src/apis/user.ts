@@ -22,3 +22,8 @@ export const fetchUserByIdAction = (id: string) =>
   })
     .then(errHandler)
     .then((r: Response<UserDetails | undefined>) => r.data);
+
+export const fetchUserIdByNameAction = (name: string) =>
+  fetch(`${import.meta.env.VITE_API_URL}/users/name/${name}`)
+    .then(errHandler)
+    .then((r: Response<number | undefined>) => r.data);

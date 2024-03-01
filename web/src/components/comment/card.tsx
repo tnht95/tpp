@@ -5,7 +5,7 @@ import { Avatar, CommentForm, Markdown, OptionButton } from '@/components';
 import { useToastCtx } from '@/context';
 import { CommentDetails, RespErr } from '@/models';
 import { authenticationStore } from '@/store';
-import { formatTime } from '@/utils';
+import { formatTime, highlight } from '@/utils';
 
 type Props = {
   comment: CommentDetails;
@@ -77,7 +77,7 @@ export const CommentCard = (props: Props) => {
         <div class="flex flex-col items-baseline gap-2 rounded-b border border-gray-200 px-5 py-3">
           <Show
             when={isEditMode()}
-            fallback={<Markdown content={props.comment.content} />}
+            fallback={<Markdown content={highlight(props.comment.content)} />}
           >
             <CommentForm
               content={props.comment.content}

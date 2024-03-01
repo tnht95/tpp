@@ -9,3 +9,4 @@ export * from './not-found';
 export * from './post-details';
 export * from './emulator';
 export * from './tag-search';
+export * from './user-redirect';
