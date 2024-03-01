@@ -1,11 +1,11 @@
-mod cache;
+pub mod cache;
 pub mod cli;
 pub mod config;
-mod database;
+pub mod database;
 pub mod http;
 mod model;
 pub mod services;
-mod utils;
+pub mod utils;
 
 use std::sync::Arc;
 

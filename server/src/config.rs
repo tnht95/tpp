@@ -11,7 +11,7 @@ use serde::{Deserialize, Serialize};
 pub struct Config {
     pub log_format: LogFmt,
     pub server: HttpServer,
-    pub cache: Cache,
+    pub cache: CacheServer,
     pub github_app: GithubApp,
     pub auth: Auth,
     pub site_url: String,
@@ -33,7 +33,7 @@ pub struct HttpServer {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct Cache {
+pub struct CacheServer {
     pub redis_url: String,
     pub exp: u64, // seconds
 }
@@ -67,7 +67,7 @@ impl Default for Config {
                 pg_max_pool: 50,
                 cors_max_age: 3600,
             },
-            cache: Cache {
+            cache: CacheServer {
                 redis_url: "redis://:redis@localhost:6379/".into(),
                 exp: 3600,
             },

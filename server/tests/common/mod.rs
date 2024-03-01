@@ -1,7 +1,17 @@
+#![allow(dead_code)]
 use std::{path::PathBuf, sync::Arc};
 
 use axum::Router;
-use server::{config::Config, http::ApiServer, services::InternalServices};
+use chrono::Utc;
+use redis::AsyncCommands;
+use server::{
+    cache::{Cache, ICache},
+    config::Config,
+    database::entities::user::User,
+    http::ApiServer,
+    services::InternalServices,
+    utils::jwt,
+};
 use sqlx::postgres::PgPoolOptions;
 use tokio::sync::OnceCell;
 
@@ -40,4 +50,31 @@ async fn clean_data() {
 pub async fn setup_app() -> Router {
     clean_data().await;
     init_server().await.build_app()
+}
+
+pub fn mock_user(id: i64, name: &str) -> User {
+    User {
+        id,
+        name: name.into(),
+        github_url: format!("https://github.com/{name}"),
+        bio: None,
+        avatar: "https://avatars.githubusercontent.com/u/40195902?v=4".into(),
+        // TODO: mock time
+        created_at: Utc::now(),
+        updated_at: Utc::now(),
+    }
+}
+
+pub async fn gen_jwt(user: User) -> String {
+    jwt::encode(user, get_config().await).unwrap()
+}
+
+pub async fn gen_ws_ticket(user: &User) -> String {
+    let ws_ticket = uuid::Uuid::new_v4().to_string();
+    let key = format!("ws_ticket_{ws_ticket}");
+    let user_str = serde_json::to_string(user).unwrap();
+    let cache = Cache::new(get_config().await).await.unwrap();
+    let mut con = cache.get_con();
+    let _: () = con.set_ex(&key, user_str, cache.get_exp()).await.unwrap();
+    key
 }
