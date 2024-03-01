@@ -48,4 +48,4 @@ futures-util = { version = "0.3", default-features = false, features = [
   "sink",
   "std",
 ] }
-async-once-cell = "0.5.3"
+http-body-util = "0.1.0"

@@ -1,4 +1,4 @@
-.PHONY: build docker fmt lint test pg-up pg-down
+.PHONY: build docker fmt lint test pg-up pg-down clean-data
 
 build:
 	cargo build -r
@@ -21,3 +21,6 @@ pgup:
 
 pgdown:
 	sqlx migrate revert --target-version 0
+
+clean-data:
+	rm -rf ./data/db ./data/cache
