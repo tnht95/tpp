@@ -17,7 +17,9 @@ BEGIN
     ELSIF (TG_OP = 'DELETE') THEN
         DELETE FROM activities
         WHERE target_id = OLD.id;
-        DELETE FROM notis
+        DELETE FROM comments
+        WHERE target_id = OLD.id;
+        DELETE FROM likes
         WHERE target_id = OLD.id;
     END IF;
     RETURN NULL;
