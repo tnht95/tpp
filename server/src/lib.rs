@@ -2,9 +2,9 @@ mod cache;
 pub mod cli;
 pub mod config;
 mod database;
-mod http;
+pub mod http;
 mod model;
-mod services;
+pub mod services;
 mod utils;
 
 use std::sync::Arc;
@@ -37,7 +37,7 @@ use crate::{
     },
 };
 
-pub async fn start(config: Config) -> Result<()> {
+pub async fn init(config: Config) -> Result<ApiServer<InternalServices>> {
     Database::migrate(&config)
         .await
         .context("Failed to migrate database")?;
@@ -76,7 +76,7 @@ pub async fn start(config: Config) -> Result<()> {
     let activity_service = ActivityService::new(Arc::clone(&db));
     let notification_service = NofitifcationService::new(db, cache);
 
-    ApiServer::<InternalServices>::new(
+    Ok(ApiServer::new(
         config,
         ServicesBuilder::new()
             .health(health_service)
@@ -94,8 +94,5 @@ pub async fn start(config: Config) -> Result<()> {
             .activity(activity_service)
             .notification(notification_service)
             .build(),
-    )
-    .start()
-    .await
-    .context("Failed to start server {}")
+    ))
 }

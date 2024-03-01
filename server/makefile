@@ -13,8 +13,8 @@ fmt:
 lint:
 	cargo clippy --bins --examples --tests --benches --all-targets --all-features --frozen --locked -- -D warnings -D clippy::all
 
-test:
-	cargo test
+test: docker pgdown pgup
+	cargo test -- --show-output
 
 pgup:
 	sqlx migrate run

@@ -105,9 +105,9 @@ pub struct ServicesBuilder<TInternalServices: IInternalServices> {
     notification: Option<TInternalServices::TNotificationService>,
 }
 
-impl<TInternalServices: IInternalServices> ServicesBuilder<TInternalServices> {
-    pub fn new() -> Self {
-        ServicesBuilder {
+impl<TInternalServices: IInternalServices> Default for ServicesBuilder<TInternalServices> {
+    fn default() -> Self {
+        Self {
             health: None,
             auth: None,
             user: None,
@@ -123,6 +123,12 @@ impl<TInternalServices: IInternalServices> ServicesBuilder<TInternalServices> {
             activity: None,
             notification: None,
         }
+    }
+}
+
+impl<TInternalServices: IInternalServices> ServicesBuilder<TInternalServices> {
+    pub fn new() -> Self {
+        Self::default()
     }
 
     pub fn health(mut self, health: RwLock<TInternalServices::THealthService>) -> Self {

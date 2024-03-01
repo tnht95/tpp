@@ -38,6 +38,11 @@ async fn main() -> Result<()> {
     trace!("config: {:?}", config);
 
     match cli.command {
-        Cmd::Start => server::start(config).await,
+        Cmd::Start => server::init(config)
+            .await
+            .context("Failed to init server {}")?
+            .start()
+            .await
+            .context("Failed to start server {}"),
     }
 }
