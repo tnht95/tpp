@@ -31,8 +31,7 @@ BEGIN
         SELECT
             user_id,
             target_type,
-            target_id
-        INTO noti_to_user_id,
+            target_id INTO noti_to_user_id,
             noti_target_type,
             noti_target_id
         FROM

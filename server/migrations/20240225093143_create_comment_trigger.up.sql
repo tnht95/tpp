@@ -79,7 +79,7 @@ INSERT INTO notis (to_user_id, by_user_id, by_user_name, by_object_id, target_ty
 WHERE
     tag_users.to_user_id = noti_to_user_id;
     -- prevent noti to oneself
-    IF (noti_to_user_id != NEW.user_id AND is_tag_user_same_with_author is null) THEN
+    IF (noti_to_user_id != NEW.user_id AND is_tag_user_same_with_author IS NULL) THEN
         INSERT INTO notis (to_user_id, by_user_id, by_user_name, by_object_id, target_type, target_id, parent_target_id)
             VALUES (noti_to_user_id, NEW.user_id, NEW.user_name, NEW.id, noti_target_type::noti_type, noti_target_id, noti_parent_target_id);
     END IF;
@@ -93,4 +93,24 @@ CREATE TRIGGER comment_insert_trigger
     AFTER INSERT ON comments
     FOR EACH ROW
     EXECUTE FUNCTION insert_noti_on_comment_insert ();
+
+CREATE FUNCTION delete_data_on_delete_comment ()
+    RETURNS TRIGGER
+    AS $$
+BEGIN
+    DELETE FROM notis
+    WHERE by_object_id = OLD.id;
+    DELETE FROM comments
+    WHERE target_id = OLD.id;
+    DELETE FROM likes
+    WHERE target_id = OLD.id;
+    RETURN NULL;
+END;
+$$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER delete_comment_trigger
+    AFTER DELETE ON comments
+    FOR EACH ROW
+    EXECUTE FUNCTION delete_data_on_delete_comment ();
 

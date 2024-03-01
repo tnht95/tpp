@@ -15,5 +15,5 @@ LANGUAGE plpgsql;
 CREATE TRIGGER delete_game_trigger
     AFTER DELETE ON games
     FOR EACH ROW
-    EXECUTE FUNCTION delete_data_on_delete_game();
+    EXECUTE FUNCTION delete_data_on_delete_game ();
 
