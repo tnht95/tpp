@@ -12,7 +12,7 @@ export const fetchMeAction = () =>
 
 export const logoutAction = () =>
   fetch(`${import.meta.env.VITE_API_URL}/logout`, {
-    method: 'post',
+    method: 'delete',
     credentials: 'include'
   }).then(errHandler);
 

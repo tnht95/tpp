@@ -110,7 +110,7 @@ where
                 "/api/v1",
                 Router::new()
                     .route("/me", get(auth::me))
-                    .route("/logout", post(auth::log_out))
+                    .route("/logout", delete(auth::log_out))
                     .route("/authentication", get(auth::authentication))
                     .route("/users/:id", get(user::get_by_id))
                     .route("/users/name/:name", get(user::get_id_by_name))
