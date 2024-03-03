@@ -68,7 +68,7 @@ async fn valid_user_authentication() {
     let user_expected_body = mock_user(1, "bob");
     mock_time::clear_mock_time();
 
-    let ws_ticket = gen_ws_ticket(&user).await;
+    let ws_ticket = gen_ws_ticket(&user, false).await;
     let access_token = gen_jwt(user).await;
 
     let request = Request::builder()
@@ -111,7 +111,7 @@ async fn valid_admin_authentication() {
     let user_expected_body = mock_user(config.auth.admin_id, "bob");
     mock_time::clear_mock_time();
 
-    let ws_ticket = gen_ws_ticket(&user).await;
+    let ws_ticket = gen_ws_ticket(&user, false).await;
     let access_token = gen_jwt(user).await;
 
     let request = Request::builder()
@@ -142,4 +142,37 @@ async fn valid_admin_authentication() {
         "user": user_expected_body
     } })
     );
+}
+
+#[tokio::test]
+async fn logout_successfully() {
+    let mut app = setup_app(false).await;
+
+    let user = mock_user(1, "bob");
+
+    let ws_ticket = gen_ws_ticket(&user, true).await;
+    let access_token = gen_jwt(user).await;
+
+    let request = Request::builder()
+        .uri("/api/v1/logout")
+        .method("DELETE")
+        .header(
+            "cookie",
+            format!("access_token={access_token};ws_ticket={ws_ticket}"),
+        )
+        .body(Body::empty())
+        .unwrap();
+
+    let response = ServiceExt::<Request<Body>>::ready(&mut app)
+        .await
+        .unwrap()
+        .call(request)
+        .await
+        .unwrap();
+
+    assert_eq!(response.status(), StatusCode::OK);
+
+    let body = response.into_body().collect().await.unwrap().to_bytes();
+    let body: Value = serde_json::from_slice(&body).unwrap();
+    assert_eq!(body, json!({ "data": None::<()> }));
 }

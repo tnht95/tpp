@@ -7,7 +7,7 @@ use std::{
 use anyhow::{bail, Result};
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Config {
     pub log_format: LogFmt,
     pub server: HttpServer,
@@ -18,13 +18,13 @@ pub struct Config {
     pub rom_dir: String,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum LogFmt {
     Json,
     Text,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct HttpServer {
     pub http_port: u16,
     pub pg_url: String,
@@ -32,26 +32,26 @@ pub struct HttpServer {
     pub cors_max_age: u64, // seconds
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct CacheServer {
     pub redis_url: String,
     pub exp: u64, // seconds
 }
 
-#[derive(Serialize, Deserialize, Debug, Default)]
+#[derive(Serialize, Deserialize, Debug, Default, Clone)]
 pub struct GithubApp {
     pub client_id: String,
     pub client_secret: String,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Auth {
     pub jwt: Jwt,
     pub redirect_url: String,
     pub admin_id: i64,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Jwt {
     pub secret: String,
     pub expire_in: u64, // seconds
