@@ -10,7 +10,6 @@ use axum::{
     response::{AppendHeaders, IntoResponse, Response},
     Json,
 };
-use chrono::Utc;
 use serde_json::json;
 
 use super::InternalState;
@@ -32,6 +31,7 @@ use crate::{
     utils::{
         github::{exchange_user_token, get_ghuser_from_token},
         jwt,
+        time::now,
     },
 };
 
@@ -69,8 +69,8 @@ pub async fn authentication<TInternalServices: IInternalServices>(
             github_url: gh_user.html_url,
             bio: gh_user.bio,
             avatar: gh_user.avatar_url,
-            created_at: Utc::now(),
-            updated_at: Utc::now(),
+            created_at: now(),
+            updated_at: now(),
         })
         .await
     {

@@ -2,6 +2,7 @@ use std::collections::HashSet;
 
 pub mod github;
 pub mod jwt;
+pub mod time;
 
 pub fn clean_duplicate(str: Option<Vec<String>>) -> Vec<String> {
     str.unwrap_or_default()

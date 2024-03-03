@@ -2,7 +2,6 @@
 use std::{path::PathBuf, sync::Arc};
 
 use axum::Router;
-use chrono::Utc;
 use redis::AsyncCommands;
 use server::{
     cache::{Cache, ICache},
@@ -10,7 +9,7 @@ use server::{
     database::entities::user::User,
     http::ApiServer,
     services::InternalServices,
-    utils::jwt,
+    utils::{jwt, time::now},
 };
 use sqlx::postgres::PgPoolOptions;
 use tokio::sync::OnceCell;
@@ -19,7 +18,7 @@ static SERVER_INSTANCE: OnceCell<Arc<ApiServer<InternalServices>>> = OnceCell::c
 
 static CONFIG_INSTANCE: OnceCell<Config> = OnceCell::const_new();
 
-async fn get_config() -> &'static Config {
+pub async fn get_config() -> &'static Config {
     CONFIG_INSTANCE
         .get_or_init(|| async { Config::from_file(PathBuf::from("./config.toml")).unwrap() })
         .await
@@ -47,8 +46,10 @@ async fn clean_data() {
     sqlx::migrate!().run(&pool).await.unwrap()
 }
 
-pub async fn setup_app() -> Router {
-    clean_data().await;
+pub async fn setup_app(should_clean_data: bool) -> Router {
+    if should_clean_data {
+        clean_data().await;
+    }
     init_server().await.build_app()
 }
 
@@ -59,9 +60,8 @@ pub fn mock_user(id: i64, name: &str) -> User {
         github_url: format!("https://github.com/{name}"),
         bio: None,
         avatar: "https://avatars.githubusercontent.com/u/40195902?v=4".into(),
-        // TODO: mock time
-        created_at: Utc::now(),
-        updated_at: Utc::now(),
+        created_at: now(),
+        updated_at: now(),
     }
 }
 

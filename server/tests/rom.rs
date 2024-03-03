@@ -8,7 +8,7 @@ mod common;
 
 #[tokio::test]
 async fn rom_is_accessible() {
-    let mut app = setup_app().await;
+    let mut app = setup_app(false).await;
     tokio::fs::write("./roms/123", "my_rom").await.unwrap();
     let request = Request::builder()
         .uri("/roms/123")

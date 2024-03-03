@@ -7,7 +7,7 @@ mod common;
 
 #[tokio::test]
 async fn is_healthy() {
-    let mut app = setup_app().await;
+    let mut app = setup_app(false).await;
     let request = Request::builder()
         .uri("/health")
         .body(Body::empty())

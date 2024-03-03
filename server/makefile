@@ -14,7 +14,7 @@ lint:
 	cargo clippy --bins --examples --tests --benches --all-targets --all-features -- -D warnings -D clippy::all
 
 test: docker pgdown pgup
-	cargo test -- --show-output
+	cargo test --features mock-time -- --show-output
 
 pgup:
 	sqlx migrate run
