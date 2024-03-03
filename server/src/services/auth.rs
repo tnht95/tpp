@@ -74,7 +74,7 @@ where
 
     async fn delete_ws_ticket(&self, ws_ticket: &str) -> Result<(), AuthServiceErr> {
         let mut con = self.cache.get_con();
-        con.del(ws_ticket)
+        con.del(self.build_key(ws_ticket))
             .await
             .map_err(|e| AuthServiceErr::Other(anyhow!(e)))
     }
