@@ -12,8 +12,10 @@ BEGIN
             games
         WHERE
             id = NEW.game_id;
-        INSERT INTO notis (to_user_id, by_user_id, by_user_name, by_object_id, target_type, target_id, parent_target_id)
-            VALUES (noti_to_user_id, NEW.user_id, NEW.user_name, NEW.id, 'game_discussion', NEW.id, NEW.game_id);
+        IF (noti_to_user_id != NEW.user_id) THEN
+            INSERT INTO notis (to_user_id, by_user_id, by_user_name, by_object_id, target_type, target_id, parent_target_id)
+                VALUES (noti_to_user_id, NEW.user_id, NEW.user_name, NEW.id, 'game_discussion', NEW.id, NEW.game_id);
+        END IF;
     ELSIF (TG_OP = 'DELETE') THEN
         DELETE FROM notis
         WHERE target_id = OLD.id;
