@@ -1,7 +1,15 @@
-use axum::{body::Body, extract::Request, http::StatusCode};
+use axum::{
+    body::Body,
+    extract::Request,
+    http::{header::SET_COOKIE, StatusCode},
+};
 use http_body_util::BodyExt;
+use redis::AsyncCommands;
 use serde_json::{json, Value};
-use server::utils::time::mock_time;
+use server::{
+    cache::{Cache, ICache},
+    utils::time::mock_time,
+};
 use tower::{util::ServiceExt, Service};
 
 use crate::common::{gen_jwt, gen_ws_ticket, get_config, mock_user, setup_app};
@@ -172,7 +180,23 @@ async fn logout_successfully() {
 
     assert_eq!(response.status(), StatusCode::OK);
 
+    let mut headers = response.headers().get_all(SET_COOKIE).iter();
+    assert_eq!(
+        headers.next().unwrap(),
+        "access_token=;SameSite=None;Secure;HttpOnly;Max-Age=0"
+    );
+    assert_eq!(
+        headers.next().unwrap(),
+        "ws_ticket=;SameSite=None;Secure;HttpOnly;Max-Age=0"
+    );
+    assert!(headers.next().is_none());
+
     let body = response.into_body().collect().await.unwrap().to_bytes();
     let body: Value = serde_json::from_slice(&body).unwrap();
     assert_eq!(body, json!({ "data": None::<()> }));
+
+    let cache = Cache::new(get_config().await).await.unwrap();
+    let mut con = cache.get_con();
+    let result: Option<()> = con.get(format!("ws_ticket_{ws_ticket}")).await.unwrap();
+    assert_eq!(result, None);
 }
