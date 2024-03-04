@@ -9,7 +9,7 @@ use crate::common::{gen_jwt, gen_ws_ticket, get_db, mock_user, setup_app};
 mod common;
 
 #[tokio::test]
-async fn get_user_by_id_with_invalid_id() {
+async fn with_invalid_id() {
     let mut app = setup_app(true).await;
     let request = Request::builder()
         .uri("/api/v1/users/sss")
@@ -34,7 +34,7 @@ async fn get_user_by_id_with_invalid_id() {
 }
 
 #[tokio::test]
-async fn get_user_by_id_with_not_existed_id() {
+async fn with_not_existed_id() {
     let mut app = setup_app(true).await;
     let request = Request::builder()
         .uri("/api/v1/users/1")
@@ -59,7 +59,7 @@ async fn get_user_by_id_with_not_existed_id() {
 }
 
 #[tokio::test]
-async fn get_user_by_id_non_auth_with_existed_id() {
+async fn non_auth_with_existed_id() {
     let mut app = setup_app(true).await;
     let request = Request::builder()
         .uri("/api/v1/users/40195902")
@@ -95,7 +95,7 @@ async fn get_user_by_id_non_auth_with_existed_id() {
 }
 
 #[tokio::test]
-async fn get_user_by_id_auth_with_subscriber() {
+async fn auth_with_subscriber() {
     let mut app = setup_app(true).await;
 
     let user = mock_user(1, "me", true).await;
