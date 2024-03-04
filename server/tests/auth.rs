@@ -72,8 +72,8 @@ async fn valid_user_authentication() {
     let mut app = setup_app(false).await;
 
     mock_time::set_mock_time(mock_time::now());
-    let user = mock_user(1, "bob");
-    let user_expected_body = mock_user(1, "bob");
+    let user = mock_user(1, "bob", false).await;
+    let user_expected_body = mock_user(1, "bob", false).await;
     mock_time::clear_mock_time();
 
     let ws_ticket = gen_ws_ticket(&user, false).await;
@@ -115,8 +115,8 @@ async fn valid_admin_authentication() {
     let mut app = setup_app(false).await;
 
     mock_time::set_mock_time(mock_time::now());
-    let user = mock_user(config.auth.admin_id, "bob");
-    let user_expected_body = mock_user(config.auth.admin_id, "bob");
+    let user = mock_user(config.auth.admin_id, "bob", false).await;
+    let user_expected_body = mock_user(config.auth.admin_id, "bob", false).await;
     mock_time::clear_mock_time();
 
     let ws_ticket = gen_ws_ticket(&user, false).await;
@@ -156,7 +156,7 @@ async fn valid_admin_authentication() {
 async fn logout_successfully() {
     let mut app = setup_app(false).await;
 
-    let user = mock_user(1, "bob");
+    let user = mock_user(1, "bob", false).await;
 
     let ws_ticket = gen_ws_ticket(&user, true).await;
     let access_token = gen_jwt(user).await;

@@ -6,7 +6,7 @@ use redis::AsyncCommands;
 use server::{
     cache::{Cache, ICache},
     config::Config,
-    database::entities::user::User,
+    database::{entities::user::User, Database, IDatabase},
     init,
     utils::{jwt, time::now},
 };
@@ -14,10 +14,17 @@ use sqlx::postgres::PgPoolOptions;
 use tokio::sync::OnceCell;
 
 static CONFIG_INSTANCE: OnceCell<Config> = OnceCell::const_new();
+static DB_INSTANCE: OnceCell<Database> = OnceCell::const_new();
 
 pub async fn get_config() -> &'static Config {
     CONFIG_INSTANCE
         .get_or_init(|| async { Config::from_file(PathBuf::from("./config.toml")).unwrap() })
+        .await
+}
+
+pub async fn get_db() -> &'static Database {
+    DB_INSTANCE
+        .get_or_init(|| async { Database::new(get_config().await).await.unwrap() })
         .await
 }
 
@@ -38,16 +45,30 @@ pub async fn setup_app(reset_data: bool) -> Router {
     Arc::new(init(get_config().await.clone()).await.unwrap()).build_app()
 }
 
-pub fn mock_user(id: i64, name: &str) -> User {
-    User {
+pub async fn mock_user(id: i64, name: &str, persist_db: bool) -> User {
+    let user = User {
         id,
         name: name.into(),
         github_url: format!("https://github.com/{name}"),
         bio: None,
-        avatar: "https://avatars.githubusercontent.com/u/40195902?v=4".into(),
+        avatar: format!("https://avatars.githubusercontent.com/u/{id}?v=4"),
         created_at: now(),
         updated_at: now(),
+    };
+    if persist_db {
+        sqlx::query!(
+            "insert into users (id, name, avatar, github_url)
+            values ($1, $2, $3, $4)",
+            user.id,
+            user.name,
+            user.avatar,
+            user.github_url,
+        )
+        .execute(get_db().await.get_pool())
+        .await
+        .unwrap();
     }
+    user
 }
 
 pub async fn gen_jwt(user: User) -> String {
