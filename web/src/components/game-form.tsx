@@ -28,10 +28,23 @@ export const GameForm = (props: Props) => {
   const [isFileUploaderVisible, setIsFileUploaderVisible] = createSignal(false);
   const [content, setContent] = createSignal('');
   const { validate, submit, errors } = useForm({ errClass: 'border-red-600' });
+  const [inputFileRef, setInputFileRef] = createSignal<HTMLInputElement>();
 
   createEffect(() => {
     setContent(props.game?.info ?? '');
   });
+
+createEffect(() => {
+  if (inputFileRef()) {
+    if (!props.game || isFileUploaderVisible()) {
+      validate(inputFileRef() as HTMLInputElement, () => [fileRequired], {
+        onBlur: false
+      });
+    } else if (!isFileUploaderVisible()) {
+      validate(inputFileRef() as HTMLInputElement, () => [])
+    }
+  }
+})
 
   const togglePreviewHandler = () => {
     setIsEditMode(mode => !mode);
@@ -158,12 +171,8 @@ export const GameForm = (props: Props) => {
               <Show when={props.game}>
                 <div class="flex items-center gap-1">
                   <i class="fa-regular fa-file-lines" />
-                  <p
-                    class="cursor-pointer font-semibold text-blue-500 underline"
-                    onClick={() =>
-                      setIsFileUploaderVisible(!isFileUploaderVisible())
-                    }
-                  >
+                  <p onClick={() => setIsFileUploaderVisible(!isFileUploaderVisible())}
+                    class="cursor-pointer font-semibold text-blue-500 underline">
                     {isFileUploaderVisible()
                       ? 'Upload new ROM file'
                       : 'Use old ROM file'}{' '}
@@ -177,14 +186,7 @@ export const GameForm = (props: Props) => {
                     class="block w-full cursor-pointer rounded-lg border bg-gray-50 text-sm text-gray-400 focus:outline-none"
                     type="file"
                     name="rom"
-                    ref={el => {
-                      if (!props.game || isFileUploaderVisible()) {
-                        return validate(el, () => [fileRequired], {
-                          onBlur: false
-                        });
-                      }
-                      return [];
-                    }}
+                    ref={setInputFileRef}
                   />
                   <p class="mt-1 text-sm text-gray-400">
                     Upload your ROM (Max file size: 4KB)
