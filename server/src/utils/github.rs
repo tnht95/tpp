@@ -4,7 +4,7 @@ use axum::{
     http::header::{ACCEPT, AUTHORIZATION},
 };
 use http_body_util::BodyExt;
-use hyper::Request;
+use hyper::{header::USER_AGENT, Request};
 use hyper_tls::HttpsConnector;
 use hyper_util::{client::legacy::Client, rt::TokioExecutor};
 use serde::{Deserialize, Serialize};
@@ -47,6 +47,7 @@ pub async fn get_ghuser_from_token(token: &str) -> Result<GithubUser> {
         .request(
             Request::builder()
                 .uri("https://api.github.com/user")
+                .header(USER_AGENT, "tpp-app")
                 .header(ACCEPT, "application/vnd.github+json")
                 .header(AUTHORIZATION, format!("Bearer {token}"))
                 .body(Body::empty())?,
