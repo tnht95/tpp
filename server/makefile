@@ -1,6 +1,6 @@
 .PHONY: deploy build docker fmt lint test pg-up pg-down clean-data
 
-export SQLX_OFFLINE = true
+deploy: export SQLX_OFFLINE = true
 
 # on VM
 deploy:
