@@ -1,0 +1,67 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select\n                comments.id,\n                comments.user_id,\n                comments.user_name,\n                users.avatar as user_avatar,\n                comments.content,\n                comments.likes,\n                comments.created_at,\n                case\n                    when $4::bigint is not null then exists (\n                        select 1\n                        from likes\n                        where target_id = comments.id and user_id = $4\n                    )\n                    else null\n                end as is_liked\n            from comments\n            left join users on users.id = comments.user_id\n            where target_id = $1\n            order by comments.created_at asc\n            offset $2 limit $3",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "user_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 2,
+        "name": "user_name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "user_avatar",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "content",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 5,
+        "name": "likes",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 6,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 7,
+        "name": "is_liked",
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Int8",
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      null
+    ]
+  },
+  "hash": "afea58d588043dd42d0e31132cd31c16c15889ed5f8a56a79f44b78425e9412e"
+}

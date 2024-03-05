@@ -1,0 +1,74 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update blogs set content = $1, title = $2, description = $3, tags = $4, updated_at = now() where id = $5 returning *",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "user_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 2,
+        "name": "title",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "description",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "content",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 5,
+        "name": "comments",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 6,
+        "name": "tags",
+        "type_info": "VarcharArray"
+      },
+      {
+        "ordinal": 7,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 8,
+        "name": "updated_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "VarcharArray",
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false
+    ]
+  },
+  "hash": "d6bf5551c21e0ee51fb691ffe4561209286e71bdace02a77782085ced20b1ff8"
+}

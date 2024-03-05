@@ -1,13 +1,19 @@
 .PHONY: deploy build docker fmt lint test pg-up pg-down clean-data
 
+# on VM
 deploy:
-	cargo sqlx prepare
-	docker build -t tpp-server .
+	cargo install --locked --path .
+	sudo systemctl daemon-reload
+	sudo systemctl enable tpp
+	sudo systemctl restart my-service
+	sudo systemctl status my-service
 
 build:
+	cargo sqlx prepare
 	cargo build -r --locked
 
 docker:
+	# docker build -t tpp-server .
 	docker compose up -d
 
 fmt:

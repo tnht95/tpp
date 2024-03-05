@@ -1,0 +1,109 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            select\n                notis.id,\n                notis.to_user_id,\n                notis.by_user_id,\n                notis.by_user_name,\n                users.avatar as \"by_user_name_avatar\",\n                notis.by_object_id,\n                notis.target_type as \"target_type!: NotificationType\",\n                notis.target_id,\n                notis.parent_target_id,\n                notis.is_read,\n                notis.created_at\n            from notis\n            left join users on users.id = notis.by_user_id\n            where\n                to_user_id = $1\n            order by id desc offset $2 limit $3\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 1,
+        "name": "to_user_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 2,
+        "name": "by_user_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 3,
+        "name": "by_user_name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "by_user_name_avatar",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "by_object_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 6,
+        "name": "target_type!: NotificationType",
+        "type_info": {
+          "Custom": {
+            "name": "noti_type",
+            "kind": {
+              "Enum": [
+                "like_post",
+                "like_discussion",
+                "like_comment_blog",
+                "like_comment_post",
+                "like_comment_discussion",
+                "comment_blog",
+                "comment_post",
+                "comment_discussion",
+                "comment_tag_blog",
+                "comment_tag_post",
+                "comment_tag_discussion",
+                "game_discussion",
+                "subscribe",
+                "user_added_game",
+                "user_updated_game",
+                "user_post",
+                "vote_game"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "ordinal": 7,
+        "name": "target_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 8,
+        "name": "parent_target_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 9,
+        "name": "is_read",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 10,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false
+    ]
+  },
+  "hash": "1026353ef926786508d15d715342a14d4c935178fc25c9b9c2c1d8e204107e3a"
+}

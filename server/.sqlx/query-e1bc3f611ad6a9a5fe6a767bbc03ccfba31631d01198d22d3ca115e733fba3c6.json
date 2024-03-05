@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into posts (user_id, content) values ($1, $2)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Varchar"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "e1bc3f611ad6a9a5fe6a767bbc03ccfba31631d01198d22d3ca115e733fba3c6"
+}

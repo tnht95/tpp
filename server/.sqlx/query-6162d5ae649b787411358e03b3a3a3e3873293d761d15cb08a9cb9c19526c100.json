@@ -1,0 +1,35 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select delete_comment($1, $2, $3)",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "delete_comment",
+        "type_info": "Void"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid",
+        {
+          "Custom": {
+            "name": "comment_type",
+            "kind": {
+              "Enum": [
+                "discussions",
+                "blogs",
+                "posts"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "6162d5ae649b787411358e03b3a3a3e3873293d761d15cb08a9cb9c19526c100"
+}

@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update notis set is_read = true where id = $1 AND to_user_id = $2",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "45853fd6590da9de86a29763d597ab14ae21e1372f7534f122069677bb750c54"
+}

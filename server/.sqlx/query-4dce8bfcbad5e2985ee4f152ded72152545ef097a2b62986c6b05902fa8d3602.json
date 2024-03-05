@@ -1,0 +1,35 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select delete_like($1, $2, $3)",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "delete_like",
+        "type_info": "Void"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Uuid",
+        {
+          "Custom": {
+            "name": "like_type",
+            "kind": {
+              "Enum": [
+                "discussions",
+                "comments",
+                "posts"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "4dce8bfcbad5e2985ee4f152ded72152545ef097a2b62986c6b05902fa8d3602"
+}

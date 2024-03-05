@@ -1,0 +1,60 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select id, name, author_id, author_name, avatar_url, up_votes, down_votes\n                    from games\n                    where name ilike $1\n                    order by created_at desc offset $2 limit $3",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "author_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 3,
+        "name": "author_name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "avatar_url",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 5,
+        "name": "up_votes",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 6,
+        "name": "down_votes",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false
+    ]
+  },
+  "hash": "840a96639cb00e88ebf292c5e608125561c68b674a0b6ff8b4cfa9af85d60cce"
+}

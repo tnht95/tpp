@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into activities (user_id, target_type, target_id, memo) values ($1, 'updated_game', $2, $3)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Uuid",
+        "Varchar"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "8186c7e4fab161cb2debefbee32c1eb5e5e70963f2d2a272caa8f4421313b76f"
+}

@@ -1,0 +1,72 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select\n                posts.id,\n                posts.user_id,\n                users.name as user_name,\n                users.avatar as user_avatar,\n                posts.content,\n                posts.likes,\n                posts.comments,\n                posts.created_at,\n                case\n                    when $1::bigint is not null then exists (\n                        select 1\n                        from likes\n                        where target_id = posts.id and user_id = $1\n                    )\n                    else null\n                end as is_liked\n            from\n                posts\n                left join users on users.id = posts.user_id\n            order by\n                posts.created_at desc\n            offset $2 limit $3;",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "user_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 2,
+        "name": "user_name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "user_avatar",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "content",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 5,
+        "name": "likes",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 6,
+        "name": "comments",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 7,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 8,
+        "name": "is_liked",
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      null
+    ]
+  },
+  "hash": "45f31c11a280d64da68ea8206ca385622cc0bf84dd67012619fa5fadc9487d9d"
+}

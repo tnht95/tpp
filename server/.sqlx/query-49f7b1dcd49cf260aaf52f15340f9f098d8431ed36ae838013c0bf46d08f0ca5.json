@@ -1,0 +1,70 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select * from blogs where id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "user_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 2,
+        "name": "title",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "description",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "content",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 5,
+        "name": "comments",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 6,
+        "name": "tags",
+        "type_info": "VarcharArray"
+      },
+      {
+        "ordinal": 7,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 8,
+        "name": "updated_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false
+    ]
+  },
+  "hash": "49f7b1dcd49cf260aaf52f15340f9f098d8431ed36ae838013c0bf46d08f0ca5"
+}

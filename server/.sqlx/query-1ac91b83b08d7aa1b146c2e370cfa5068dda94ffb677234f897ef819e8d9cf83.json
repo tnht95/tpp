@@ -1,0 +1,36 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select id, name, avatar\n                    from users\n                    where name ilike $1\n                    order by created_at desc offset $2 limit $3",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 1,
+        "name": "name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "avatar",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "1ac91b83b08d7aa1b146c2e370cfa5068dda94ffb677234f897ef819e8d9cf83"
+}

@@ -1,0 +1,71 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select\n                u.*,\n                count(s.user_id) as \"subscribers!\",\n                case\n                    when $1::bigint is not null then bool_or(s.subscriber_id = $1)\n                    else null\n                end as is_subscribed\n            from\n                users u\n            left join\n                user_subscribers s on u.id = s.user_id\n            where\n                u.id = $2\n            group by\n                u.id\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 1,
+        "name": "name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "github_url",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "avatar",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "bio",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 6,
+        "name": "updated_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 7,
+        "name": "subscribers!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 8,
+        "name": "is_subscribed",
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      null,
+      null
+    ]
+  },
+  "hash": "bdefb7fae5230b22a27cd68694657c740c3d5cb74bfbbd17bef01bee39beba4a"
+}

@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "update games set rom = $1 where id = $2",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Uuid"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "ecc629236515118cea5c6f6f1d4f3c30be1b245b3b822e0afd5ddbc815a698dd"
+}

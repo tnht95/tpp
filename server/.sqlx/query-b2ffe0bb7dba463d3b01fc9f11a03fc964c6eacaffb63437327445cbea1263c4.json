@@ -1,0 +1,37 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select insert_comment($1, $2, $3, $4, $5) as \"id!\"",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id!",
+        "type_info": "Uuid"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Uuid",
+        {
+          "Custom": {
+            "name": "comment_type",
+            "kind": {
+              "Enum": [
+                "discussions",
+                "blogs",
+                "posts"
+              ]
+            }
+          }
+        },
+        "Varchar",
+        "Varchar"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "b2ffe0bb7dba463d3b01fc9f11a03fc964c6eacaffb63437327445cbea1263c4"
+}

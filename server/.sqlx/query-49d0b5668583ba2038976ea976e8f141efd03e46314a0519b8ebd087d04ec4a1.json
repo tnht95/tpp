@@ -1,0 +1,23 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select count(*) as comment_count from comments where id = $1 and user_id = $2",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "comment_count",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "49d0b5668583ba2038976ea976e8f141efd03e46314a0519b8ebd087d04ec4a1"
+}

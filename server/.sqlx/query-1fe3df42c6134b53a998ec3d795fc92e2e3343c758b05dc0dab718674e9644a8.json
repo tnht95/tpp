@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "delete from user_subscribers where user_id = $1 and subscriber_id = $2",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "1fe3df42c6134b53a998ec3d795fc92e2e3343c758b05dc0dab718674e9644a8"
+}

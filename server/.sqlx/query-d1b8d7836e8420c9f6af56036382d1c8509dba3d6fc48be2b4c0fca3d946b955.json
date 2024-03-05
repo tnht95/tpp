@@ -1,0 +1,62 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into users (id, name, avatar, github_url, bio)\n            values ($1, $2, $3, $4, $5)\n            on conflict (id) do update\n            set name = $2, avatar = $3, github_url = $4, bio = $5, updated_at = now()\n            returning *",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 1,
+        "name": "name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "github_url",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "avatar",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "bio",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 6,
+        "name": "updated_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Varchar",
+        "Text",
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false
+    ]
+  },
+  "hash": "d1b8d7836e8420c9f6af56036382d1c8509dba3d6fc48be2b4c0fca3d946b955"
+}

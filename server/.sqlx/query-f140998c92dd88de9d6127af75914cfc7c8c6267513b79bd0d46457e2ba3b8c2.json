@@ -1,0 +1,61 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            select\n                user_id,\n                target_type as \"target_type!: ActivityType\",\n                target_id,\n                memo,\n                created_at\n            from activities\n            where \n                user_id = $1\n                and ($2 = uuid_nil() or target_id = $2)\n            order by created_at desc offset $3 limit $4\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "user_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 1,
+        "name": "target_type!: ActivityType",
+        "type_info": {
+          "Custom": {
+            "name": "activity_type",
+            "kind": {
+              "Enum": [
+                "user",
+                "added_game",
+                "updated_game",
+                "post"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "target_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 3,
+        "name": "memo",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Uuid",
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "f140998c92dd88de9d6127af75914cfc7c8c6267513b79bd0d46457e2ba3b8c2"
+}

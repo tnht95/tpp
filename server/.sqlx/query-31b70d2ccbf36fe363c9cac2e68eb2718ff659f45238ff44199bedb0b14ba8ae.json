@@ -1,0 +1,20 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select distinct unnest(tags) as \"tag!\" from blogs",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "tag!",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "31b70d2ccbf36fe363c9cac2e68eb2718ff659f45238ff44199bedb0b14ba8ae"
+}

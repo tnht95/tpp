@@ -1,0 +1,35 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select insert_like($1, $2, $3)",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "insert_like",
+        "type_info": "Void"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Uuid",
+        {
+          "Custom": {
+            "name": "like_type",
+            "kind": {
+              "Enum": [
+                "discussions",
+                "comments",
+                "posts"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "43bb1f89780369e0102b930dceda51e2d756d97da562c49a77f274ea0bd051b7"
+}

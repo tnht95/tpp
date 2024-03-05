@@ -1,0 +1,113 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            select\n                games.*,\n                users.avatar as author_avatar,\n                case\n                    when $1 is not null then votes.is_up\n                    else null\n                end as is_up_voted\n            from\n                games\n            left join\n                votes on games.id = votes.game_id and votes.user_id = $1\n            left join\n                users on games.author_id = users.id\n            where\n                games.id = $2;\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "author_name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "author_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 4,
+        "name": "url",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 5,
+        "name": "avatar_url",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 6,
+        "name": "about",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 7,
+        "name": "info",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 8,
+        "name": "up_votes",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 9,
+        "name": "down_votes",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 10,
+        "name": "tags",
+        "type_info": "VarcharArray"
+      },
+      {
+        "ordinal": 11,
+        "name": "rom",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 12,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 13,
+        "name": "updated_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 14,
+        "name": "author_avatar",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 15,
+        "name": "is_up_voted",
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      null
+    ]
+  },
+  "hash": "f08f13762eb8d55dcdeaf118bbeb7aa144ff7b463768e719ea7279dffc074df5"
+}

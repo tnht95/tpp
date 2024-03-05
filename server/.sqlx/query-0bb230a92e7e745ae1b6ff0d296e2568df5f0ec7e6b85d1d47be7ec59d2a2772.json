@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into user_subscribers (user_id, subscriber_id) values ($1, $2)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "0bb230a92e7e745ae1b6ff0d296e2568df5f0ec7e6b85d1d47be7ec59d2a2772"
+}

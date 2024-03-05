@@ -1,0 +1,20 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select distinct unnest(tags) AS tag FROM games",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "tag",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "a950b7ebd1efbe3f129f0705979f788733d2abe63fcf6d34ed80a934c435ef72"
+}

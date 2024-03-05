@@ -1,0 +1,84 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select \n                discussions.id, \n                discussions.user_id, \n                discussions.user_name, \n                users.avatar as user_avatar,\n                discussions.game_id, \n                discussions.title, \n                discussions.content, \n                discussions.created_at,\n                discussions.likes,\n                discussions.comments,\n                case\n                    when $3::bigint is not null then exists (\n                        select 1\n                        from likes\n                        where target_id = discussions.id and user_id = $3\n                    )\n                    else null\n                end as is_liked\n            from discussions \n            left join users on discussions.user_id = users.id\n            where discussions.id = $1 and discussions.game_id = $2",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "user_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 2,
+        "name": "user_name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "user_avatar",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "game_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 5,
+        "name": "title",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 6,
+        "name": "content",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 7,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 8,
+        "name": "likes",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 9,
+        "name": "comments",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 10,
+        "name": "is_liked",
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      null
+    ]
+  },
+  "hash": "90dd9280a740b09ca296fdb6bb00ed01d0e5a78d71f04965b4e13a23f0fa446e"
+}

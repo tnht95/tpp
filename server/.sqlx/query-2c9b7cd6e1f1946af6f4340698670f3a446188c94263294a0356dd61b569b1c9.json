@@ -1,0 +1,35 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "insert into games\n            (name, author_id, author_name, url, avatar_url, about, info, tags, rom) values\n            ($1, $2, $3, $4, $5, $6, $7, $8, '')\n            returning id, name",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "name",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Int8",
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "VarcharArray"
+      ]
+    },
+    "nullable": [
+      false,
+      false
+    ]
+  },
+  "hash": "2c9b7cd6e1f1946af6f4340698670f3a446188c94263294a0356dd61b569b1c9"
+}

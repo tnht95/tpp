@@ -18,7 +18,7 @@ COPY config-prod.toml ./config-prod.toml
 
 ARG SQLX_OFFLINE=true
 
-RUN cargo install --path .
+RUN cargo install --locked --path .
 
 FROM debian:bullseye-slim
 

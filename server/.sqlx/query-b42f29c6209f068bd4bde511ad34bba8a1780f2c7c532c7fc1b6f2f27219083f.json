@@ -1,0 +1,48 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "select\n                        id, title, description, tags, created_at\n                    from blogs\n                    where\n                        $1 ilike any(tags)\n                    order by created_at desc offset $2 limit $3",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "title",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "description",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "tags",
+        "type_info": "VarcharArray"
+      },
+      {
+        "ordinal": 4,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      false
+    ]
+  },
+  "hash": "b42f29c6209f068bd4bde511ad34bba8a1780f2c7c532c7fc1b6f2f27219083f"
+}
