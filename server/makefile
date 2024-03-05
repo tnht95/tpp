@@ -1,12 +1,14 @@
 .PHONY: deploy build docker fmt lint test pg-up pg-down clean-data
 
+export SQLX_OFFLINE = true
+
 # on VM
 deploy:
 	cargo install --locked --path .
 	sudo systemctl daemon-reload
 	sudo systemctl enable tpp
-	sudo systemctl restart my-service
-	sudo systemctl status my-service
+	sudo systemctl restart tpp
+	sudo systemctl status tpp
 
 build:
 	cargo sqlx prepare
