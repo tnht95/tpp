@@ -17,4 +17,6 @@ target/
 
 data
 config.toml
+config-prod.toml
 roms/*
+.sqlx

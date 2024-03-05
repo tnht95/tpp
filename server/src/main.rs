@@ -40,9 +40,9 @@ async fn main() -> Result<()> {
     match cli.command {
         Cmd::Start => server::init(config)
             .await
-            .context("Failed to init server {}")?
+            .context("Failed to init server")?
             .start()
             .await
-            .context("Failed to start server {}"),
+            .context("Failed to start server"),
     }
 }

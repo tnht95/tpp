@@ -1,7 +1,11 @@
-.PHONY: build docker fmt lint test pg-up pg-down clean-data
+.PHONY: deploy build docker fmt lint test pg-up pg-down clean-data
+
+deploy:
+	cargo sqlx prepare
+	docker build -t tpp-server .
 
 build:
-	cargo build -r --frozen --locked
+	cargo build -r --locked
 
 docker:
 	docker compose up -d
