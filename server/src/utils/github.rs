@@ -1,9 +1,12 @@
-use anyhow::{anyhow, Result};
-use axum::http::{
-    header::{InvalidHeaderValue, ACCEPT, AUTHORIZATION},
-    HeaderMap,
-    HeaderValue,
+use anyhow::Result;
+use axum::{
+    body::Body,
+    http::header::{ACCEPT, AUTHORIZATION},
 };
+use http_body_util::BodyExt;
+use hyper::Request;
+use hyper_tls::HttpsConnector;
+use hyper_util::{client::legacy::Client, rt::TokioExecutor};
 use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize)]
@@ -21,46 +24,34 @@ pub struct GithubUser {
     pub bio: Option<String>,
 }
 
-fn build_headers(token: Option<&str>) -> Result<HeaderMap> {
-    let mut headers = HeaderMap::new();
-    headers.insert(
-        ACCEPT,
-        HeaderValue::from_static("application/vnd.github+json"),
-    );
-    if let Some(token) = token {
-        headers.insert(
-            AUTHORIZATION,
-            format!("Bearer {token}")
-                .parse()
-                .map_err(|e: InvalidHeaderValue| anyhow!(e))?,
-        );
-    }
-    Ok(headers)
-}
-
 pub async fn exchange_user_token(
     client_id: &str,
     client_secret: &str,
     code: &str,
 ) -> Result<GhOAuth> {
-    octocrab::instance()
-        .get_with_headers::<GhOAuth, _, _>(
-            format!(
-            "https://github.com/login/oauth/access_token?client_id={client_id}&client_secret={client_secret}&code={code}",
-        ),
-            None::<&()>,
-            Some(build_headers(None)?),
-        )
-        .await.map_err(|e| anyhow!(e))
+    let response = Client::builder(TokioExecutor::new()).build(HttpsConnector::new())
+            .request(
+                Request::builder()
+                    .uri(format!("https://github.com/login/oauth/access_token?client_id={client_id}&client_secret={client_secret}&code={code}"))
+                    .header(ACCEPT, "application/vnd.github+json")
+                    .body(Body::empty())?
+            )
+            .await?;
+    let body = response.into_body().collect().await?.to_bytes();
+    Ok(serde_json::from_slice::<GhOAuth>(&body)?)
 }
 
 pub async fn get_ghuser_from_token(token: &str) -> Result<GithubUser> {
-    octocrab::instance()
-        .get_with_headers::<GithubUser, _, _>(
-            "https://api.github.com/user",
-            None::<&()>,
-            Some(build_headers(Some(token))?),
+    let response = Client::builder(TokioExecutor::new())
+        .build(HttpsConnector::new())
+        .request(
+            Request::builder()
+                .uri("https://api.github.com/user")
+                .header(ACCEPT, "application/vnd.github+json")
+                .header(AUTHORIZATION, format!("Bearer {token}"))
+                .body(Body::empty())?,
         )
-        .await
-        .map_err(|e| anyhow!(e))
+        .await?;
+    let body = response.into_body().collect().await?.to_bytes();
+    Ok(serde_json::from_slice::<GithubUser>(&body)?)
 }
