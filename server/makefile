@@ -5,6 +5,7 @@ deploy: export SQLX_OFFLINE = true
 # on VM
 deploy:
 	cargo install --locked --path .
+	cp tpp.service /etc/systemd/system/tpp.service
 	sudo systemctl daemon-reload
 	sudo systemctl enable tpp
 	sudo systemctl restart tpp

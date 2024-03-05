@@ -1,0 +1,14 @@
+# /etc/systemd/system/tpp.service
+
+[Unit]
+Description=Tpp Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=RUST_LOG=2 server start
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
