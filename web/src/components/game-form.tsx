@@ -34,17 +34,17 @@ export const GameForm = (props: Props) => {
     setContent(props.game?.info ?? '');
   });
 
-createEffect(() => {
-  if (inputFileRef()) {
-    if (!props.game || isFileUploaderVisible()) {
-      validate(inputFileRef() as HTMLInputElement, () => [fileRequired], {
-        onBlur: false
-      });
-    } else if (!isFileUploaderVisible()) {
-      validate(inputFileRef() as HTMLInputElement, () => [])
+  createEffect(() => {
+    if (inputFileRef()) {
+      if (!props.game || isFileUploaderVisible()) {
+        validate(inputFileRef() as HTMLInputElement, () => [fileRequired], {
+          onBlur: false
+        });
+      } else if (!isFileUploaderVisible()) {
+        validate(inputFileRef() as HTMLInputElement, () => []);
+      }
     }
-  }
-})
+  });
 
   const togglePreviewHandler = () => {
     setIsEditMode(mode => !mode);
@@ -171,8 +171,12 @@ createEffect(() => {
               <Show when={props.game}>
                 <div class="flex items-center gap-1">
                   <i class="fa-regular fa-file-lines" />
-                  <p onClick={() => setIsFileUploaderVisible(!isFileUploaderVisible())}
-                    class="cursor-pointer font-semibold text-blue-500 underline">
+                  <p
+                    onClick={() =>
+                      setIsFileUploaderVisible(!isFileUploaderVisible())
+                    }
+                    class="cursor-pointer font-semibold text-blue-500 underline"
+                  >
                     {isFileUploaderVisible()
                       ? 'Upload new ROM file'
                       : 'Use old ROM file'}{' '}
