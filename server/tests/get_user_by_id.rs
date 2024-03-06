@@ -34,7 +34,7 @@ async fn with_invalid_id() {
 }
 
 #[tokio::test]
-async fn with_not_existed_id() {
+async fn with_nonexistent_id() {
     let mut app = setup_app(true).await;
     let request = Request::builder()
         .uri("/api/v1/users/1")

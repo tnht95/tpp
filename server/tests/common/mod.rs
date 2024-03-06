@@ -6,12 +6,17 @@ use redis::AsyncCommands;
 use server::{
     cache::{Cache, ICache},
     config::Config,
-    database::{entities::user::User, Database, IDatabase},
+    database::{
+        entities::{discussion::Discussion, game::Game, user::User},
+        Database,
+        IDatabase,
+    },
     init,
     utils::{jwt, time::now},
 };
 use sqlx::postgres::PgPoolOptions;
 use tokio::sync::OnceCell;
+use uuid::Uuid;
 
 static CONFIG_INSTANCE: OnceCell<Config> = OnceCell::const_new();
 static DB_INSTANCE: OnceCell<Database> = OnceCell::const_new();
@@ -58,7 +63,8 @@ pub async fn mock_user(id: i64, name: &str, persist_db: bool) -> User {
     if persist_db {
         sqlx::query!(
             "insert into users (id, name, avatar, github_url)
-            values ($1, $2, $3, $4)",
+            values ($1, $2, $3, $4)
+            on conflict do nothing",
             user.id,
             user.name,
             user.avatar,
@@ -71,12 +77,81 @@ pub async fn mock_user(id: i64, name: &str, persist_db: bool) -> User {
     user
 }
 
+pub async fn mock_discussion(game_id: Uuid) -> Discussion {
+    let disc = Discussion {
+        id: Uuid::new_v4(),
+        user_id: 40195902,
+        user_name: "tnht95".to_string(),
+        game_id,
+        title: "abc".to_string(),
+        content: "cba".to_string(),
+        created_at: Default::default(),
+        updated_at: Default::default(),
+    };
+    sqlx::query!(
+            "INSERT INTO discussions (id, user_id, user_name, game_id, title, content, created_at, updated_at)
+             VALUES ($1,$2,$3, $4, $5, $6, $7, $8);
+            ",
+            disc.id,
+            disc.user_id,
+            disc.user_name,
+            disc.game_id,
+            disc.title,
+            disc.content,
+            disc.created_at,
+            disc.updated_at
+        )
+            .execute(get_db().await.get_pool())
+            .await
+            .unwrap();
+
+    disc
+}
+
+pub async fn mock_game() -> Game {
+    let game = Game {
+        id: Uuid::new_v4(),
+        name: "game".to_string(),
+        author_id: 40195902,
+        author_name: "tnht95".to_string(),
+        url: None,
+        avatar_url: None,
+        about: None,
+        info: None,
+        up_votes: 0,
+        down_votes: 0,
+        tags: None,
+        rom: "".to_string(),
+        created_at: Default::default(),
+        updated_at: Default::default(),
+    };
+
+    sqlx::query!(
+        r#"
+        INSERT INTO games (id, name, author_id, author_name, rom, created_at, updated_at)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        "#,
+        game.id,
+        game.name,
+        game.author_id,
+        game.author_name,
+        game.rom,
+        game.created_at,
+        game.updated_at
+    )
+    .execute(get_db().await.get_pool())
+    .await
+    .unwrap();
+
+    game
+}
+
 pub async fn gen_jwt(user: User) -> String {
     jwt::encode(user, get_config().await).unwrap()
 }
 
 pub async fn gen_ws_ticket(user: &User, persist_cache: bool) -> String {
-    let ws_ticket = uuid::Uuid::new_v4().to_string();
+    let ws_ticket = Uuid::new_v4().to_string();
     let user_str = serde_json::to_string(user).unwrap();
     if persist_cache {
         let cache = Cache::new(get_config().await).await.unwrap();
