@@ -60,7 +60,7 @@ pub struct Jwt {
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Acme {
-    pub domains: String,
+    pub domain: String,
     pub email: String,
     pub cache: String,
 }

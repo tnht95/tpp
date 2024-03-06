@@ -6,7 +6,7 @@ use tracing::{error, info};
 use crate::config::Acme;
 
 pub fn build_acceptor(acme: &Acme) -> Result<AxumAcceptor> {
-    let mut acme_state = AcmeConfig::new([&acme.domains])
+    let mut acme_state = AcmeConfig::new([&acme.domain])
         .contact([&format!("mailto:{}", acme.email)])
         .cache_option(Some(DirCache::new(String::from(&acme.cache))))
         .directory_lets_encrypt(true)
