@@ -6,7 +6,7 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=sudo RUST_LOG=2 server start
+ExecStart=sudo server start
 Restart=always
 
 [Install]
