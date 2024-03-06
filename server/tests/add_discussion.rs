@@ -49,7 +49,7 @@ async fn with_nonexistent_game_id() {
 }
 
 #[tokio::test]
-async fn with_empty_request_id() {
+async fn with_empty_request() {
     let mut app = setup_app(true).await;
     let user = mock_user(1, "me", true).await;
     let ws_ticket = gen_ws_ticket(&user, false).await;

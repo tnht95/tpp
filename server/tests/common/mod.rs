@@ -40,7 +40,7 @@ async fn clean_data() {
         .connect(&config.server.pg_url)
         .await
         .unwrap();
-    sqlx::migrate!().run(&pool).await.unwrap()
+    sqlx::migrate!().undo(&pool, 0).await.unwrap()
 }
 
 pub async fn setup_app(reset_data: bool) -> Router {
