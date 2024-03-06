@@ -50,6 +50,12 @@ pub async fn setup_app(reset_data: bool) -> Router {
     Arc::new(init(get_config().await.clone()).await.unwrap()).build_app()
 }
 
+pub async fn get_admin() -> User {
+    sqlx::query_as!(User, "select * from users where id = 40195902")
+        .fetch_one(get_db().await.get_pool())
+        .await
+        .unwrap()
+}
 pub async fn mock_user(id: i64, name: &str, persist_db: bool) -> User {
     let user = User {
         id,
@@ -90,7 +96,8 @@ pub async fn mock_discussion(game_id: Uuid) -> Discussion {
     };
     sqlx::query!(
             "INSERT INTO discussions (id, user_id, user_name, game_id, title, content, created_at, updated_at)
-             VALUES ($1,$2,$3, $4, $5, $6, $7, $8);
+             VALUES ($1,$2,$3, $4, $5, $6, $7, $8)
+             on conflict do nothing;
             ",
             disc.id,
             disc.user_id,
