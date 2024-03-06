@@ -16,6 +16,7 @@ pub struct Config {
     pub auth: Auth,
     pub site_url: String,
     pub rom_dir: String,
+    pub acme: Option<Acme>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -57,6 +58,13 @@ pub struct Jwt {
     pub expire_in: u64, // seconds
 }
 
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct Acme {
+    pub domains: String,
+    pub email: String,
+    pub cache: String,
+}
+
 impl Default for Config {
     fn default() -> Self {
         Self {
@@ -82,6 +90,7 @@ impl Default for Config {
             },
             site_url: "http://localhost:3000".into(),
             rom_dir: format!("{}/roms", env!("PWD")),
+            acme: None,
         }
     }
 }

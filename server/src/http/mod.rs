@@ -3,7 +3,12 @@ mod handlers;
 mod utils;
 mod ws;
 
-use std::{iter::once, net::SocketAddr, sync::Arc, time::Duration};
+use std::{
+    iter::once,
+    net::{Ipv4Addr, SocketAddr},
+    sync::Arc,
+    time::Duration,
+};
 
 use anyhow::Result;
 use axum::{
@@ -48,7 +53,7 @@ use crate::{
             vote,
         },
         handlers::{panic, shutdown},
-        utils::err_handler::response_404_err,
+        utils::{acme::build_acceptor, err_handler::response_404_err},
     },
     services::{IInternalServices, Services},
 };
@@ -164,20 +169,31 @@ where
     }
 
     pub async fn start(self) -> Result<()> {
-        let addr = format!("0.0.0.0:{}", self.config.server.http_port);
-
-        info!("listening on {}", &addr);
-
         let state = Arc::new(self);
+        let app = state
+            .build_app()
+            .into_make_service_with_connect_info::<SocketAddr>();
 
-        axum::serve(
-            TcpListener::bind(addr).await?,
-            state
-                .build_app()
-                .into_make_service_with_connect_info::<SocketAddr>(),
-        )
-        .with_graceful_shutdown(shutdown::handle(state))
-        .await?;
+        let handler = axum_server::Handle::new();
+        let shutdown_handler = shutdown::handle(state.clone(), handler.clone());
+
+        if let Some(acme) = &state.config.acme {
+            axum_server::bind(SocketAddr::from((
+                Ipv4Addr::UNSPECIFIED,
+                state.config.server.http_port,
+            )))
+            .acceptor(build_acceptor(acme)?)
+            .handle(handler)
+            .serve(app)
+            .await?;
+        } else {
+            axum::serve(
+                TcpListener::bind(format!("0.0.0.0:{}", state.config.server.http_port)).await?,
+                app,
+            )
+            .with_graceful_shutdown(shutdown_handler)
+            .await?;
+        }
 
         info!("Server shutdown successfully");
 

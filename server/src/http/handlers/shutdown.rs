@@ -1,4 +1,4 @@
-use std::sync::Arc;
+use std::{sync::Arc, time::Duration};
 
 use tracing::info;
 
@@ -9,6 +9,7 @@ use crate::{
 
 pub async fn handle<TInternalServices: IInternalServices>(
     state: Arc<ApiServer<TInternalServices>>,
+    handler: axum_server::Handle,
 ) {
     let ctrl_c = async {
         tokio::signal::ctrl_c()
@@ -37,4 +38,7 @@ pub async fn handle<TInternalServices: IInternalServices>(
             state.services.health.write().await.app_close();
         },
     }
+
+    // force shutdown timeout 10s
+    handler.graceful_shutdown(Some(Duration::from_secs(10)));
 }
