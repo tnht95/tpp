@@ -65,7 +65,7 @@ async fn handle_socket<TInternalServices: IInternalServices + 'static>(
             .listen(&format!("to_user_id_{}", user.id), noti_sender)
             .await
         {
-            error!("Listener has stopped due to: {}", e);
+            error!("Listener has stopped due to: {e:#}");
         };
     });
 
@@ -73,7 +73,7 @@ async fn handle_socket<TInternalServices: IInternalServices + 'static>(
     let mut noti_receiver_task = tokio::spawn(async move {
         while let Some(payload) = noti_receiver.recv().await {
             if let Err(e) = socket_sender.send(Message::Text(payload)).await {
-                error!("Error sending message: {}", e);
+                error!("Error sending message: {e:#}");
                 return;
             }
         }
