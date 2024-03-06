@@ -1,6 +1,7 @@
 use std::sync::Arc;
 
 use async_trait::async_trait;
+use sqlx::Error;
 use thiserror::Error;
 use uuid::Uuid;
 
@@ -9,7 +10,7 @@ use crate::{
     model::{
         requests::{
             discussion::{AddDiscussionRequest, EditDiscussionRequest},
-            Pagination,
+            PaginationInternal,
         },
         responses::discussion::{DiscussionDetails, DiscussionSummary},
     },
@@ -19,6 +20,8 @@ use crate::{
 pub enum DiscussionServiceErr {
     #[error(transparent)]
     Other(#[from] anyhow::Error),
+    #[error("InvalidGame")]
+    InvalidGame,
 }
 
 #[async_trait]
@@ -26,7 +29,7 @@ pub trait IDiscussionService {
     async fn filter(
         &self,
         game_id: Uuid,
-        pagination: Pagination,
+        pagination: PaginationInternal,
     ) -> Result<Vec<DiscussionSummary>, DiscussionServiceErr>;
     async fn add(
         &self,
@@ -74,7 +77,7 @@ where
     async fn filter(
         &self,
         game_id: Uuid,
-        pagination: Pagination,
+        pagination: PaginationInternal,
     ) -> Result<Vec<DiscussionSummary>, DiscussionServiceErr> {
         sqlx::query_as!(
             DiscussionSummary,
@@ -83,9 +86,9 @@ where
             pagination.offset,
             pagination.limit
         )
-        .fetch_all(self.db.get_pool())
-        .await
-        .map_err(|e| DiscussionServiceErr::Other(e.into()))
+            .fetch_all(self.db.get_pool())
+            .await
+            .map_err(|e| DiscussionServiceErr::Other(e.into()))
     }
 
     async fn add(
@@ -103,10 +106,13 @@ where
             discussion.title,
             discussion.content
         )
-        .execute(self.db.get_pool())
-        .await
-        .map(|_| ())
-        .map_err(|e| DiscussionServiceErr::Other(e.into()))
+            .execute(self.db.get_pool())
+            .await
+            .map(|_| ())
+            .map_err(|e| match e {
+                Error::Database(e) if e.is_foreign_key_violation() => DiscussionServiceErr::InvalidGame,
+                _ => DiscussionServiceErr::Other(e.into()),
+            })
     }
 
     async fn get_by_id(
@@ -162,9 +168,9 @@ where
             id,
             game_id
         )
-        .execute(self.db.get_pool())
-        .await
-        .map_err(|e| DiscussionServiceErr::Other(e.into()))?;
+            .execute(self.db.get_pool())
+            .await
+            .map_err(|e| DiscussionServiceErr::Other(e.into()))?;
         self.get_by_id(id, game_id, Some(user_id))
             .await
             .map(|d| d.unwrap_or_default())

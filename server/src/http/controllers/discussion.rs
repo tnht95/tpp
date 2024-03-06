@@ -21,7 +21,7 @@ use crate::{
         },
         responses::{
             comment::{NOT_AUTH_DEL, NOT_AUTH_EDIT},
-            discussion::NOT_FOUND,
+            discussion::{INVALID_GAME, NOT_FOUND},
             HttpResponse,
             INVALID_UUID_ERR,
         },
@@ -42,9 +42,17 @@ pub async fn filter<TInternalServices: IInternalServices>(
         Err(_) => return response_400_with_const(INVALID_UUID_ERR),
     };
 
-    match state.services.discussion.filter(game_id, pagination).await {
+    match state
+        .services
+        .discussion
+        .filter(game_id, pagination.into())
+        .await
+    {
         Ok(discussions) => Json(HttpResponse { data: discussions }).into_response(),
-        Err(DiscussionServiceErr::Other(e)) => response_unhandled_err(e),
+        Err(e) => match e {
+            DiscussionServiceErr::Other(e) => response_unhandled_err(e),
+            DiscussionServiceErr::InvalidGame => unreachable!(),
+        },
     }
 }
 
@@ -66,7 +74,10 @@ pub async fn add<TInternalServices: IInternalServices>(
         .await
     {
         Ok(discussion) => Json(HttpResponse { data: discussion }).into_response(),
-        Err(DiscussionServiceErr::Other(e)) => response_unhandled_err(e),
+        Err(e) => match e {
+            DiscussionServiceErr::InvalidGame => response_400_with_const(INVALID_GAME),
+            DiscussionServiceErr::Other(e) => response_unhandled_err(e),
+        },
     }
 }
 
@@ -95,7 +106,10 @@ pub async fn get_by_id<TInternalServices: IInternalServices>(
             Some(discussion) => Json(HttpResponse { data: discussion }).into_response(),
             None => response_400_with_const(NOT_FOUND),
         },
-        Err(DiscussionServiceErr::Other(e)) => response_unhandled_err(e),
+        Err(e) => match e {
+            DiscussionServiceErr::Other(e) => response_unhandled_err(e),
+            DiscussionServiceErr::InvalidGame => unreachable!(),
+        },
     }
 }
 
@@ -120,7 +134,10 @@ pub async fn edit<TInternalServices: IInternalServices>(
             if !existed {
                 return response_400_with_const(NOT_AUTH_EDIT);
             },
-        Err(DiscussionServiceErr::Other(e)) => return response_unhandled_err(e),
+        Err(e) => match e {
+            DiscussionServiceErr::Other(e) => return response_unhandled_err(e),
+            DiscussionServiceErr::InvalidGame => unreachable!(),
+        },
     };
 
     match state
@@ -130,7 +147,10 @@ pub async fn edit<TInternalServices: IInternalServices>(
         .await
     {
         Ok(discussion) => Json(HttpResponse { data: discussion }).into_response(),
-        Err(DiscussionServiceErr::Other(e)) => response_unhandled_err(e),
+        Err(e) => match e {
+            DiscussionServiceErr::Other(e) => response_unhandled_err(e),
+            DiscussionServiceErr::InvalidGame => unreachable!(),
+        },
     }
 }
 
@@ -154,12 +174,18 @@ pub async fn delete<TInternalServices: IInternalServices>(
             if !existed {
                 return response_400_with_const(NOT_AUTH_DEL);
             },
-        Err(DiscussionServiceErr::Other(e)) => return response_unhandled_err(e),
+        Err(e) => match e {
+            DiscussionServiceErr::Other(e) => return response_unhandled_err(e),
+            DiscussionServiceErr::InvalidGame => unreachable!(),
+        },
     };
 
     match state.services.discussion.delete(id, game_id).await {
         Ok(discussion) => Json(HttpResponse { data: discussion }).into_response(),
-        Err(DiscussionServiceErr::Other(e)) => response_unhandled_err(e),
+        Err(e) => match e {
+            DiscussionServiceErr::Other(e) => response_unhandled_err(e),
+            DiscussionServiceErr::InvalidGame => unreachable!(),
+        },
     }
 }
 
@@ -174,6 +200,9 @@ pub async fn count<TInternalServices: IInternalServices>(
 
     match state.services.discussion.count(game_id).await {
         Ok(count) => Json(HttpResponse { data: count }).into_response(),
-        Err(DiscussionServiceErr::Other(e)) => response_unhandled_err(e),
+        Err(e) => match e {
+            DiscussionServiceErr::Other(e) => response_unhandled_err(e),
+            DiscussionServiceErr::InvalidGame => unreachable!(),
+        },
     }
 }

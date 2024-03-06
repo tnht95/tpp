@@ -34,3 +34,7 @@ pub const NOT_FOUND: HttpResponseConstErr = HttpResponseConstErr {
     code: "DISCUSSION_001",
     msg: "Discussion Not Found",
 };
+pub const INVALID_GAME: HttpResponseConstErr = HttpResponseConstErr {
+    code: "DISCUSSION_002",
+    msg: "Invalid Game",
+};
