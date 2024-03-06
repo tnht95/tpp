@@ -1,4 +1,5 @@
 #![allow(dead_code)]
+
 use std::{path::PathBuf, sync::Arc};
 
 use axum::Router;
@@ -7,7 +8,7 @@ use server::{
     cache::{Cache, ICache},
     config::Config,
     database::{
-        entities::{discussion::Discussion, game::Game, user::User},
+        entities::{blog::Blog, discussion::Discussion, game::Game, user::User},
         Database,
         IDatabase,
     },
@@ -56,6 +57,7 @@ pub async fn get_admin() -> User {
         .await
         .unwrap()
 }
+
 pub async fn mock_user(id: i64, name: &str, persist_db: bool) -> User {
     let user = User {
         id,
@@ -108,9 +110,9 @@ pub async fn mock_discussion(game_id: Uuid) -> Discussion {
             disc.created_at,
             disc.updated_at
         )
-            .execute(get_db().await.get_pool())
-            .await
-            .unwrap();
+        .execute(get_db().await.get_pool())
+        .await
+        .unwrap();
 
     disc
 }
@@ -151,6 +153,40 @@ pub async fn mock_game() -> Game {
     .unwrap();
 
     game
+}
+
+pub async fn mock_blog() -> Blog {
+    let blog = Blog {
+        id: Uuid::new_v4(),
+        user_id: 40195902,
+        title: "abc".to_string(),
+        description: "abc".to_string(),
+        content: "abc".to_string(),
+        comments: 0,
+        tags: None,
+        created_at: Default::default(),
+        updated_at: Default::default(),
+    };
+
+    sqlx::query!(
+        r#"
+        INSERT INTO blogs (id, user_id, title, description, content, comments, created_at, updated_at)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        "#,
+        blog.id,
+        blog.user_id,
+        blog.title,
+        blog.description,
+        blog.content,
+        blog.comments,
+        blog.created_at,
+        blog.updated_at
+    )
+        .execute(get_db().await.get_pool())
+        .await
+        .unwrap();
+
+    blog
 }
 
 pub async fn gen_jwt(user: User) -> String {

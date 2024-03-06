@@ -105,7 +105,10 @@ pub async fn edit<TInternalServices: IInternalServices>(
     };
 
     match state.services.blog.edit(id, blog).await {
-        Ok(blog) => Json(HttpResponse { data: blog }).into_response(),
+        Ok(blog) => match blog {
+            None => response_400_with_const(NOT_FOUND),
+            Some(blog) => Json(HttpResponse { data: blog }).into_response(),
+        },
         Err(BlogServiceErr::Other(e)) => response_unhandled_err(e),
     }
 }

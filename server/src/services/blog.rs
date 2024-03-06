@@ -31,7 +31,11 @@ pub trait IBlogService {
     async fn add(&self, user_id: i64, blog: AddBlogRequest) -> Result<(), BlogServiceErr>;
     async fn get_by_id(&self, id: Uuid) -> Result<Option<Blog>, BlogServiceErr>;
     async fn delete(&self, id: Uuid) -> Result<(), BlogServiceErr>;
-    async fn edit(&self, id: Uuid, comment: EditBlogRequest) -> Result<Blog, BlogServiceErr>;
+    async fn edit(
+        &self,
+        id: Uuid,
+        comment: EditBlogRequest,
+    ) -> Result<Option<Blog>, BlogServiceErr>;
     async fn get_tags(&self) -> Result<Vec<String>, BlogServiceErr>;
 }
 
@@ -99,7 +103,7 @@ where
             .map_err(|e| BlogServiceErr::Other(e.into()))
     }
 
-    async fn edit(&self, id: Uuid, blog: EditBlogRequest) -> Result<Blog, BlogServiceErr> {
+    async fn edit(&self, id: Uuid, blog: EditBlogRequest) -> Result<Option<Blog>, BlogServiceErr> {
         sqlx::query_as!(
             Blog,
             "update blogs set content = $1, title = $2, description = $3, tags = $4, updated_at = now() where id = $5 returning *",
@@ -109,7 +113,7 @@ where
             &clean_duplicate(blog.tags),
             id,
         )
-        .fetch_one(self.db.get_pool())
+        .fetch_optional(self.db.get_pool())
         .await
         .map_err(|e| BlogServiceErr::Other(e.into()))
     }
