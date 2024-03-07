@@ -1,3 +1,4 @@
+use serial_test::file_serial;
 use axum::{body::Body, extract::Request, http::StatusCode};
 use http_body_util::BodyExt;
 use tower::{util::ServiceExt, Service};
@@ -7,6 +8,7 @@ use crate::common::setup_app;
 mod common;
 
 #[tokio::test]
+#[file_serial]
 async fn rom_is_accessible() {
     let mut app = setup_app(false).await;
     tokio::fs::write("./roms/123", "my_rom").await.unwrap();

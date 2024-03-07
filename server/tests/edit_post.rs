@@ -1,3 +1,4 @@
+use serial_test::file_serial;
 use axum::{
     body::Body,
     extract::Request,
@@ -11,6 +12,7 @@ use crate::common::{gen_jwt, gen_ws_ticket, get_admin, mock_post, mock_user, set
 mod common;
 
 #[tokio::test]
+#[file_serial]
 async fn when_not_login() {
     let mut app = setup_app(true).await;
     let request = Request::builder()
@@ -34,6 +36,7 @@ async fn when_not_login() {
 }
 
 #[tokio::test]
+#[file_serial]
 async fn with_empty_request() {
     let mut app = setup_app(true).await;
     let user = get_admin().await;
@@ -70,6 +73,7 @@ async fn with_empty_request() {
 }
 
 #[tokio::test]
+#[file_serial]
 async fn when_not_owner() {
     let mut app = setup_app(true).await;
     let user = mock_user(1, "me", true).await;
@@ -110,6 +114,7 @@ async fn when_not_owner() {
 }
 
 #[tokio::test]
+#[file_serial]
 async fn with_nonexistent_id() {
     let mut app = setup_app(true).await;
     let user = mock_user(1, "me", true).await;
@@ -149,6 +154,7 @@ async fn with_nonexistent_id() {
 }
 
 #[tokio::test]
+#[file_serial]
 async fn with_invalid_id() {
     let mut app = setup_app(true).await;
     let user = mock_user(1, "me", true).await;
@@ -189,6 +195,7 @@ async fn with_invalid_id() {
 }
 
 #[tokio::test]
+#[file_serial]
 async fn successfully() {
     let mut app = setup_app(true).await;
     let user = get_admin().await;

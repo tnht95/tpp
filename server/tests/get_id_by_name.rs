@@ -1,3 +1,4 @@
+use serial_test::file_serial;
 use axum::{body::Body, extract::Request, http::StatusCode};
 use http_body_util::BodyExt;
 use serde_json::{json, Value};
@@ -7,6 +8,7 @@ use crate::common::setup_app;
 
 mod common;
 #[tokio::test]
+#[file_serial]
 async fn with_nonexistent_name() {
     let mut app = setup_app(true).await;
     let request = Request::builder()
@@ -32,6 +34,7 @@ async fn with_nonexistent_name() {
 }
 
 #[tokio::test]
+#[file_serial]
 async fn with_valid_name() {
     let mut app = setup_app(true).await;
     let request = Request::builder()

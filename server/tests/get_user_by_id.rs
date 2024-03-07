@@ -1,14 +1,15 @@
+use serial_test::file_serial;
 use axum::{body::Body, extract::Request, http::StatusCode};
 use http_body_util::BodyExt;
 use serde_json::{json, Value};
-use server::database::IDatabase;
 use tower::{util::ServiceExt, Service};
 
-use crate::common::{gen_jwt, gen_ws_ticket, get_db, mock_user, setup_app};
+use crate::common::{gen_jwt, get_pool, gen_ws_ticket, mock_user, setup_app};
 
 mod common;
 
 #[tokio::test]
+#[file_serial]
 async fn with_invalid_id() {
     let mut app = setup_app(true).await;
     let request = Request::builder()
@@ -34,6 +35,7 @@ async fn with_invalid_id() {
 }
 
 #[tokio::test]
+#[file_serial]
 async fn with_nonexistent_id() {
     let mut app = setup_app(true).await;
     let request = Request::builder()
@@ -59,6 +61,7 @@ async fn with_nonexistent_id() {
 }
 
 #[tokio::test]
+#[file_serial]
 async fn non_auth_with_existed_id() {
     let mut app = setup_app(true).await;
     let request = Request::builder()
@@ -95,6 +98,7 @@ async fn non_auth_with_existed_id() {
 }
 
 #[tokio::test]
+#[file_serial]
 async fn auth_with_subscriber() {
     let mut app = setup_app(true).await;
 
@@ -103,7 +107,7 @@ async fn auth_with_subscriber() {
     let access_token = gen_jwt(user).await;
 
     sqlx::query!("insert into user_subscribers (user_id, subscriber_id) values (40195902,1)")
-        .execute(get_db().await.get_pool())
+        .execute(get_pool().await)
         .await
         .unwrap();
 
@@ -146,7 +150,7 @@ async fn auth_with_subscriber() {
     );
 
     sqlx::query!("delete from users where id = 1",)
-        .execute(get_db().await.get_pool())
+        .execute(get_pool().await)
         .await
         .unwrap();
 }

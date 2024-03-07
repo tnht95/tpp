@@ -1,3 +1,4 @@
+use serial_test::file_serial;
 use axum::{body::Body, extract::Request, http::StatusCode};
 use http_body_util::BodyExt;
 use serde_json::Value;
@@ -8,6 +9,7 @@ use crate::common::{mock_game, setup_app};
 mod common;
 
 #[tokio::test]
+#[file_serial]
 async fn with_big_pagination() {
     let mut app = setup_app(true).await;
     mock_game().await;
@@ -30,6 +32,7 @@ async fn with_big_pagination() {
 }
 
 #[tokio::test]
+#[file_serial]
 async fn successfully() {
     let mut app = setup_app(true).await;
     let request = Request::builder()

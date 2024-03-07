@@ -1,26 +1,22 @@
 #![allow(dead_code)]
 
-use std::{path::PathBuf, sync::Arc};
+use std::{path::PathBuf, sync::Arc, time::Duration};
 
 use axum::Router;
 use redis::AsyncCommands;
 use server::{
     cache::{Cache, ICache},
     config::Config,
-    database::{
-        entities::{blog::Blog, discussion::Discussion, game::Game, post::Post, user::User},
-        Database,
-        IDatabase,
-    },
+    database::entities::{blog::Blog, discussion::Discussion, game::Game, post::Post, user::User},
     init,
     utils::{jwt, time::now},
 };
-use sqlx::postgres::PgPoolOptions;
+use sqlx::{postgres::PgPoolOptions, Pool, Postgres};
 use tokio::sync::OnceCell;
 use uuid::Uuid;
 
 static CONFIG_INSTANCE: OnceCell<Config> = OnceCell::const_new();
-static DB_INSTANCE: OnceCell<Database> = OnceCell::const_new();
+static DB_INSTANCE: OnceCell<Pool<Postgres>> = OnceCell::const_new();
 
 pub async fn get_config() -> &'static Config {
     CONFIG_INSTANCE
@@ -28,20 +24,23 @@ pub async fn get_config() -> &'static Config {
         .await
 }
 
-pub async fn get_db() -> &'static Database {
+pub async fn get_pool() -> &'static Pool<Postgres> {
     DB_INSTANCE
-        .get_or_init(|| async { Database::new(get_config().await).await.unwrap() })
+        .get_or_init(|| async {
+            PgPoolOptions::new()
+                .max_connections(100)
+                .idle_timeout(Duration::from_secs(0))
+                .max_lifetime(Duration::from_secs(0))
+                .connect(&get_config().await.server.pg_url)
+                .await
+                .unwrap()
+        })
         .await
 }
 
 async fn clean_data() {
-    let config = get_config().await;
-    let pool = PgPoolOptions::new()
-        .max_connections(1)
-        .connect(&config.server.pg_url)
-        .await
-        .unwrap();
-    sqlx::migrate!().undo(&pool, 0).await.unwrap()
+    let pool = get_pool().await;
+    sqlx::migrate!().undo(pool, 0).await.unwrap()
 }
 
 pub async fn setup_app(reset_data: bool) -> Router {
@@ -83,7 +82,7 @@ pub async fn mock_user(id: i64, name: &str, persist_db: bool) -> User {
             user.avatar,
             user.github_url,
         )
-        .execute(get_db().await.get_pool())
+        .execute(get_pool().await)
         .await
         .unwrap();
     }
@@ -115,7 +114,7 @@ pub async fn mock_discussion(game_id: Uuid) -> Discussion {
             disc.created_at,
             disc.updated_at
         )
-        .execute(get_db().await.get_pool())
+        .execute(get_pool().await)
         .await
         .unwrap();
 
@@ -153,7 +152,7 @@ pub async fn mock_game() -> Game {
         game.created_at,
         game.updated_at
     )
-    .execute(get_db().await.get_pool())
+    .execute(get_pool().await)
     .await
     .unwrap();
 
@@ -187,7 +186,7 @@ pub async fn mock_blog() -> Blog {
         blog.created_at,
         blog.updated_at
     )
-        .execute(get_db().await.get_pool())
+        .execute(get_pool().await)
         .await
         .unwrap();
 
@@ -216,7 +215,7 @@ pub async fn mock_post() -> Post {
         post.created_at,
         post.updated_at
     )
-    .execute(get_db().await.get_pool())
+    .execute(get_pool().await)
     .await
     .unwrap();
 
