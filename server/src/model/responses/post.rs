@@ -28,3 +28,8 @@ pub const NOT_AUTH_EDIT: HttpResponseConstErr = HttpResponseConstErr {
     code: "POST_002",
     msg: "Not Authorized To Edit",
 };
+
+pub const NOT_FOUND: HttpResponseConstErr = HttpResponseConstErr {
+    code: "POST_003",
+    msg: "Post Not Found",
+};
