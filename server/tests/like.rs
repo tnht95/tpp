@@ -7,10 +7,10 @@ use axum::{
 };
 use http_body_util::BodyExt;
 use serde_json::{json, Value};
+use serial_test::serial;
 use server::database::entities::comment::CommentType::Blogs;
 use tower::{Service, ServiceExt};
 use uuid::Uuid;
-use serial_test::serial;
 
 use crate::common::{
     gen_jwt,

@@ -73,7 +73,7 @@ where
                 u.*,
                 count(s.user_id) as "subscribers!",
                 case
-                    when $1::bigint is not null then bool_or(s.subscriber_id = $1)
+                    when $1::bigint is not null then bool_or(s.subscriber_id is not null and s.subscriber_id = $1)
                     else null
                 end as is_subscribed
             from

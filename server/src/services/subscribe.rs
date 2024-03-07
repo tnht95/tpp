@@ -51,7 +51,7 @@ where
         user_id: i64,
     ) -> Result<(), SubscribeServiceErr> {
         sqlx::query!(
-            "insert into user_subscribers (user_id, subscriber_id) values ($1, $2)",
+            "insert into user_subscribers (user_id, subscriber_id) values ($1, $2) on conflict do nothing",
             user_id,
             subscriber_id
         )
