@@ -13,7 +13,7 @@ export * from './notification';
 
 export const errHandler = async (r: Response) => {
   if (r.status >= 400 && r.status <= 500) {
-    throw await r.json();
+    throw new Error(JSON.stringify(await r.json()));
   }
   return r.json();
 };
