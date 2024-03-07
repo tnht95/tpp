@@ -8,7 +8,7 @@ use server::{
     cache::{Cache, ICache},
     config::Config,
     database::{
-        entities::{blog::Blog, discussion::Discussion, game::Game, user::User},
+        entities::{blog::Blog, discussion::Discussion, game::Game, post::Post, user::User},
         Database,
         IDatabase,
     },
@@ -187,6 +187,35 @@ pub async fn mock_blog() -> Blog {
         .unwrap();
 
     blog
+}
+
+pub async fn mock_post() -> Post {
+    let post = Post {
+        id: Uuid::new_v4(),
+        user_id: 40195902,
+        content: "".to_string(),
+        likes: 0,
+        comments: 0,
+        created_at: Default::default(),
+        updated_at: Default::default(),
+    };
+
+    sqlx::query!(
+        r#"
+        INSERT INTO posts (id, user_id, content,created_at, updated_at)
+        VALUES ($1, $2, $3, $4, $5)
+        "#,
+        post.id,
+        post.user_id,
+        post.content,
+        post.created_at,
+        post.updated_at
+    )
+    .execute(get_db().await.get_pool())
+    .await
+    .unwrap();
+
+    post
 }
 
 pub async fn gen_jwt(user: User) -> String {
