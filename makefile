@@ -10,6 +10,6 @@ web:
 	az cdn endpoint purge -g tpp --profile-name tpp-cdn -n tpp-app --content-paths '/*' --no-wait
 
 server:
-	ssh tpp "cd tpp/server && git pull && rm -rf config.toml"
+	ssh tpp "cd tpp/server && git pull -f --ff-only && rm -rf config.toml && sudo systemctl stop tpp"
 	cd server && scp -i ~/.ssh/tpp-user.pem config-prod.toml tpp-user@tpp-server.southeastasia.cloudapp.azure.com:/home/tpp-user/tpp/server/config.toml
 	ssh tpp "cd tpp/server && source /home/tpp-user/.cargo/env && make deploy"
