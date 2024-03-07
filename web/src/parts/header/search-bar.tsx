@@ -13,7 +13,7 @@ export const HeaderSearchbar = () => {
     const formData = new FormData(form);
     const searchContent = (formData.get('searchContent') as string).trim();
     if (searchContent) {
-      let url = `/search?keyword=${searchContent}`;
+      let url = `/search?keyword=${encodeURIComponent(searchContent)}`;
       if (searchCategory()) {
         url = `${url}&category=${searchCategory()}`;
       }

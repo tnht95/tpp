@@ -66,7 +66,7 @@ export const SearchProvider = (props: ParentProps) => {
 
   createEffect(() => {
     setQuery({
-      keyword: searchParams['keyword'] as string,
+      keyword: encodeURIComponent(searchParams['keyword'] as string),
       category: searchParams['category'],
       offset: 0,
       limit: PAGINATION
@@ -107,7 +107,7 @@ export const SearchProvider = (props: ParentProps) => {
 
   const fetchMore = (category: keyof SearchResult) => {
     searchAction({
-      keyword: searchParams['keyword'] as string,
+      keyword: encodeURIComponent(searchParams['keyword'] as string),
       category,
       offset: fetchMoreOpts()[category].offset + PAGINATION,
       limit: PAGINATION
