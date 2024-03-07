@@ -19,7 +19,7 @@ use crate::common::{
 
 mod common;
 #[tokio::test]
-async fn unauthorized() {
+async fn when_not_owner() {
     let mut app = setup_app(true).await;
     let user = mock_user(1, "me", true).await;
     let ws_ticket = gen_ws_ticket(&user, false).await;
@@ -51,7 +51,7 @@ async fn unauthorized() {
     assert_eq!(
         body,
         json!({
-           "code": "CMT_001", "msg": "Not Authorized To Delete",
+           "code": "DISCUSSION_004", "msg": "Not Authorized To Delete",
         })
     )
 }

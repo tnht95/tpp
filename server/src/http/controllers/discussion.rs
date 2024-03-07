@@ -20,8 +20,7 @@ use crate::{
             Pagination,
         },
         responses::{
-            comment::{NOT_AUTH_DEL, NOT_AUTH_EDIT},
-            discussion::{INVALID_GAME, NOT_FOUND},
+            discussion::{INVALID_GAME, NOT_AUTH_DEL, NOT_AUTH_EDIT, NOT_FOUND},
             HttpResponse,
             INVALID_UUID_ERR,
         },

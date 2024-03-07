@@ -38,3 +38,13 @@ pub const INVALID_GAME: HttpResponseConstErr = HttpResponseConstErr {
     code: "DISCUSSION_002",
     msg: "Invalid Game",
 };
+
+pub const NOT_AUTH_EDIT: HttpResponseConstErr = HttpResponseConstErr {
+    code: "DISCUSSION_003",
+    msg: "Not Authorized To Edit",
+};
+
+pub const NOT_AUTH_DEL: HttpResponseConstErr = HttpResponseConstErr {
+    code: "DISCUSSION_004",
+    msg: "Not Authorized To Delete",
+};

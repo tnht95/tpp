@@ -58,7 +58,7 @@ async fn unauthorized() {
     assert_eq!(
         body,
         json!({
-           "code": "CMT_002", "msg": "Not Authorized To Edit",
+           "code": "DISCUSSION_003", "msg": "Not Authorized To Edit",
         })
     )
 }
