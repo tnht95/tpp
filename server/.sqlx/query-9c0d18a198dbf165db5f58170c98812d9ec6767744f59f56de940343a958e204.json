@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "select\n                u.*,\n                count(s.user_id) as \"subscribers!\",\n                case\n                    when $1::bigint is not null then bool_or(s.subscriber_id = $1)\n                    else null\n                end as is_subscribed\n            from\n                users u\n            left join\n                user_subscribers s on u.id = s.user_id\n            where\n                u.id = $2\n            group by\n                u.id\n            ",
+  "query": "select\n                u.*,\n                count(s.user_id) as \"subscribers!\",\n                case\n                    when $1::bigint is not null then bool_or(s.subscriber_id is not null and s.subscriber_id = $1)\n                    else null\n                end as is_subscribed\n            from\n                users u\n            left join\n                user_subscribers s on u.id = s.user_id\n            where\n                u.id = $2\n            group by\n                u.id\n            ",
   "describe": {
     "columns": [
       {
@@ -67,5 +67,5 @@
       null
     ]
   },
-  "hash": "bdefb7fae5230b22a27cd68694657c740c3d5cb74bfbbd17bef01bee39beba4a"
+  "hash": "9c0d18a198dbf165db5f58170c98812d9ec6767744f59f56de940343a958e204"
 }
