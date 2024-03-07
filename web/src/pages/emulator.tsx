@@ -8,11 +8,11 @@ import {
 } from 'solid-js';
 
 import { fetchRomAction } from '@/apis';
+import { EmuWasm, init } from '@/chip8';
 import { LoadingSpinner } from '@/components';
 import { NotFound } from '@/pages';
 
 // eslint-disable-next-line no-restricted-imports
-import init, { EmuWasm } from '../../public/chip8/wasm';
 
 const WIDTH = 64;
 const HEIGHT = 32;

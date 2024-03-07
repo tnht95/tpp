@@ -3,3 +3,4 @@ dist
 public
 coverage
 html-trimmer.js
+src/chip8

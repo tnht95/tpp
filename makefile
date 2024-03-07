@@ -1,7 +1,10 @@
 .PHONY: chip8 web server
 
 chip8:
-	cd chip8/wasm && wasm-pack build --target web && mv pkg/wasm_bg.wasm ../../web/public/chip8 && mv pkg/wasm.js ../../web/public/chip8 && mv pkg/wasm.d.ts ../../web/public/chip8
+	cd chip8/wasm && wasm-pack build --target web
+	mv chip8/wasm/pkg/wasm_bg.wasm web/src/chip8/wasm_bg.wasm
+	mv chip8/wasm/pkg/wasm.js web/src/chip8/wasm.js
+	mv chip8/wasm/pkg/wasm.d.ts web/src/chip8/wasm.d.ts
 
 web:
 	az storage blob delete-batch -s '$$web' --account-name tppsite --auth-mode key
