@@ -7,7 +7,14 @@ use redis::AsyncCommands;
 use server::{
     cache::{Cache, ICache},
     config::Config,
-    database::entities::{blog::Blog, discussion::Discussion, game::Game, post::Post, user::User},
+    database::entities::{
+        blog::Blog,
+        comment::{Comment, CommentType},
+        discussion::Discussion,
+        game::Game,
+        post::Post,
+        user::User,
+    },
     init,
     utils::{jwt, time::now},
 };
@@ -220,6 +227,50 @@ pub async fn mock_post() -> Post {
     .unwrap();
 
     post
+}
+
+pub async fn mock_comment(target_id: Uuid, target_type: CommentType) -> Comment {
+    let comment = Comment {
+        id: Uuid::new_v4(),
+        user_id: 40195902,
+        user_name: "tnht95".to_string(),
+        target_id,
+        content: "abc".to_string(),
+        likes: 0,
+        target_type,
+        created_at: Default::default(),
+        updated_at: Default::default(),
+    };
+
+    sqlx::query!(
+        r#"
+        INSERT INTO comments (
+            id,
+            user_id,
+            user_name,
+            target_id,
+            content,
+            target_type,
+            created_at,
+            updated_at
+        ) VALUES (
+            $1, $2, $3, $4, $5, $6, $7, $8
+        )
+        "#,
+        comment.id,
+        comment.user_id,
+        comment.user_name,
+        comment.target_id,
+        comment.content,
+        comment.target_type.clone() as CommentType,
+        comment.created_at,
+        comment.updated_at
+    )
+    .execute(get_pool().await)
+    .await
+    .unwrap();
+
+    comment
 }
 
 pub async fn gen_jwt(user: User) -> String {
