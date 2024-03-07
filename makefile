@@ -8,7 +8,6 @@ web:
 	cd web && yarn build
 	az storage blob upload-batch -d '$$web' -s ./web/dist --account-name tppsite --auth-mode key
 	az cdn endpoint purge -g tpp --profile-name tpp-cdn -n tpp-app --content-paths '/*' --no-wait
-	az cdn endpoint purge -g tpp --profile-name tpp-cdn -n tpp-server --content-paths '/*' --no-wait
 
 server:
 	ssh tpp "cd tpp/server && git pull && rm -rf config.toml"
