@@ -39,7 +39,7 @@ async fn main() -> Result<()> {
 
     match cli.command {
         Cmd::Start => {
-            init_roms().await;
+            init_roms().await?;
             server::init(config)
                 .await
                 .context("Failed to init server")?
@@ -50,10 +50,10 @@ async fn main() -> Result<()> {
     }
 }
 
-async fn init_roms() {
+async fn init_roms() -> Result<()> {
     let mut dirs = tokio::fs::read_dir("./fixed_roms")
         .await
-        .expect("Fixed roms to exist");
+        .context("Fixed roms to exist")?;
     while let Ok(Some(dir)) = dirs.next_entry().await {
         tokio::fs::copy(
             dir.path(),
@@ -61,13 +61,14 @@ async fn init_roms() {
                 "./roms/{}",
                 dir.path()
                     .to_str()
-                    .expect("Exist path")
+                    .context("Exist path")?
                     .split('/')
                     .last()
-                    .expect("Exist file")
+                    .context("Exist file")?
             ),
         )
         .await
-        .expect("Copy successfully");
+        .context("Copy successfully")?;
     }
+    Ok(())
 }

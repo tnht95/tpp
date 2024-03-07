@@ -114,6 +114,12 @@ where
             .nest(
                 "/api/v1",
                 Router::new()
+                    .route(
+                        "/version",
+                        get(|| async {
+                            compile_time_run::run_command_str!("git", "rev-parse", "HEAD");
+                        }),
+                    )
                     .route("/me", get(auth::me))
                     .route("/logout", delete(auth::log_out))
                     .route("/authentication", get(auth::authentication))
