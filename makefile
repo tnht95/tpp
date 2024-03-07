@@ -9,7 +9,8 @@ chip8:
 web:
 	az storage blob delete-batch -s '$$web' --account-name tppsite --auth-mode key
 	cd web && rm -rf dist && yarn build
-	az storage blob upload-batch -d '$$web' -s ./web/dist --account-name tppsite --auth-mode key
+	git rev-parse HEAD > web/dist/assets/version
+	az storage blob upload-batch -d '$$web' -s web/dist --account-name tppsite --auth-mode key
 	az cdn endpoint purge -g tpp --profile-name tpp-cdn -n tpp-app --content-paths '/*' --no-wait
 
 server:
