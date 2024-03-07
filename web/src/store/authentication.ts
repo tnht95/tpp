@@ -33,7 +33,7 @@ export const authenticationStore = createRoot<Store>(() => {
       logout: () => {
         logoutAction()
           .then(() => mutate())
-          .catch(() => {});
+          .catch(() => mutate());
       }
     }
   };
