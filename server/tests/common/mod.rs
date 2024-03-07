@@ -52,10 +52,15 @@ pub async fn setup_app(reset_data: bool) -> Router {
 }
 
 pub async fn get_admin() -> User {
-    sqlx::query_as!(User, "select * from users where id = 40195902")
-        .fetch_one(get_db().await.get_pool())
-        .await
-        .unwrap()
+    User {
+        id: 40195902,
+        name: "tnht95".to_string(),
+        github_url: "".to_string(),
+        bio: None,
+        avatar: "".to_string(),
+        created_at: Default::default(),
+        updated_at: Default::default(),
+    }
 }
 
 pub async fn mock_user(id: i64, name: &str, persist_db: bool) -> User {
@@ -193,7 +198,7 @@ pub async fn mock_post() -> Post {
     let post = Post {
         id: Uuid::new_v4(),
         user_id: 40195902,
-        content: "".to_string(),
+        content: "abc".to_string(),
         likes: 0,
         comments: 0,
         created_at: Default::default(),
