@@ -12,8 +12,6 @@ import { EmuWasm, init } from '@/chip8';
 import { LoadingSpinner } from '@/components';
 import { NotFound } from '@/pages';
 
-// eslint-disable-next-line no-restricted-imports
-
 const WIDTH = 64;
 const HEIGHT = 32;
 const SCALE = 20;
