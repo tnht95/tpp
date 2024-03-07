@@ -45,18 +45,20 @@ export const PostDetailsPage = () => {
       .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
   };
   return (
-    <ErrorBoundary fallback={<NotFound />}>
-      <Show when={post.state === 'ready'} fallback={<LoadingSpinner />}>
+    <Show when={!post.loading} fallback={<LoadingSpinner />}>
+      <ErrorBoundary fallback={<NotFound />}>
         <div class="mt-7 flex w-full justify-center">
           <div class="w-2/5">
-            <PostCard
-              post={post() as PostDetails}
-              onDelete={del}
-              onEdit={edit}
-            />
+            <Show when={post()}>
+              <PostCard
+                post={post() as PostDetails}
+                onDelete={del}
+                onEdit={edit}
+              />
+            </Show>
           </div>
         </div>
-      </Show>
-    </ErrorBoundary>
+      </ErrorBoundary>
+    </Show>
   );
 };
