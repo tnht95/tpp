@@ -25,7 +25,7 @@ use crate::{
     model::{
         requests::game::{AddGameRequest, EditGameRequest, GamePagination},
         responses::{
-            game::{DESERIALIZE_GAME_ERR, INVALID_ROM, NOT_AUTH_DEL, NOT_FOUND},
+            game::{DESERIALIZE_GAME_ERR, INVALID_ROM, NOT_AUTH_DEL, NOT_AUTH_EDIT, NOT_FOUND},
             HttpResponse,
             INVALID_UUID_ERR,
         },
@@ -143,6 +143,14 @@ pub async fn edit<TInternalServices: IInternalServices>(
         Err(_) => return response_400_with_const(INVALID_UUID_ERR),
     };
 
+    match state.services.game.existed(id, user.id).await {
+        Ok(existed) =>
+            if !existed {
+                return response_400_with_const(NOT_AUTH_EDIT);
+            },
+        Err(GameServiceErr::Other(e)) => return response_unhandled_err(e),
+    };
+
     let rom_bytes = match extract_bytes_from_multipart(&mut multipart).await {
         Ok(bytes) => {
             if bytes.len() > 3584 {
@@ -169,12 +177,7 @@ pub async fn edit<TInternalServices: IInternalServices>(
     match state
         .services
         .game
-        .edit(
-            game,
-            rom_bytes.as_ref().map(|r| r.as_ref()),
-            id,
-            Some(user.id),
-        )
+        .edit(game, rom_bytes.as_ref().map(|r| r.as_ref()), id, user.id)
         .await
     {
         Ok(game) => Json(HttpResponse { data: game }).into_response(),

@@ -49,17 +49,21 @@ pub const NOT_AUTH_DEL: HttpResponseConstErr = HttpResponseConstErr {
     msg: "Not Authorized To Delete",
 };
 
-pub const NOT_FOUND: HttpResponseConstErr = HttpResponseConstErr {
+pub const NOT_AUTH_EDIT: HttpResponseConstErr = HttpResponseConstErr {
     code: "GAME_002",
+    msg: "Not Authorized To Edit",
+};
+pub const NOT_FOUND: HttpResponseConstErr = HttpResponseConstErr {
+    code: "GAME_003",
     msg: "Game Not Found",
 };
 
 pub const INVALID_ROM: HttpResponseConstErr = HttpResponseConstErr {
-    code: "GAME_003",
+    code: "GAME_004",
     msg: "Invalid Rom",
 };
 
 pub const DESERIALIZE_GAME_ERR: HttpResponseConstErr = HttpResponseConstErr {
-    code: "GAME_004",
+    code: "GAME_005",
     msg: "Failed To Deserialize Game From Bytes",
 };
