@@ -1,4 +1,4 @@
-use serial_test::file_serial;
+use serial_test::serial;
 use axum::{
     body::Body,
     extract::Request,
@@ -18,7 +18,7 @@ use crate::common::{gen_jwt, gen_ws_ticket, get_config, mock_user, setup_app};
 mod common;
 
 #[tokio::test]
-#[file_serial]
+#[serial]
 async fn missing_cookie() {
     let mut app = setup_app(false).await;
     let request = Request::builder()
@@ -44,7 +44,7 @@ async fn missing_cookie() {
 }
 
 #[tokio::test]
-#[file_serial]
+#[serial]
 async fn bad_access_token() {
     let mut app = setup_app(false).await;
     let request = Request::builder()
@@ -71,7 +71,7 @@ async fn bad_access_token() {
 }
 
 #[tokio::test]
-#[file_serial]
+#[serial]
 async fn valid_user_authentication() {
     let mut app = setup_app(false).await;
 
@@ -114,7 +114,7 @@ async fn valid_user_authentication() {
 }
 
 #[tokio::test]
-#[file_serial]
+#[serial]
 async fn valid_admin_authentication() {
     let config = get_config().await;
     let mut app = setup_app(false).await;
@@ -158,7 +158,7 @@ async fn valid_admin_authentication() {
 }
 
 #[tokio::test]
-#[file_serial]
+#[serial]
 async fn logout_successfully() {
     let mut app = setup_app(false).await;
 

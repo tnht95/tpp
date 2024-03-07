@@ -1,4 +1,4 @@
-use serial_test::file_serial;
+use serial_test::serial;
 use axum::{body::Body, extract::Request, http::StatusCode};
 use http_body_util::BodyExt;
 use serde_json::{json, Value};
@@ -9,7 +9,7 @@ use crate::common::{gen_jwt, get_pool, gen_ws_ticket, mock_user, setup_app};
 mod common;
 
 #[tokio::test]
-#[file_serial]
+#[serial]
 async fn with_invalid_id() {
     let mut app = setup_app(true).await;
     let request = Request::builder()
@@ -35,7 +35,7 @@ async fn with_invalid_id() {
 }
 
 #[tokio::test]
-#[file_serial]
+#[serial]
 async fn with_nonexistent_id() {
     let mut app = setup_app(true).await;
     let request = Request::builder()
@@ -61,7 +61,7 @@ async fn with_nonexistent_id() {
 }
 
 #[tokio::test]
-#[file_serial]
+#[serial]
 async fn non_auth_with_existed_id() {
     let mut app = setup_app(true).await;
     let request = Request::builder()
@@ -98,7 +98,7 @@ async fn non_auth_with_existed_id() {
 }
 
 #[tokio::test]
-#[file_serial]
+#[serial]
 async fn auth_with_subscriber() {
     let mut app = setup_app(true).await;
 

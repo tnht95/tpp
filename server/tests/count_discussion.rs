@@ -1,4 +1,4 @@
-use serial_test::file_serial;
+use serial_test::serial;
 use axum::{body::Body, extract::Request, http::StatusCode};
 use http_body_util::BodyExt;
 use serde_json::Value;
@@ -9,7 +9,7 @@ use crate::common::{mock_discussion, mock_game, setup_app};
 mod common;
 
 #[tokio::test]
-#[file_serial]
+#[serial]
 async fn with_invalid_id() {
     let mut app = setup_app(true).await;
 
@@ -31,7 +31,7 @@ async fn with_invalid_id() {
 }
 
 #[tokio::test]
-#[file_serial]
+#[serial]
 async fn successfully() {
     let mut app = setup_app(true).await;
     let game = mock_game().await;

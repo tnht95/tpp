@@ -1,4 +1,4 @@
-use serial_test::file_serial;
+use serial_test::serial;
 use axum::{
     body::Body,
     extract::Request,
@@ -13,7 +13,7 @@ use crate::common::{gen_jwt, gen_ws_ticket, get_admin, mock_post, mock_user, set
 mod common;
 
 #[tokio::test]
-#[file_serial]
+#[serial]
 async fn with_invalid_id() {
     let mut app = setup_app(true).await;
     let user = mock_user(1, "me", true).await;
@@ -48,7 +48,7 @@ async fn with_invalid_id() {
 }
 
 #[tokio::test]
-#[file_serial]
+#[serial]
 async fn when_not_owner() {
     let mut app = setup_app(true).await;
     let user = mock_user(1, "me", true).await;
@@ -83,7 +83,7 @@ async fn when_not_owner() {
 }
 
 #[tokio::test]
-#[file_serial]
+#[serial]
 async fn successfully() {
     let mut app = setup_app(true).await;
     let user = get_admin().await;

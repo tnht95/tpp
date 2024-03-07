@@ -1,4 +1,4 @@
-use serial_test::file_serial;
+use serial_test::serial;
 use axum::{body::Body, extract::Request, http::StatusCode};
 use http_body_util::BodyExt;
 use serde_json::Value;
@@ -8,7 +8,7 @@ use crate::common::{mock_blog, setup_app};
 
 mod common;
 #[tokio::test]
-#[file_serial]
+#[serial]
 async fn with_negative_pagination() {
     let mut app = setup_app(true).await;
     mock_blog().await;

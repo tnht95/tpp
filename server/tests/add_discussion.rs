@@ -1,5 +1,5 @@
 use axum::{body::Body, extract::Request, http::StatusCode};
-use serial_test::file_serial;
+use serial_test::serial;
 use http_body_util::BodyExt;
 use hyper::Method;
 use serde_json::{json, Value};
@@ -9,7 +9,7 @@ use crate::common::{gen_jwt, gen_ws_ticket, mock_game, mock_user, setup_app};
 
 mod common;
 #[tokio::test]
-#[file_serial]
+#[serial]
 async fn with_nonexistent_game_id() {
     let mut app = setup_app(true).await;
     let user = mock_user(1, "me", true).await;
@@ -51,7 +51,7 @@ async fn with_nonexistent_game_id() {
 }
 
 #[tokio::test]
-#[file_serial]
+#[serial]
 async fn with_empty_request() {
     let mut app = setup_app(true).await;
     let user = mock_user(1, "me", true).await;
@@ -89,7 +89,7 @@ async fn with_empty_request() {
 }
 
 #[tokio::test]
-#[file_serial]
+#[serial]
 async fn when_not_login() {
     let mut app = setup_app(true).await;
 
@@ -115,7 +115,7 @@ async fn when_not_login() {
 }
 
 #[tokio::test]
-#[file_serial]
+#[serial]
 async fn successfully() {
     let mut app = setup_app(true).await;
     let game = mock_game().await;

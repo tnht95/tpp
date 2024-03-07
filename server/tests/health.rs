@@ -1,4 +1,4 @@
-use serial_test::file_serial;
+use serial_test::serial;
 use axum::{body::Body, extract::Request, http::StatusCode};
 use tower::{util::ServiceExt, Service};
 
@@ -7,7 +7,7 @@ use crate::common::setup_app;
 mod common;
 
 #[tokio::test]
-#[file_serial]
+#[serial]
 async fn is_healthy() {
     let mut app = setup_app(false).await;
     let request = Request::builder()

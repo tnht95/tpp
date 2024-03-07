@@ -1,4 +1,4 @@
-use serial_test::file_serial;
+use serial_test::serial;
 use axum::{body::Body, extract::Request, http::StatusCode};
 use tower::{Service, ServiceExt};
 
@@ -7,7 +7,7 @@ use crate::common::setup_app;
 mod common;
 
 #[tokio::test]
-#[file_serial]
+#[serial]
 async fn successfully() {
     let mut app = setup_app(true).await;
 
