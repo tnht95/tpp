@@ -1,5 +1,5 @@
-use serial_test::serial;
 use axum::{body::Body, extract::Request, http::StatusCode};
+use serial_test::serial;
 use tower::{Service, ServiceExt};
 
 use crate::common::setup_app;

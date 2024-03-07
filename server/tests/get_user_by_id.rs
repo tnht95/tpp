@@ -1,10 +1,10 @@
-use serial_test::serial;
 use axum::{body::Body, extract::Request, http::StatusCode};
 use http_body_util::BodyExt;
 use serde_json::{json, Value};
+use serial_test::serial;
 use tower::{util::ServiceExt, Service};
 
-use crate::common::{gen_jwt, get_pool, gen_ws_ticket, mock_user, setup_app};
+use crate::common::{gen_jwt, gen_ws_ticket, get_pool, mock_user, setup_app};
 
 mod common;
 

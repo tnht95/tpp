@@ -2,8 +2,8 @@ use axum::{body::Body, extract::Request, http::StatusCode};
 use http_body_util::BodyExt;
 use hyper::Method;
 use serde_json::{json, Value};
-use tower::{Service, ServiceExt};
 use serial_test::serial;
+use tower::{Service, ServiceExt};
 
 use crate::common::{gen_jwt, gen_ws_ticket, get_admin, mock_user, setup_app};
 

@@ -1,7 +1,7 @@
-use serial_test::serial;
 use axum::{body::Body, extract::Request, http::StatusCode};
 use http_body_util::BodyExt;
 use serde_json::Value;
+use serial_test::serial;
 use tower::{Service, ServiceExt};
 
 use crate::common::{mock_post, setup_app};

@@ -1,4 +1,3 @@
-use serial_test::serial;
 use axum::{
     body::Body,
     extract::Request,
@@ -7,6 +6,7 @@ use axum::{
 use http_body_util::BodyExt;
 use redis::AsyncCommands;
 use serde_json::{json, Value};
+use serial_test::serial;
 use server::{
     cache::{Cache, ICache},
     utils::time::mock_time,
