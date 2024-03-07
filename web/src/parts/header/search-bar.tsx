@@ -9,9 +9,9 @@ export const HeaderSearchbar = () => {
   const navigate = useNavigate();
   const onSubmitHandler = (e: Event) => {
     e.preventDefault();
-    const searchContent = new FormData(e.target as HTMLFormElement).get(
-      'searchContent'
-    ) as string;
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+    const searchContent = (formData.get('searchContent') as string).trim();
     if (searchContent) {
       let url = `/search?keyword=${searchContent}`;
       if (searchCategory()) {
@@ -20,6 +20,7 @@ export const HeaderSearchbar = () => {
       navigate(url);
       (e.target as HTMLFormElement).reset();
     }
+    form.reset();
   };
   return (
     <form onSubmit={onSubmitHandler} class="flex w-1/2">
