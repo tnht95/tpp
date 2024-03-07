@@ -57,7 +57,7 @@ export const CommentCard = (props: Props) => {
     <div class="flex">
       <Avatar userId={props.comment.userId} img={props.comment.userAvatar} />
       <div class="ml-2 w-full">
-        <div class="flex items-center justify-between rounded-t border border-gray-200 bg-gray-200 px-5 py-2">
+        <div class="flex items-center justify-between rounded-t border border-gray-200 bg-gray-200 px-5 py-2 min-h-12">
           <div class="flex items-center gap-1">
             <span class="font-semibold">{props.comment.userName}</span>
             <span> commented on </span>

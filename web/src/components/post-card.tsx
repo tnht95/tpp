@@ -74,7 +74,7 @@ export const PostCard = (props: Props) => {
       <div class="flex items-center">
         <Avatar img={props.post.userAvatar} userId={props.post.userId} />
         <div class="w-full pl-3 leading-tight">
-          <div class="flex items-center justify-between">
+          <div class="flex items-center justify-between min-h-7">
             <p class="text-base font-bold text-black">{props.post.userName}</p>
             <Show when={utils.isSameUser(props.post.userId)}>
               <OptionButton
