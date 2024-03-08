@@ -17,7 +17,6 @@ import {
   BlogSummary,
   GameSummary,
   PostDetails,
-  RespErr,
   SearchResult,
   UserSummary
 } from '@/models';
@@ -99,7 +98,7 @@ export const SearchProvider = (props: ParentProps) => {
     }
     if (resource.error) {
       showToast({
-        msg: (resource.error as Error).message,
+        message: (resource.error as Error).message,
         type: 'err'
       });
     }
@@ -133,7 +132,7 @@ export const SearchProvider = (props: ParentProps) => {
           );
         })
       )
-      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
+      .catch(({ message }: Error) => showToast({ message, type: 'err' }));
   };
 
   const showMore = (category: keyof FetchMoreOpts) =>

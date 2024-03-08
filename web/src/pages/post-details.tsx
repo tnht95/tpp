@@ -11,7 +11,7 @@ import {
 import { deletePostAction, editPostAction, getPostByIdAction } from '@/apis';
 import { LoadingSpinner, PostCard } from '@/components';
 import { useToastCtx } from '@/context';
-import { PostDetails, RespErr } from '@/models';
+import { PostDetails } from '@/models';
 import { NotFound } from '@/pages';
 
 export const PostDetailsPage = () => {
@@ -27,22 +27,22 @@ export const PostDetailsPage = () => {
     deletePostAction(postId)
       .then(() =>
         batch(() => {
-          showToast({ msg: 'Post Deleted', type: 'ok' });
+          showToast({ message: 'Post Deleted', type: 'ok' });
           window.history.back();
         })
       )
-      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
+      .catch(({ message }: Error) => showToast({ message, type: 'err' }));
   };
 
   const edit = (postId: string, content: string) => {
     editPostAction(postId, { content })
       .then(post =>
         batch(() => {
-          showToast({ msg: 'Post Updated', type: 'ok' });
+          showToast({ message: 'Post Updated', type: 'ok' });
           mutate(post);
         })
       )
-      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
+      .catch(({ message }: Error) => showToast({ message, type: 'err' }));
   };
   return (
     <Show when={!post.loading} fallback={<LoadingSpinner />}>

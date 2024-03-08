@@ -3,7 +3,6 @@ import { batch, createSignal, Show } from 'solid-js';
 import { unVoteAction, voteAction } from '@/apis';
 import { GameForm, OptionButton, PillButton } from '@/components';
 import { useGameDetailsCtx, useToastCtx } from '@/context';
-import { RespErr } from '@/models';
 import { authenticationStore } from '@/store';
 
 export const GameDetailsHeader = () => {
@@ -70,7 +69,7 @@ export const GameDetailsHeader = () => {
     }
 
     votePromise
-      .catch(error => showToast({ msg: (error as RespErr).msg, type: 'err' }))
+      .catch(({ message }: Error) => showToast({ message, type: 'err' }))
       .finally(() => setIsLoading(false)) as unknown;
   };
 

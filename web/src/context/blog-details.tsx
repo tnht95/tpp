@@ -13,7 +13,7 @@ import {
 
 import { deleteBlogAction, editBlogAction, fetchBlogByIdAction } from '@/apis';
 import { LoadingSpinner } from '@/components';
-import { Blog, BlogRequest, RespErr } from '@/models';
+import { Blog, BlogRequest } from '@/models';
 import { NotFound } from '@/pages';
 import { ModalUtil, useModalUtils } from '@/utils';
 
@@ -49,10 +49,10 @@ export const BlogDetailsProvider = (props: ParentProps) => {
         batch(() => {
           mutate(blog);
           modal.hide();
-          showToast({ msg: 'Blog Updated', type: 'ok' });
+          showToast({ message: 'Blog Updated', type: 'ok' });
         })
       )
-      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
+      .catch(({ message }: Error) => showToast({ message, type: 'err' }));
   };
 
   const del = () => {
@@ -60,10 +60,10 @@ export const BlogDetailsProvider = (props: ParentProps) => {
       .then(() =>
         batch(() => {
           navigate(`/blogs`);
-          showToast({ msg: 'Blog Deleted', type: 'ok' });
+          showToast({ message: 'Blog Deleted', type: 'ok' });
         })
       )
-      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
+      .catch(({ message }: Error) => showToast({ message, type: 'err' }));
   };
 
   const state: Ctx = {

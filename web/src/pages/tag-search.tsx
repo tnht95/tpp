@@ -19,7 +19,7 @@ import {
 } from '@/components';
 import { PAGINATION } from '@/constant';
 import { useToastCtx } from '@/context';
-import { BlogSummary, GameSummary, RespErr, TagSearchResult } from '@/models';
+import { BlogSummary, GameSummary, TagSearchResult } from '@/models';
 
 type FetchMoreOpts = {
   games: { offset: number; showMore: boolean };
@@ -72,7 +72,7 @@ export const TagSearch = () => {
 
     if (searchResource.error) {
       showToast({
-        msg: (searchResource.error as Error).message,
+        message: (searchResource.error as Error).message,
         type: 'err'
       });
     }
@@ -105,7 +105,7 @@ export const TagSearch = () => {
           );
         })
       )
-      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
+      .catch(({ message }: Error) => showToast({ message, type: 'err' }));
   };
 
   const showMoreFn = (category: keyof FetchMoreOpts) =>

@@ -3,7 +3,7 @@ import { batch, createEffect, createSignal, Show } from 'solid-js';
 import { likeAction, unLikeAction } from '@/apis';
 import { Avatar, CommentForm, Markdown, OptionButton } from '@/components';
 import { useToastCtx } from '@/context';
-import { CommentDetails, RespErr } from '@/models';
+import { CommentDetails } from '@/models';
 import { authenticationStore } from '@/store';
 import { formatTime, highlight } from '@/utils';
 
@@ -49,7 +49,7 @@ export const CommentCard = (props: Props) => {
 
     actionPromise
       .then(likeBatch)
-      .catch(error => showToast({ msg: (error as RespErr).msg, type: 'err' }))
+      .catch(({ message }: Error) => showToast({ message, type: 'err' }))
       .finally(() => setIsLoading(false)) as unknown;
   };
 

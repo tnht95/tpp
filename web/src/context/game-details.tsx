@@ -13,7 +13,7 @@ import {
 
 import { deleteGameAction, editGameAction, fetchGameByIdAction } from '@/apis';
 import { LoadingSpinner } from '@/components';
-import { GameDetails, GameRequest, RespErr } from '@/models';
+import { GameDetails, GameRequest } from '@/models';
 import { NotFound } from '@/pages';
 import { authenticationStore } from '@/store';
 import { ModalUtil, useModalUtils } from '@/utils';
@@ -52,10 +52,10 @@ export const GameDetailsProvider = (props: ParentProps) => {
           mutate(game);
           modal.hide();
           navigate(`/games/${game.id}/info`);
-          showToast({ msg: 'Game Updated', type: 'ok' });
+          showToast({ message: 'Game Updated', type: 'ok' });
         })
       )
-      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
+      .catch(({ message }: Error) => showToast({ message, type: 'err' }));
   };
 
   const del = () => {
@@ -63,10 +63,10 @@ export const GameDetailsProvider = (props: ParentProps) => {
       .then(() =>
         batch(() => {
           navigate(`/users/${user()?.id}`);
-          showToast({ msg: 'Game Deleted', type: 'ok' });
+          showToast({ message: 'Game Deleted', type: 'ok' });
         })
       )
-      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
+      .catch(({ message }: Error) => showToast({ message, type: 'err' }));
   };
 
   const state: Ctx = {

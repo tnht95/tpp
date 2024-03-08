@@ -17,7 +17,7 @@ import {
   fetchDiscussionByIdAction
 } from '@/apis';
 import { LoadingSpinner } from '@/components';
-import { DiscussionDetails, DiscussionRequest, RespErr } from '@/models';
+import { DiscussionDetails, DiscussionRequest } from '@/models';
 import { NotFound } from '@/pages';
 import { ModalUtil, useModalUtils } from '@/utils';
 
@@ -63,22 +63,22 @@ export const GameDiscussionDetailsProvider = (props: ParentProps) => {
         batch(() => {
           mutate(discussion);
           modal.hide();
-          showToast({ msg: 'Discussion Updated', type: 'ok' });
+          showToast({ message: 'Discussion Updated', type: 'ok' });
         })
       )
-      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
+      .catch(({ message }: Error) => showToast({ message, type: 'err' }));
   };
 
   const handleBatchDelete = () =>
     batch(() => {
       navigate(`/games/${gameId()}/discussions`);
-      showToast({ msg: 'Discussion Deleted', type: 'ok' });
+      showToast({ message: 'Discussion Deleted', type: 'ok' });
     });
 
   const del = () => {
     deleteDiscussionAction(gameId(), discussionId())
       .then(handleBatchDelete)
-      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
+      .catch(({ message }: Error) => showToast({ message, type: 'err' }));
   };
 
   const state = {

@@ -17,7 +17,7 @@ import {
   filterDiscussionsAction
 } from '@/apis';
 import { PAGINATION } from '@/constant';
-import { DiscussionRequest, DiscussionSummary, RespErr } from '@/models';
+import { DiscussionRequest, DiscussionSummary } from '@/models';
 import { ModalUtil, useModalUtils } from '@/utils';
 
 import { useToastCtx } from './toast';
@@ -66,10 +66,10 @@ export const GameDiscussionsProvider = (props: ParentProps) => {
           setQuery([0, gameId]);
           reCount() as unknown;
           modal.hide();
-          showToast({ msg: 'Discussion Added', type: 'ok' });
+          showToast({ message: 'Discussion Added', type: 'ok' });
         })
       )
-      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
+      .catch(({ message }: Error) => showToast({ message, type: 'err' }));
   };
 
   const fetchMore = () => {

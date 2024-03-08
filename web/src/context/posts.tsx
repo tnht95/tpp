@@ -16,7 +16,7 @@ import {
   filterPostsAction
 } from '@/apis';
 import { PAGINATION } from '@/constant';
-import { PostDetails, RespErr } from '@/models';
+import { PostDetails } from '@/models';
 
 import { useToastCtx } from './toast';
 
@@ -58,10 +58,10 @@ export const PostsProvider = (props: ParentProps) => {
         batch(() => {
           setPosts([]);
           setQuery(p => ({ ...p, offset: 0 }));
-          showToast({ msg: 'Post Added', type: 'ok' });
+          showToast({ message: 'Post Added', type: 'ok' });
         })
       )
-      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
+      .catch(({ message }: Error) => showToast({ message, type: 'err' }));
   };
 
   const del = (postId: string) => {
@@ -70,10 +70,10 @@ export const PostsProvider = (props: ParentProps) => {
         batch(() => {
           setPosts([]);
           setQuery(p => ({ ...p, offset: 0 }));
-          showToast({ msg: 'Post Deleted', type: 'ok' });
+          showToast({ message: 'Post Deleted', type: 'ok' });
         })
       )
-      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
+      .catch(({ message }: Error) => showToast({ message, type: 'err' }));
   };
 
   const edit = (postId: string, content: string) => {
@@ -81,10 +81,10 @@ export const PostsProvider = (props: ParentProps) => {
       .then(post =>
         batch(() => {
           setPosts(p => p.id === post.id, post);
-          showToast({ msg: 'Post Updated', type: 'ok' });
+          showToast({ message: 'Post Updated', type: 'ok' });
         })
       )
-      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
+      .catch(({ message }: Error) => showToast({ message, type: 'err' }));
   };
 
   const handleScroll = () => {

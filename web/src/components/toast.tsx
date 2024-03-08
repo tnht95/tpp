@@ -17,7 +17,7 @@ export const Toast = (props: Props) => (
   >
     <div class="flex items-center justify-center gap-1">
       <span class="sr-only">Info</span>
-      <h3 class="text-lg font-medium">{props.input.msg}</h3>
+      <h3 class="text-lg font-medium">{props.input.message}</h3>
     </div>
     <button
       onClick={() => props.onClose()}

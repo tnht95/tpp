@@ -11,7 +11,7 @@ import { createStore, produce } from 'solid-js/store';
 
 import { addBlogAction, filterBlogsAction } from '@/apis';
 import { PAGINATION } from '@/constant';
-import { BlogRequest, BlogSummary, RespErr } from '@/models';
+import { BlogRequest, BlogSummary } from '@/models';
 import { ModalUtil, useModalUtils } from '@/utils';
 
 import { useToastCtx } from './toast';
@@ -52,10 +52,10 @@ export const BlogsProvider = (props: ParentProps) => {
           setBlogs([]);
           setQuery({ offset: 0 });
           modal.hide();
-          showToast({ msg: 'Blog Added', type: 'ok' });
+          showToast({ message: 'Blog Added', type: 'ok' });
         })
       )
-      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
+      .catch(({ message }: Error) => showToast({ message, type: 'err' }));
   };
 
   const fetchMore = () => {

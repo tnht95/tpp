@@ -8,7 +8,6 @@ import {
   useGameDiscussionDetailsCtx,
   useToastCtx
 } from '@/context';
-import { RespErr } from '@/models';
 import { CommentContainer } from '@/parts';
 import { authenticationStore } from '@/store';
 import { formatTime } from '@/utils';
@@ -57,7 +56,7 @@ const GameDetailsDiscussionDetailsInner = () => {
 
     actionPromise
       .then(likeBatch)
-      .catch(error => showToast({ msg: (error as RespErr).msg, type: 'err' }))
+      .catch(({ message }: Error) => showToast({ message, type: 'err' }))
       .finally(() => setIsLoading(false)) as unknown;
   };
 

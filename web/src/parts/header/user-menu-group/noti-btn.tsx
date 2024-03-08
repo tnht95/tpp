@@ -19,7 +19,7 @@ import {
 import { NotificationCard } from '@/components';
 import { PAGINATION } from '@/constant';
 import { useToastCtx } from '@/context';
-import { Notification, RespErr } from '@/models';
+import { Notification } from '@/models';
 import { authenticationStore } from '@/store';
 import { connect, disconnect, useDropdownUtils } from '@/utils';
 
@@ -99,8 +99,8 @@ export const UserMenuGroupNotiBtn = () => {
   const onNotiClickHandler = () =>
     batch(() => {
       if (!isCheck()) {
-        checkNotificationAction().catch(error =>
-          showToast({ msg: (error as RespErr).msg, type: 'err' })
+        checkNotificationAction().catch(({ message }: Error) =>
+          showToast({ message, type: 'err' })
         );
         setIsCheck(true);
         setIsNotiOpen(true);
@@ -112,9 +112,7 @@ export const UserMenuGroupNotiBtn = () => {
       if (!noti.isRead) {
         readNotificationAction(noti.id)
           .then(() => setNotifications(n => n.id === noti.id, 'isRead', true))
-          .catch(error =>
-            showToast({ msg: (error as RespErr).msg, type: 'err' })
-          );
+          .catch(({ message }: Error) => showToast({ message, type: 'err' }));
       }
       dropdown.hide();
     });

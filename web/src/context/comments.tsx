@@ -17,7 +17,7 @@ import {
   QueryWIthTargetInput
 } from '@/apis';
 import { PAGINATION } from '@/constant';
-import { CommentDetails, CommentType, RespErr } from '@/models';
+import { CommentDetails, CommentType } from '@/models';
 
 import { useToastCtx } from './toast';
 
@@ -71,7 +71,7 @@ export const CommentsProvider = (props: Props) => {
   const onAddCmtBatchHandler = (cmt: CommentDetails) =>
     batch(() => {
       setComments(produce(c => c.push(cmt)));
-      showToast({ msg: 'Comment Added', type: 'ok' });
+      showToast({ message: 'Comment Added', type: 'ok' });
       newAddedCmts.push(cmt);
       props.onAddNewCmt && props.onAddNewCmt();
     });
@@ -80,7 +80,7 @@ export const CommentsProvider = (props: Props) => {
     batch(() => {
       setComments([]);
       setQuery(q => ({ ...q, offset: 0 }));
-      showToast({ msg: 'Comment Deleted', type: 'ok' });
+      showToast({ message: 'Comment Deleted', type: 'ok' });
       newAddedCmts.length = 0;
       props.onDeleteCmt && props.onDeleteCmt();
     });
@@ -92,7 +92,7 @@ export const CommentsProvider = (props: Props) => {
       targetType: props.targetType
     })
       .then(onAddCmtBatchHandler)
-      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
+      .catch(({ message }: Error) => showToast({ message, type: 'err' }));
   };
 
   const edit = (commentId: string, content: string) => {
@@ -104,10 +104,10 @@ export const CommentsProvider = (props: Props) => {
       .then(cmt =>
         batch(() => {
           setComments(c => c.id === cmt.id, cmt);
-          showToast({ msg: 'Comment Updated', type: 'ok' });
+          showToast({ message: 'Comment Updated', type: 'ok' });
         })
       )
-      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
+      .catch(({ message }: Error) => showToast({ message, type: 'err' }));
   };
 
   const del = (commentId: string) => {
@@ -116,7 +116,7 @@ export const CommentsProvider = (props: Props) => {
       targetType: props.targetType
     })
       .then(onDeleteCmtBatchHandler)
-      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
+      .catch(({ message }: Error) => showToast({ message, type: 'err' }));
   };
 
   const fetchMore = () => {

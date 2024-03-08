@@ -11,7 +11,7 @@ import {
 import { createStore, produce } from 'solid-js/store';
 
 import { addGameAction, filterGamesAction, GameQueryInput } from '@/apis';
-import { GameRequest, GameSummary, RespErr } from '@/models';
+import { GameRequest, GameSummary } from '@/models';
 import { ModalUtil, useModalUtils } from '@/utils';
 
 import { useToastCtx } from './toast';
@@ -62,10 +62,10 @@ export const UserGamesProvider = (props: ParentProps) => {
           setGames([]);
           setParam(p => ({ ...p, offset: 0 }));
           modal.hide();
-          showToast({ msg: 'Game Added', type: 'ok' });
+          showToast({ message: 'Game Added', type: 'ok' });
         })
       )
-      .catch((error: RespErr) => showToast({ msg: error.msg, type: 'err' }));
+      .catch(({ message }: Error) => showToast({ message, type: 'err' }));
   };
 
   const fetchMore = () => {

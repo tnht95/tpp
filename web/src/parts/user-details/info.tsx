@@ -3,7 +3,6 @@ import { batch, createSignal, Show } from 'solid-js';
 import { subscribeAction, unSubscribeAction } from '@/apis';
 import { PillButton } from '@/components';
 import { useToastCtx, useUserDetailsCtx } from '@/context';
-import { RespErr } from '@/models';
 import { authenticationStore } from '@/store';
 
 export const UserDetailsInfo = () => {
@@ -35,7 +34,7 @@ export const UserDetailsInfo = () => {
 
     actionPromise
       .then(subscribeBatch)
-      .catch(error => showToast({ msg: (error as RespErr).msg, type: 'err' }))
+      .catch(({ message }: Error) => showToast({ message, type: 'err' }))
       .finally(() => setIsLoading(false)) as unknown;
   };
 
