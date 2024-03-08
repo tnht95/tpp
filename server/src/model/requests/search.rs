@@ -36,7 +36,7 @@ pub struct SearchPaginationInternal {
 impl From<SearchPagination> for SearchPaginationInternal {
     fn from(pagination: SearchPagination) -> Self {
         Self {
-            keyword: pagination.keyword,
+            keyword: pagination.keyword.replace('%', "\\%").replace('_', "\\_"),
             category: pagination.category,
             offset: match pagination.offset.unwrap_or(0) {
                 offset if offset < 0 => 0,
