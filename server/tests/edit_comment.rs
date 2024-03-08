@@ -12,7 +12,7 @@ use server::database::entities::comment::CommentType::{Blogs, Discussions, Posts
 use tower::{Service, ServiceExt};
 use uuid::Uuid;
 
-use crate::common::{gen_jwt, gen_ws_ticket, get_admin, mock_comment, mock_user, setup_app};
+use crate::common::{gen_jwt, gen_ws_ticket, get_admin, mock_comment_with_admin, mock_user, setup_app};
 
 mod common;
 #[tokio::test]
@@ -22,7 +22,7 @@ async fn when_not_owner() {
     let user = mock_user(1, "me", true).await;
     let ws_ticket = gen_ws_ticket(&user, false).await;
     let access_token = gen_jwt(user).await;
-    let comment = mock_comment(
+    let comment = mock_comment_with_admin(
         Uuid::from_str("b2337049-fa84-4d42-95da-3720a90e994d").unwrap(),
         Posts,
     )
@@ -154,7 +154,7 @@ async fn post_successfully() {
     let user = get_admin();
     let ws_ticket = gen_ws_ticket(&user, false).await;
     let access_token = gen_jwt(user).await;
-    let comment = mock_comment(
+    let comment = mock_comment_with_admin(
         Uuid::from_str("b2337049-fa84-4d42-95da-3720a90e994d").unwrap(),
         Posts,
     )
@@ -197,7 +197,7 @@ async fn blog_successfully() {
     let user = get_admin();
     let ws_ticket = gen_ws_ticket(&user, false).await;
     let access_token = gen_jwt(user).await;
-    let comment = mock_comment(
+    let comment = mock_comment_with_admin(
         Uuid::from_str("b2337049-fa84-4d42-95da-3720a90e994d").unwrap(),
         Blogs,
     )
@@ -240,7 +240,7 @@ async fn discussion_successfully() {
     let user = get_admin();
     let ws_ticket = gen_ws_ticket(&user, false).await;
     let access_token = gen_jwt(user).await;
-    let comment = mock_comment(
+    let comment = mock_comment_with_admin(
         Uuid::from_str("b2337049-fa84-4d42-95da-3720a90e994d").unwrap(),
         Discussions,
     )

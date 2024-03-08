@@ -8,14 +8,14 @@ use server::database::entities::comment::CommentType::Posts;
 use tower::{Service, ServiceExt};
 use uuid::Uuid;
 
-use crate::common::{mock_comment, setup_app};
+use crate::common::{mock_comment_with_admin, setup_app};
 
 mod common;
 #[tokio::test]
 #[serial]
 async fn with_big_pagination() {
     let mut app = setup_app(true).await;
-    mock_comment(
+    mock_comment_with_admin(
         Uuid::from_str("b2337049-fa84-4d42-95da-3720a90e994d").unwrap(),
         Posts,
     )

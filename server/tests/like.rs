@@ -16,7 +16,7 @@ use crate::common::{
     gen_jwt,
     gen_ws_ticket,
     get_admin,
-    mock_comment,
+    mock_comment_with_admin,
     mock_discussion,
     mock_game,
     mock_post,
@@ -258,7 +258,7 @@ async fn comment_successfully() {
     let user = get_admin();
     let ws_ticket = gen_ws_ticket(&user, false).await;
     let access_token = gen_jwt(user).await;
-    let comment = mock_comment(
+    let comment = mock_comment_with_admin(
         Uuid::from_str("b2337049-fa84-4d42-95da-3720a90e994d").unwrap(),
         Blogs,
     )

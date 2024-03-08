@@ -229,7 +229,7 @@ pub async fn mock_post() -> Post {
     post
 }
 
-pub async fn mock_comment(target_id: Uuid, target_type: CommentType) -> Comment {
+pub async fn mock_comment_with_admin(target_id: Uuid, target_type: CommentType) -> Comment {
     let comment = Comment {
         id: Uuid::new_v4(),
         user_id: 40195902,
@@ -269,6 +269,50 @@ pub async fn mock_comment(target_id: Uuid, target_type: CommentType) -> Comment 
     .execute(get_pool().await)
     .await
     .unwrap();
+
+    comment
+}
+
+pub async fn mock_comment_with_other_user(target_id: Uuid, target_type: CommentType) -> Comment {
+    let comment = Comment {
+        id: Uuid::new_v4(),
+        user_id: 1,
+        user_name: "me".to_string(),
+        target_id,
+        content: "abc".to_string(),
+        likes: 0,
+        target_type,
+        created_at: Default::default(),
+        updated_at: Default::default(),
+    };
+
+    sqlx::query!(
+        r#"
+        INSERT INTO comments (
+            id,
+            user_id,
+            user_name,
+            target_id,
+            content,
+            target_type,
+            created_at,
+            updated_at
+        ) VALUES (
+            $1, $2, $3, $4, $5, $6, $7, $8
+        )
+        "#,
+        comment.id,
+        comment.user_id,
+        comment.user_name,
+        comment.target_id,
+        comment.content,
+        comment.target_type.clone() as CommentType,
+        comment.created_at,
+        comment.updated_at
+    )
+        .execute(get_pool().await)
+        .await
+        .unwrap();
 
     comment
 }
