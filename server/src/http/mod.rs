@@ -117,7 +117,7 @@ where
                     .route(
                         "/version",
                         get(|| async {
-                            compile_time_run::run_command_str!("git", "rev-parse", "HEAD");
+                            compile_time_run::run_command_str!("git", "rev-parse", "HEAD")
                         }),
                     )
                     .route("/me", get(auth::me))
