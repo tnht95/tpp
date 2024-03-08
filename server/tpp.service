@@ -1,12 +1,13 @@
 # /etc/systemd/system/tpp.service
 
 [Unit]
-Description=Tpp Service
+Description=Tpp Server
 After=network.target
 
 [Service]
 Type=simple
-ExecStart=sudo server start
+WorkingDirectory=/home/tpp-user/tpp/server
+ExecStart=sudo server -c ./config-prod.toml start
 Restart=always
 
 [Install]
