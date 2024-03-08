@@ -9,9 +9,6 @@ use server::{
 use tracing::trace;
 use tracing_subscriber::{prelude::*, EnvFilter};
 
-// TODO
-// test
-// CI/CD
 #[tokio::main]
 async fn main() -> Result<()> {
     let cli = Cli::parse();
