@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "select id, name, author_id, author_name, avatar_url, up_votes, down_votes\n                    from games\n                    where $1 ilike any(tags)\n                    order by created_at desc offset $2 limit $3",
+  "query": "select id, name, author_id, author_name, avatar_url, up_votes, down_votes\n                    from games\n                    where $1 = any(tags)\n                    order by created_at desc offset $2 limit $3",
   "describe": {
     "columns": [
       {
@@ -56,5 +56,5 @@
       false
     ]
   },
-  "hash": "7157480950a64a10d1359d12a7fde6d2e3d6e23220403c916effdd4f190e8447"
+  "hash": "dc8422e7b8075c15f2bc4a4eea7d1d4b25278f9a03f386885bebdee839f30bed"
 }
