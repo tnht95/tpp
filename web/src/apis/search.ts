@@ -1,4 +1,4 @@
-import { RespErr, Response, SearchResult, TagSearchResult } from '@/models';
+import { Response, SearchResult, TagSearchResult } from '@/models';
 
 import { errHandler } from '.';
 
@@ -27,10 +27,7 @@ export const searchAction = async (queryInput: SearchQueryInput) => {
 
   return fetch(`${baseUrl}/search?${query.join('&')}`)
     .then(errHandler)
-    .then((r: Response<SearchResult>) => r.data)
-    .catch((error: RespErr) => {
-      throw error.msg;
-    });
+    .then((r: Response<SearchResult>) => r.data);
 };
 
 export const tagSearchAction = async ([tag, queryInput]: [
@@ -48,8 +45,5 @@ export const tagSearchAction = async ([tag, queryInput]: [
 
   return fetch(`${baseUrl}/tags/${tag}?${query.join('&')}`)
     .then(errHandler)
-    .then((r: Response<TagSearchResult>) => r.data)
-    .catch((error: RespErr) => {
-      throw error.msg;
-    });
+    .then((r: Response<TagSearchResult>) => r.data);
 };

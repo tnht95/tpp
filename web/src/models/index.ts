@@ -14,8 +14,3 @@ export * from './notification';
 export type Response<T> = {
   data: T;
 };
-
-export type RespErr = {
-  code: string;
-  msg: string;
-};
