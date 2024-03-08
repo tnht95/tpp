@@ -3,7 +3,7 @@ use std::sync::Arc;
 use async_trait::async_trait;
 use sqlx::{Postgres, QueryBuilder};
 use thiserror::Error;
-use tokio::fs::{create_dir, metadata, remove_file, write};
+use tokio::fs::{remove_file, write};
 use uuid::Uuid;
 
 use crate::{
@@ -61,13 +61,6 @@ where
     T: IDatabase,
 {
     pub async fn new(db: Arc<T>, rom_dir: String) -> anyhow::Result<Self> {
-        let is_dir = metadata(&rom_dir)
-            .await
-            .map(|mdata| mdata.is_dir())
-            .unwrap_or(false);
-        if !is_dir {
-            create_dir(&rom_dir).await?;
-        }
         Ok(Self { db, rom_dir })
     }
 
