@@ -10,7 +10,10 @@ pub mod utils;
 use std::sync::Arc;
 
 use anyhow::{Context, Result};
-use tokio::sync::RwLock;
+use tokio::{
+    fs::{copy, create_dir, metadata, read_dir},
+    sync::RwLock,
+};
 
 use crate::{
     cache::Cache,
@@ -36,6 +39,39 @@ use crate::{
         ServicesBuilder,
     },
 };
+
+pub async fn init_roms(rom_dir: &str) -> Result<()> {
+    let is_dir = metadata(rom_dir)
+        .await
+        .map(|mdata| mdata.is_dir())
+        .unwrap_or(false);
+    if !is_dir {
+        create_dir(rom_dir)
+            .await
+            .context("Failed to create roms dir")?;
+    }
+    let mut fixed_roms_dir = read_dir("./fixed_roms")
+        .await
+        .context("Failed to read fixed_roms")?;
+    while let Ok(Some(rom_entry)) = fixed_roms_dir.next_entry().await {
+        copy(
+            rom_entry.path(),
+            format!(
+                "./roms/{}",
+                rom_entry
+                    .path()
+                    .to_str()
+                    .with_context(|| format!("Invalid path: {:?}", rom_entry.path()))?
+                    .split('/')
+                    .last()
+                    .with_context(|| format!("Invalid file: {:?}", rom_entry.path()))?
+            ),
+        )
+        .await
+        .with_context(|| format!("Failed to copy roms: {:?}", rom_entry.path()))?;
+    }
+    Ok(())
+}
 
 pub async fn init(config: Config) -> Result<ApiServer<InternalServices>> {
     Database::migrate(&config)
