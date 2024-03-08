@@ -240,7 +240,7 @@ where
                         id, title, description, tags, created_at
                     from blogs
                     where
-                        $1 ilike any(tags)
+                        $1 = any(tags)
                     order by created_at desc offset $2 limit $3",
                     format!("{}", tag),
                     pagination.offset,
@@ -276,7 +276,7 @@ where
                     GameSummary,
                     "select id, name, author_id, author_name, avatar_url, up_votes, down_votes
                     from games
-                    where $1 ilike any(tags)
+                    where $1 = any(tags)
                     order by created_at desc offset $2 limit $3",
                     format!("{}", tag),
                     pagination.offset,
@@ -342,7 +342,7 @@ where
         self.search_games_by_tag(Arc::clone(&tag_ref), Arc::clone(&pagination_ref), game_tx);
 
         let (blog_tx, blog_rx) = oneshot::channel();
-        self.search_blogs_by_tag(Arc::clone(&tag_ref), pagination_ref, blog_tx);
+        self.search_blogs_by_tag(tag_ref, pagination_ref, blog_tx);
 
         Ok(TagSearchResult {
             games: game_rx
