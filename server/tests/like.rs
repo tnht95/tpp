@@ -134,7 +134,7 @@ async fn unlike_when_not_login() {
 #[serial]
 async fn post_successfully() {
     let mut app = setup_app(true).await;
-    let user = get_admin().await;
+    let user = get_admin();
     let ws_ticket = gen_ws_ticket(&user, false).await;
     let access_token = gen_jwt(user).await;
     let post = mock_post().await;
@@ -255,7 +255,7 @@ async fn post_successfully() {
 #[serial]
 async fn comment_successfully() {
     let mut app = setup_app(true).await;
-    let user = get_admin().await;
+    let user = get_admin();
     let ws_ticket = gen_ws_ticket(&user, false).await;
     let access_token = gen_jwt(user).await;
     let comment = mock_comment(
@@ -386,7 +386,7 @@ async fn comment_successfully() {
 #[serial]
 async fn discussion_successfully() {
     let mut app = setup_app(true).await;
-    let user = get_admin().await;
+    let user = get_admin();
     let ws_ticket = gen_ws_ticket(&user, false).await;
     let access_token = gen_jwt(user).await;
     let game = mock_game().await;

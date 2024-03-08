@@ -13,7 +13,7 @@ mod common;
 #[serial]
 async fn with_empty_request() {
     let mut app = setup_app(true).await;
-    let user = get_admin().await;
+    let user = get_admin();
     let ws_ticket = gen_ws_ticket(&user, false).await;
     let access_token = gen_jwt(user).await;
 
@@ -113,7 +113,7 @@ async fn when_not_login() {
 #[serial]
 async fn successfully() {
     let mut app = setup_app(true).await;
-    let user = get_admin().await;
+    let user = get_admin();
     let ws_ticket = gen_ws_ticket(&user, false).await;
     let access_token = gen_jwt(user).await;
 

@@ -57,7 +57,7 @@ pub async fn setup_app(reset_data: bool) -> Router {
     Arc::new(init(get_config().await.clone()).await.unwrap()).build_app()
 }
 
-pub async fn get_admin() -> User {
+pub fn get_admin() -> User {
     User {
         id: 40195902,
         name: "tnht95".to_string(),
