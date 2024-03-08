@@ -9,7 +9,7 @@ export const Tag = (props: Props) => {
   const navigate = useNavigate();
 
   const navigateToSearchPage = () => {
-    navigate(`/tags/${props.name}`, { replace: true });
+    navigate(`/tags/${encodeURIComponent(props.name)}`);
   };
   return (
     <div
