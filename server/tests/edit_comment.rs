@@ -12,7 +12,14 @@ use server::database::entities::comment::CommentType::{Blogs, Discussions, Posts
 use tower::{Service, ServiceExt};
 use uuid::Uuid;
 
-use crate::common::{gen_jwt, gen_ws_ticket, get_admin, mock_comment_with_admin, mock_user, setup_app};
+use crate::common::{
+    gen_jwt,
+    gen_ws_ticket,
+    get_admin,
+    mock_comment_with_admin,
+    mock_user,
+    setup_app,
+};
 
 mod common;
 #[tokio::test]

@@ -310,9 +310,9 @@ pub async fn mock_comment_with_other_user(target_id: Uuid, target_type: CommentT
         comment.created_at,
         comment.updated_at
     )
-        .execute(get_pool().await)
-        .await
-        .unwrap();
+    .execute(get_pool().await)
+    .await
+    .unwrap();
 
     comment
 }
