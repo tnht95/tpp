@@ -131,13 +131,13 @@ async fn get_notification_with_subscribe() {
         .await
         .unwrap();
 
+    // check if subscriber get notified if user posts
     mock_post().await;
-
     let request = Request::builder()
         .uri("/api/v1/notifications?offset=0&limit=20")
         .header(
             "cookie",
-            format!("access_token={other_access_token};ws_ticket={other_access_token}"),
+            format!("access_token={other_access_token};ws_ticket={other_ws_ticket}"),
         )
         .body(Body::empty())
         .unwrap();
@@ -153,5 +153,39 @@ async fn get_notification_with_subscribe() {
     let body = response.into_body().collect().await.unwrap().to_bytes();
     let body: Value = serde_json::from_slice(&body).unwrap();
     let data = body.get("data").unwrap().as_array().unwrap();
-    assert_eq!(data.len(), 2);
+    assert_eq!(data.len(), 1);
+    assert_eq!(
+        data.first().unwrap().get("targetType").unwrap().as_str(),
+        Some("userPost")
+    );
+
+    // check if user get notified if someone subscribed them
+    let admin = get_admin();
+    let ws_ticket = gen_ws_ticket(&admin, false).await;
+    let token = gen_jwt(admin).await;
+
+    let request = Request::builder()
+        .uri("/api/v1/notifications?offset=0&limit=20")
+        .header(
+            "cookie",
+            format!("access_token={token};ws_ticket={ws_ticket}"),
+        )
+        .body(Body::empty())
+        .unwrap();
+    let response = ServiceExt::<Request<Body>>::ready(&mut app)
+        .await
+        .unwrap()
+        .call(request)
+        .await
+        .unwrap();
+    assert_eq!(response.status(), StatusCode::OK);
+
+    let body = response.into_body().collect().await.unwrap().to_bytes();
+    let body: Value = serde_json::from_slice(&body).unwrap();
+    let data = body.get("data").unwrap().as_array().unwrap();
+    assert_eq!(data.len(), 1);
+    assert_eq!(
+        data.first().unwrap().get("targetType").unwrap().as_str(),
+        Some("subscribe")
+    );
 }
