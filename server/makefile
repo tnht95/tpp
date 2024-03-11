@@ -22,7 +22,7 @@ docker:
 	docker compose up -d
 
 fmt:
-	cargo +nightly fmt
+	cargo +nightly fmt --all
 	pg_format migrations/* --inplace
 
 lint:
