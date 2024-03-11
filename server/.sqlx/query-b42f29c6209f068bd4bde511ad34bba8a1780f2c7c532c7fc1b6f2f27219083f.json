@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "select\n                        id, title, description, tags, created_at\n                    from blogs\n                    where\n                        $1 = any(tags)\n                    order by created_at desc offset $2 limit $3",
+  "query": "select\n                        id, title, description, tags, created_at\n                    from blogs\n                    where\n                        $1 ilike any(tags)\n                    order by created_at desc offset $2 limit $3",
   "describe": {
     "columns": [
       {
@@ -44,5 +44,5 @@
       false
     ]
   },
-  "hash": "0292c87d2050ca38f6036fc12f37937c5e92ae855dcc644578d90896d01f5a98"
+  "hash": "b42f29c6209f068bd4bde511ad34bba8a1780f2c7c532c7fc1b6f2f27219083f"
 }

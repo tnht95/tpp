@@ -91,7 +91,7 @@ pub async fn init(config: Config) -> Result<ApiServer<InternalServices>> {
     );
 
     let health_service = RwLock::new(HealthService::new(
-        Database::new_with_default_log(&config)
+        Database::basic_default(&config)
             .await
             .context("Failed to initialize database")?,
         Arc::clone(&cache),

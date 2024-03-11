@@ -25,6 +25,13 @@ pub struct Database {
 }
 
 impl Database {
+    async fn init_pool(config: &Config) -> Result<Pool<Postgres>> {
+        Ok(PgPoolOptions::new()
+            .max_connections(config.server.pg_max_pool)
+            .connect(&config.server.pg_url)
+            .await?)
+    }
+
     pub async fn new(config: &Config) -> Result<Self> {
         let opts = PgConnectOptions::from_url(&config.server.pg_url.parse()?)?
             .log_statements(LevelFilter::Info)
@@ -32,32 +39,19 @@ impl Database {
 
         let pool = PgPoolOptions::new()
             .max_connections(config.server.pg_max_pool)
-            .acquire_timeout(Duration::from_secs(1))
-            .idle_timeout(Duration::from_secs(2))
-            .max_lifetime(Duration::from_secs(3))
             .connect_with(opts)
             .await?;
 
         Ok(Database { pool })
     }
 
-    pub async fn new_with_default_log(config: &Config) -> Result<Self> {
-        let pool = PgPoolOptions::new()
-            .max_connections(config.server.pg_max_pool)
-            .acquire_timeout(Duration::from_secs(1))
-            .idle_timeout(Duration::from_secs(2))
-            .max_lifetime(Duration::from_secs(3))
-            .connect(&config.server.pg_url)
-            .await?;
-
+    pub async fn basic_default(config: &Config) -> Result<Self> {
+        let pool = Self::init_pool(config).await?;
         Ok(Database { pool })
     }
 
     pub async fn migrate(config: &Config) -> Result<()> {
-        let pool = PgPoolOptions::new()
-            .max_connections(1)
-            .connect(&config.server.pg_url)
-            .await?;
+        let pool = Self::init_pool(config).await?;
         Ok(sqlx::migrate!().run(&pool).await?)
     }
 }

@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Result};
+use anyhow::Result;
 use async_trait::async_trait;
 use redis::{aio::MultiplexedConnection, Client};
 
@@ -42,8 +42,7 @@ impl ICache for Cache {
         let mut con = self.get_con();
         let pong = redis::cmd("ping")
             .query_async::<_, String>(&mut con)
-            .await
-            .map_err(|e| anyhow!(e))?;
+            .await?;
         Ok(pong.eq("PONG"))
     }
 }
