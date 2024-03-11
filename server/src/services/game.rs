@@ -60,8 +60,8 @@ impl<T> GameService<T>
 where
     T: IDatabase,
 {
-    pub async fn new(db: Arc<T>, rom_dir: String) -> anyhow::Result<Self> {
-        Ok(Self { db, rom_dir })
+    pub fn new(db: Arc<T>, rom_dir: String) -> Self {
+        Self { db, rom_dir }
     }
 
     async fn write_rom(&self, id: Uuid, rom_bytes: &[u8]) -> Result<String, GameServiceErr> {
@@ -295,5 +295,77 @@ where
             .fetch_all(self.db.get_pool())
             .await
             .map_err(|e| GameServiceErr::Other(e.into()))
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use sqlx::Pool;
+
+    use super::*;
+    use crate::database::{entities::activity::ActivityType, Database};
+
+    #[sqlx::test]
+    async fn add_game(pool: Pool<Postgres>) {
+        let service: &dyn IGameService =
+            &GameService::new(Arc::new(Database::new(pool.clone())), "./roms".into());
+
+        service
+            .add(
+                40195902,
+                "tnht95".into(),
+                AddGameRequest {
+                    name: "game_name".into(),
+                    url: Some("game_url".into()),
+                    avatar_url: Some("game_avatar_url".into()),
+                    about: Some("game_about".into()),
+                    info: Some("game_info".into()),
+                    tags: Some(vec!["game_tags".into()]),
+                    memo: "game_memo".into(),
+                },
+                &[1, 2, 3, 4, 5],
+            )
+            .await
+            .unwrap();
+
+        let game = sqlx::query!("select * from games order by created_at desc limit 1")
+            .fetch_one(&pool)
+            .await
+            .unwrap();
+
+        assert_eq!(game.name, "game_name");
+        assert_eq!(game.author_name, "tnht95");
+        assert_eq!(game.author_id, 40195902);
+        assert_eq!(game.url, Some("game_url".into()));
+        assert_eq!(game.avatar_url, Some("game_avatar_url".into()));
+        assert_eq!(game.about, Some("game_about".into()));
+        assert_eq!(game.info, Some("game_info".into()));
+        assert_eq!(game.up_votes, 0);
+        assert_eq!(game.down_votes, 0);
+        assert_eq!(game.tags, Some(vec!["game_tags".into()]));
+        assert_eq!(game.rom, format!("roms/{}", game.id));
+
+        let activity = sqlx::query!(
+            r#"select
+                user_id,
+                target_type as "target_type!: ActivityType",
+                target_id,
+                memo
+            from activities
+            order by created_at desc limit 1"#
+        )
+        .fetch_one(&pool)
+        .await
+        .unwrap();
+
+        assert_eq!(activity.user_id, 40195902);
+        assert_eq!(activity.target_type, ActivityType::AddedGame);
+        assert_eq!(activity.target_id, game.id);
+        assert_eq!(activity.memo, "Name: game_name");
+
+        let rom = tokio::fs::read(format!("./roms/{}", game.id))
+            .await
+            .unwrap();
+        assert_eq!(rom, vec![1, 2, 3, 4, 5]);
     }
 }

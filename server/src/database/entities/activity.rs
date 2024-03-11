@@ -12,7 +12,7 @@ pub struct Activity {
     pub created_at: DateTime<Utc>,
 }
 
-#[derive(Serialize, sqlx::Type)]
+#[derive(Serialize, sqlx::Type, Debug, PartialEq)]
 #[serde(rename_all = "camelCase")]
 #[sqlx(type_name = "activity_type", rename_all = "snake_case")]
 pub enum ActivityType {

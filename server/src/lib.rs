@@ -74,9 +74,15 @@ pub async fn init_roms(rom_dir: &str) -> Result<()> {
 }
 
 pub async fn init(config: Config) -> Result<ApiServer<InternalServices>> {
-    Database::migrate(&config)
+    let pg_pool = Database::init_pool_with_custom_log(&config)
+        .await
+        .context("Failed to initialize database")?;
+
+    Database::migrate(&pg_pool)
         .await
         .context("Failed to migrate database")?;
+
+    let db = Arc::new(Database::new(pg_pool));
 
     let cache = Arc::new(
         Cache::new(&config)
@@ -84,23 +90,17 @@ pub async fn init(config: Config) -> Result<ApiServer<InternalServices>> {
             .context("Failed to initialize cache")?,
     );
 
-    let db = Arc::new(
-        Database::new(&config)
-            .await
-            .context("Failed to initialize database")?,
-    );
-
     let health_service = RwLock::new(HealthService::new(
-        Database::basic_default(&config)
-            .await
-            .context("Failed to initialize database")?,
+        Database::new(
+            Database::init_pool(&config)
+                .await
+                .context("Failed to initialize database")?,
+        ),
         Arc::clone(&cache),
     ));
     let auth_service = AuthService::new(Arc::clone(&cache));
     let user_service = UserService::new(Arc::clone(&db));
-    let game_service = GameService::new(Arc::clone(&db), String::from(&config.rom_dir))
-        .await
-        .context("Failed to initialize game")?;
+    let game_service = GameService::new(Arc::clone(&db), String::from(&config.rom_dir));
     let post_service = PostService::new(Arc::clone(&db));
     let blog_service = BlogService::new(Arc::clone(&db));
     let comment_service = CommentService::new(Arc::clone(&db));
