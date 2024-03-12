@@ -103,7 +103,7 @@ where
 }
 
 #[cfg(test)]
-mod test {
+mod tests {
     use std::sync::Arc;
 
     use sqlx::{Pool, Postgres};
