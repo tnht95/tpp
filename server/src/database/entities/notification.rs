@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, sqlx::Type)]
+#[derive(Serialize, Deserialize, sqlx::Type, Debug, PartialEq)]
 #[serde(rename_all(serialize = "camelCase", deserialize = "snake_case"))]
 #[sqlx(type_name = "noti_type", rename_all = "snake_case")]
 pub enum NotificationType {
