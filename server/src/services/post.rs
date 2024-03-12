@@ -187,3 +187,179 @@ where
             .map(|p| p.unwrap_or_default())
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use std::sync::Arc;
+
+    use sqlx::{Pool, Postgres};
+
+    use crate::{
+        database::Database,
+        model::requests::post::{AddPostRequest, EditPostRequest},
+        services::post::{IPostService, PostService},
+    };
+
+    #[sqlx::test]
+    async fn add_post(pool: Pool<Postgres>) {
+        let service: &dyn IPostService = &PostService::new(Arc::new(Database::new(pool.clone())));
+
+        service
+            .add(
+                40195902,
+                AddPostRequest {
+                    content: "new".to_string(),
+                },
+            )
+            .await
+            .unwrap();
+
+        let post = sqlx::query!(
+            "select * from posts where user_id = 40195902 order by created_at desc limit 1"
+        )
+        .fetch_one(&pool)
+        .await
+        .unwrap();
+
+        assert_eq!(post.content, "new");
+    }
+
+    #[sqlx::test]
+    async fn edit_post(pool: Pool<Postgres>) {
+        let service: &dyn IPostService = &PostService::new(Arc::new(Database::new(pool.clone())));
+
+        sqlx::query!(
+            "INSERT INTO posts (id, user_id, content)
+                      VALUES ('f9e866b0-042d-4b6f-83b3-cb8683f37cd1', 40195902, 'Post Content');"
+        )
+        .execute(&pool)
+        .await
+        .unwrap();
+
+        let post = service
+            .edit(
+                "f9e866b0-042d-4b6f-83b3-cb8683f37cd1".parse().unwrap(),
+                EditPostRequest {
+                    content: "new".to_string(),
+                },
+                40195902,
+            )
+            .await
+            .unwrap();
+
+        assert_eq!(post.content, "new");
+    }
+    #[sqlx::test]
+    async fn delete_post(pool: Pool<Postgres>) {
+        let service: &dyn IPostService = &PostService::new(Arc::new(Database::new(pool.clone())));
+
+        sqlx::query!(
+            "INSERT INTO posts (id, user_id, content)
+                      VALUES ('f9e866b0-042d-4b6f-83b3-cb8683f37cd1', 40195902, 'Post Content');"
+        )
+        .execute(&pool)
+        .await
+        .unwrap();
+
+        let res = sqlx::query!(
+            "select 1 as res from posts where id = 'f9e866b0-042d-4b6f-83b3-cb8683f37cd1'"
+        )
+        .fetch_optional(&pool)
+        .await
+        .unwrap();
+
+        assert!(res.is_some());
+
+        service
+            .delete("f9e866b0-042d-4b6f-83b3-cb8683f37cd1".parse().unwrap())
+            .await
+            .unwrap();
+
+        let res = sqlx::query!(
+            "select 1 as res from posts where id = 'f9e866b0-042d-4b6f-83b3-cb8683f37cd1'"
+        )
+        .fetch_optional(&pool)
+        .await
+        .unwrap();
+
+        assert!(res.is_none());
+    }
+    #[sqlx::test]
+    async fn get_post_by_id_not_found(pool: Pool<Postgres>) {
+        let service: &dyn IPostService = &PostService::new(Arc::new(Database::new(pool.clone())));
+
+        let post = service
+            .get_by_id(
+                "f9e866b0-042d-4b6f-83b3-cb8683f37cd1".parse().unwrap(),
+                None,
+            )
+            .await
+            .unwrap();
+
+        assert!(post.is_none())
+    }
+
+    #[sqlx::test]
+    async fn get_post_by_id(pool: Pool<Postgres>) {
+        let service: &dyn IPostService = &PostService::new(Arc::new(Database::new(pool.clone())));
+
+        sqlx::query!(
+            "INSERT INTO posts (id, user_id, content)
+                      VALUES ('f9e866b0-042d-4b6f-83b3-cb8683f37cd1', 40195902, 'Post Content');"
+        )
+        .execute(&pool)
+        .await
+        .unwrap();
+
+        let post = service
+            .get_by_id(
+                "f9e866b0-042d-4b6f-83b3-cb8683f37cd1".parse().unwrap(),
+                None,
+            )
+            .await
+            .unwrap();
+        assert!(post.is_some());
+        assert!(post.unwrap().is_liked.is_none());
+
+        let post = service
+            .get_by_id(
+                "f9e866b0-042d-4b6f-83b3-cb8683f37cd1".parse().unwrap(),
+                None,
+            )
+            .await
+            .unwrap();
+        assert!(post.is_some());
+        assert!(post.unwrap().is_liked.is_none());
+
+        let post = service
+            .get_by_id(
+                "f9e866b0-042d-4b6f-83b3-cb8683f37cd1".parse().unwrap(),
+                Some(40195902),
+            )
+            .await
+            .unwrap();
+        assert!(post.is_some());
+        assert_eq!(post.unwrap().is_liked, Some(false));
+    }
+    #[sqlx::test]
+    async fn existed_post(pool: Pool<Postgres>) {
+        let service: &dyn IPostService = &PostService::new(Arc::new(Database::new(pool.clone())));
+
+        sqlx::query!(
+            "INSERT INTO posts (id, user_id, content)
+                      VALUES ('f9e866b0-042d-4b6f-83b3-cb8683f37cd1', 40195902, 'Post Content');"
+        )
+        .execute(&pool)
+        .await
+        .unwrap();
+
+        let res = service
+            .existed(
+                "f9e866b0-042d-4b6f-83b3-cb8683f37cd1".parse().unwrap(),
+                40195902,
+            )
+            .await
+            .unwrap();
+        assert!(res);
+    }
+}
