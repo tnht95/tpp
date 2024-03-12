@@ -414,30 +414,35 @@ mod test {
         let service: &dyn IGameService =
             &GameService::new(Arc::new(Database::new(pool.clone())), "./roms".into());
 
-        sqlx::query!("INSERT INTO games (id, name, author_name, author_id, url, avatar_url, about, info, rom)
-                      VALUES ('4d956893-2ced-42c4-8489-fb84c04c9d8f', 'Your Game Name', 'tnht95', 40195902, 'https://example.com', 'https://avatar.example.com', 'About the game', 'Game information', 'path/to/your/rom_file.bin');")
-            .execute(&pool)
-            .await
-            .unwrap();
-
-        let game =
-            sqlx::query!("select * from games where id = '4d956893-2ced-42c4-8489-fb84c04c9d8f'")
-                .fetch_optional(&pool)
-                .await
-                .unwrap();
-
-        assert!(game.is_some());
-
         service
-            .delete("4d956893-2ced-42c4-8489-fb84c04c9d8f".parse().unwrap())
+            .add(
+                40195902,
+                "tnht95".into(),
+                AddGameRequest {
+                    name: "game_name".into(),
+                    url: Some("game_url".into()),
+                    avatar_url: Some("game_avatar_url".into()),
+                    about: Some("game_about".into()),
+                    info: Some("game_info".into()),
+                    tags: Some(vec!["game_tags".into()]),
+                    memo: "game_memo".into(),
+                },
+                &[1, 2, 3, 4, 5],
+            )
             .await
             .unwrap();
 
-        let game =
-            sqlx::query!("select * from games where id = '4d956893-2ced-42c4-8489-fb84c04c9d8f'")
-                .fetch_optional(&pool)
-                .await
-                .unwrap();
+        let game = sqlx::query!("select * from games order by created_at desc limit 1")
+            .fetch_one(&pool)
+            .await
+            .unwrap();
+
+        service.delete(game.id).await.unwrap();
+
+        let game = sqlx::query!("select * from games where id = $1", game.id)
+            .fetch_optional(&pool)
+            .await
+            .unwrap();
 
         assert!(game.is_none());
     }
