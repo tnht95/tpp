@@ -123,7 +123,7 @@ where
 }
 
 #[cfg(test)]
-mod test {
+mod tests {
     use std::{fmt::Debug, sync::Arc};
 
     use sqlx::{Pool, Postgres};

@@ -299,7 +299,7 @@ where
 }
 
 #[cfg(test)]
-mod test {
+mod tests {
     use sqlx::Pool;
 
     use super::*;

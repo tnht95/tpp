@@ -191,19 +191,17 @@ mod tests {
     #[sqlx::test]
     async fn filter_notis(pool: Pool<Postgres>) {
         sqlx::query!(
-            "
-            insert into users (id, name, github_url, avatar, bio) values
+            "insert into users (id, name, github_url, avatar, bio) values
             (1, 'JohnDoe', 'JohnDoe_url', 'JohnDoe_avatar', 'Software Developer'),
             (2, 'JaneSmith', 'JaneSmith_url', 'JaneSmith_avatar', 'Data Scientist'),
-            (3, 'BobJohnson', 'BobJohnson_url', 'BobJohnson_avatar', null)
-        "
+            (3, 'BobJohnson', 'BobJohnson_url', 'BobJohnson_avatar', null)"
         )
         .execute(&pool)
         .await
         .unwrap();
 
-        sqlx::query!("
-            insert into notis(id, to_user_id, by_user_id, by_user_name, by_object_id, target_type, target_id, parent_target_id) values
+        sqlx::query!(
+            "insert into notis(id, to_user_id, by_user_id, by_user_name, by_object_id, target_type, target_id, parent_target_id) values
             (1, 40195902, 1, 'JohnDoe', uuid_generate_v4(), 'like_post', uuid_generate_v4(), null),
             (2, 40195902, 1, 'JohnDoe', uuid_generate_v4(), 'like_discussion', uuid_generate_v4(), null),
             (3, 40195902, 1, 'JohnDoe', uuid_generate_v4(), 'like_comment_blog', uuid_generate_v4(), null),
@@ -220,8 +218,8 @@ mod tests {
             (14, 40195902, 2, 'JaneSmith', uuid_generate_v4(), 'user_added_game', uuid_generate_v4(), null),
             (15, 40195902, 2, 'JaneSmith', uuid_generate_v4(), 'user_updated_game', uuid_generate_v4(), null),
             (16, 40195902, 3, 'BobJohnson', uuid_generate_v4(), 'user_post', uuid_generate_v4(), null),
-            (17, 40195902, 3, 'BobJohnson', uuid_generate_v4(), 'vote_game', uuid_generate_v4(), null)
-        ").execute(&pool).await.unwrap();
+            (17, 40195902, 3, 'BobJohnson', uuid_generate_v4(), 'vote_game', uuid_generate_v4(), null)")
+            .execute(&pool).await.unwrap();
 
         let service: &dyn INofitifcationService = &NofitifcationService::new(
             Arc::new(Database::new(pool.clone())),
@@ -303,18 +301,20 @@ mod tests {
     #[sqlx::test]
     async fn read_noti(pool: Pool<Postgres>) {
         sqlx::query!(
-            "
-            insert into users (id, name, github_url, avatar, bio) values
+            "insert into users (id, name, github_url, avatar, bio) values
             (1, 'JohnDoe', 'JohnDoe_url', 'JohnDoe_avatar', 'Software Developer')"
         )
         .execute(&pool)
         .await
         .unwrap();
 
-        sqlx::query!("
-            insert into notis(id, to_user_id, by_user_id, by_user_name, by_object_id, target_type, target_id, parent_target_id) values
-            (1, 40195902, 1, 'JohnDoe', uuid_generate_v4(), 'like_post', uuid_generate_v4(), uuid_generate_v4())
-        ").execute(&pool).await.unwrap();
+        sqlx::query!(
+            "insert into notis(id, to_user_id, by_user_id, by_user_name, by_object_id, target_type, target_id, parent_target_id) values
+            (1, 40195902, 1, 'JohnDoe', uuid_generate_v4(), 'like_post', uuid_generate_v4(), uuid_generate_v4())"
+        )
+        .execute(&pool)
+        .await
+        .unwrap();
 
         let service: &dyn INofitifcationService = &NofitifcationService::new(
             Arc::new(Database::new(pool.clone())),
@@ -325,17 +325,17 @@ mod tests {
 
         let noti = sqlx::query!(
             r#"
-            select 
-                id, 
-                to_user_id, 
-                by_user_id, 
-                by_user_name, 
-                by_object_id, 
-                target_type as "target_type!: NotificationType", 
-                target_id, 
-                parent_target_id, 
+            select
+                id,
+                to_user_id,
+                by_user_id,
+                by_user_name,
+                by_object_id,
+                target_type as "target_type!: NotificationType",
+                target_id,
+                parent_target_id,
                 is_read
-            from notis 
+            from notis
             where id = 1"#
         )
         .fetch_one(&pool)
