@@ -355,3 +355,136 @@ where
         })
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use std::sync::Arc;
+
+    use sqlx::{Pool, Postgres};
+
+    use crate::{
+        database::Database,
+        model::requests::search::{
+            Category::Blogs,
+            SearchPaginationInternal,
+            TagCategory,
+            TagSearchPaginationInternal,
+        },
+        services::search::{ISearchService, SearchService},
+    };
+
+    #[sqlx::test]
+    async fn search_all(pool: Pool<Postgres>) {
+        let service: &dyn ISearchService =
+            &SearchService::new(Arc::new(Database::new(pool.clone())));
+
+        sqlx::query!(
+            "INSERT INTO posts (id, user_id, content)
+                      VALUES ('f9e866b0-042d-4b6f-83b3-cb8683f37cd1', 40195902, 'A Content');"
+        )
+        .execute(&pool)
+        .await
+        .unwrap();
+
+        let res = service
+            .search(
+                SearchPaginationInternal {
+                    keyword: "a".to_string(),
+                    category: None,
+                    offset: 0,
+                    limit: 20,
+                },
+                None,
+            )
+            .await
+            .unwrap();
+
+        assert_eq!(res.users.len(), 0);
+        assert_eq!(res.games.len(), 2);
+        assert_eq!(res.posts.len(), 1);
+        assert_eq!(res.blogs.len(), 0);
+    }
+
+    #[sqlx::test]
+    async fn search_with_one_category(pool: Pool<Postgres>) {
+        let service: &dyn ISearchService =
+            &SearchService::new(Arc::new(Database::new(pool.clone())));
+
+        sqlx::query!("INSERT INTO blogs (id, user_id, title, description, content)
+                      VALUES ('e9228e4c-75d1-42d3-a860-dbd3d8e2efe5', 40195902, 'Blog Title', 'Blog Description', 'Blog Content')")
+            .execute(&pool)
+            .await
+            .unwrap();
+
+        let res = service
+            .search(
+                SearchPaginationInternal {
+                    keyword: "e".to_string(),
+                    category: Some(Blogs),
+                    offset: 0,
+                    limit: 20,
+                },
+                None,
+            )
+            .await
+            .unwrap();
+
+        assert_eq!(res.users.len(), 0);
+        assert_eq!(res.games.len(), 0);
+        assert_eq!(res.posts.len(), 0);
+        assert_eq!(res.blogs.len(), 1);
+    }
+
+    #[sqlx::test]
+    async fn tag_search_all(pool: Pool<Postgres>) {
+        let service: &dyn ISearchService =
+            &SearchService::new(Arc::new(Database::new(pool.clone())));
+
+        sqlx::query!("INSERT INTO blogs (id, user_id, title, description, content, tags)
+                      VALUES ('e9228e4c-75d1-42d3-a860-dbd3d8e2efe5', 40195902, 'Blog Title', 'Blog Description', 'Blog Content', ARRAY['ufo'])")
+            .execute(&pool)
+            .await
+            .unwrap();
+
+        let res = service
+            .tag_search(
+                TagSearchPaginationInternal {
+                    category: None,
+                    offset: 0,
+                    limit: 20,
+                },
+                "ufo".to_string(),
+            )
+            .await
+            .unwrap();
+
+        assert_eq!(res.games.len(), 1);
+        assert_eq!(res.blogs.len(), 1);
+    }
+    #[sqlx::test]
+    async fn tag_search_one_category(pool: Pool<Postgres>) {
+        let service: &dyn ISearchService =
+            &SearchService::new(Arc::new(Database::new(pool.clone())));
+
+        sqlx::query!("INSERT INTO blogs (id, user_id, title, description, content, tags)
+                      VALUES ('e9228e4c-75d1-42d3-a860-dbd3d8e2efe5', 40195902, 'Blog Title', 'Blog Description', 'Blog Content', ARRAY['ufo'])")
+            .execute(&pool)
+            .await
+            .unwrap();
+
+        let res = service
+            .tag_search(
+                TagSearchPaginationInternal {
+                    category: Some(TagCategory::Blogs),
+                    offset: 0,
+                    limit: 20,
+                },
+                "ufo".to_string(),
+            )
+            .await
+            .unwrap();
+
+        assert_eq!(res.games.len(), 0);
+        assert_eq!(res.blogs.len(), 1);
+    }
+}
