@@ -80,3 +80,48 @@ where
         .map_err(|e| SubscribeServiceErr::Other(e.into()))
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use std::sync::Arc;
+
+    use sqlx::{Pool, Postgres};
+
+    use crate::{
+        database::Database,
+        services::subscribe::{ISubscribeService, SubscribeService},
+    };
+
+    #[sqlx::test]
+    async fn subscribe_and_unsubscribe(pool: Pool<Postgres>) {
+        let service: &dyn ISubscribeService =
+            &SubscribeService::new(Arc::new(Database::new(pool.clone())));
+
+        sqlx::query!("INSERT INTO users (id, name, github_url, avatar, bio)
+                      VALUES (1, 'YourUsername', 'https://github.com/YourUsername', 'https://avatar-url.com', 'User Bio');").execute(&pool)
+            .await
+            .unwrap();
+
+        service.subscribe_user(1, 40195902).await.unwrap();
+
+        let subscription = sqlx::query!(
+            "select 1 as res from user_subscribers where subscriber_id = 1 and user_id = 40195902"
+        )
+        .fetch_optional(&pool)
+        .await
+        .unwrap();
+
+        assert!(subscription.is_some());
+
+        service.unsubscribe_user(1, 40195902).await.unwrap();
+
+        let subscription = sqlx::query!(
+            "select 1 as res from user_subscribers where subscriber_id = 1 and user_id = 40195902"
+        )
+        .fetch_optional(&pool)
+        .await
+        .unwrap();
+
+        assert!(subscription.is_none());
+    }
+}
