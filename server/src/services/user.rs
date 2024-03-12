@@ -101,3 +101,42 @@ where
             .map_err(|e| UserServiceErr::Other(e.into()))
     }
 }
+
+#[cfg(test)]
+mod test {
+    use std::sync::Arc;
+
+    use sqlx::{Pool, Postgres};
+
+    use crate::{
+        database::Database,
+        services::user::{IUserService, UserService},
+    };
+
+    #[sqlx::test]
+    async fn get_id_by_username_not_found(pool: Pool<Postgres>) {
+        let service: &dyn IUserService = &UserService::new(Arc::new(Database::new(pool.clone())));
+
+        let user_id = service.get_id_by_name("some_name").await.unwrap();
+        assert!(user_id.is_none())
+    }
+
+    #[sqlx::test]
+    async fn get_id_by_username(pool: Pool<Postgres>) {
+        let service: &dyn IUserService = &UserService::new(Arc::new(Database::new(pool.clone())));
+
+        let user_id = service.get_id_by_name("tnht95").await.unwrap();
+
+        assert_eq!(user_id, Some(40195902));
+    }
+
+    #[sqlx::test]
+    async fn get_by_id_when_not_login(pool: Pool<Postgres>) {
+        let service: &dyn IUserService = &UserService::new(Arc::new(Database::new(pool.clone())));
+
+        let user = service.get_by_id(40195902, None).await.unwrap().unwrap();
+
+        assert_eq!(user.name, "tnht95");
+        assert!(user.is_subscribed.is_none());
+    }
+}

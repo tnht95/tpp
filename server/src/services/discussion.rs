@@ -211,3 +211,128 @@ where
         .map_err(|e| DiscussionServiceErr::Other(e.into()))
     }
 }
+
+#[cfg(test)]
+mod test {
+    use std::sync::Arc;
+
+    use sqlx::{Pool, Postgres};
+
+    use crate::{
+        database::Database,
+        model::requests::discussion::{AddDiscussionRequest, EditDiscussionRequest},
+        services::discussion::{DiscussionService, IDiscussionService},
+    };
+
+    #[sqlx::test]
+    async fn add_discussion_invalid(pool: Pool<Postgres>) {
+        let service: &dyn IDiscussionService =
+            &DiscussionService::new(Arc::new(Database::new(pool.clone())));
+
+        let res = service
+            .add(
+                40195902,
+                "tnht95".to_string(),
+                "f9e866b0-042d-4b6f-83b3-cb8683f37cd1".parse().unwrap(),
+                AddDiscussionRequest {
+                    title: "title".to_string(),
+                    content: "content".to_string(),
+                },
+            )
+            .await;
+        assert!(res.is_err());
+    }
+
+    #[sqlx::test]
+    async fn edit_discussion(pool: Pool<Postgres>) {
+        let service: &dyn IDiscussionService =
+            &DiscussionService::new(Arc::new(Database::new(pool.clone())));
+
+        sqlx::query!("INSERT INTO discussions (id, user_id, user_name, game_id, title, content)
+                      VALUES ('f9e866b0-042d-4b6f-83b3-cb8683f37cd1', 40195902, 'tnht95', 'f1171914-8f07-4981-bfc2-9f33030c2a67', 'Discussion Title', 'Discussion Content')")
+            .execute(&pool)
+            .await
+            .unwrap();
+
+        let disc = service
+            .edit(
+                "f9e866b0-042d-4b6f-83b3-cb8683f37cd1".parse().unwrap(),
+                "f1171914-8f07-4981-bfc2-9f33030c2a67".parse().unwrap(),
+                EditDiscussionRequest {
+                    title: "new".to_string(),
+                    content: "newContent".to_string(),
+                },
+                40195902,
+            )
+            .await
+            .unwrap();
+
+        assert_eq!(disc.title, "new");
+        assert_eq!(disc.content, "newContent");
+    }
+
+    #[sqlx::test]
+    async fn existed_discussion(pool: Pool<Postgres>) {
+        let service: &dyn IDiscussionService =
+            &DiscussionService::new(Arc::new(Database::new(pool.clone())));
+
+        sqlx::query!("INSERT INTO discussions (id, user_id, user_name, game_id, title, content)
+                      VALUES ('f9e866b0-042d-4b6f-83b3-cb8683f37cd1', 40195902, 'tnht95', 'f1171914-8f07-4981-bfc2-9f33030c2a67', 'Discussion Title', 'Discussion Content')")
+            .execute(&pool)
+            .await
+            .unwrap();
+
+        let res = service
+            .existed(
+                "f9e866b0-042d-4b6f-83b3-cb8683f37cd1".parse().unwrap(),
+                40195902,
+            )
+            .await
+            .unwrap();
+
+        assert!(res);
+    }
+
+    #[sqlx::test]
+    async fn count_discussion(pool: Pool<Postgres>) {
+        let service: &dyn IDiscussionService =
+            &DiscussionService::new(Arc::new(Database::new(pool.clone())));
+
+        sqlx::query!("INSERT INTO discussions (id, user_id, user_name, game_id, title, content)
+                      VALUES ('f9e866b0-042d-4b6f-83b3-cb8683f37cd1', 40195902, 'tnht95', 'f1171914-8f07-4981-bfc2-9f33030c2a67', 'Discussion Title', 'Discussion Content')")
+            .execute(&pool)
+            .await
+            .unwrap();
+
+        let res = service
+            .count("f1171914-8f07-4981-bfc2-9f33030c2a67".parse().unwrap())
+            .await
+            .unwrap();
+
+        assert_eq!(res, 1);
+    }
+
+    #[sqlx::test]
+    async fn get_discussion_by_id(pool: Pool<Postgres>) {
+        let service: &dyn IDiscussionService =
+            &DiscussionService::new(Arc::new(Database::new(pool.clone())));
+
+        sqlx::query!("INSERT INTO discussions (id, user_id, user_name, game_id, title, content)
+                      VALUES ('f9e866b0-042d-4b6f-83b3-cb8683f37cd1', 40195902, 'tnht95', 'f1171914-8f07-4981-bfc2-9f33030c2a67', 'Discussion Title', 'Discussion Content')")
+            .execute(&pool)
+            .await
+            .unwrap();
+
+        let disc = service
+            .get_by_id(
+                "f9e866b0-042d-4b6f-83b3-cb8683f37cd1".parse().unwrap(),
+                "f1171914-8f07-4981-bfc2-9f33030c2a67".parse().unwrap(),
+                Some(40195902),
+            )
+            .await
+            .unwrap()
+            .unwrap();
+        assert_eq!(disc.title, "Discussion Title");
+        assert_eq!(disc.is_liked, Some(false));
+    }
+}
