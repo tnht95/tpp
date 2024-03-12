@@ -206,9 +206,39 @@ mod tests {
 
     use crate::{
         database::{entities::comment::CommentType, Database},
-        model::requests::comment::{DeleteCommentRequest, EditCommentRequest},
+        model::requests::comment::{AddCommentRequest, DeleteCommentRequest, EditCommentRequest},
         services::comment::{CommentService, ICommentService},
     };
+
+    #[sqlx::test]
+    async fn add_comment(pool: Pool<Postgres>) {
+        let service: &dyn ICommentService =
+            &CommentService::new(Arc::new(Database::new(pool.clone())));
+
+        sqlx::query!(
+            "INSERT INTO posts (id, user_id, content)
+                      VALUES ('f9e866b0-042d-4b6f-83b3-cb8683f37cd1', 40195902, 'Post Content');"
+        )
+        .execute(&pool)
+        .await
+        .unwrap();
+
+        let comment = service
+            .add(
+                40195902,
+                "tnht95".to_string(),
+                AddCommentRequest {
+                    target_id: "f9e866b0-042d-4b6f-83b3-cb8683f37cd1".parse().unwrap(),
+                    target_type: CommentType::Posts,
+                    content: "content".to_string(),
+                },
+            )
+            .await
+            .unwrap();
+
+        assert_eq!(comment.is_liked, Some(false));
+        assert_eq!(comment.content, "content");
+    }
     #[sqlx::test]
     async fn delete_comment(pool: Pool<Postgres>) {
         let service: &dyn ICommentService =
