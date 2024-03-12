@@ -197,3 +197,93 @@ where
         self.get_by_id(id, user_id).await
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use std::sync::Arc;
+
+    use sqlx::{Pool, Postgres};
+
+    use crate::{
+        database::{entities::comment::CommentType, Database},
+        model::requests::comment::{DeleteCommentRequest, EditCommentRequest},
+        services::comment::{CommentService, ICommentService},
+    };
+    #[sqlx::test]
+    async fn delete_comment(pool: Pool<Postgres>) {
+        let service: &dyn ICommentService =
+            &CommentService::new(Arc::new(Database::new(pool.clone())));
+
+        sqlx::query!("INSERT INTO comments (id, user_id, user_name, target_id, content, target_type)
+                      VALUES ('b203622d-413d-4d53-bd2d-9ebd00576d37', 40195902, 'tnht95', '57770708-2694-4bca-a332-c4c44ed2daa3', 'Comment Content', 'posts');")
+            .execute(&pool)
+            .await
+            .unwrap();
+
+        service
+            .delete(
+                "b203622d-413d-4d53-bd2d-9ebd00576d37".parse().unwrap(),
+                DeleteCommentRequest {
+                    target_id: "57770708-2694-4bca-a332-c4c44ed2daa3".parse().unwrap(),
+                    target_type: CommentType::Posts,
+                },
+            )
+            .await
+            .unwrap();
+
+        let res = sqlx::query!(
+            "select 1 as res from comments where id = 'b203622d-413d-4d53-bd2d-9ebd00576d37'"
+        )
+        .fetch_optional(&pool)
+        .await
+        .unwrap();
+        assert!(res.is_none())
+    }
+    #[sqlx::test]
+    async fn edit_comment(pool: Pool<Postgres>) {
+        let service: &dyn ICommentService =
+            &CommentService::new(Arc::new(Database::new(pool.clone())));
+
+        sqlx::query!("INSERT INTO comments (id, user_id, user_name, target_id, content, target_type)
+                      VALUES ('b203622d-413d-4d53-bd2d-9ebd00576d37', 40195902, 'tnht95', '57770708-2694-4bca-a332-c4c44ed2daa3', 'Comment Content', 'posts');")
+            .execute(&pool)
+            .await
+            .unwrap();
+
+        let comment = service
+            .edit(
+                "b203622d-413d-4d53-bd2d-9ebd00576d37".parse().unwrap(),
+                EditCommentRequest {
+                    target_id: "57770708-2694-4bca-a332-c4c44ed2daa3".parse().unwrap(),
+                    target_type: CommentType::Posts,
+                    content: "new".to_string(),
+                },
+                40195902,
+            )
+            .await
+            .unwrap();
+        assert_eq!(comment.is_liked, Some(false));
+        assert_eq!(comment.content, "new");
+    }
+
+    #[sqlx::test]
+    async fn existed_comment(pool: Pool<Postgres>) {
+        let service: &dyn ICommentService =
+            &CommentService::new(Arc::new(Database::new(pool.clone())));
+
+        sqlx::query!("INSERT INTO comments (id, user_id, user_name, target_id, content, target_type)
+                      VALUES ('b203622d-413d-4d53-bd2d-9ebd00576d37', 40195902, 'tnht95', '57770708-2694-4bca-a332-c4c44ed2daa3', 'Comment Content', 'posts');")
+            .execute(&pool)
+            .await
+            .unwrap();
+
+        let res = service
+            .existed(
+                "b203622d-413d-4d53-bd2d-9ebd00576d37".parse().unwrap(),
+                40195902,
+            )
+            .await
+            .unwrap();
+        assert!(res)
+    }
+}
