@@ -161,3 +161,94 @@ async fn update_game_votes(
         .map_err(|e| VoteServiceErr::Other(e.into()))
         .map(|_| ())
 }
+
+#[cfg(test)]
+mod tests {
+    use std::sync::Arc;
+
+    use sqlx::{Pool, Postgres};
+
+    use crate::{
+        database::Database,
+        model::requests::vote::AddVoteRequest,
+        services::vote::{IVoteService, VoteService},
+    };
+
+    #[sqlx::test]
+    async fn vote_and_un_vote_game(pool: Pool<Postgres>) {
+        let service: &dyn IVoteService = &VoteService::new(Arc::new(Database::new(pool.clone())));
+
+        service
+            .vote(
+                "22ca2145-5e71-44ee-9fd1-bf45e1e5fb3c".parse().unwrap(),
+                40195902,
+                AddVoteRequest { is_up: true },
+            )
+            .await
+            .unwrap();
+
+        let game =
+            sqlx::query!("select * from games where id = '22ca2145-5e71-44ee-9fd1-bf45e1e5fb3c'")
+                .fetch_one(&pool)
+                .await
+                .unwrap();
+
+        assert_eq!(game.up_votes, 1);
+        assert_eq!(game.down_votes, 0);
+
+        let vote = sqlx::query!("select * from votes where game_id = '22ca2145-5e71-44ee-9fd1-bf45e1e5fb3c' and user_id = 40195902")
+            .fetch_one(&pool)
+            .await
+            .unwrap();
+        assert!(vote.is_up);
+
+        // test update vote
+        service
+            .vote(
+                "22ca2145-5e71-44ee-9fd1-bf45e1e5fb3c".parse().unwrap(),
+                40195902,
+                AddVoteRequest { is_up: false },
+            )
+            .await
+            .unwrap();
+
+        let game =
+            sqlx::query!("select * from games where id = '22ca2145-5e71-44ee-9fd1-bf45e1e5fb3c'")
+                .fetch_one(&pool)
+                .await
+                .unwrap();
+
+        assert_eq!(game.up_votes, 0);
+        assert_eq!(game.down_votes, 1);
+
+        let vote = sqlx::query!("select * from votes where game_id = '22ca2145-5e71-44ee-9fd1-bf45e1e5fb3c' and user_id = 40195902")
+            .fetch_one(&pool)
+            .await
+            .unwrap();
+        assert!(!vote.is_up);
+
+        //test undo vote
+        service
+            .un_vote(
+                "22ca2145-5e71-44ee-9fd1-bf45e1e5fb3c".parse().unwrap(),
+                40195902,
+            )
+            .await
+            .unwrap();
+
+        let game =
+            sqlx::query!("select * from games where id = '22ca2145-5e71-44ee-9fd1-bf45e1e5fb3c'")
+                .fetch_one(&pool)
+                .await
+                .unwrap();
+
+        assert_eq!(game.up_votes, 0);
+        assert_eq!(game.down_votes, 0);
+
+        let vote = sqlx::query!("select * from votes where game_id = '22ca2145-5e71-44ee-9fd1-bf45e1e5fb3c' and user_id = 40195902")
+            .fetch_optional(&pool)
+            .await
+            .unwrap();
+        assert!(vote.is_none());
+    }
+}
