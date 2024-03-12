@@ -368,4 +368,77 @@ mod test {
             .unwrap();
         assert_eq!(rom, vec![1, 2, 3, 4, 5]);
     }
+
+    #[sqlx::test]
+    async fn edit_game(pool: Pool<Postgres>) {
+        let service: &dyn IGameService =
+            &GameService::new(Arc::new(Database::new(pool.clone())), "./roms".into());
+
+        sqlx::query!("INSERT INTO games (id, name, author_name, author_id, url, avatar_url, about, info, rom)
+                      VALUES ('4d956893-2ced-42c4-8489-fb84c04c9d8f', 'Your Game Name', 'tnht95', 40195902, 'https://example.com', 'https://avatar.example.com', 'About the game', 'Game information', 'path/to/your/rom_file.bin');")
+            .execute(&pool)
+            .await
+            .unwrap();
+
+        service
+            .edit(
+                EditGameRequest {
+                    name: "new".into(),
+                    url: Some("game_url".into()),
+                    avatar_url: Some("game_avatar_url".into()),
+                    about: Some("game_about".into()),
+                    info: Some("game_info".into()),
+                    tags: None,
+                    memo: "game_memo".into(),
+                },
+                Some(&[1, 2, 3, 4, 5]),
+                "4d956893-2ced-42c4-8489-fb84c04c9d8f".parse().unwrap(),
+                40195902,
+            )
+            .await
+            .unwrap();
+
+        let game =
+            sqlx::query!("select * from games where id = '4d956893-2ced-42c4-8489-fb84c04c9d8f'")
+                .fetch_one(&pool)
+                .await
+                .unwrap();
+
+        assert_eq!(game.name, "new");
+        assert_eq!(game.author_name, "tnht95");
+        assert_eq!(game.author_id, 40195902);
+    }
+
+    #[sqlx::test]
+    async fn delete_game(pool: Pool<Postgres>) {
+        let service: &dyn IGameService =
+            &GameService::new(Arc::new(Database::new(pool.clone())), "./roms".into());
+
+        sqlx::query!("INSERT INTO games (id, name, author_name, author_id, url, avatar_url, about, info, rom)
+                      VALUES ('4d956893-2ced-42c4-8489-fb84c04c9d8f', 'Your Game Name', 'tnht95', 40195902, 'https://example.com', 'https://avatar.example.com', 'About the game', 'Game information', 'path/to/your/rom_file.bin');")
+            .execute(&pool)
+            .await
+            .unwrap();
+
+        let game =
+            sqlx::query!("select * from games where id = '4d956893-2ced-42c4-8489-fb84c04c9d8f'")
+                .fetch_optional(&pool)
+                .await
+                .unwrap();
+
+        assert!(game.is_some());
+
+        service
+            .delete("4d956893-2ced-42c4-8489-fb84c04c9d8f".parse().unwrap())
+            .await
+            .unwrap();
+
+        let game =
+            sqlx::query!("select * from games where id = '4d956893-2ced-42c4-8489-fb84c04c9d8f'")
+                .fetch_optional(&pool)
+                .await
+                .unwrap();
+
+        assert!(game.is_none());
+    }
 }
