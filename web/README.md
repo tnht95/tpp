@@ -13,6 +13,9 @@ In the project directory, you can run:
 Runs the app in the development mode.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
+### `yarn format && yarn lint `
+Ensures code consistency and quality by automatically formatting the code according to predefined style guidelines and checking for errors and adherence to coding standards using linters.
+
 ### `yarn build`
 
 Builds the app for production to the `dist` folder.<br>
