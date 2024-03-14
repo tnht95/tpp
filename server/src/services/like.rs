@@ -122,4 +122,44 @@ mod tests {
 
         assert!(res.is_none());
     }
+
+    #[sqlx::test]
+    async fn like_and_unlike_nonexistent_target(pool: Pool<Postgres>) {
+        let service: &dyn ILikeService = &LikeService::new(Arc::new(Database::new(pool.clone())));
+
+        service
+            .like(
+                40195902,
+                AddLikeRequest {
+                    target_id: "b203622d-413d-4d53-bd2d-9ebd00576d37".parse().unwrap(),
+                    target_type: LikeType::Comments,
+                },
+            )
+            .await
+            .unwrap();
+
+        let res =  sqlx::query!("select 1 as res from likes where target_id = 'b203622d-413d-4d53-bd2d-9ebd00576d37' and user_id = 40195902").fetch_optional(&pool)
+            .await
+            .unwrap();
+
+        assert!(res.is_none());
+
+        //test unlike
+        service
+            .unlike(
+                40195902,
+                DeleteLikeRequest {
+                    target_id: "b203622d-413d-4d53-bd2d-9ebd00576d37".parse().unwrap(),
+                    target_type: LikeType::Comments,
+                },
+            )
+            .await
+            .unwrap();
+
+        let res =  sqlx::query!("select 1 as res from likes where target_id = 'b203622d-413d-4d53-bd2d-9ebd00576d37' and user_id = 40195902").fetch_optional(&pool)
+            .await
+            .unwrap();
+
+        assert!(res.is_none());
+    }
 }
