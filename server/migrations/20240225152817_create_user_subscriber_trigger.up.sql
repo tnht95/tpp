@@ -26,3 +26,22 @@ CREATE TRIGGER user_subscriber_insert_trigger
     FOR EACH ROW
     EXECUTE FUNCTION insert_noti_on_user_subscriber_insert ();
 
+CREATE FUNCTION delete_noti_on_user_subscriber_delete ()
+    RETURNS TRIGGER
+    AS $$
+BEGIN
+    DELETE FROM notis
+    WHERE target_type = 'subscribe'
+        AND by_user_id = OLD.subscriber_id
+        AND to_user_id = OLD.user_id;
+    RETURN NULL;
+END;
+$$
+LANGUAGE plpgsql;
+
+-- Create a trigger that inserts a record into the notis table when a new user_subscribers is inserted
+CREATE TRIGGER user_subscriber_delete_trigger
+    AFTER DELETE ON user_subscribers
+    FOR EACH ROW
+    EXECUTE FUNCTION delete_noti_on_user_subscriber_delete ();
+
