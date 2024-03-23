@@ -21,6 +21,8 @@ BEGIN
         WHERE target_id = OLD.id;
         DELETE FROM likes
         WHERE target_id = OLD.id;
+        DELETE FROM notis
+        WHERE target_id = OLD.id;
     END IF;
     RETURN NULL;
 END;
