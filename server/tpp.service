@@ -6,7 +6,7 @@ After=network.target
 
 [Service]
 Type=simple
-WorkingDirectory=/home/tpp-user/tpp/server
+WorkingDirectory=/home/tpp-admin/tpp/server
 ExecStart=sudo server -c ./config-prod.toml start
 Restart=always
 
