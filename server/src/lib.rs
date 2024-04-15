@@ -7,7 +7,7 @@ mod model;
 pub mod services;
 pub mod utils;
 
-use std::sync::Arc;
+use std::{sync::Arc, time::Duration};
 
 use anyhow::{Context, Result};
 use tokio::{
@@ -16,7 +16,7 @@ use tokio::{
 };
 
 use crate::{
-    cache::Cache,
+    cache::{Cache, ICache},
     config::Config,
     database::Database,
     http::ApiServer,
@@ -89,6 +89,17 @@ pub async fn init(config: Config) -> Result<ApiServer<InternalServices>> {
             .await
             .context("Failed to initialize cache")?,
     );
+
+    // cache heartbeat
+    let ref_cache = Arc::clone(&cache);
+    tokio::spawn(async move {
+        loop {
+            tokio::time::sleep(Duration::from_secs(300)).await; // 5 mins
+            if let Err(e) = ref_cache.ping().await {
+                tracing::error!("[Cache]: Failed to ping: {e:?}");
+            }
+        }
+    });
 
     let health_service = RwLock::new(HealthService::new(
         Database::new(
