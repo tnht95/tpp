@@ -183,6 +183,9 @@ mod tests {
         fn get_exp(&self) -> u64 {
             todo!()
         }
+        async fn ping(&self) -> Result<String> {
+            todo!()
+        }
         async fn is_healthy(&self) -> Result<bool> {
             todo!()
         }

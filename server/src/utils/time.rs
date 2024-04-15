@@ -10,7 +10,7 @@ pub mod mock_time {
     use chrono::{DateTime, Utc};
 
     thread_local! {
-        static MOCK_TIME: RefCell<Option<DateTime<Utc>>> = RefCell::new(None);
+        static MOCK_TIME: RefCell<Option<DateTime<Utc>>> = const {RefCell::new(None)};
     }
 
     pub fn now() -> DateTime<Utc> {

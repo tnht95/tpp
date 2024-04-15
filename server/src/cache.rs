@@ -8,6 +8,7 @@ use crate::config::Config;
 pub trait ICache {
     fn get_con(&self) -> MultiplexedConnection;
     fn get_exp(&self) -> u64;
+    async fn ping(&self) -> Result<String>;
     async fn is_healthy(&self) -> Result<bool>;
 }
 
@@ -38,11 +39,15 @@ impl ICache for Cache {
         self.exp_sec
     }
 
-    async fn is_healthy(&self) -> Result<bool> {
+    async fn ping(&self) -> Result<String> {
         let mut con = self.get_con();
-        let pong = redis::cmd("ping")
+        Ok(redis::cmd("ping")
             .query_async::<_, String>(&mut con)
-            .await?;
+            .await?)
+    }
+
+    async fn is_healthy(&self) -> Result<bool> {
+        let pong = self.ping().await?;
         Ok(pong.eq("PONG"))
     }
 }
